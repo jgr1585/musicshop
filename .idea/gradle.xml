@@ -12,7 +12,16 @@
             <option value="$PROJECT_DIR$/backend" />
             <option value="$PROJECT_DIR$/customerDBClient" />
             <option value="$PROJECT_DIR$/library" />
-            <option value="$PROJECT_DIR$/userClient" />
+            <option value="$PROJECT_DIR$/user-client" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/user-client" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/user-client" />
           </set>
         </option>
       </GradleProjectSettings>
