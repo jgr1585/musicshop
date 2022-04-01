@@ -1,0 +1,33 @@
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
+  http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd"
+             version="2.1">
+    <persistence-unit name="Main">
+        <description>Hibernate EntityManager</description>
+
+        <class>at.fhv.teamd.musicshop.backend.domain.article.Album</class>
+        <class>at.fhv.teamd.musicshop.backend.domain.article.Article</class>
+        <class>at.fhv.teamd.musicshop.backend.domain.article.Artist</class>
+        <class>at.fhv.teamd.musicshop.backend.domain.article.Song</class>
+
+        <class>at.fhv.teamd.musicshop.backend.domain.medium.AnalogMedium</class>
+        <class>at.fhv.teamd.musicshop.backend.domain.medium.Medium</class>
+        <class>at.fhv.teamd.musicshop.backend.domain.medium.Stock</class>
+        <class>at.fhv.teamd.musicshop.backend.domain.medium.Supplier</class>
+
+        <class>at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem</class>
+
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres"/>
+            <property name="javax.persistence.jdbc.user" value="postgres"/>
+            <property name="javax.persistence.jdbc.password" value="fyouuNeW!4"/>
+            <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
