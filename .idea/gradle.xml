@@ -11,9 +11,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/backend" />
             <option value="$PROJECT_DIR$/customerDBClient" />
-            <option value="$PROJECT_DIR$/frontend" />
             <option value="$PROJECT_DIR$/library" />
-            <option value="$PROJECT_DIR$/sharedLibrary" />
             <option value="$PROJECT_DIR$/userClient" />
           </set>
         </option>

@@ -10,6 +10,7 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
+import at.fhv.teamd.musicshop.library.DTO.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
