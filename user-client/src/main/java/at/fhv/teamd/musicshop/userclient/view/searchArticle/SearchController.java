@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.userclient.view.searchArticle;
 
 import at.fhv.teamd.musicshop.library.ApplicationClient;
+import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.userclient.view.ArticleController;
 import at.fhv.teamd.musicshop.userclient.connection.RMIconnection;
