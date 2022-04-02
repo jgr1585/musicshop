@@ -24,19 +24,21 @@ public class Medium {
     @Embedded
     private Stock stock;
 
-    @OneToOne(cascade= CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private Supplier supplier;
 
-    @Column
+    @ManyToOne
+    @JoinColumn(name = "article")
     private Article article;
 
-    protected Medium() {}
+    protected Medium() {
+    }
 
-    public Medium(BigDecimal price, MediumType type, Stock stock, Supplier supplier, Article article) {
+    public Medium(BigDecimal price, MediumType type, Stock stock, Supplier supplier/*, Article article*/) {
         this.type = Objects.requireNonNull(type);
         this.price = Objects.requireNonNull(price);
         this.stock = Objects.requireNonNull(stock);
         this.supplier = Objects.requireNonNull(supplier);
-        this.article = Objects.requireNonNull(article);
+//        this.article = Objects.requireNonNull(article);
     }
 }
