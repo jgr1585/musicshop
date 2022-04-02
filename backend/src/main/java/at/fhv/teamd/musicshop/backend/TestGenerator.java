@@ -3,6 +3,7 @@ package at.fhv.teamd.musicshop.backend;
 import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.article.Album;
+import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.article.Artist;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
@@ -32,6 +33,8 @@ public class TestGenerator {
 
         Artist artistLongLive = new Artist("A$AP Rocky");
 
+        em.persist(artistLongLive);
+
         String mbidLongLive = "ab967b6a-de5c-455b-aad2-8b2f5899b288";
         String labelLongLive = "Sony Records International";
         String genreLongLive = "hip hop, dubstep, east coast hip hop, underground hip hop";
@@ -46,6 +49,8 @@ public class TestGenerator {
                 mbidLongLive,
                 mediums1,
                 Set.of(songLongLive));
+
+        em.persist(songLongLive);
 
         em.persist(albumLongLive);
 
@@ -99,25 +104,73 @@ public class TestGenerator {
         Set<Medium> mediums4 = new HashSet<>();
         mediums4.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), new Supplier("ZYX Music GmbH & Co KG", Duration.ofDays(1))));
 
-        Artist artistAnti = new Artist("Rihanna");
-
-        String mbidAnti = "a84dea70-f81b-4761-a39c-2dd3a9e985cc";
-        String labelAnti = "Westbury Road Entertainment";
-        String genreAnti = "contemporary r&b, pop, hip hop, soul, trap";
-        LocalDate releaseAnti = LocalDate.of(2016, 2,5);
-
-        Song songAnti = new Song("Consideration", labelAnti, releaseAnti, genreAnti, "", mbidAnti, mediums4, Duration.ofMinutes(2), Set.of(artistAnti));
-
-        Album albumAnti = new Album("ANTI",
-                labelAnti,
-                releaseAnti,
-                genreAnti,
-                "",
-                mbidAnti,
-                mediums4,
-                Set.of(songAnti));
-
-        em.persist(albumAnti);
+//        //ALBUM 2
+//        Artist artistUntamedDesire = new Artist("50 Cent");
+//
+//        em.persist(artistUntamedDesire);
+//
+//        String mbidUntamedDesire = "b4cfbcbc-b98c-4695-94c9-e095412e4a84";
+//        String labelUntamedDesire = "G-Unit Records";
+//        String genreUntamedDesire= "hip hop, rap";
+//        LocalDate releaseUntamedDesire = LocalDate.of(2014, 6,3);
+//
+//        Song songUntamedDesire = new Song("Hold On", labelUntamedDesire, releaseUntamedDesire, genreUntamedDesire, mbidUntamedDesire, analogMediumMap2, Duration.ofMinutes(3), List.of(artistUntamedDesire));
+//        Album albumUntamedDesire = new Album("Animal Ambition: An Untamed Desire to Win",
+//                labelUntamedDesire,
+//                releaseUntamedDesire,
+//                genreUntamedDesire,
+//                mbidUntamedDesire,
+//                analogMediumMap2,
+//                List.of(songUntamedDesire));
+//
+//        em.persist(songUntamedDesire);
+//        em.persist(albumUntamedDesire);
+//
+//        //ALBUM 3
+//        Artist artistUnion = new Artist("Rasa");
+//
+//        em.persist(artistUnion);
+//
+//        String mbidUnion = "da25e5c4-afcb-4f10-af3f-be2251241b35";
+//        String labelUnion = "Hearts of Space";
+//        String genreUnion = "ambient, electronic, new age, fusion";
+//        LocalDate releaseUnion = LocalDate.of(2001, 1,1);
+//
+//        Song songUnion = new Song("Kabe Habe Bolo", labelUnion, releaseUnion, genreUnion, mbidUnion, analogMediumMap3, Duration.ofMinutes(8), List.of(artistUnion));
+//
+//        Album albumUnion = new Album("Union",
+//                labelUnion,
+//                releaseUnion,
+//                genreUnion,
+//                mbidUnion,
+//                analogMediumMap3,
+//                List.of(songUnion));
+//
+//        em.persist(songUnion);
+//        em.persist(albumUnion);
+//
+//        //ALBUM 4
+//        Artist artistAnti = new Artist("Rihanna");
+//
+//        em.persist(artistAnti);
+//
+//        String mbidAnti = "a84dea70-f81b-4761-a39c-2dd3a9e985cc";
+//        String labelAnti = "Westbury Road Entertainment";
+//        String genreAnti = "contemporary r&b, pop, hip hop, soul, trap";
+//        LocalDate releaseAnti = LocalDate.of(2016, 2,5);
+//
+//        Song songAnti = new Song("Consideration", labelAnti, releaseAnti, genreAnti, mbidAnti, analogMediumMap4, Duration.ofMinutes(2), List.of(artistAnti));
+//
+//        Album albumAnti = new Album("ANTI",
+//                labelAnti,
+//                releaseAnti,
+//                genreAnti,
+//                mbidAnti,
+//                analogMediumMap4,
+//                List.of(songAnti));
+//
+//        em.persist(songAnti);
+//        em.persist(albumAnti);
 //
 //        //ALBUM 5
 //        Artist artistLetItBe = new Artist("The Beatles");
