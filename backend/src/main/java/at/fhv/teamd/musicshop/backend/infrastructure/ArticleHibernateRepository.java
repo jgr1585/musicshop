@@ -5,10 +5,10 @@ import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
-import jakarta.transaction.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 

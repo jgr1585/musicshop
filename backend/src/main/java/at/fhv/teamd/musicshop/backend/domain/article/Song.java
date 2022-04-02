@@ -1,13 +1,9 @@
 package at.fhv.teamd.musicshop.backend.domain.article;
 
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
-import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import lombok.Getter;
 
-import javax.annotation.processing.Generated;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
@@ -19,7 +15,7 @@ public class Song extends Article {
     @Column
     private Duration length;
 
-    @Column
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<Artist> artists;
 
     protected Song() {

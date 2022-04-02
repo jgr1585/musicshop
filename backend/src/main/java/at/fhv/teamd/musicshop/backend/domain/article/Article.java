@@ -30,10 +30,11 @@ public abstract class Article {
     private String descriptorName;
     @Column
     private String musicbrainzId;
-    @OneToMany(cascade= CascadeType.ALL)
+    @OneToMany(mappedBy = "article")
     private Set<Medium> mediums;
 
-    protected Article() {}
+    protected Article() {
+    }
 
     protected Article(String title, String label, LocalDate releaseDate, String genre, String descriptorName, String musicbrainzId, Set<Medium> mediums) {
         this.title = Objects.requireNonNull(title);
@@ -47,7 +48,7 @@ public abstract class Article {
 
     public Set<Long> getMediumIDs() {
         return mediums.stream()
-                .map(medium -> medium.getId())
+                .map(Medium::getId)
                 .collect(Collectors.toUnmodifiableSet());
     }
 }

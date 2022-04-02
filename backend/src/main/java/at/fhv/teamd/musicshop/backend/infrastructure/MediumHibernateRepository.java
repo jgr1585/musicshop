@@ -3,11 +3,12 @@ package at.fhv.teamd.musicshop.backend.infrastructure;
 import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
-import jakarta.transaction.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
+//import javax.transaction.Transactional;
 import java.util.Optional;
 
 public class MediumHibernateRepository implements MediumRepository {
