@@ -5,13 +5,11 @@ import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
+import jakarta.transaction.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ArticleHibernateRepository implements ArticleRepository {
@@ -27,65 +25,40 @@ public class ArticleHibernateRepository implements ArticleRepository {
      */
     @Override
     @Transactional
-    public List<Article> searchArticlesByAttributes(String title, String artist) {
+    public Set<Article> searchArticlesByAttributes(String title, String artist) {
         Objects.requireNonNull(title);
         Objects.requireNonNull(artist);
 
         EntityManager em = PersistenceManager.getEntityManagerInstance();
 
-        // NOTE: This redundant querying is done because abstract article cannot be directly queried
-        // because the required JPA inheritance strategy probably cannot be used
-        TypedQuery<Album> albumQuery = em.createQuery(
-                "SELECT DISTINCT(a) FROM Album a JOIN a.artists aa WHERE " +
-                        "((a.title <> '' AND LOWER(a.title) LIKE LOWER(:titlePattern)) OR a.title = '') AND " +
-                        "((aa.name <> '' AND LOWER(aa.name) LIKE LOWER(:artistPattern)) OR aa.name = '')"
-                , Album.class).setMaxResults(25);
-
-        albumQuery.setParameter("titlePattern", "%"+title+"%");
-        albumQuery.setParameter("artistPattern", "%"+artist+"%");
-
-        TypedQuery<Song> songQuery = em.createQuery("SELECT DISTINCT(s) FROM Song s JOIN s.artists sa WHERE " +
-                        "((s.title <> '' AND LOWER(s.title) LIKE LOWER(:titlePattern)) OR s.title = '') AND " +
-                        "((sa.name <> '' AND LOWER(sa.name) LIKE LOWER(:artistPattern)) OR sa.name = '')"
-                , Song.class).setMaxResults(25);
-
-        songQuery.setParameter("titlePattern", "%"+title+"%");
-        songQuery.setParameter("artistPattern", "%"+artist+"%");
-
-        List<Article> articles = new ArrayList<>();
-
-        // NOTE: Alternative to this is to order by case select in query
-        List<Album> albums = albumQuery.getResultList();
-        List<Album> albumsDirectMatches = albums.stream()
-                .filter(album -> album.getTitle().equals(title)
-                                || album.getArtists().stream().anyMatch(
-                                        albumArtist -> albumArtist.getName().equals(artist)
-                                    )
-                )
-                .collect(Collectors.toList());
-        List<Album> albumsIndirectMatches = albums.stream()
-                .filter(album -> !albumsDirectMatches.contains(album))
-                .collect(Collectors.toList());
-
-        List<Song> songs = songQuery.getResultList();
-        List<Song> songsDirectMatches = songs.stream()
-                .filter(song -> song.getTitle().equals(title)
-                                || song.getArtists().stream().anyMatch(
-                                songArtist -> songArtist.getName().equals(artist)
-                        )
-                )
-                .collect(Collectors.toList());
-        List<Song> songsIndirectMatches = songs.stream()
-                .filter(song -> !songsDirectMatches.contains(song))
-                .collect(Collectors.toList());
-
-        articles.addAll(albumsDirectMatches);
-        articles.addAll(songsDirectMatches);
-        articles.addAll(albumsIndirectMatches);
-        articles.addAll(songsIndirectMatches);
+//        TypedQuery<Article> query = em.createQuery(
+//                "SELECT DISTINCT(a) FROM Article a WHERE " +
+//                        "((a.title <> '' AND LOWER(a.title) LIKE LOWER(:titlePattern)) OR a.title = '') AND " +
+//                        "((aa.name <> '' AND LOWER(aa.name) LIKE LOWER(:artistPattern)) OR aa.name = '')"
+//                , Article.class).setMaxResults(50);
+//
+//        query.setParameter("titlePattern", "%"+title+"%");
+//        query.setParameter("artistPattern", "%"+artist+"%");
+//
+//        // NOTE: Alternative to this is to order by case select in query
+//        Set<Article> articles = query.getResultStream().collect(Collectors.toSet());
+//        Set<Article> articlesDirectMatches = articles.stream()
+//                .filter(article -> article.getTitle().equals(title)
+////                                || article.getArtists().stream().anyMatch(
+////                                        albumArtist -> albumArtist.getName().equals(artist)
+////                                    )
+//                )
+//                .collect(Collectors.toSet());
+//        Set<Article> articlesIndirectMatches = articles.stream()
+//                .filter(article -> !articlesDirectMatches.contains(article))
+//                .collect(Collectors.toSet());
+//
+//
+//        articles.addAll(articlesDirectMatches);
+//        articles.addAll(articlesIndirectMatches);
 
         em.close();
-
-        return articles;
+//        return articles;
+        return null;
     }
 }

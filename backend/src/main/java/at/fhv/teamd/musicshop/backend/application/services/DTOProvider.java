@@ -4,8 +4,7 @@ import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.article.Artist;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
-import at.fhv.teamd.musicshop.backend.domain.medium.AnalogMedium;
-import at.fhv.teamd.musicshop.backend.domain.medium.AnalogMediumType;
+import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
@@ -17,7 +16,8 @@ import java.util.stream.Collectors;
 
 public class DTOProvider {
 
-    private DTOProvider() {}
+    private DTOProvider() {
+    }
 
     static ShoppingCartDTO buildShoppingCartDTO(MediumRepository mediumRepository, List<LineItem> lineItems) {
         return ShoppingCartDTO.builder()
@@ -26,12 +26,13 @@ public class DTOProvider {
     }
 
     static LineItemDTO buildLineItemDTO(MediumRepository mediumRepository, LineItem lineItem) {
-        Medium medium = mediumRepository.findAnalogMediumById(lineItem.getMediumId()).orElseThrow();
+        Medium medium = mediumRepository.findMediumById(lineItem.getMediumId()).orElseThrow();
 
         return LineItemDTO.builder()
                 .withLineItemData(
                         lineItem.getId(),
-                        buildArticleDTO(mediumRepository, new Article() {}),
+                        buildArticleDTO(mediumRepository, new Article() {
+                        }),
                         lineItem.getDescriptorName(),
                         lineItem.getQuantity().getValue(),
                         lineItem.getPrice(),
@@ -42,22 +43,13 @@ public class DTOProvider {
     }
 
     static MediumDTO buildMediumDTO(Medium medium) {
-        if (medium instanceof AnalogMedium) {
-            return buildAnalogMediumDTO((AnalogMedium) medium);
-
-        } else {
-            throw new UnsupportedOperationException();
-        }
-    }
-
-    static AnalogMediumDTO buildAnalogMediumDTO(AnalogMedium analogMedium) {
-        return AnalogMediumDTO.builder().
-                withAnalogMediumData(
-                        analogMedium.getId(),
-                        analogMedium.getPrice(),
-                        buildSupplierDTO(analogMedium.getSupplier()),
-                        analogMedium.getType().toString(),
-                        analogMedium.getStock().getQuantity().getValue()
+        return MediumDTO.builder().
+                withMediumData(
+                        medium.getId(),
+                        medium.getPrice(),
+                        buildSupplierDTO(medium.getSupplier()),
+                        medium.getType().toString(),
+                        medium.getStock().getQuantity().getValue()
                 ).build();
     }
 
@@ -77,26 +69,25 @@ public class DTOProvider {
     }
 
     static ArticleDTO buildArticleDTO(MediumRepository mediumRepository, Article article) {
-        Map<String, AnalogMediumDTO> analogMediumDTOMap = new HashMap<>();
-        for (Map.Entry<AnalogMediumType, Long> analogMediumID : article.getAnalogMediumIDs().entrySet()) {
-            AnalogMedium analogMedium = mediumRepository.findAnalogMediumById(analogMediumID.getValue()).orElseThrow();
-
-            analogMediumDTOMap.put(
-                    analogMediumID.getKey().toString(),
-                    buildAnalogMediumDTO(analogMedium)
-            );
-        }
+        Set<MediumDTO> mediumDTOs = new HashSet<>();
+        article.getMediumIDs().forEach(id ->
+                mediumDTOs.add(buildMediumDTO(mediumRepository.findMediumById(id).get()))
+        );
 
         if (article instanceof Album) {
             Album album = (Album) article;
 
-            List<SongDTO> songDTOs = new ArrayList<>();
+            Set<SongDTO> songDTOs = new HashSet<>();
             for (Song song : album.getSongs()) {
                 songDTOs.add((SongDTO) buildArticleDTO(mediumRepository, song));
             }
-            List<ArtistDTO> artistDTOs = new ArrayList<>();
-            for (Artist artist : album.getArtists()) {
-                artistDTOs.add(buildArtistDTO(artist));
+
+            Set<ArtistDTO> artistDTOs = new HashSet<>();
+            for (Song song : album.getSongs()) {
+                artistDTOs.addAll(song.getArtists()
+                        .stream()
+                        .map(artist -> buildArtistDTO(artist))
+                        .collect(Collectors.toUnmodifiableSet()));
             }
 
             return AlbumDTO.builder().withAlbumData(
@@ -107,9 +98,9 @@ public class DTOProvider {
                     album.getReleaseDate(),
                     album.getGenre(),
                     album.getMusicbrainzId(),
-                    Collections.unmodifiableMap(analogMediumDTOMap),
-                    Collections.unmodifiableList(songDTOs),
-                    Collections.unmodifiableList(artistDTOs)
+                    Collections.unmodifiableSet(mediumDTOs),
+                    Collections.unmodifiableSet(songDTOs),
+                    Collections.unmodifiableSet(artistDTOs)
             ).build();
 
         } else if (article instanceof Song) {
@@ -123,11 +114,11 @@ public class DTOProvider {
                     song.getReleaseDate(),
                     song.getGenre(),
                     song.getMusicbrainzId(),
-                    Collections.unmodifiableMap(analogMediumDTOMap),
+                    Collections.unmodifiableSet(mediumDTOs),
                     song.getLength(),
                     song.getArtists().stream()
                             .map(DTOProvider::buildArtistDTO)
-                            .collect(Collectors.toUnmodifiableList())
+                            .collect(Collectors.toUnmodifiableSet())
             ).build();
 
         } else {

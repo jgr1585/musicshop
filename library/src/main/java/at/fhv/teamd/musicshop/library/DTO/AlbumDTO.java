@@ -2,10 +2,7 @@ package at.fhv.teamd.musicshop.library.DTO;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public final class AlbumDTO implements ArticleDTO, Serializable {
     private static final long serialVersionUID = 1577561200659149099L;
@@ -17,9 +14,9 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
     private LocalDate releaseDate;
     private String genre;
     private String musicbrainzId;
-    private Map<String, AnalogMediumDTO> analogMedium;
-    private List<SongDTO> songs;
-    private List<ArtistDTO> artists;
+    private Set<MediumDTO> mediums;
+    private Set<SongDTO> songs;
+    private Set<ArtistDTO> artists;
 
     public static AlbumDTO.Builder builder() {
         return new AlbumDTO.Builder();
@@ -49,14 +46,14 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
 
     public String musicbrainzId() { return this.musicbrainzId; }
 
-    public Map<String, AnalogMediumDTO> analogMedium() { return Collections.unmodifiableMap(analogMedium); }
+    public Set<MediumDTO> mediums() { return Collections.unmodifiableSet(mediums); }
 
-    public List<SongDTO> songs() {
-        return Collections.unmodifiableList(songs);
+    public Set<SongDTO> songs() {
+        return Collections.unmodifiableSet(songs);
     }
 
-    public List<ArtistDTO> artists() {
-        return Collections.unmodifiableList(artists);
+    public Set<ArtistDTO> artists() {
+        return Collections.unmodifiableSet(artists);
     }
 
     private AlbumDTO() {
@@ -77,9 +74,9 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
                 LocalDate releaseDate,
                 String genre,
                 String musicbrainzId,
-                Map<String, AnalogMediumDTO> analogMedium,
-                List<SongDTO> songs,
-                List<ArtistDTO> artists
+                Set<MediumDTO> mediums,
+                Set<SongDTO> songs,
+                Set<ArtistDTO> artists
         ) {
             this.instance.id = id;
             this.instance.descriptorName = descriptorName;
@@ -88,7 +85,7 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
             this.instance.releaseDate = releaseDate;
             this.instance.genre = genre;
             this.instance.musicbrainzId = musicbrainzId;
-            this.instance.analogMedium = analogMedium;
+            this.instance.mediums = mediums;
             this.instance.songs = songs;
             this.instance.artists = artists;
             return this;

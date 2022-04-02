@@ -1,5 +1,5 @@
 rootProject.name = 'musicshop'
 include 'library'
 include 'backend'
-include 'customerDBClient'
-include 'user-client'
+include 'client-customerdb'
+include 'client-user'

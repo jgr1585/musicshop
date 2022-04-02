@@ -8,7 +8,9 @@ import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildArticleDTO;
 
@@ -21,14 +23,14 @@ public class ArticleService {
         mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
     }
 
-    public List<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException {
+    public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException {
         if (!searchableParam(title, artist)) {
             throw new ApplicationClientException("Validation error: No searchable param for search.");
         }
 
-        List<Article> articles = articleRepository.searchArticlesByAttributes(title, artist);
+        Set<Article> articles = articleRepository.searchArticlesByAttributes(title, artist);
 
-        List<ArticleDTO> articleDTOs = new ArrayList<>();
+        Set<ArticleDTO> articleDTOs = new HashSet<>();
         for (Article article : articles) {
             articleDTOs.add(buildArticleDTO(mediumRepository, article));
         }

@@ -3,10 +3,7 @@ package at.fhv.teamd.musicshop.library.DTO;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public final class SongDTO implements ArticleDTO, Serializable {
     private static final long serialVersionUID = 5897685238657995442L;
@@ -18,9 +15,9 @@ public final class SongDTO implements ArticleDTO, Serializable {
     private LocalDate releaseDate;
     private String genre;
     private String musicbrainzId;
-    private Map<String, AnalogMediumDTO> analogMedium;
+    private Set<MediumDTO> mediums;
     private Duration length;
-    private List<ArtistDTO> artists;
+    private Set<ArtistDTO> artists;
 
     public static SongDTO.Builder builder() {
         return new SongDTO.Builder();
@@ -50,14 +47,14 @@ public final class SongDTO implements ArticleDTO, Serializable {
 
     public String musicbrainzId() { return this.musicbrainzId; }
 
-    public Map<String, AnalogMediumDTO> analogMedium() { return Collections.unmodifiableMap(analogMedium); }
+    public Set<MediumDTO> mediums() { return Collections.unmodifiableSet(mediums); }
 
     public Duration length() {
         return length;
     }
 
-    public List<ArtistDTO> artists() {
-        return Collections.unmodifiableList(artists);
+    public Set<ArtistDTO> artists() {
+        return Collections.unmodifiableSet(artists);
     }
 
     private SongDTO() {
@@ -78,9 +75,9 @@ public final class SongDTO implements ArticleDTO, Serializable {
                 LocalDate releaseDate,
                 String genre,
                 String musicbrainzId,
-                Map<String, AnalogMediumDTO> analogMedium,
+                Set<MediumDTO> mediums,
                 Duration length,
-                List<ArtistDTO> artists
+                Set<ArtistDTO> artists
         ) {
             this.instance.id = id;
             this.instance.descriptorName = descriptorName;
@@ -89,7 +86,7 @@ public final class SongDTO implements ArticleDTO, Serializable {
             this.instance.releaseDate = releaseDate;
             this.instance.genre = genre;
             this.instance.musicbrainzId = musicbrainzId;
-            this.instance.analogMedium = analogMedium;
+            this.instance.mediums = mediums;
             this.instance.length = length;
             this.instance.artists = artists;
             return this;

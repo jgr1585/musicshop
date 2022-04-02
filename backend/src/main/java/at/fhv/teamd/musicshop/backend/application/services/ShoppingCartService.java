@@ -1,6 +1,6 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
-import at.fhv.teamd.musicshop.library.DTO.AnalogMediumDTO;
+import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
@@ -22,12 +22,12 @@ public class ShoppingCartService {
         mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
     }
 
-    public void addToShoppingCart(UUID sessionUUID, ArticleDTO articleDTO, AnalogMediumDTO analogMediumDTO, int amount) {
+    public void addToShoppingCart(UUID sessionUUID, ArticleDTO articleDTO, MediumDTO analogMediumDTO, int amount) {
         if (!sessionLineItems.containsKey(sessionUUID)) {
             sessionLineItems.put(sessionUUID, new ArrayList<>());
         }
         List<LineItem> lineItems = sessionLineItems.get(sessionUUID);
-        Medium medium = mediumRepository.findAnalogMediumById(analogMediumDTO.id()).orElseThrow();
+        Medium medium = mediumRepository.findMediumById(analogMediumDTO.id()).orElseThrow();
 
         lineItems.stream()
                 .filter(li -> li.getMediumId().equals(analogMediumDTO.id()))
@@ -41,7 +41,7 @@ public class ShoppingCartService {
                 });
     }
 
-    public void removeFromShoppingCart(UUID sessionUUID, AnalogMediumDTO analogMediumDTO, int amount) {
+    public void removeFromShoppingCart(UUID sessionUUID, MediumDTO analogMediumDTO, int amount) {
         if (!sessionLineItems.containsKey(sessionUUID)) {
             throw new IllegalStateException("Shopping cart does not exist.");
         }

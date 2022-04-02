@@ -3,6 +3,7 @@ package at.fhv.teamd.musicshop.library.DTO;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface ArticleDTO {
     Long id();
@@ -19,7 +20,7 @@ public interface ArticleDTO {
 
     String musicbrainzId();
 
-    Map<String, AnalogMediumDTO> analogMedium();
+    Set<MediumDTO> mediums();
 
-    List<ArtistDTO> artists();
+    Set<ArtistDTO> artists();
 }

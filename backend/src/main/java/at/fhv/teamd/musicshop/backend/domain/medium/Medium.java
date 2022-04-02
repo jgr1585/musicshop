@@ -1,38 +1,42 @@
 package at.fhv.teamd.musicshop.backend.domain.medium;
 
+import at.fhv.teamd.musicshop.backend.domain.article.Article;
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Getter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Medium {
+public class Medium {
     @Id
     @GeneratedValue
     private long id;
 
+    @Enumerated(EnumType.STRING)
+    private MediumType type;
+
     @Column
     private BigDecimal price;
+
+    @Embedded
+    private Stock stock;
 
     @OneToOne(cascade= CascadeType.ALL)
     private Supplier supplier;
 
+    @Column
+    private Article article;
+
     protected Medium() {}
 
-    public Medium(BigDecimal price, Supplier supplier) {
+    public Medium(BigDecimal price, MediumType type, Stock stock, Supplier supplier, Article article) {
+        this.type = Objects.requireNonNull(type);
         this.price = Objects.requireNonNull(price);
+        this.stock = Objects.requireNonNull(stock);
         this.supplier = Objects.requireNonNull(supplier);
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public Supplier getSupplier() {
-        return supplier;
+        this.article = Objects.requireNonNull(article);
     }
 }

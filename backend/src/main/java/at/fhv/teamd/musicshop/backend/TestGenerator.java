@@ -1,33 +1,58 @@
-//package at.fhv.teamd.musicshop.backend;
-//
-//import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
-//import at.fhv.teamd.musicshop.backend.domain.Quantity;
-//import at.fhv.teamd.musicshop.backend.domain.article.Album;
-//import at.fhv.teamd.musicshop.backend.domain.article.Artist;
-//import at.fhv.teamd.musicshop.backend.domain.article.Song;
-//import at.fhv.teamd.musicshop.backend.domain.medium.AnalogMedium;
-//import at.fhv.teamd.musicshop.backend.domain.medium.AnalogMediumType;
-//import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
-//import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
-//
-//import javax.persistence.EntityManager;
-//import java.math.BigDecimal;
-//import java.time.Duration;
-//import java.time.LocalDate;
-//import java.util.*;
-//
-//public class TestGenerator {
-//
-//    // TODO: Test data generation with real data -> Articles, Artists, Mediums, Suppliers
-//    private static void generateTestData() {
-//        EntityManager em = PersistenceManager.getEntityManagerInstance();
-//        em.getTransaction().begin();
-//
-//        Map<AnalogMediumType, AnalogMedium> analogMediumMap1 = new HashMap<>();
-//        AnalogMedium analogMedium1 = new AnalogMedium(BigDecimal.valueOf(12), new Supplier("ZYX Music GmbH & Co KG", Duration.ofDays(3)), AnalogMediumType.CD, Stock.of(Quantity.of(25)));
-//        analogMediumMap1.put(AnalogMediumType.CD, analogMedium1);
-//        analogMediumMap1.values().forEach(em::persist);
-//
+package at.fhv.teamd.musicshop.backend;
+
+import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
+import at.fhv.teamd.musicshop.backend.domain.Quantity;
+import at.fhv.teamd.musicshop.backend.domain.article.Album;
+import at.fhv.teamd.musicshop.backend.domain.article.Article;
+import at.fhv.teamd.musicshop.backend.domain.article.Artist;
+import at.fhv.teamd.musicshop.backend.domain.article.Song;
+import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
+import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
+import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
+import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
+
+import javax.persistence.EntityManager;
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.*;
+
+public class TestGenerator {
+
+    // TODO: Test data generation with real data -> Articles, Artists, Mediums, Suppliers
+    private static void generateTestData() {
+        EntityManager em = PersistenceManager.getEntityManagerInstance();
+        em.getTransaction().begin();
+
+        Set<Medium> mediums1 = new HashSet<>();
+        mediums1.add(new Medium(BigDecimal.valueOf(12), MediumType.CD, Stock.of(Quantity.of(25)), new Supplier("ZYX Music GmbH & Co KG", Duration.ofDays(3)), null));
+        mediums1.forEach(em::persist);
+
+        //ALBUM 1
+        Artist artistLongLive = new Artist("A$AP Rocky");
+
+        em.persist(artistLongLive);
+
+        String mbidLongLive = "ab967b6a-de5c-455b-aad2-8b2f5899b288";
+        String labelLongLive = "Sony Records International";
+        String genreLongLive = "hip hop, dubstep, east coast hip hop, underground hip hop";
+        String descriptorNameLongLive = "";
+        LocalDate releaseLongLive = LocalDate.of(2013, 10,23);
+
+        Song songLongLive = new Song("Long Live A$AP", labelLongLive, releaseLongLive, genreLongLive, "", mbidLongLive, mediums1, Duration.ofMinutes(4), Set.of(artistLongLive));
+        Album albumLongLive = new Album("Long Live A$AP",
+                labelLongLive,
+                releaseLongLive,
+                genreLongLive,
+                mbidLongLive,
+                descriptorNameLongLive,
+                mediums1,
+                Set.of(songLongLive));
+
+        em.persist(songLongLive);
+
+        em.persist(albumLongLive);
+
 //        Map<AnalogMediumType, AnalogMedium> analogMediumMap2 = new HashMap<>();
 //        AnalogMedium analogMedium2 = new AnalogMedium(BigDecimal.valueOf(15), new Supplier("ZYX Music GmbH & Co KG", Duration.ofDays(8)), AnalogMediumType.CD, Stock.of(Quantity.of(20)));
 //        analogMediumMap2.put(AnalogMediumType.CD, analogMedium2);
@@ -57,30 +82,7 @@
 //        AnalogMedium analogMedium7 = new AnalogMedium(BigDecimal.valueOf(30), new Supplier("Adcom Production AG", Duration.ofDays(7)), AnalogMediumType.CD, Stock.of(Quantity.of(0)));
 //        analogMediumMap7.put(AnalogMediumType.CD, analogMedium7);
 //        analogMediumMap7.values().forEach(em::persist);
-//
-//        //ALBUM 1
-//        Artist artistLongLive = new Artist("A$AP Rocky");
-//
-//        em.persist(artistLongLive);
-//
-//        String mbidLongLive = "ab967b6a-de5c-455b-aad2-8b2f5899b288";
-//        String labelLongLive = "Sony Records International";
-//        String genreLongLive = "hip hop, dubstep, east coast hip hop, underground hip hop";
-//        LocalDate releaseLongLive = LocalDate.of(2013, 10,23);
-//
-//        Song songLongLive = new Song("Long Live A$AP", labelLongLive, releaseLongLive, genreLongLive, mbidLongLive, analogMediumMap1, Duration.ofMinutes(4), List.of(artistLongLive));
-//        Album albumLongLive = new Album("Long Live A$AP",
-//                labelLongLive,
-//                releaseLongLive,
-//                genreLongLive,
-//                mbidLongLive,
-//                analogMediumMap1,
-//                List.of(songLongLive));
-//
-//        em.persist(songLongLive);
-//
-//        em.persist(albumLongLive);
-//
+
 //        //ALBUM 2
 //        Artist artistUntamedDesire = new Artist("50 Cent");
 //
@@ -217,13 +219,13 @@
 //
 //        em.persist(songTouchBlue);
 //        em.persist(albumTouchBlue);
-//
-//        em.flush();
-//        em.getTransaction().commit();
-//        em.close();
-//    }
-//
-//    public static void main(String[] args) {
-//        generateTestData();
-//    }
-//}
+
+        em.flush();
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public static void main(String[] args) {
+        generateTestData();
+    }
+}

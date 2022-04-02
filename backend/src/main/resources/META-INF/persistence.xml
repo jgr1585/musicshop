@@ -11,7 +11,6 @@
         <class>at.fhv.teamd.musicshop.backend.domain.article.Artist</class>
         <class>at.fhv.teamd.musicshop.backend.domain.article.Song</class>
 
-        <class>at.fhv.teamd.musicshop.backend.domain.medium.AnalogMedium</class>
         <class>at.fhv.teamd.musicshop.backend.domain.medium.Medium</class>
         <class>at.fhv.teamd.musicshop.backend.domain.medium.Stock</class>
         <class>at.fhv.teamd.musicshop.backend.domain.medium.Supplier</class>
