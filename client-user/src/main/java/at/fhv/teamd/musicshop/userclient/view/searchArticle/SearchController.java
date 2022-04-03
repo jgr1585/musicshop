@@ -1,11 +1,10 @@
 package at.fhv.teamd.musicshop.userclient.view.searchArticle;
 
-import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
-import at.fhv.teamd.musicshop.userclient.view.ArticleController;
-import at.fhv.teamd.musicshop.userclient.connection.RMIconnection;
 import at.fhv.teamd.musicshop.userclient.Tabs;
+import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.view.ArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +17,6 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.List;
 import java.util.Set;
 
 public class SearchController {
@@ -51,8 +49,7 @@ public class SearchController {
     private void searchArticle(ActionEvent actionEvent) throws ApplicationClientException, RemoteException {
         this.searchPane.getChildren().clear();
         if (!(this.searchByTitle.getText().isEmpty() && this.searchByArtist.getText().isEmpty())) {
-            ApplicationClient client = RMIconnection.getApplicationClient();
-            Set<ArticleDTO> result = client.searchArticlesByAttributes(this.searchByTitle.getText(), this.searchByArtist.getText());
+            Set<ArticleDTO> result = RemoteFacade.getInstance().searchArticlesByAttributes(this.searchByTitle.getText(), this.searchByArtist.getText());
             if (!(result.isEmpty())) {
                 this.insertResults(result);
             } else {

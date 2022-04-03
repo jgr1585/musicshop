@@ -1,10 +1,9 @@
 package at.fhv.teamd.musicshop.userclient.view.searchArticle;
 
-import at.fhv.teamd.musicshop.library.ApplicationClient;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
-import at.fhv.teamd.musicshop.userclient.connection.RMIconnection;
+import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.generic.GenericArticleController;
 import at.fhv.teamd.musicshop.userclient.view.generic.GenericArticleFunctions;
 import javafx.event.ActionEvent;
@@ -58,8 +57,6 @@ public class SearchMediumController extends GenericArticleFunctions implements G
 
     @FXML
     private void addToCard(ActionEvent actionEvent) throws RemoteException {
-        ApplicationClient client = RMIconnection.getApplicationClient();
-
-        client.addToShoppingCart(this.articleDTO, this.analogMediumDTO, Integer.parseInt(this.mediumAmount.getText()));
+        RemoteFacade.getInstance().addToShoppingCart(this.articleDTO, this.analogMediumDTO, Integer.parseInt(this.mediumAmount.getText()));
     }
 }

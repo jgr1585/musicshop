@@ -1,7 +1,5 @@
 package at.fhv.teamd.musicshop.userclient.view.generic;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TextField;
 
 public abstract class GenericArticleFunctions {

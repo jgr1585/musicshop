@@ -1,12 +1,11 @@
 package at.fhv.teamd.musicshop.userclient.view.shoppingCart;
 
-import at.fhv.teamd.musicshop.library.ApplicationClient;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
+import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.generic.GenericArticleController;
 import at.fhv.teamd.musicshop.userclient.view.generic.GenericArticleFunctions;
-import at.fhv.teamd.musicshop.userclient.connection.RMIconnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -50,17 +49,14 @@ public class ShoppingCartArticleController extends GenericArticleFunctions imple
 
     @FXML
     private void reduceByOne(ActionEvent actionEvent) throws RemoteException {
-        ApplicationClient client = RMIconnection.getApplicationClient();
-        client.addToShoppingCart(articleDTO, analogMediumDTO, 1);
+        RemoteFacade.getInstance().addToShoppingCart(articleDTO, analogMediumDTO, 1);
     }
     @FXML
     private void increaseByOne(ActionEvent actionEvent) throws RemoteException {
-        ApplicationClient client = RMIconnection.getApplicationClient();
-        client.removeFromShoppingCart(analogMediumDTO, 1);
+        RemoteFacade.getInstance().removeFromShoppingCart(analogMediumDTO, 1);
     }
     @FXML
     private void remove(ActionEvent actionEvent) throws RemoteException {
-        ApplicationClient client = RMIconnection.getApplicationClient();
-        client.removeFromShoppingCart(analogMediumDTO, lineItemDTO.quantity());
+        RemoteFacade.getInstance().removeFromShoppingCart(analogMediumDTO, lineItemDTO.quantity());
     }
 }
