@@ -18,7 +18,7 @@ import java.rmi.RemoteException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class SearchMediumController extends GenericArticleFunctions implements GenericArticleController, Initializable {
+public class SearchMediumController extends GenericArticleFunctions implements GenericArticleController {
 
     @FXML
     private Label title;
@@ -39,8 +39,8 @@ public class SearchMediumController extends GenericArticleFunctions implements G
     private ArticleDTO articleDTO;
     private MediumDTO analogMediumDTO;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    @FXML
+    public void initialize() {
         // force the field to be numeric only
         numberOnly(this.mediumAmount);
     }

@@ -17,7 +17,7 @@ import java.rmi.RemoteException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class ShoppingCartArticleController extends GenericArticleFunctions implements GenericArticleController, Initializable {
+public class ShoppingCartArticleController extends GenericArticleFunctions implements GenericArticleController {
 
     @FXML
     private Label mediumType;
@@ -30,8 +30,8 @@ public class ShoppingCartArticleController extends GenericArticleFunctions imple
     private MediumDTO analogMediumDTO;
     private LineItemDTO lineItemDTO;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    @FXML
+    public void initialize() {
         // force the field to be numeric only
         numberOnly(this.mediumAmount);
     }
