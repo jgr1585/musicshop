@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.userclient.view.returnArticle;
+package at.fhv.teamd.musicshop.userclient.view.returnArticles;
 
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;

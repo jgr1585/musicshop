@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.userclient.view.searchArticle;
+package at.fhv.teamd.musicshop.userclient.view.searchArticles;
 
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
@@ -46,7 +46,7 @@ public class SearchController {
     }
 
     @FXML
-    private void searchArticle(ActionEvent actionEvent) throws ApplicationClientException, RemoteException {
+    private void searchArticles(ActionEvent actionEvent) throws ApplicationClientException, RemoteException {
         this.searchPane.getChildren().clear();
         if (!(this.searchByTitle.getText().isEmpty() && this.searchByArtist.getText().isEmpty())) {
             Set<ArticleDTO> result = RemoteFacade.getInstance().searchArticlesByAttributes(this.searchByTitle.getText(), this.searchByArtist.getText());

@@ -53,10 +53,10 @@ public class ArticleController {
 
             switch (tab) {
                 case SEARCH:
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/searchArticle/search-article.fxml"));
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/searchArticles/search-article.fxml"));
                     break;
                 case RETURN:
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/returnArticle/return-article.fxml"));
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/returnArticles/return-article.fxml"));
                     break;
                 case SHOPPINGCART:
                     fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/shoppingCart/shoppingCart-article.fxml"));

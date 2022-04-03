@@ -5,7 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefWidth="100.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.searchArticle.SearchController">
+<VBox prefWidth="100.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.searchArticles.SearchController">
    <children>
       <HBox alignment="CENTER_LEFT" maxHeight="81.0" minHeight="-Infinity" prefHeight="81.0" style="-fx-background-color: cornflowerblue;">
          <children>
@@ -60,7 +60,7 @@
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin></Button>
-                  <Button defaultButton="true" minWidth="70.0" mnemonicParsing="false" onAction="#searchArticle" style="-fx-background-color: lightgreen;" text="Search" />
+                  <Button defaultButton="true" minWidth="70.0" mnemonicParsing="false" onAction="#searchArticles" style="-fx-background-color: lightgreen;" text="Search" />
                </children>
                <opaqueInsets>
                   <Insets />
