@@ -1,11 +1,11 @@
-package at.fhv.teamd.musicshop.userclient.view;
+package at.fhv.teamd.musicshop.userclient.view.article;
 
 import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArtistDTO;
 import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.userclient.Tabs;
-import at.fhv.teamd.musicshop.userclient.view.generic.GenericArticleController;
+import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

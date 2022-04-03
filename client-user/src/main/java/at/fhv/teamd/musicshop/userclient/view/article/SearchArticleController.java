@@ -1,10 +1,9 @@
-package at.fhv.teamd.musicshop.userclient.view.searchArticles;
+package at.fhv.teamd.musicshop.userclient.view.article;
 
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
-import at.fhv.teamd.musicshop.userclient.view.ArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +18,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Set;
 
-public class SearchController {
+public class SearchArticleController {
 
     @FXML
     private TextField searchByTitle;

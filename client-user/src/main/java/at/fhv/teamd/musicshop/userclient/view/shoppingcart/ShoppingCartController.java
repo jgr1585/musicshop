@@ -1,9 +1,9 @@
-package at.fhv.teamd.musicshop.userclient.view.shoppingCart;
+package at.fhv.teamd.musicshop.userclient.view.shoppingcart;
 
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
-import at.fhv.teamd.musicshop.userclient.view.ArticleController;
+import at.fhv.teamd.musicshop.userclient.view.article.ArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

@@ -1,32 +1,41 @@
-package at.fhv.teamd.musicshop.userclient.view.shoppingCart;
+package at.fhv.teamd.musicshop.userclient.view.medium;
 
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
-import at.fhv.teamd.musicshop.userclient.view.generic.GenericArticleController;
+import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.rmi.RemoteException;
 import java.util.Optional;
 
 import static at.fhv.teamd.musicshop.userclient.view.FieldValidationHelper.numberOnly;
 
-public class ShoppingCartArticleController implements GenericArticleController {
+public class SearchMediumController implements GenericArticleController {
 
     @FXML
-    private Label mediumType;
+    private Label title;
+    @FXML
+    private Label artist;
+    @FXML
+    private Label genre;
+    @FXML
+    private VBox mediumTypeList;
+
+    @FXML
+    private Label mediumPrice;
     @FXML
     private TextField mediumAmount;
     @FXML
-    private Label mediumPrice;
+    private Label mediumType;
 
     private ArticleDTO articleDTO;
     private MediumDTO analogMediumDTO;
-    private LineItemDTO lineItemDTO;
 
     @FXML
     public void initialize() {
@@ -34,27 +43,18 @@ public class ShoppingCartArticleController implements GenericArticleController {
         numberOnly(this.mediumAmount);
     }
 
-    @Override
+
+
     public void setMediumType(ArticleDTO articleDTO, MediumDTO analogMedium, Optional<LineItemDTO> lineItemDTO) {
         this.articleDTO = articleDTO;
         this.analogMediumDTO = analogMedium;
-        this.lineItemDTO = lineItemDTO.orElseThrow();
 
         this.mediumType.setText(analogMedium.type());
         this.mediumPrice.setText(analogMedium.price().toString());
-        this.mediumAmount.setText(this.lineItemDTO.quantity().toString());
     }
 
     @FXML
-    private void reduceByOne(ActionEvent actionEvent) throws RemoteException {
-        RemoteFacade.getInstance().addToShoppingCart(articleDTO, analogMediumDTO, 1);
-    }
-    @FXML
-    private void increaseByOne(ActionEvent actionEvent) throws RemoteException {
-        RemoteFacade.getInstance().removeFromShoppingCart(analogMediumDTO, 1);
-    }
-    @FXML
-    private void remove(ActionEvent actionEvent) throws RemoteException {
-        RemoteFacade.getInstance().removeFromShoppingCart(analogMediumDTO, lineItemDTO.quantity());
+    private void addToCard(ActionEvent actionEvent) throws RemoteException {
+        RemoteFacade.getInstance().addToShoppingCart(this.articleDTO, this.analogMediumDTO, Integer.parseInt(this.mediumAmount.getText()));
     }
 }

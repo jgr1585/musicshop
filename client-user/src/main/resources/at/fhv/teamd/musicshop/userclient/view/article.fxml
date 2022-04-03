@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<GridPane style="-fx-border-color: #000000; -fx-border-radius: 15;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.ArticleController">
+<GridPane style="-fx-border-color: #000000; -fx-border-radius: 15;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.article.ArticleController">
    <children>
       <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" spacing="5.0">
          <children>
