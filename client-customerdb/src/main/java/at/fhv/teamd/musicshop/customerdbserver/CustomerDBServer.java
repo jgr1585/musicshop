@@ -7,13 +7,16 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class CustomerDBServer {
+    private static final int REMOTE_PORT = 1100;
 
     public static void main(String[] args) throws RemoteException, MalformedURLException {
         CustomerDBClientImpl.init();
 
-        LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-        Naming.rebind("CustomerDBClientFactory", new CustomerDBClientFactoryImpl());
+        LocateRegistry.createRegistry(REMOTE_PORT);
+        System.out.println("Registry started @ port " + REMOTE_PORT);
 
+        String bindStr = String.format("//%s:%d/%s", "localhost", REMOTE_PORT, "CustomerDBClientFactory");
+        Naming.rebind(bindStr, new CustomerDBClientFactoryImpl());
         System.out.println("CustomerDBClientFactory bound in registry");
     }
 }

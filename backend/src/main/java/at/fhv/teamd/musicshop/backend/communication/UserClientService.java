@@ -9,9 +9,14 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class UserClientService {
+    private static final int REMOTE_PORT = Registry.REGISTRY_PORT;
+
     public static void initRmiRegistry() throws RemoteException, MalformedURLException {
-        LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-        Naming.rebind("rmi://localhost/ApplicationClientFactoryImpl", new ApplicationClientFactoryImpl());
-        System.out.println("ApplicationClientFactoryImpl bound");
+        LocateRegistry.createRegistry(REMOTE_PORT);
+        System.out.println("Registry started @ port " + REMOTE_PORT);
+
+        String bindStr = String.format("//%s:%d/%s", "localhost", REMOTE_PORT, "ApplicationClientFactoryImpl");
+        Naming.rebind(bindStr, new ApplicationClientFactoryImpl());
+        System.out.println("ApplicationClientFactory bound in registry");
     }
 }
