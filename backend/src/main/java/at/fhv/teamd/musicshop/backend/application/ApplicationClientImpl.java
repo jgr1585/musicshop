@@ -41,6 +41,11 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
+    public void buyFromShoppingCart(int customerId) throws RemoteException {
+        ServiceFactory.getShoppingCartServiceInstance().buyFromShoppingCart(sessionUUID, customerId);
+    }
+
+    @Override
     public ShoppingCartDTO getShoppingCart() {
         return ServiceFactory.getShoppingCartServiceInstance().getShoppingCart(sessionUUID);
     }

@@ -1,10 +1,10 @@
-package at.fhv.teamd.musicshop.userclient.view.shoppingCart;
+package at.fhv.teamd.musicshop.userclient.view.customer;
 
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.userclient.Tabs;
-import at.fhv.teamd.musicshop.userclient.view.ArticleController;
 import at.fhv.teamd.musicshop.userclient.connection.RMIconnection;
+import at.fhv.teamd.musicshop.userclient.view.ArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,9 +20,11 @@ import java.rmi.RemoteException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class ShoppingCartController implements Initializable {
+public class CustomerController implements Initializable {
     @FXML
     private VBox shoppingCardElements;
+
+    // TODO: fix initialize shopping cart;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -60,7 +62,6 @@ public class ShoppingCartController implements Initializable {
         //TODO: Check and buy
 
         ApplicationClient client = RMIconnection.getApplicationClient();
-
         client.buyFromShoppingCart(0);
 
         new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
