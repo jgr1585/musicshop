@@ -15,7 +15,7 @@ public class Song extends Article {
     @Column
     private Duration length;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private Set<Artist> artists;
 
     protected Song() {

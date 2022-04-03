@@ -1,7 +1,6 @@
 package at.fhv.teamd.musicshop.backend.domain.article;
 
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
-import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -30,7 +29,7 @@ public abstract class Article {
     private String descriptorName;
     @Column
     private String musicbrainzId;
-    @OneToMany(mappedBy = "article")
+    @ManyToMany(mappedBy = "article")
     private Set<Medium> mediums;
 
     protected Article() {
@@ -44,6 +43,7 @@ public abstract class Article {
         this.descriptorName = Objects.requireNonNull(descriptorName);
         this.musicbrainzId = Objects.requireNonNull(musicbrainzId);
         this.mediums = Objects.requireNonNull(mediums);
+        this.mediums.forEach(medium -> medium.appendArticle(this));
     }
 
     public Set<Long> getMediumIDs() {
