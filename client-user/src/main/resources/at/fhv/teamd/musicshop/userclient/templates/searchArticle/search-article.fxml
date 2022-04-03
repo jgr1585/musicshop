@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
+<?import javafx.scene.text.Font?>
 <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-font-family: sans-serif; -fx-font-size: 13;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.medium.SearchMediumController">
+    <padding>
+        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+    </padding>
    <children>
       <Label fx:id="mediumType1" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" text="Label">
          <HBox.margin>
@@ -37,9 +38,6 @@
             <Insets left="10.0" />
          </HBox.margin>
       </Label>
-      <Button mnemonicParsing="false" onAction="#addToCard" prefWidth="100.0" style="-fx-background-color: orange;" text="Order" />
+       <Button mnemonicParsing="false" onAction="#addToCard" prefWidth="100.0" style="-fx-background-color: cornflowerblue;" text="Add to Card" />
    </children>
-   <padding>
-      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-   </padding>
 </HBox>

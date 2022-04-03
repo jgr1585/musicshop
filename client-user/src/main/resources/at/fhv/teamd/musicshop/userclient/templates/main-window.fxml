@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.effect.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.layout.VBox?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" style="-fx-font-family: serif;-fx-background-color: black;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TabPane nodeOrientation="LEFT_TO_RIGHT" prefWidth="800.0" style="-fx-tab-min-width: 10em; -fx-font-size: 13; -fx-base: black; -fx-text-box-border: black; -fx-color: black; -fx-background-color: black; -fx-box-border: black; -fx-outer-border: black;">
          <tabs>
             <Tab closable="false" style="-fx-background-color: red; -fx-background-radius: 6; -fx-padding: 10;" text="Search">
                <content>
-                  <fx:include source="view/searchArticle/search.fxml" />
+                  <fx:include source="searchArticle/search.fxml" />
                </content>
             </Tab>
             <Tab closable="false" style="-fx-background-color: orange; -fx-background-radius: 6; -fx-padding: 10;" text="Return">
                <content>
-                  <fx:include source="view/returnArticle/return.fxml" />
+                  <fx:include source="returnArticle/return.fxml" />
                </content>
             </Tab>
             <Tab closable="false" style="-fx-background-color: green; -fx-background-radius: 6; -fx-padding: 10;" text="Shopping Cart">
                <content>
-                 <fx:include source="view/shoppingCart/shoppingCart.fxml" />
+                 <fx:include source="shoppingCart/shoppingCart.fxml" />
                </content>
             </Tab>
          </tabs>

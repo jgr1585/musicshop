@@ -2,9 +2,9 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-
 <VBox prefWidth="100.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.article.SearchArticleController">
    <children>
       <HBox alignment="CENTER_LEFT" maxHeight="81.0" minHeight="-Infinity" prefHeight="81.0" style="-fx-background-color: cornflowerblue;">
