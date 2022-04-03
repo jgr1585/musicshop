@@ -7,39 +7,41 @@ import at.fhv.teamd.musicshop.userclient.view.ArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
-public class ShoppingCartController implements Initializable {
+public class ShoppingCartController {
     @FXML
     private VBox shoppingCardElements;
 
     // TODO: fix initialize shopping cart;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.reloadShoppingCart();
-    }
-
-    public void reloadShoppingCart() {
+    @FXML
+    public void initialize() {
         try {
-            insertData(RemoteFacade.getInstance().getShoppingCart());
-        } catch (Exception e) {
-            e.printStackTrace();
+            reloadShoppingCart();
+
+        } catch (RemoteException e) {
+            clearCart();
         }
     }
 
-    private void insertData(ShoppingCartDTO shoppingCartDTO) {
+    public void reloadShoppingCart() throws RemoteException {
+        insertData(RemoteFacade.getInstance().getShoppingCart());
+    }
+
+    private void clearCart() {
         this.shoppingCardElements.getChildren().clear();
+    }
+
+    private void insertData(ShoppingCartDTO shoppingCartDTO) {
+        clearCart();
 
         shoppingCartDTO.lineItems().forEach(lineItemDTO -> {
             try {
