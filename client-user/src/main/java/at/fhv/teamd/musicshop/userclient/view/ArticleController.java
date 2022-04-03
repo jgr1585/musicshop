@@ -47,7 +47,6 @@ public class ArticleController {
         //Select Cover Art for Album
         new Thread(() -> this.loadCoverArt(articleDTO)).start();
 
-
         articleDTO.mediums().forEach(mediumDTO -> {
 
             FXMLLoader fxmlLoader;

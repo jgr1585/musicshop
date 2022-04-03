@@ -31,34 +31,35 @@ public class ArticleHibernateRepository implements ArticleRepository {
 
         EntityManager em = PersistenceManager.getEntityManagerInstance();
 
-//        TypedQuery<Article> query = em.createQuery(
-//                "SELECT DISTINCT(a) FROM Article a WHERE " +
-//                        "((a.title <> '' AND LOWER(a.title) LIKE LOWER(:titlePattern)) OR a.title = '') AND " +
-//                        "((aa.name <> '' AND LOWER(aa.name) LIKE LOWER(:artistPattern)) OR aa.name = '')"
-//                , Article.class).setMaxResults(50);
-//
-//        query.setParameter("titlePattern", "%"+title+"%");
+        // TODO: Suche nach artist einbauen
+        TypedQuery<Article> query = em.createQuery(
+                "SELECT DISTINCT(a) FROM Article a WHERE " +
+                        "((a.title <> '' AND LOWER(a.title) LIKE LOWER(:titlePattern)) OR a.title = '')"
+                , Article.class).setMaxResults(50);
+
+        query.setParameter("titlePattern", "%"+title+"%");
 //        query.setParameter("artistPattern", "%"+artist+"%");
-//
-//        // NOTE: Alternative to this is to order by case select in query
-//        Set<Article> articles = query.getResultStream().collect(Collectors.toSet());
-//        Set<Article> articlesDirectMatches = articles.stream()
-//                .filter(article -> article.getTitle().equals(title)
-////                                || article.getArtists().stream().anyMatch(
-////                                        albumArtist -> albumArtist.getName().equals(artist)
-////                                    )
-//                )
-//                .collect(Collectors.toSet());
-//        Set<Article> articlesIndirectMatches = articles.stream()
-//                .filter(article -> !articlesDirectMatches.contains(article))
-//                .collect(Collectors.toSet());
-//
-//
-//        articles.addAll(articlesDirectMatches);
-//        articles.addAll(articlesIndirectMatches);
+
+        // NOTE: Alternative to this is to order by case select in query
+        Set<Article> articles = new HashSet<>(query.getResultList());
+
+        Set<Article> articlesDirectMatches = articles.stream()
+                .filter(article -> article.getTitle().equals(title)
+//                                || article.getArtists().stream().anyMatch(
+//                                        albumArtist -> albumArtist.getName().equals(artist)
+//                                    )
+                )
+                .collect(Collectors.toSet());
+
+        Set<Article> articlesIndirectMatches = articles.stream()
+                .filter(article -> !articlesDirectMatches.contains(article))
+                .collect(Collectors.toSet());
+
+
+        articles.addAll(articlesDirectMatches);
+        articles.addAll(articlesIndirectMatches);
 
         em.close();
-//        return articles;
-        return null;
+        return articles;
     }
 }

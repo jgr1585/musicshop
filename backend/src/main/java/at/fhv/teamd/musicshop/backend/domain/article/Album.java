@@ -1,14 +1,9 @@
 package at.fhv.teamd.musicshop.backend.domain.article;
 
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
-import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import lombok.Getter;
 
-import javax.annotation.processing.Generated;
-import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
 
