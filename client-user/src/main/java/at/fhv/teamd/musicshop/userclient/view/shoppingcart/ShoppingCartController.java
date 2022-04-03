@@ -13,7 +13,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.Optional;
 
 public class ShoppingCartController {
@@ -27,12 +26,12 @@ public class ShoppingCartController {
         try {
             reloadShoppingCart();
 
-        } catch (RemoteException e) {
+        } catch (IOException e) {
             clearCart();
         }
     }
 
-    public void reloadShoppingCart() throws RemoteException {
+    public void reloadShoppingCart() throws IOException {
         insertData(RemoteFacade.getInstance().getShoppingCart());
     }
 
@@ -40,24 +39,21 @@ public class ShoppingCartController {
         this.shoppingCardElements.getChildren().clear();
     }
 
-    private void insertData(ShoppingCartDTO shoppingCartDTO) {
+    private void insertData(ShoppingCartDTO shoppingCartDTO) throws IOException {
         clearCart();
 
-        shoppingCartDTO.lineItems().forEach(lineItemDTO -> {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/article.fxml"));
-                Parent medium = fxmlLoader.load();
-                ArticleController controller = fxmlLoader.getController();
-                controller.addMediumTypes(lineItemDTO.article(), Optional.of(lineItemDTO), Tabs.SHOPPINGCART);
-                this.shoppingCardElements.getChildren().add(medium);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        for (var lineItemDTO : shoppingCartDTO.lineItems()) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/article.fxml"));
+            Parent medium = fxmlLoader.load();
+            ArticleController controller = fxmlLoader.getController();
+            controller.addMediumTypes(lineItemDTO.article(), Optional.of(lineItemDTO), Tabs.SHOPPINGCART);
+            this.shoppingCardElements.getChildren().add(medium);
+
+        }
     }
 
     @FXML
-    private void buyAll(ActionEvent actionEvent) throws RemoteException {
+    private void buyAll(ActionEvent actionEvent) throws IOException {
         //TODO: Check and buy
 
         RemoteFacade.getInstance().emptyShoppingCart();

@@ -34,23 +34,30 @@ public class ArticleController {
     @FXML
     private VBox mediumTypeList;
 
-    public void addMediumTypes(ArticleDTO articleDTO,  Tabs tabs) {
+    public void addMediumTypes(ArticleDTO articleDTO,  Tabs tabs) throws IOException {
         this.addMediumTypes(articleDTO, Optional.empty(), tabs);
     }
 
-    public void addMediumTypes(ArticleDTO articleDTO, Optional<LineItemDTO> lineItemDTO, Tabs tab) {
+    public void addMediumTypes(ArticleDTO articleDTO, Optional<LineItemDTO> lineItemDTO, Tabs tab) throws IOException {
 
         this.title.setText(articleDTO.title());
         this.genre.setText(articleDTO.genre());
         this.artist.setText(articleDTO.artists().stream().map(ArtistDTO::name).collect(Collectors.joining(", ")));
 
         //Select Cover Art for Album
-        new Thread(() -> this.loadCoverArt(articleDTO)).start();
+        Runnable loadCoverArtRunnable = () -> {
+            try {
+                this.loadCoverArt(articleDTO);
 
-        articleDTO.mediums().forEach(mediumDTO -> {
+            } catch (IOException e) {
+                Thread t = Thread.currentThread();
+                t.getUncaughtExceptionHandler().uncaughtException(t, e);
+            }
+        };
+        new Thread(loadCoverArtRunnable).start();
 
+        for (var mediumDTO : articleDTO.mediums()) {
             FXMLLoader fxmlLoader;
-
             switch (tab) {
                 case SEARCH:
                     fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/searchArticles/search-article.fxml"));
@@ -65,30 +72,22 @@ public class ArticleController {
                     throw new RuntimeException("invalid tab-parameter for article");
             }
 
-            try {
-                Parent root = fxmlLoader.load();
-                GenericArticleController controller = fxmlLoader.getController();
-                controller.setMediumType(articleDTO, mediumDTO, lineItemDTO);
-                this.mediumTypeList.getChildren().add(root);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+            Parent root = fxmlLoader.load();
+            GenericArticleController controller = fxmlLoader.getController();
+            controller.setMediumType(articleDTO, mediumDTO, lineItemDTO);
+            this.mediumTypeList.getChildren().add(root);
+        }
     }
 
-    private void loadCoverArt(ArticleDTO articleDTO) {
+    private void loadCoverArt(ArticleDTO articleDTO) throws IOException {
         if (articleDTO instanceof AlbumDTO) {
             AlbumDTO albumDTO = (AlbumDTO) articleDTO;
 
-            try {
-                String url = getImageURL("http://coverartarchive.org/release/" + albumDTO.musicbrainzId() + "/front");
+            String url = getImageURL("http://coverartarchive.org/release/" + albumDTO.musicbrainzId() + "/front");
 
-                Image coverArt = new Image(url);
-                if (coverArt.getProgress() == 1 && !coverArt.isError()) {
-                    this.cover.setImage(coverArt);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            Image coverArt = new Image(url);
+            if (coverArt.getProgress() == 1 && !coverArt.isError()) {
+                this.cover.setImage(coverArt);
             }
         }
     }

@@ -30,23 +30,20 @@ public class SearchArticleController {
     @FXML
     private VBox searchPane;
 
-    public void insertResults(Set<ArticleDTO> results) {
-        results.forEach(article -> {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/article.fxml"));
-                Parent medium = fxmlLoader.load();
-                ArticleController controller = fxmlLoader.getController();
-                controller.addMediumTypes(article, Tabs.SEARCH);
-                this.searchPane.getChildren().add(medium);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+    public void insertResults(Set<ArticleDTO> results) throws IOException {
+        for (var article : results) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/article.fxml"));
+            Parent medium = fxmlLoader.load();
+            ArticleController controller = fxmlLoader.getController();
+            controller.addMediumTypes(article, Tabs.SEARCH);
+            this.searchPane.getChildren().add(medium);
+        }
     }
 
     @FXML
-    private void searchArticles(ActionEvent actionEvent) throws ApplicationClientException, RemoteException {
+    private void searchArticles(ActionEvent actionEvent) throws ApplicationClientException, IOException {
         this.searchPane.getChildren().clear();
+
         if (!(this.searchByTitle.getText().isEmpty() && this.searchByArtist.getText().isEmpty())) {
             Set<ArticleDTO> result = RemoteFacade.getInstance().searchArticlesByAttributes(this.searchByTitle.getText(), this.searchByArtist.getText());
             if (!(result.isEmpty())) {
