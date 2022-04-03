@@ -5,19 +5,17 @@ import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.generic.GenericArticleController;
-import at.fhv.teamd.musicshop.userclient.view.generic.GenericArticleFunctions;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
-public class ShoppingCartArticleController extends GenericArticleFunctions implements GenericArticleController {
+import static at.fhv.teamd.musicshop.userclient.view.FieldValidationHelper.numberOnly;
+
+public class ShoppingCartArticleController implements GenericArticleController {
 
     @FXML
     private Label mediumType;

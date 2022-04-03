@@ -1,8 +1,8 @@
-package at.fhv.teamd.musicshop.userclient.view.generic;
+package at.fhv.teamd.musicshop.userclient.view;
 
 import javafx.scene.control.TextField;
 
-public abstract class GenericArticleFunctions {
+public class FieldValidationHelper {
 
     public static void numberOnly(TextField mediumAmount) {
         mediumAmount.textProperty().addListener((observable, oldValue, newValue) -> {
