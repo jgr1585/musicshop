@@ -48,9 +48,13 @@ public class Main extends Application {
             new Alert(Alert.AlertType.ERROR, "Connection to server failed (may be offline).", ButtonType.CLOSE).showAndWait();
 
         } else {
-            StringWriter errorMsg = new StringWriter();
-            e.printStackTrace(new PrintWriter(errorMsg));
-            new Alert(Alert.AlertType.ERROR, "An exception occurred:\n\n"+errorMsg, ButtonType.CLOSE).showAndWait();
+            // Print stack trace in alert modal
+//            StringWriter errorMsg = new StringWriter();
+//            e.printStackTrace(new PrintWriter(errorMsg));
+//            new Alert(Alert.AlertType.ERROR, "An exception occurred:\n\n"+errorMsg, ButtonType.CLOSE).showAndWait();
+
+            new Alert(Alert.AlertType.ERROR, "An error occurred. Check the error output stream for details.", ButtonType.CLOSE).showAndWait();
+
             e.printStackTrace();
         }
     }
