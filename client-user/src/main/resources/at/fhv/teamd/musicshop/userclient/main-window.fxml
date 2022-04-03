@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TabPane nodeOrientation="LEFT_TO_RIGHT" prefWidth="800.0" style="-fx-tab-min-width: 10em; -fx-font-size: 13; -fx-font-weight: bold; -fx-font-family: sans-serif; -fx-base: black; -fx-text-box-border: black; -fx-color: black; -fx-background-color: black; -fx-box-border: black; -fx-outer-border: black;">
+      <TabPane nodeOrientation="LEFT_TO_RIGHT" prefWidth="800.0" style="-fx-tab-min-width: 10em; -fx-font-size: 13; -fx-base: black; -fx-text-box-border: black; -fx-color: black; -fx-background-color: black; -fx-box-border: black; -fx-outer-border: black;">
          <tabs>
             <Tab closable="false" style="-fx-background-color: red; -fx-background-radius: 6; -fx-padding: 10;" text="Search">
                <content>

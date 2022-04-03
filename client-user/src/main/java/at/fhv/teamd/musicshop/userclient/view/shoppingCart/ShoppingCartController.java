@@ -1,7 +1,6 @@
 package at.fhv.teamd.musicshop.userclient.view.shoppingCart;
 
 import at.fhv.teamd.musicshop.library.ApplicationClient;
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.view.ArticleController;
@@ -25,12 +24,14 @@ public class ShoppingCartController implements Initializable {
     @FXML
     private VBox shoppingCardElements;
 
+    // TODO: fix initialize shopping cart;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        this.reloadShoppingCard();
+        this.reloadShoppingCart();
     }
 
-    public void reloadShoppingCard() {
+    public void reloadShoppingCart() {
         ApplicationClient client = RMIconnection.getApplicationClient();
         try {
             insertData(client.getShoppingCart());
@@ -64,7 +65,7 @@ public class ShoppingCartController implements Initializable {
 
         new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
 
-        this.reloadShoppingCard();
+        this.reloadShoppingCart();
     }
 
 }
