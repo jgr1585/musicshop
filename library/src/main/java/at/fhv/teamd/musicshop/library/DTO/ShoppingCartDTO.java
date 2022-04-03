@@ -3,18 +3,19 @@ package at.fhv.teamd.musicshop.library.DTO;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class ShoppingCartDTO implements Serializable {
     private static final long serialVersionUID = -4652034296336248491L;
 
-    private List<LineItemDTO> lineItems;
+    private Set<LineItemDTO> lineItems;
 
     public static ShoppingCartDTO.Builder builder() {
         return new ShoppingCartDTO.Builder();
     }
 
-    public List<LineItemDTO> lineItems() {
-        return Collections.unmodifiableList(this.lineItems);
+    public Set<LineItemDTO> lineItems() {
+        return Collections.unmodifiableSet(this.lineItems);
     }
 
     private ShoppingCartDTO() {
@@ -27,9 +28,7 @@ public class ShoppingCartDTO implements Serializable {
             this.instance = new ShoppingCartDTO();
         }
 
-        public ShoppingCartDTO.Builder withLineItems(
-                List<LineItemDTO> lineItemDTOs
-        ) {
+        public ShoppingCartDTO.Builder withLineItems(Set<LineItemDTO> lineItemDTOs) {
             this.instance.lineItems = lineItemDTOs;
             return this;
         }

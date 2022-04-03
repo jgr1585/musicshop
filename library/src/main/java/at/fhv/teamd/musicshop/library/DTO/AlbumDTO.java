@@ -3,6 +3,7 @@ package at.fhv.teamd.musicshop.library.DTO;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class AlbumDTO implements ArticleDTO, Serializable {
     private static final long serialVersionUID = 1577561200659149099L;
@@ -26,7 +27,9 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
         return this.id;
     }
 
-    public String descriptorName() { return this.descriptorName; }
+    public String descriptorName() {
+        return this.descriptorName;
+    }
 
     public String title() {
         return this.title;
@@ -44,7 +47,9 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
         return this.genre;
     }
 
-    public String musicbrainzId() { return this.musicbrainzId; }
+    public String musicbrainzId() {
+        return this.musicbrainzId;
+    }
 
     public Set<MediumDTO> mediums() { return Collections.unmodifiableSet(mediums); }
 

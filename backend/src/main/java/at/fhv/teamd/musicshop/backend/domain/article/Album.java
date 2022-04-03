@@ -19,7 +19,6 @@ public class Album extends Article {
 
     public Album(String title, String label, LocalDate releaseDate, String genre, String descriptorName, String musicbrainzId, Set<Medium> mediums, Set<Song> songs) {
         super(title, label, releaseDate, genre, descriptorName, musicbrainzId, mediums);
-
         this.songs = songs; // already checked for non-null @method:getArtistsFromSongs
     }
 }

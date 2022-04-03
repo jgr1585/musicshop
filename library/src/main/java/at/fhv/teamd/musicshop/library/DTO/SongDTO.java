@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public final class SongDTO implements ArticleDTO, Serializable {
     private static final long serialVersionUID = 5897685238657995442L;

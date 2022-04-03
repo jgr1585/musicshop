@@ -1,12 +1,12 @@
 package at.fhv.teamd.musicshop.backend.infrastructure;
 
 import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
-import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
-import at.fhv.teamd.musicshop.backend.domain.article.Song;
+import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.*;
@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 public class ArticleHibernateRepository implements ArticleRepository {
 
     // package-private constructor to enable initialization only through same package classes
-    ArticleHibernateRepository() {}
+    ArticleHibernateRepository() {
+    }
 
     /*
         Pattern search for the combination of each entered property
@@ -37,7 +38,7 @@ public class ArticleHibernateRepository implements ArticleRepository {
                         "((a.title <> '' AND LOWER(a.title) LIKE LOWER(:titlePattern)) OR a.title = '')"
                 , Article.class).setMaxResults(50);
 
-        query.setParameter("titlePattern", "%"+title+"%");
+        query.setParameter("titlePattern", "%" + title + "%");
 //        query.setParameter("artistPattern", "%"+artist+"%");
 
         // NOTE: Alternative to this is to order by case select in query
@@ -61,5 +62,29 @@ public class ArticleHibernateRepository implements ArticleRepository {
 
         em.close();
         return articles;
+    }
+
+    @Override
+    @Transactional
+    public Optional<Article> findArticlesById(Long id) {
+        Objects.requireNonNull(id);
+
+        EntityManager em = PersistenceManager.getEntityManagerInstance();
+
+        TypedQuery<Article> query = em.createQuery(
+                "SELECT a FROM Article a WHERE a.id=:id", Article.class);
+
+        query.setParameter("id", id);
+
+        Optional<Article> articleOpt;
+
+        try {
+            articleOpt = Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            articleOpt = Optional.empty();
+        }
+
+        em.close();
+        return articleOpt;
     }
 }

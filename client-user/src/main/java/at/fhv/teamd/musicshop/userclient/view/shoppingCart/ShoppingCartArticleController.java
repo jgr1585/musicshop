@@ -28,7 +28,7 @@ public class ShoppingCartArticleController extends GenericArticleFunctions imple
     private Label mediumPrice;
 
     private ArticleDTO articleDTO;
-    private MediumDTO analogMediumDTO;
+    private MediumDTO mediumDTO;
     private LineItemDTO lineItemDTO;
 
     @Override
@@ -40,7 +40,7 @@ public class ShoppingCartArticleController extends GenericArticleFunctions imple
     @Override
     public void setMediumType(ArticleDTO articleDTO, MediumDTO analogMedium, Optional<LineItemDTO> lineItemDTO) {
         this.articleDTO = articleDTO;
-        this.analogMediumDTO = analogMedium;
+        this.mediumDTO = analogMedium;
         this.lineItemDTO = lineItemDTO.orElseThrow();
 
         this.mediumType.setText(analogMedium.type());
@@ -51,16 +51,16 @@ public class ShoppingCartArticleController extends GenericArticleFunctions imple
     @FXML
     private void reduceByOne(ActionEvent actionEvent) throws RemoteException {
         ApplicationClient client = RMIconnection.getApplicationClient();
-        client.addToShoppingCart(articleDTO, analogMediumDTO, 1);
+        client.addToShoppingCart(articleDTO, mediumDTO, 1);
     }
     @FXML
     private void increaseByOne(ActionEvent actionEvent) throws RemoteException {
         ApplicationClient client = RMIconnection.getApplicationClient();
-        client.removeFromShoppingCart(analogMediumDTO, 1);
+        client.removeFromShoppingCart(mediumDTO, 1);
     }
     @FXML
     private void remove(ActionEvent actionEvent) throws RemoteException {
         ApplicationClient client = RMIconnection.getApplicationClient();
-        client.removeFromShoppingCart(analogMediumDTO, lineItemDTO.quantity());
+        client.removeFromShoppingCart(mediumDTO, lineItemDTO.quantity());
     }
 }

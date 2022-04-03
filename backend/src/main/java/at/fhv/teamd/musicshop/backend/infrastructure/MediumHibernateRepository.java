@@ -9,16 +9,20 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 //import javax.transaction.Transactional;
+import java.util.Objects;
 import java.util.Optional;
 
 public class MediumHibernateRepository implements MediumRepository {
 
     // package-private constructor to enable initialization only through same package classes
-    MediumHibernateRepository() {}
+    MediumHibernateRepository() {
+    }
 
     @Override
     @Transactional
     public Optional<Medium> findMediumById(Long id) {
+        Objects.requireNonNull(id);
+
         EntityManager em = PersistenceManager.getEntityManagerInstance();
 
         TypedQuery<Medium> query = em.createQuery("SELECT m FROM Medium m " +
@@ -29,9 +33,9 @@ public class MediumHibernateRepository implements MediumRepository {
         Optional<Medium> mediumOpt;
 
         try {
-            mediumOpt= Optional.of(query.getSingleResult());
+            mediumOpt = Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
-            mediumOpt= Optional.empty();
+            mediumOpt = Optional.empty();
         }
 
         em.close();

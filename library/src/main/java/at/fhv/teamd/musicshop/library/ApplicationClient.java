@@ -7,16 +7,19 @@ import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Optional;
 import java.util.Set;
 
 public interface ApplicationClient extends Remote {
     // Search Articles
     Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException;
 
-    // Shopping Cart
-    void addToShoppingCart(ArticleDTO articleDTO, MediumDTO analogMediumDTO, int amount) throws RemoteException;
+    Optional<ArticleDTO> searchArticleByID(Long id) throws RemoteException, ApplicationClientException;
 
-    void removeFromShoppingCart(MediumDTO analogMediumDTO, int amount) throws RemoteException;
+    // Shopping Cart
+    void addToShoppingCart(ArticleDTO articleDTO, MediumDTO mediumDTO, int amount) throws RemoteException;
+
+    void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException;
 
     void emptyShoppingCart() throws RemoteException;
 

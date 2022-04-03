@@ -29,7 +29,7 @@ public abstract class Article {
     private String descriptorName;
     @Column
     private String musicbrainzId;
-    @ManyToMany(mappedBy = "article")
+    @ManyToMany(cascade = CascadeType.ALL)
     private Set<Medium> mediums;
 
     protected Article() {

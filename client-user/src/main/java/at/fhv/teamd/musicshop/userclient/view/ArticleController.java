@@ -49,21 +49,11 @@ public class ArticleController {
 
         articleDTO.mediums().forEach(mediumDTO -> {
 
-            FXMLLoader fxmlLoader;
-
-            switch (tab) {
-                case SEARCH:
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/searchArticle/search-article.fxml"));
-                    break;
-                case RETURN:
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/returnArticle/return-article.fxml"));
-                    break;
-                case SHOPPINGCART:
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/shoppingCart/shoppingCart-article.fxml"));
-                    break;
-                default:
-                    throw new RuntimeException("invalid tab-parameter for article");
-            }
+            FXMLLoader fxmlLoader = switch (tab) {
+                case SEARCH -> new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/searchArticle/search-article.fxml"));
+                case RETURN -> new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/returnArticle/return-article.fxml"));
+                case SHOPPINGCART -> new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/shoppingCart/shoppingCart-article.fxml"));
+            };
 
             try {
                 Parent root = fxmlLoader.load();
@@ -77,15 +67,16 @@ public class ArticleController {
     }
 
     private void loadCoverArt(ArticleDTO articleDTO) {
-        if (articleDTO instanceof AlbumDTO) {
-            AlbumDTO albumDTO = (AlbumDTO) articleDTO;
+        if (articleDTO instanceof AlbumDTO albumDTO) {
 
             try {
+                System.out.println("looking for coverid: " + albumDTO.musicbrainzId());
                 String url = getImageURL("http://coverartarchive.org/release/" + albumDTO.musicbrainzId() + "/front");
 
                 Image coverArt = new Image(url);
                 if (coverArt.getProgress() == 1 && !coverArt.isError()) {
                     this.cover.setImage(coverArt);
+                    System.out.println("coverid: " + albumDTO.musicbrainzId() + " found");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -108,15 +99,11 @@ public class ArticleController {
         int responseCode = con.getResponseCode();
         String location = con.getHeaderField( "Location" );
 
-        switch (responseCode) {
-            case 200:
-                return url;
-            case 404:
-            case 405:
-                throw new FileNotFoundException();
-            default:
-                return this.getImageURL(location, depth + 1);
-        }
+        return switch (responseCode) {
+            case 200 -> url;
+            case 404, 405 -> throw new FileNotFoundException();
+            default -> this.getImageURL(location, depth + 1);
+        };
 
     }
 

@@ -20,24 +20,29 @@ public class LineItem {
     private Quantity quantity;
     @Column
     private BigDecimal price;
-
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private Medium medium;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Article article;
 
-    protected LineItem() {}
+    protected LineItem() {
+    }
 
-    public LineItem(String descriptorName, Quantity quantity, Medium medium) {
+    public LineItem(String descriptorName, Quantity quantity, Medium medium, Article article) {
         this.descriptorName = Objects.requireNonNull(descriptorName);
         this.quantity = Objects.requireNonNull(quantity);
         this.medium = Objects.requireNonNull(medium);
         this.price = medium.getPrice();
+        this.article = article;
     }
 
     public long getId() {
         return id;
     }
 
-    public String getDescriptorName() { return descriptorName; }
+    public String getDescriptorName() {
+        return descriptorName;
+    }
 
     public Quantity getQuantity() {
         return quantity;
@@ -55,9 +60,15 @@ public class LineItem {
         return price;
     }
 
-    public BigDecimal getTotalPrice() { return price.multiply(BigDecimal.valueOf(quantity.getValue())); }
+    public BigDecimal getTotalPrice() {
+        return price.multiply(BigDecimal.valueOf(quantity.getValue()));
+    }
 
     public Long getMediumId() {
         return medium.getId();
+    }
+
+    public Long getArticleId() {
+        return article.getId();
     }
 }

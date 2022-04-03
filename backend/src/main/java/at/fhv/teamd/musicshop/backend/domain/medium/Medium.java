@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public class Medium {
     @ManyToOne(cascade = CascadeType.ALL)
     private Supplier supplier;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "mediums")
     private Set<Article> articles;
 
     protected Medium() {
@@ -40,6 +41,7 @@ public class Medium {
         this.price = Objects.requireNonNull(price);
         this.stock = Objects.requireNonNull(stock);
         this.supplier = Objects.requireNonNull(supplier);
+        this.articles = new HashSet<>();
     }
 
     public void appendArticle(Article article) {

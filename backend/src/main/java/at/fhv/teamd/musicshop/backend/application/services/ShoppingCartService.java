@@ -1,5 +1,7 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
+import at.fhv.teamd.musicshop.backend.domain.article.Article;
+import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
@@ -14,63 +16,69 @@ import java.util.*;
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildShoppingCartDTO;
 
 public class ShoppingCartService {
-    private static Map<UUID, List<LineItem>> sessionLineItems = new HashMap<>();
+    private static Map<UUID, Set<LineItem>> sessionLineItems = new HashMap<>();
 
     private static MediumRepository mediumRepository;
+    private static ArticleRepository articleRepository;
 
     ShoppingCartService() {
         mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
+        articleRepository = RepositoryFactory.getArticleRepositoryInstance();
     }
 
     private void initializeShoppingcart(UUID sessionUUID) {
         if (!shoppingCartExists(sessionUUID)) {
-            sessionLineItems.put(sessionUUID, new ArrayList<>());
+            sessionLineItems.put(sessionUUID, new HashSet<>());
         } else {
             throw new IllegalStateException("Shopping cart already exists.");
         }
     }
 
-    public void addToShoppingCart(UUID sessionUUID, ArticleDTO articleDTO, MediumDTO analogMediumDTO, int amount) {
+    public void addToShoppingCart(UUID sessionUUID, ArticleDTO articleDTO, MediumDTO mediumDTO, int amount) {
         if (!shoppingCartExists(sessionUUID)) {
             initializeShoppingcart(sessionUUID);
         }
-        List<LineItem> lineItems = sessionLineItems.get(sessionUUID);
-        Medium medium = mediumRepository.findMediumById(analogMediumDTO.id()).orElseThrow();
+        Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
+
+        Medium medium = mediumRepository.findMediumById(mediumDTO.id()).orElseThrow();
+        Article article = articleRepository.findArticlesById(articleDTO.id()).orElseThrow();
 
         lineItems.stream()
-                .filter(li -> li.getMediumId().equals(analogMediumDTO.id()))
+                .filter(li -> li.getMediumId().equals(mediumDTO.id()))
                 .findFirst()
                 .ifPresentOrElse(li -> {
                     li.increaseQuantity(Quantity.of(amount));
+                    System.out.println("amount of lineItem increased");
                 }, () -> {
-                    lineItems.add(new LineItem(articleDTO.descriptorName(), Quantity.of(amount), medium));
+                    lineItems.add(new LineItem(articleDTO.descriptorName(), Quantity.of(amount), medium, article));
+                    System.out.println("lineItem added");
                     sessionLineItems.put(sessionUUID, lineItems);
                 });
     }
 
-    public void removeFromShoppingCart(UUID sessionUUID, MediumDTO analogMediumDTO, int amount) {
+    public void removeFromShoppingCart(UUID sessionUUID, MediumDTO mediumDTO, int amount) {
         if (!shoppingCartExists(sessionUUID)) {
             throw new IllegalStateException("Shopping cart does not exist.");
         }
 
-        List<LineItem> lineItems = sessionLineItems.get(sessionUUID);
+        Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
 
         lineItems.stream()
-                .filter(li -> li.getMediumId().equals(analogMediumDTO.id()))
+                .filter(li -> li.getMediumId().equals(mediumDTO.id()))
                 .findFirst()
                 .orElseThrow()
                 .decreaseQuantity(Quantity.of(amount));
     }
 
     public void emptyShoppingCart(UUID sessionUUID) {
-        sessionLineItems.put(sessionUUID, new ArrayList<>());
+        sessionLineItems.put(sessionUUID, new HashSet<>());
     }
 
     public ShoppingCartDTO getShoppingCart(UUID sessionUUID) {
         if (!shoppingCartExists(sessionUUID)) {
             initializeShoppingcart(sessionUUID);
         }
-        return buildShoppingCartDTO(mediumRepository, sessionLineItems.get(sessionUUID));
+        return buildShoppingCartDTO(articleRepository, mediumRepository, sessionLineItems.get(sessionUUID));
     }
 
     // TODO: overload with customer
@@ -82,7 +90,7 @@ public class ShoppingCartService {
         // TODO: move lineItems to new invoice
 
         // clear shoppingCart after purchase
-        sessionLineItems.put(sessionUUID, new ArrayList<>());
+        sessionLineItems.put(sessionUUID, new HashSet<>());
     }
 
     private boolean shoppingCartExists(UUID sessionUUID) {

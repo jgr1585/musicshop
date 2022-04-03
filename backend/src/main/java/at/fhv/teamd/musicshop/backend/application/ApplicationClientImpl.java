@@ -1,5 +1,6 @@
 package at.fhv.teamd.musicshop.backend.application;
 
+import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
@@ -9,6 +10,7 @@ import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,13 +28,18 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public void addToShoppingCart(ArticleDTO articleDTO, MediumDTO analogMediumDTO, int amount) {
-        ServiceFactory.getShoppingCartServiceInstance().addToShoppingCart(sessionUUID, articleDTO, analogMediumDTO, amount);
+    public Optional<ArticleDTO> searchArticleByID(Long id) throws RemoteException, ApplicationClientException {
+        return ServiceFactory.getArticleServiceInstance().searchArticleByID(id);
     }
 
     @Override
-    public void removeFromShoppingCart(MediumDTO analogMediumDTO, int amount) {
-        ServiceFactory.getShoppingCartServiceInstance().removeFromShoppingCart(sessionUUID, analogMediumDTO, amount);
+    public void addToShoppingCart(ArticleDTO articleDTO, MediumDTO mediumDTO, int amount) {
+        ServiceFactory.getShoppingCartServiceInstance().addToShoppingCart(sessionUUID, articleDTO, mediumDTO, amount);
+    }
+
+    @Override
+    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) {
+        ServiceFactory.getShoppingCartServiceInstance().removeFromShoppingCart(sessionUUID, mediumDTO, amount);
     }
 
     @Override
