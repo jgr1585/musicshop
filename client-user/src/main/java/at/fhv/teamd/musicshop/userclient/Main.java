@@ -44,7 +44,7 @@ public class Main extends Application {
     }
 
     private static void showErrorDialog(Throwable e) {
-        if (isRMIRemoteException(e)) {
+        if (containsThrowableTypeInCauseStack(e, RemoteException.class)) {
             new Alert(Alert.AlertType.ERROR, "Connection to server failed (may be offline).", ButtonType.CLOSE).showAndWait();
 
         } else {
@@ -55,11 +55,13 @@ public class Main extends Application {
         }
     }
 
-    public static boolean isRMIRemoteException(Throwable throwable) {
+    public static boolean containsThrowableTypeInCauseStack(Throwable throwable, Class<? extends Throwable> throwableTypeInCauseStack) {
         Objects.requireNonNull(throwable);
+        Objects.requireNonNull(throwableTypeInCauseStack);
+
         Throwable cause = throwable;
         while (cause.getCause() != null && cause.getCause() != cause) {
-            if (cause instanceof RemoteException) {
+            if (throwableTypeInCauseStack.isInstance(cause)) {
                 return true;
             }
 
