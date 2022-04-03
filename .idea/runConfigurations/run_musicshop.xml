@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="run musicshop" type="Multirun" singleton="false" separateTabs="false" reuseTabsWithFailures="false" startOneByOne="true" markFailedProcess="true" hideSuccessProcess="false" delayTime="0.0">
+    <runConfiguration name="client-customerdb (main)" type="Application" />
+    <runConfiguration name="backend (main)" type="Application" />
+    <runConfiguration name="client-user (main)" type="Application" />
+    <method v="2" />
+  </configuration>
+</component>
