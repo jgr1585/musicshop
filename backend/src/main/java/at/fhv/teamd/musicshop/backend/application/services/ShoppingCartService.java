@@ -43,7 +43,7 @@ public class ShoppingCartService {
 
     public void removeFromShoppingCart(UUID sessionUUID, MediumDTO analogMediumDTO, int amount) {
         if (!sessionLineItems.containsKey(sessionUUID)) {
-            throw new IllegalStateException("Shopping cart does not exist.");
+            emptyShoppingCart(sessionUUID);
         }
 
         List<LineItem> lineItems = sessionLineItems.get(sessionUUID);
@@ -56,14 +56,12 @@ public class ShoppingCartService {
     }
 
     public void emptyShoppingCart(UUID sessionUUID) {
-        if (sessionLineItems.containsKey(sessionUUID)) {
-            sessionLineItems.put(sessionUUID, new ArrayList<>());
-        }
+        sessionLineItems.put(sessionUUID, new ArrayList<>());
     }
 
     public ShoppingCartDTO getShoppingCart(UUID sessionUUID) {
         if (!sessionLineItems.containsKey(sessionUUID)) {
-            throw new IllegalStateException("Shopping cart does not exist.");
+            emptyShoppingCart(sessionUUID);
         }
 
         return buildShoppingCartDTO(mediumRepository, sessionLineItems.get(sessionUUID));
