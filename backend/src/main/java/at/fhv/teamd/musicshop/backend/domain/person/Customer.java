@@ -1,7 +1,10 @@
 package at.fhv.teamd.musicshop.backend.domain.person;
 
+import lombok.Getter;
+
 import java.time.LocalDate;
 
+@Getter
 public class Customer extends Person {
     private final int customerNo;
     private String givenName;

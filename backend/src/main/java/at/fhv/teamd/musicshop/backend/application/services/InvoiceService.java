@@ -9,11 +9,14 @@ import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import java.util.Set;
 
 public class InvoiceService {
-
-    public static void createInvoice(PaymentMethod paymentMethod, Set<LineItem> lineItems, Employee createdByEmployee) {
-        new Invoice(paymentMethod, lineItems, null, createdByEmployee);
+    // TODO: static?
+    // TODO: notification on client
+    public static void createInvoice(PaymentMethod paymentMethod, Set<LineItem> lineItems) {
+        System.out.println("created new invoice");
+        new Invoice(paymentMethod, lineItems, null);
     }
-    public static void createInvoice(PaymentMethod paymentMethod, Set<LineItem> lineItems, Customer assignedCustomer, Employee createdByEmployee) {
-        new Invoice(paymentMethod, lineItems, assignedCustomer, createdByEmployee);
+    public static void createInvoice(PaymentMethod paymentMethod, Set<LineItem> lineItems, Customer assignedCustomer) {
+        System.out.println("created new invoice");
+        new Invoice(paymentMethod, lineItems, assignedCustomer);
     }
 }

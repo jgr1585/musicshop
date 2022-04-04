@@ -3,6 +3,7 @@ package at.fhv.teamd.musicshop.backend.application.services;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
 import at.fhv.teamd.musicshop.backend.domain.invoice.PaymentMethod;
+import at.fhv.teamd.musicshop.backend.domain.person.Customer;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
@@ -37,6 +38,7 @@ public class ShoppingCartService {
         }
     }
 
+    // TODO: notification on client
     public void addToShoppingCart(UUID sessionUUID, ArticleDTO articleDTO, MediumDTO mediumDTO, int amount) {
         if (!shoppingCartExists(sessionUUID)) {
             initializeShoppingcart(sessionUUID);
@@ -86,7 +88,7 @@ public class ShoppingCartService {
 
     // TODO: overload with customer
     // TODO: append paymentMethod
-    public void buyFromShoppingCart(UUID sessionUUID, int customerId) {
+    public void buyFromShoppingCart(UUID sessionUUID, int id) {
         if (!shoppingCartExists(sessionUUID)) {
             throw new IllegalStateException("Shopping cart does not exist.");
         }
@@ -99,7 +101,11 @@ public class ShoppingCartService {
             }
         });
 
-        createInvoice(PaymentMethod.CASH, lineItems, null, null);
+        try {
+            createInvoice(PaymentMethod.CASH, lineItems, CustomerService.searchCustomerById(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         sessionLineItems.put(sessionUUID, new HashSet<>());
     }
 

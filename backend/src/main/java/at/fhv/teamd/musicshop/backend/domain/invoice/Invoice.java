@@ -26,13 +26,9 @@ public class Invoice {
     @Column
     private final Customer assignedCustomer;
 
-    @Column
-    private final Employee createdByEmployee;
-
-    public Invoice(PaymentMethod paymentMethod, Set<LineItem> lineItems, Customer assignedCustomer, Employee createdByEmployee) {
+    public Invoice(PaymentMethod paymentMethod, Set<LineItem> lineItems, Customer assignedCustomer) {
         this.paymentMethod = Objects.requireNonNull(paymentMethod);
         this.lineItems = Objects.requireNonNull(lineItems);
         this.assignedCustomer = assignedCustomer;
-        this.createdByEmployee = createdByEmployee;
     }
 }
