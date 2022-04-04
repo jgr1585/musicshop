@@ -27,7 +27,7 @@ public class DTOProvider {
 
     static LineItemDTO buildLineItemDTO(ArticleRepository articleRepository, MediumRepository mediumRepository, LineItem lineItem) {
         Medium medium = mediumRepository.findMediumById(lineItem.getMediumId()).orElseThrow();
-        Article article = articleRepository.findArticlesById(lineItem.getArticleId()).orElseThrow();
+        Article article = articleRepository.findArticleById(lineItem.getArticleId()).orElseThrow();
 
         return LineItemDTO.builder()
                 .withLineItemData(
@@ -78,7 +78,8 @@ public class DTOProvider {
                 mediumDTOs.add(buildMediumDTO(mediumRepository.findMediumById(id).orElseThrow()))
         );
 
-        if (article instanceof Album album) {
+        if (article instanceof Album) {
+            Album album = (Album) article;
 
             Set<SongDTO> songDTOs = new HashSet<>();
             for (Song song : album.getSongs()) {
@@ -106,7 +107,8 @@ public class DTOProvider {
                     Collections.unmodifiableSet(artistDTOs)
             ).build();
 
-        } else if (article instanceof Song song) {
+        } else if (article instanceof Song) {
+            Song song = (Song) article;
 
             return SongDTO.builder().withSongData(
                     song.getId(),

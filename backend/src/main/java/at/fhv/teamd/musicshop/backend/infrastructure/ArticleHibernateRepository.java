@@ -66,7 +66,7 @@ public class ArticleHibernateRepository implements ArticleRepository {
 
     @Override
     @Transactional
-    public Optional<Article> findArticlesById(Long id) {
+    public Optional<Article> findArticleById(Long id) {
         Objects.requireNonNull(id);
 
         EntityManager em = PersistenceManager.getEntityManagerInstance();

@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.backend.domain.TEMPARCHIVE.person;
+package at.fhv.teamd.musicshop.backend.domain.person;
 
 import java.util.Objects;
 

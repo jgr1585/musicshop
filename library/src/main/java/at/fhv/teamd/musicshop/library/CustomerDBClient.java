@@ -10,6 +10,5 @@ import java.util.List;
 
 public interface CustomerDBClient extends Remote {
     List<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException;
-
     CustomerDTO findCustomerById(int customerId) throws RemoteException, CustomerDBClientException, CustomerNotFoundException;
 }

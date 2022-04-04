@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-public class UserClientService {
+public class UserClient {
     public static void initRmiRegistry() throws RemoteException, MalformedURLException {
         LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
         Naming.rebind("rmi://localhost/ApplicationClientFactoryImpl", new ApplicationClientFactoryImpl());

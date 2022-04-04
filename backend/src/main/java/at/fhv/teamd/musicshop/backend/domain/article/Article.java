@@ -19,16 +19,22 @@ public abstract class Article {
 
     @Column
     private String title;
+
     @Column
     private String label;
+
     @Column
     private LocalDate releaseDate;
+
     @Column
     private String genre;
+
     @Column
     private String descriptorName;
+
     @Column
     private String musicbrainzId;
+
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Medium> mediums;
 

@@ -49,10 +49,18 @@ public class ArticleController {
 
         articleDTO.mediums().forEach(mediumDTO -> {
 
-            FXMLLoader fxmlLoader = switch (tab) {
-                case SEARCH -> new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/searchArticle/search-article.fxml"));
-                case RETURN -> new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/returnArticle/return-article.fxml"));
-                case SHOPPINGCART -> new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/shoppingCart/shoppingCart-article.fxml"));
+            FXMLLoader fxmlLoader = null;
+
+            switch (tab) {
+                case SEARCH:
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/searchArticle/search-article.fxml"));
+                    break;
+                case RETURN:
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/returnArticle/return-article.fxml"));
+                    break;
+                case SHOPPINGCART:
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/shoppingCart/shoppingCart-article.fxml"));
+                    break;
             };
 
             try {
@@ -67,7 +75,8 @@ public class ArticleController {
     }
 
     private void loadCoverArt(ArticleDTO articleDTO) {
-        if (articleDTO instanceof AlbumDTO albumDTO) {
+        if (articleDTO instanceof AlbumDTO) {
+            AlbumDTO albumDTO = (AlbumDTO) articleDTO;
 
             try {
                 System.out.println("looking for coverid: " + albumDTO.musicbrainzId());
@@ -97,14 +106,16 @@ public class ArticleController {
 
         con.connect();
         int responseCode = con.getResponseCode();
-        String location = con.getHeaderField( "Location" );
+        String location = con.getHeaderField("Location");
 
-        return switch (responseCode) {
-            case 200 -> url;
-            case 404, 405 -> throw new FileNotFoundException();
-            default -> this.getImageURL(location, depth + 1);
-        };
-
+        switch (responseCode) {
+            case 200:
+                return url;
+            case 404:
+            case 405:
+                throw new FileNotFoundException();
+            default:
+                return this.getImageURL(location, depth + 1);
+        }
     }
-
 }

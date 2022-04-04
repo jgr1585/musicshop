@@ -10,10 +10,8 @@ public class CustomerDBServer {
 
     public static void main(String[] args) throws RemoteException, MalformedURLException {
         CustomerDBClientImpl.init();
-
         LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
-        Naming.rebind("CustomerDBClientFactory", new CustomerDBClientFactoryImpl());
-
-        System.out.println("CustomerDBClientFactory bound in registry");
+        Naming.rebind("rmi://localhost/CustomerDBClientFactory", new CustomerDBClientFactoryImpl());
+        System.out.println("CustomerDBClientFactory bound");
     }
 }

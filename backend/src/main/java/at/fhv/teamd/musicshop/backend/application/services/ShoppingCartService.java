@@ -1,6 +1,8 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
+import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
+import at.fhv.teamd.musicshop.backend.domain.invoice.PaymentMethod;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
@@ -14,6 +16,7 @@ import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import java.util.*;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildShoppingCartDTO;
+import static at.fhv.teamd.musicshop.backend.application.services.InvoiceService.createInvoice;
 
 public class ShoppingCartService {
     private static Map<UUID, Set<LineItem>> sessionLineItems = new HashMap<>();
@@ -41,7 +44,7 @@ public class ShoppingCartService {
         Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
 
         Medium medium = mediumRepository.findMediumById(mediumDTO.id()).orElseThrow();
-        Article article = articleRepository.findArticlesById(articleDTO.id()).orElseThrow();
+        Article article = articleRepository.findArticleById(articleDTO.id()).orElseThrow();
 
         lineItems.stream()
                 .filter(li -> li.getMediumId().equals(mediumDTO.id()))
@@ -82,14 +85,38 @@ public class ShoppingCartService {
     }
 
     // TODO: overload with customer
+    // TODO: append paymentMethod
     public void buyFromShoppingCart(UUID sessionUUID, int customerId) {
         if (!shoppingCartExists(sessionUUID)) {
             throw new IllegalStateException("Shopping cart does not exist.");
         }
 
-        // TODO: move lineItems to new invoice
+        Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
+        lineItems.forEach(lineItem -> {
+            Medium medium = mediumRepository.findMediumById(lineItem.getMediumId()).orElseThrow();
+            if (medium.getStock().getQuantity().getValue() < lineItem.getQuantity().getValue()) {
+                throw  new RuntimeException("not enough in Stock: " + medium.getId());
+            }
+        });
 
-        // clear shoppingCart after purchase
+        createInvoice(PaymentMethod.CASH, lineItems, null, null);
+        sessionLineItems.put(sessionUUID, new HashSet<>());
+    }
+
+    public void buyFromShoppingCart(UUID sessionUUID) {
+        if (!shoppingCartExists(sessionUUID)) {
+            throw new IllegalStateException("Shopping cart does not exist.");
+        }
+
+        Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
+        lineItems.forEach(lineItem -> {
+            Medium medium = mediumRepository.findMediumById(lineItem.getMediumId()).orElseThrow();
+            if (medium.getStock().getQuantity().getValue() < lineItem.getQuantity().getValue()) {
+                throw  new RuntimeException("not enough in Stock: " + medium.getId());
+            }
+        });
+
+        createInvoice(PaymentMethod.CASH, lineItems, null);
         sessionLineItems.put(sessionUUID, new HashSet<>());
     }
 
