@@ -33,6 +33,6 @@ public class Invoice {
         this.paymentMethod = Objects.requireNonNull(paymentMethod);
         this.lineItems = Objects.requireNonNull(lineItems);
         this.assignedCustomer = assignedCustomer;
-        this.createdByEmployee = createdByEmployee;
+        this.createdByEmployee = Objects.requireNonNull(createdByEmployee);
     }
 }
