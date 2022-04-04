@@ -13,7 +13,7 @@ public class InvoiceService {
     // TODO: notification on client
     public static void createInvoice(PaymentMethod paymentMethod, Set<LineItem> lineItems) {
         System.out.println("created new invoice");
-        new Invoice(paymentMethod, lineItems, null);
+        new Invoice(paymentMethod, lineItems);
     }
     public static void createInvoice(PaymentMethod paymentMethod, Set<LineItem> lineItems, Customer assignedCustomer) {
         System.out.println("created new invoice");

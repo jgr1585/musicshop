@@ -122,7 +122,7 @@ public class ShoppingCartService {
             }
         });
 
-        createInvoice(PaymentMethod.CASH, lineItems, null);
+        createInvoice(PaymentMethod.CASH, lineItems);
         sessionLineItems.put(sessionUUID, new HashSet<>());
     }
 

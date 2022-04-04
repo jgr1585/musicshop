@@ -26,6 +26,12 @@ public class Invoice {
     @Column
     private final Customer assignedCustomer;
 
+    public Invoice(PaymentMethod paymentMethod, Set<LineItem> lineItems) {
+        this.paymentMethod = Objects.requireNonNull(paymentMethod);
+        this.lineItems = Objects.requireNonNull(lineItems);
+        this.assignedCustomer = null;
+    }
+
     public Invoice(PaymentMethod paymentMethod, Set<LineItem> lineItems, Customer assignedCustomer) {
         this.paymentMethod = Objects.requireNonNull(paymentMethod);
         this.lineItems = Objects.requireNonNull(lineItems);
