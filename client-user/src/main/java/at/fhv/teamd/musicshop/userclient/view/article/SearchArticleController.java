@@ -32,7 +32,7 @@ public class SearchArticleController {
 
     public void insertResults(Set<ArticleDTO> results) throws IOException {
         for (var article : results) {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/article.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/article.fxml"));
             Parent medium = fxmlLoader.load();
             ArticleController controller = fxmlLoader.getController();
             controller.addMediumTypes(article, Tabs.SEARCH);

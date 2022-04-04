@@ -60,13 +60,13 @@ public class ArticleController {
             FXMLLoader fxmlLoader;
             switch (tab) {
                 case SEARCH:
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/searchArticles/search-article.fxml"));
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/searchArticles/search-article.fxml"));
                     break;
                 case RETURN:
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/returnArticles/return-article.fxml"));
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/returnArticles/return-article.fxml"));
                     break;
                 case SHOPPINGCART:
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/shoppingCart/shoppingCart-article.fxml"));
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/shoppingCart/shoppingCart-article.fxml"));
                     break;
                 default:
                     throw new RuntimeException("invalid tab-parameter for article");

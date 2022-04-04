@@ -18,7 +18,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main-window.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("templates/main-window.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 900, 700);
             stage.setTitle("MusicShop24");
             stage.setScene(scene);

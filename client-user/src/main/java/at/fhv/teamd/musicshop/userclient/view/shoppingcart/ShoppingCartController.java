@@ -43,7 +43,7 @@ public class ShoppingCartController {
         clearCart();
 
         for (var lineItemDTO : shoppingCartDTO.lineItems()) {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/article.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/article.fxml"));
             Parent medium = fxmlLoader.load();
             ArticleController controller = fxmlLoader.getController();
             controller.addMediumTypes(lineItemDTO.article(), Optional.of(lineItemDTO), Tabs.SHOPPINGCART);
