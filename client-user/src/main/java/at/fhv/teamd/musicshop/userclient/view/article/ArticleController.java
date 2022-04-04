@@ -49,9 +49,8 @@ public class ArticleController {
             try {
                 this.loadCoverArt(articleDTO);
 
-            } catch (IOException e) {
-                Thread t = Thread.currentThread();
-                t.getUncaughtExceptionHandler().uncaughtException(t, e);
+            } catch (IOException ignored) {
+                // TODO: Something to do here?
             }
         };
         new Thread(loadCoverArtRunnable).start();
