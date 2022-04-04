@@ -32,6 +32,11 @@ public class ArticleHibernateRepository implements ArticleRepository {
         EntityManager em = PersistenceManager.getEntityManagerInstance();
 
         // TODO: Suche nach artist einbauen
+        //  (Tipp: TREAT könnte man verwenden, um auf Subtypen zu selektieren.
+        //  Allerdings stellt sich die Frage, ob es nicht besser wäre, wenn man direkt im Artikel nach Artists
+        //  selektieren könnte, da Album und Songs Artists haben, die Albums aber lediglich die Artists der Songs
+        //  aggregieren.)
+        // TODO: Order by case (?) verwenden, um die Direkttreffer (case-insensitive) vorzureihen
         TypedQuery<Article> query = em.createQuery(
                 "SELECT DISTINCT(a) FROM Article a WHERE " +
                         "((a.title <> '' AND LOWER(a.title) LIKE LOWER(:titlePattern)) OR a.title = '')"
