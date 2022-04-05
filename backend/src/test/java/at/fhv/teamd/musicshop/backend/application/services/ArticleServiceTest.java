@@ -86,7 +86,7 @@ public class ArticleServiceTest {
         actualArticleDTO = this.articleService.searchArticleByID(id);
 
         // then
-        //noinspection OptionalGetWithoutIsPresent
+        Assertions.assertTrue(actualArticleDTO.isPresent());
         Assertions.assertEquals(DTOProvider.buildArticleDTO(this.mediumRepository, article), actualArticleDTO.get());
     }
 
