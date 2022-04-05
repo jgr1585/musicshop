@@ -86,13 +86,10 @@ public class DTOProvider {
                 songDTOs.add((SongDTO) buildArticleDTO(mediumRepository, song));
             }
 
-            Set<ArtistDTO> artistDTOs = new HashSet<>();
-            for (Song song : album.getSongs()) {
-                artistDTOs.addAll(song.getArtists()
-                        .stream()
-                        .map(DTOProvider::buildArtistDTO)
-                        .collect(Collectors.toUnmodifiableSet()));
-            }
+            Set<ArtistDTO> artistDTOs = album.getArtists()
+                    .stream()
+                    .map(DTOProvider::buildArtistDTO)
+                    .collect(Collectors.toUnmodifiableSet());
 
             return AlbumDTO.builder().withAlbumData(
                     album.getId(),
