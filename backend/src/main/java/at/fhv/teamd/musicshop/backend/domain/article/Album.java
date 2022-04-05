@@ -18,7 +18,13 @@ public class Album extends Article {
     }
 
     public Album(String title, String label, LocalDate releaseDate, String genre, String descriptorName, String musicbrainzId, Set<Medium> mediums, Set<Song> songs) {
-        super(title, label, releaseDate, genre, descriptorName, musicbrainzId, mediums);
+        super(title, label, releaseDate, genre, descriptorName, musicbrainzId, mediums, findArtistsFromSongs(songs));
         this.songs = songs; // already checked for non-null @method:getArtistsFromSongs
+    }
+
+    private static Set<Artist> findArtistsFromSongs(Set<Song> songs) {
+        Set<Artist> artists = new HashSet<>();
+        songs.forEach(song -> artists.addAll(song.getArtists()));
+        return artists;
     }
 }

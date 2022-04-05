@@ -38,10 +38,13 @@ public abstract class Article {
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Medium> mediums;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    private Set<Artist> artists;
+
     protected Article() {
     }
 
-    protected Article(String title, String label, LocalDate releaseDate, String genre, String descriptorName, String musicbrainzId, Set<Medium> mediums) {
+    protected Article(String title, String label, LocalDate releaseDate, String genre, String descriptorName, String musicbrainzId, Set<Medium> mediums, Set<Artist> artists) {
         this.title = Objects.requireNonNull(title);
         this.label = Objects.requireNonNull(label);
         this.releaseDate = Objects.requireNonNull(releaseDate);
@@ -50,6 +53,7 @@ public abstract class Article {
         this.musicbrainzId = Objects.requireNonNull(musicbrainzId);
         this.mediums = Objects.requireNonNull(mediums);
         this.mediums.forEach(medium -> medium.appendArticle(this));
+        this.artists = Objects.requireNonNull(artists);
     }
 
     public Set<Long> getMediumIDs() {
