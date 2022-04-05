@@ -8,6 +8,7 @@ import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildArticleDTO;
@@ -32,12 +33,14 @@ public class ArticleService {
     }
 
 
-    public Optional<ArticleDTO> searchArticleByID(Long id) throws ApplicationClientException {
-        if (!searchableParam(id.toString())) {
-            throw new ApplicationClientException("Validation error: No searchable param for search.");
-        }
+    public Optional<ArticleDTO> searchArticleByID(Long id) {
+        Optional<Article> article = articleRepository.findArticleById(id);
 
-        return Optional.of(buildArticleDTO(mediumRepository, articleRepository.findArticleById(id).orElseThrow()));
+        AtomicReference<Optional<ArticleDTO>> articleDTO = new AtomicReference<>(Optional.empty());
+
+        article.ifPresent(articleItem -> articleDTO.set(Optional.of(buildArticleDTO(mediumRepository, articleItem))));
+
+        return articleDTO.get();
     }
 
     /*

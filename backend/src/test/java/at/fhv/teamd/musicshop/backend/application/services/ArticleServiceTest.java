@@ -14,6 +14,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -70,6 +71,23 @@ public class ArticleServiceTest {
 
     @Test
     public void given_ArticleService_when_getArticleById_then_returnArticle() {
+        // given
+        Article article = DomainFactory.createArticle();
+        Long id = article.getId();
+
+        Mockito.when(this.articleRepository.findArticleById(id)).thenReturn(Optional.of(article));
+
+        //noinspection OptionalGetWithoutIsPresent
+        Mockito.when(this.mediumRepository.findMediumById(article.getMediumIDs().stream().findFirst().get())).thenReturn(article.getMediums().stream().findFirst());
+
+        // when
+        Optional<ArticleDTO> actualArticleDTO;
+
+        actualArticleDTO = this.articleService.searchArticleByID(id);
+
+        // then
+        //noinspection OptionalGetWithoutIsPresent
+        Assertions.assertEquals(DTOProvider.buildArticleDTO(this.mediumRepository, article), actualArticleDTO.get());
     }
 
 }
