@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="OPEN_SSH" host="fhv-custdb" id="410a8d59-f126-4acd-9ac8-f11b1cef8bed" port="22" nameFormat="DESCRIPTIVE" username="fhv_team" />
+      <sshConfig authType="OPEN_SSH" host="fhv-app" id="6bd06e37-0473-4368-b2c5-58345878abf7" port="22" nameFormat="DESCRIPTIVE" username="fhv_team" />
+    </configs>
+  </component>
+</project>

@@ -1,6 +1,5 @@
 package at.fhv.teamd.musicshop.backend.application;
 
-import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
@@ -48,8 +47,8 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public void buyFromShoppingCart(int customerId) throws RemoteException {
-        ServiceFactory.getShoppingCartServiceInstance().buyFromShoppingCart(sessionUUID, customerId);
+    public boolean buyFromShoppingCart(int customerId) throws RemoteException {
+        return ServiceFactory.getShoppingCartServiceInstance().buyFromShoppingCart(sessionUUID, customerId);
     }
 
     @Override

@@ -63,7 +63,7 @@ public class ShoppingCartService {
 
     public void removeFromShoppingCart(UUID sessionUUID, MediumDTO mediumDTO, int amount) {
         if (!shoppingCartExists(sessionUUID)) {
-            throw new IllegalStateException("Shopping cart does not exist.");
+            emptyShoppingCart(sessionUUID);
         }
 
         Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
@@ -88,9 +88,9 @@ public class ShoppingCartService {
 
     // TODO: overload with customer
     // TODO: append paymentMethod
-    public void buyFromShoppingCart(UUID sessionUUID, int id) {
+    public boolean buyFromShoppingCart(UUID sessionUUID, int id) {
         if (!shoppingCartExists(sessionUUID)) {
-            throw new IllegalStateException("Shopping cart does not exist.");
+            emptyShoppingCart(sessionUUID);
         }
 
         Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
@@ -107,6 +107,7 @@ public class ShoppingCartService {
             e.printStackTrace();
         }
         sessionLineItems.put(sessionUUID, new HashSet<>());
+        return false;
     }
 
     public void buyFromShoppingCart(UUID sessionUUID) {

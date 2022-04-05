@@ -3,8 +3,8 @@ package at.fhv.teamd.musicshop.userclient.view.customer;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.userclient.Tabs;
-import at.fhv.teamd.musicshop.userclient.connection.RMIconnection;
-import at.fhv.teamd.musicshop.userclient.view.ArticleController;
+import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.view.article.ArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,9 +32,8 @@ public class CustomerController implements Initializable {
     }
 
     public void reloadShoppingCart() {
-        ApplicationClient client = RMIconnection.getApplicationClient();
         try {
-            insertData(client.getShoppingCart());
+            insertData(RemoteFacade.getInstance().getShoppingCart());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,8 +60,7 @@ public class CustomerController implements Initializable {
     private void buyAll(ActionEvent actionEvent) throws RemoteException {
         //TODO: Check and buy
 
-        ApplicationClient client = RMIconnection.getApplicationClient();
-        client.buyFromShoppingCart(0);
+        RemoteFacade.getInstance().buyFromShoppingCart(0);
 
         new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
 

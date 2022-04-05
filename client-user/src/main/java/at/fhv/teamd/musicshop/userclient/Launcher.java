@@ -1,7 +1,6 @@
 package at.fhv.teamd.musicshop.userclient;
 
-//Required to Build the Application
-//Even if it looks like a useless class, DO NOT DELETE THIS CLASS!!!
+// launcher required for javafx packaging (alternatively use javafx build artifact which comes with a packaged launcher)
 public class Launcher {
     public static void main(String[] args) {
         Main.main(args);
