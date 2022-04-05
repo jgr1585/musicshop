@@ -7,8 +7,7 @@ import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -29,17 +28,14 @@ public class ArticleServiceTest {
     private MediumRepository mediumRepository;
 
 
-    private final ArticleService articleService;
+    private ArticleService articleService;
 
+    @BeforeEach
+    public void init() {
+        RepositoryFactory.setArticleRepository(this.articleRepository);
+        RepositoryFactory.setMediumRepository(this.mediumRepository);
 
-    public ArticleServiceTest() {
         this.articleService = new ArticleService();
-
-        try (MockedStatic<RepositoryFactory> mockedRepositoryFactory = Mockito.mockStatic(RepositoryFactory.class)) {
-            mockedRepositoryFactory.when(RepositoryFactory::getArticleRepositoryInstance).thenReturn(this.articleRepository);
-            mockedRepositoryFactory.when(RepositoryFactory::getMediumRepositoryInstance).thenReturn(this.mediumRepository);
-        }
-
     }
 
     @Test
@@ -50,7 +46,10 @@ public class ArticleServiceTest {
         String artistName = "";
         Set<Article> articles = Set.of(article);
 
-        Mockito.when(this.articleRepository.searchArticlesByAttributes(title, artistName)).thenReturn(articles);
+        Mockito.when(this.articleRepository.searchArticlesByAttributes(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString())).thenReturn(articles);
+
+        System.out.println(this.articleRepository.searchArticlesByAttributes(title, artistName));
+
         //noinspection OptionalGetWithoutIsPresent
         Mockito.when(this.mediumRepository.findMediumById(article.getMediumIDs().stream().findFirst().get())).thenReturn(article.getMediums().stream().findFirst());
 
@@ -65,7 +64,7 @@ public class ArticleServiceTest {
         Assertions.assertThrows(ApplicationClientException.class, () -> this.articleService.searchArticlesByAttributes(null, null));
 
         // then
-        Assertions.assertEquals(expectedArticleDTOS, actualArticleDTOS.get());
+        Assertions.assertTrue(expectedArticleDTOS.containsAll(actualArticleDTOS.get()) && actualArticleDTOS.get().containsAll(expectedArticleDTOS));
 
     }
 

@@ -8,6 +8,7 @@ import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildArticleDTO;
 
@@ -25,14 +26,9 @@ public class ArticleService {
             throw new ApplicationClientException("Validation error: No searchable param for search.");
         }
 
-        Set<Article> articles = articleRepository.searchArticlesByAttributes(title, artist);
-
-        Set<ArticleDTO> articleDTOs = new HashSet<>();
-        for (Article article : articles) {
-            articleDTOs.add(buildArticleDTO(mediumRepository, article));
-        }
-
-        return articleDTOs;
+        return articleRepository.searchArticlesByAttributes(title, artist).stream()
+                .map(article -> buildArticleDTO(mediumRepository, article))
+                .collect(Collectors.toSet());
     }
 
 
