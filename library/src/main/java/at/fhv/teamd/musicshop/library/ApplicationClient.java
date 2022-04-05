@@ -23,7 +23,7 @@ public interface ApplicationClient extends Remote {
 
     void emptyShoppingCart() throws RemoteException;
 
-    void buyFromShoppingCart(int customerId) throws RemoteException;
+    boolean buyFromShoppingCart(int customerId) throws RemoteException;
 
     ShoppingCartDTO getShoppingCart() throws RemoteException;
 }

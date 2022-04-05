@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-font-family: sans-serif; -fx-font-size: 13;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.medium.SearchMediumController">
+   <children>
+      <Label fx:id="mediumType1" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" text="Label">
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </Label>
+      <TextField fx:id="mediumAmount1" alignment="CENTER" disable="true" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" text="0">
+         <HBox.margin>
+            <Insets left="20.0" right="30.0" />
+         </HBox.margin>
+      </TextField>
+      <Button mnemonicParsing="false" onAction="#reduceByOne" prefWidth="35.0" style="-fx-background-color: red;" text="-" textFill="#101110">
+         <HBox.margin>
+            <Insets left="30.0" right="5.0" />
+         </HBox.margin>
+      </Button>
+      <TextField fx:id="mediumAmount2" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" text="0" />
+      <Button mnemonicParsing="false" onAction="#increaseByOne" prefWidth="35.0" style="-fx-background-color: lightgreen;" text="+">
+         <HBox.margin>
+            <Insets left="5.0" right="30.0" />
+         </HBox.margin>
+      </Button>
+      <Label fx:id="mediumPrice1" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" text="€€€" textFill="#26c303">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+         <HBox.margin>
+            <Insets left="10.0" />
+         </HBox.margin>
+      </Label>
+      <Button mnemonicParsing="false" onAction="#addToCard" prefWidth="100.0" style="-fx-background-color: orange;" text="Order" />
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</HBox>
