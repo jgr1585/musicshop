@@ -34,11 +34,46 @@ public class ArticleController {
     @FXML
     private VBox mediumTypeList;
 
-    public void addMediumTypes(ArticleDTO articleDTO,  Tabs tabs) throws IOException {
-        this.addMediumTypes(articleDTO, Optional.empty(), tabs);
+    public void addMediumTypes(ArticleDTO articleDTO,  Tabs tab) throws IOException {
+        this.title.setText(articleDTO.title());
+        this.genre.setText(articleDTO.genre());
+        this.artist.setText(articleDTO.artists().stream().map(ArtistDTO::name).collect(Collectors.joining(", ")));
+
+        //Select Cover Art for Album
+        Runnable loadCoverArtRunnable = () -> {
+            try {
+                this.loadCoverArt(articleDTO);
+
+            } catch (IOException ignored) {
+                // TODO: Something to do here?
+            }
+        };
+        new Thread(loadCoverArtRunnable).start();
+
+        for (var mediumDTO : articleDTO.mediums()) {
+            FXMLLoader fxmlLoader;
+            switch (tab) {
+                case SEARCH:
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/searchArticle/search-article.fxml"));
+                    break;
+                case RETURN:
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/returnArticle/return-article.fxml"));
+                    break;
+                case SHOPPINGCART:
+                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/shoppingCart/shoppingCart-article.fxml"));
+                    break;
+                default:
+                    throw new RuntimeException("invalid tab-parameter for article");
+            }
+
+            Parent root = fxmlLoader.load();
+            GenericArticleController controller = fxmlLoader.getController();
+            controller.setMediumType(articleDTO, mediumDTO);
+            this.mediumTypeList.getChildren().add(root);
+        }
     }
 
-    public void addMediumTypes(ArticleDTO articleDTO, Optional<LineItemDTO> lineItemDTO, Tabs tab) throws IOException {
+    public void addMediumTypes(ArticleDTO articleDTO, LineItemDTO lineItemDTO, Tabs tab) throws IOException {
 
         this.title.setText(articleDTO.title());
         this.genre.setText(articleDTO.genre());

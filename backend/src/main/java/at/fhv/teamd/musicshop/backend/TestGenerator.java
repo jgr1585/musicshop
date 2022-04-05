@@ -47,6 +47,7 @@ public class TestGenerator {
                 mediums1,
                 Duration.ofMinutes(4),
                 Set.of(artistLongLive));
+
         Album albumLongLive = new Album("Long Live A$AP",
                 labelLongLive,
                 releaseLongLive,
@@ -78,6 +79,7 @@ public class TestGenerator {
                 mediums2,
                 Duration.ofMinutes(3),
                 Set.of(artistUntamedDesire));
+
         Album albumUntamedDesire = new Album("Animal Ambition: An Untamed Desire to Win",
                 labelUntamedDesire,
                 releaseUntamedDesire,
@@ -109,6 +111,7 @@ public class TestGenerator {
                 mediums3,
                 Duration.ofMinutes(8),
                 Set.of(artistUnion));
+
         Album albumUnion = new Album("Union",
                 labelUnion,
                 releaseUnion,
@@ -140,6 +143,7 @@ public class TestGenerator {
                 mediums4,
                 Duration.ofMinutes(2),
                 Set.of(artistAnti));
+
         Song songAnti1 = new Song("James Joint",
                 labelAnti,
                 releaseAnti,
@@ -149,6 +153,7 @@ public class TestGenerator {
                 mediums4,
                 Duration.ofMinutes(1),
                 Set.of(artistAnti));
+
         Album albumAnti = new Album("ANTI",
                 labelAnti,
                 releaseAnti,

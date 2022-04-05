@@ -7,5 +7,6 @@ import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import java.util.Optional;
 
 public interface GenericArticleController {
-    void setMediumType(ArticleDTO articleDTO, MediumDTO analogMedium, Optional<LineItemDTO> lineItemDTO);
+    void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO);
+    void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO, LineItemDTO lineItemDTO);
 }

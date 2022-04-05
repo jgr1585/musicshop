@@ -12,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import java.rmi.RemoteException;
-import java.util.Optional;
 
 import static at.fhv.teamd.musicshop.userclient.view.FieldValidationHelper.numberOnly;
 
@@ -45,13 +44,17 @@ public class SearchMediumController implements GenericArticleController {
         numberOnly(this.mediumAmount);
     }
 
-    public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO, Optional<LineItemDTO> lineItemDTO) {
+    public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO) {
         this.articleDTO = articleDTO;
         this.mediumDTO = mediumDTO;
         this.mediumType.setText(mediumDTO.type());
         this.mediumPrice.setText(mediumDTO.price().toString());
         this.mediumAmount.setText(mediumDTO.stockQuantity().toString());
         this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
+    }
+
+    public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO, LineItemDTO lineItemDTO) {
+        setMediumType(articleDTO, mediumDTO);
     }
 
     @FXML

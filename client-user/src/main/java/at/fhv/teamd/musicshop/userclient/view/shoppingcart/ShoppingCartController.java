@@ -25,7 +25,6 @@ public class ShoppingCartController {
     public void initialize() {
         try {
             reloadShoppingCart();
-
         } catch (IOException e) {
             clearCart();
         }
@@ -41,14 +40,12 @@ public class ShoppingCartController {
 
     private void insertData(ShoppingCartDTO shoppingCartDTO) throws IOException {
         clearCart();
-
         for (var lineItemDTO : shoppingCartDTO.lineItems()) {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/article.fxml"));
             Parent medium = fxmlLoader.load();
             ArticleController controller = fxmlLoader.getController();
-            controller.addMediumTypes(lineItemDTO.article(), Optional.of(lineItemDTO), Tabs.SHOPPINGCART);
+            controller.addMediumTypes(lineItemDTO.article(), lineItemDTO, Tabs.SHOPPINGCART);
             this.shoppingCardElements.getChildren().add(medium);
-
         }
     }
 
@@ -56,7 +53,7 @@ public class ShoppingCartController {
     private void buyAll(ActionEvent actionEvent) throws IOException {
         //TODO: Check and buy
 
-        RemoteFacade.getInstance().emptyShoppingCart();
+        RemoteFacade.getInstance().buyFromShoppingCart(0);
 
         new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
 

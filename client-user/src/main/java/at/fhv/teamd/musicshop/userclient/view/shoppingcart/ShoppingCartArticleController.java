@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import javax.naming.OperationNotSupportedException;
 import java.rmi.RemoteException;
 import java.util.Optional;
 
@@ -18,9 +19,11 @@ import static at.fhv.teamd.musicshop.userclient.view.FieldValidationHelper.numbe
 public class ShoppingCartArticleController implements GenericArticleController {
 
     @FXML
+    public TextField mediumAmountSelected;
+    @FXML
     private Label mediumType;
     @FXML
-    private TextField mediumAmount;
+    private TextField mediumAmountStock;
     @FXML
     private Label mediumPrice;
 
@@ -31,18 +34,24 @@ public class ShoppingCartArticleController implements GenericArticleController {
     @FXML
     public void initialize() {
         // force the field to be numeric only
-        numberOnly(this.mediumAmount);
+        numberOnly(this.mediumAmountStock);
     }
 
     @Override
-    public void setMediumType(ArticleDTO articleDTO, MediumDTO analogMedium, Optional<LineItemDTO> lineItemDTO) {
-        this.articleDTO = articleDTO;
-        this.mediumDTO = analogMedium;
-        this.lineItemDTO = lineItemDTO.orElseThrow();
+    public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO) {
+        throw new RuntimeException();
+    }
 
-        this.mediumType.setText(analogMedium.type());
-        this.mediumPrice.setText(analogMedium.price().toString());
-        this.mediumAmount.setText(this.lineItemDTO.quantity().toString());
+    @Override
+    public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO, LineItemDTO lineItemDTO) {
+        this.articleDTO = articleDTO;
+        this.mediumDTO = mediumDTO;
+        this.lineItemDTO = lineItemDTO;
+
+        this.mediumType.setText(mediumDTO.type());
+        this.mediumPrice.setText(mediumDTO.price().toString());
+        this.mediumAmountStock.setText(this.lineItemDTO.medium().stockQuantity().toString());
+        this.mediumAmountSelected.setText(this.lineItemDTO.quantity().toString());
     }
 
     @FXML
