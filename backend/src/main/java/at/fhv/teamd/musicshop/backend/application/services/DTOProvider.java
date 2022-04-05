@@ -72,7 +72,7 @@ public class DTOProvider {
         ).build();
     }
 
-    static ArticleDTO buildArticleDTO(MediumRepository mediumRepository, Article article) {
+    public static ArticleDTO buildArticleDTO(MediumRepository mediumRepository, Article article) {
         Set<MediumDTO> mediumDTOs = new HashSet<>();
         article.getMediumIDs().forEach(id ->
                 mediumDTOs.add(buildMediumDTO(mediumRepository.findMediumById(id).orElseThrow()))

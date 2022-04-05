@@ -4,6 +4,7 @@ import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.EmployeeRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 
+
 public class RepositoryFactory {
     private static ArticleRepository articleRepository;
     private static MediumRepository mediumRepository;
