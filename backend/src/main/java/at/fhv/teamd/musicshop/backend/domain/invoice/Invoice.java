@@ -1,7 +1,6 @@
 package at.fhv.teamd.musicshop.backend.domain.invoice;
 
 import at.fhv.teamd.musicshop.backend.domain.person.Customer;
-import at.fhv.teamd.musicshop.backend.domain.person.Employee;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import lombok.Getter;
 
@@ -15,7 +14,7 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "invoiceID_generator")
     @SequenceGenerator(name="invoiceID_generator", sequenceName = "invoice_sequence", allocationSize=10000)
-    private int invoiceNo;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private final PaymentMethod paymentMethod;
