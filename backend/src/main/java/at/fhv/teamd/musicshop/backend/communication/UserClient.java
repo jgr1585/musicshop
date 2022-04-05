@@ -10,7 +10,6 @@ import java.rmi.registry.Registry;
 
 public class UserClient {
     private static final int REMOTE_PORT = Registry.REGISTRY_PORT;
-
     public static void initRmiRegistry() throws RemoteException, MalformedURLException {
         LocateRegistry.createRegistry(REMOTE_PORT);
         System.out.println("Registry started @ port " + REMOTE_PORT);
