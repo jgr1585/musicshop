@@ -70,4 +70,7 @@ public class SearchMediumController implements GenericArticleController {
             this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
         }
     }
+
+    public void order(ActionEvent actionEvent) {
+    }
 }
