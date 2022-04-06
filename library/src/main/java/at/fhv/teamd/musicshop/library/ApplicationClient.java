@@ -14,6 +14,7 @@ public interface ApplicationClient extends Remote {
     // Search Articles
     Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException;
 
+    // TODO: Delete?
     Optional<ArticleDTO> searchArticleByID(Long id) throws RemoteException, ApplicationClientException;
 
     // Shopping Cart

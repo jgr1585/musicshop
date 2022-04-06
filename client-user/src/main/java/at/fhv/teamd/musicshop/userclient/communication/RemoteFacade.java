@@ -57,18 +57,18 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public Optional<ArticleDTO> searchArticleByID(Long id) throws RemoteException {
-        return Optional.empty();
+    public Optional<ArticleDTO> searchArticleByID(Long id) throws RemoteException, ApplicationClientException {
+        return getApplicationClientOrThrow().searchArticleByID(id);
     }
 
     @Override
-    public void addToShoppingCart(ArticleDTO articleDTO, MediumDTO analogMediumDTO, int amount) throws RemoteException {
-        getApplicationClientOrThrow().addToShoppingCart(articleDTO, analogMediumDTO, amount);
+    public void addToShoppingCart(ArticleDTO articleDTO, MediumDTO mediumDTO, int amount) throws RemoteException {
+        getApplicationClientOrThrow().addToShoppingCart(articleDTO, mediumDTO, amount);
     }
 
     @Override
-    public void removeFromShoppingCart(MediumDTO analogMediumDTO, int amount) throws RemoteException {
-        getApplicationClientOrThrow().removeFromShoppingCart(analogMediumDTO, amount);
+    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException {
+        getApplicationClientOrThrow().removeFromShoppingCart(mediumDTO, amount);
     }
 
     @Override

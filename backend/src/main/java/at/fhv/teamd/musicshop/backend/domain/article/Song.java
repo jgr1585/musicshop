@@ -15,16 +15,11 @@ public class Song extends Article {
     @Column
     private Duration length;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    private Set<Artist> artists;
-
     protected Song() {
     }
 
     public Song(String title, String label, LocalDate releaseDate, String genre, String descriptorName, String musicbrainzId, Set<Medium> mediums, Duration length, Set<Artist> artists) {
-        super(title, label, releaseDate, genre, descriptorName, musicbrainzId, mediums);
-
+        super(title, label, releaseDate, genre, descriptorName, musicbrainzId, mediums, artists);
         this.length = Objects.requireNonNull(length);
-        this.artists = Objects.requireNonNull(artists);
     }
 }
