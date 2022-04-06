@@ -9,22 +9,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 
 import java.rmi.RemoteException;
 
 import static at.fhv.teamd.musicshop.userclient.view.FieldValidationHelper.numberOnly;
 
 public class SearchMediumController implements GenericArticleController {
-
-    @FXML
-    private Label title;
-    @FXML
-    private Label artist;
-    @FXML
-    private Label genre;
-    @FXML
-    private VBox mediumTypeList;
 
     @FXML
     private Label mediumPrice;
@@ -54,24 +44,29 @@ public class SearchMediumController implements GenericArticleController {
     }
 
     public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO, LineItemDTO lineItemDTO) {
-        setMediumType(articleDTO, mediumDTO);
+        this.articleDTO = articleDTO;
+        this.mediumDTO = mediumDTO;
+        this.mediumType.setText(mediumDTO.type());
+        this.mediumPrice.setText(mediumDTO.price().toString());
+        this.mediumAmount.setText(mediumDTO.stockQuantity().toString());
+        this.mediumAmountSelected.setText(lineItemDTO.quantity().toString());
     }
 
     @FXML
     private void addToCard(ActionEvent actionEvent) throws RemoteException {
-        RemoteFacade.getInstance().addToShoppingCart(this.articleDTO, this.mediumDTO, Integer.parseInt(this.mediumAmount.getText()));
+        RemoteFacade.getInstance().addToShoppingCart(this.articleDTO, this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()));
     }
 
     public void reduceByOne(ActionEvent actionEvent) {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
-        if (val >= 1) {
+        if (val > 0) {
             this.mediumAmountSelected.setText(Integer.valueOf(val - 1).toString());
         }
     }
 
     public void increaseByOne(ActionEvent actionEvent) {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
-        if (val >= 0) {
+        if (val < this.mediumDTO.stockQuantity()) {
             this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
         }
     }

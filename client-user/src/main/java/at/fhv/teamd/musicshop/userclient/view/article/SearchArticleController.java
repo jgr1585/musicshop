@@ -43,7 +43,6 @@ public class SearchArticleController {
     @FXML
     private void searchArticles(ActionEvent actionEvent) throws ApplicationClientException, IOException {
         this.searchPane.getChildren().clear();
-
         if (!(this.searchByTitle.getText().isEmpty() && this.searchByArtist.getText().isEmpty())) {
             Set<ArticleDTO> result = RemoteFacade.getInstance().searchArticlesByAttributes(this.searchByTitle.getText(), this.searchByArtist.getText());
             if (!(result.isEmpty())) {

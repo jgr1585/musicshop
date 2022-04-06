@@ -10,12 +10,18 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public class ShoppingCartController {
+    @FXML
+    private Label totalAmount;
+
     @FXML
     private VBox shoppingCardElements;
 
@@ -47,17 +53,23 @@ public class ShoppingCartController {
             controller.addMediumTypes(lineItemDTO.article(), lineItemDTO, Tabs.SHOPPINGCART);
             this.shoppingCardElements.getChildren().add(medium);
         }
+        this.totalAmount.setText(shoppingCartDTO.totalAmount().toString());
+        System.out.println("totalAmount: " + shoppingCartDTO.totalAmount().toString());
     }
 
     @FXML
     private void buyAll(ActionEvent actionEvent) throws IOException {
-        //TODO: Check and buy
-
-        RemoteFacade.getInstance().buyFromShoppingCart(0);
-
-        new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
-
+        if (RemoteFacade.getInstance().buyFromShoppingCart(0)) {
+            new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
+        } else {
+            new Alert(Alert.AlertType.ERROR, "Purchase of items failed", ButtonType.CLOSE).show();
+        }
         this.reloadShoppingCart();
+    }
+
+    @FXML
+    private void removeAll(ActionEvent actionEvent) throws IOException {
+        RemoteFacade.getInstance().emptyShoppingCart();
     }
 
 }

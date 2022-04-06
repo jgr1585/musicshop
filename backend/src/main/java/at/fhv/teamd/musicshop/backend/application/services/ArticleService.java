@@ -40,7 +40,6 @@ public class ArticleService {
         if (!searchableParam(id.toString())) {
             throw new ApplicationClientException("Validation error: No searchable param for search.");
         }
-
         return Optional.of(buildArticleDTO(mediumRepository, articleRepository.findArticleById(id).orElseThrow()));
     }
 
