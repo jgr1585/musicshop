@@ -2,7 +2,6 @@ package at.fhv.teamd.musicshop.backend.domain.medium;
 
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

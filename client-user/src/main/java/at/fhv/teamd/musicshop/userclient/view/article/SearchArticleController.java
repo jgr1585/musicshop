@@ -15,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.Set;
 
 public class SearchArticleController {

@@ -13,7 +13,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-import java.util.Optional;
 
 public class ShoppingCartController {
     @FXML

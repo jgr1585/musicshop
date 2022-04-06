@@ -3,9 +3,13 @@ package at.fhv.teamd.musicshop.backend.domain.article;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import lombok.Getter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Entity
