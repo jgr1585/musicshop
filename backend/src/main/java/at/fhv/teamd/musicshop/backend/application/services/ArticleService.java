@@ -1,16 +1,16 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
+import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.SortedSet;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildArticleDTO;
@@ -34,13 +34,14 @@ public class ArticleService {
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
+    public Optional<ArticleDTO> searchArticleByID(Long id) {
+        Optional<Article> article = articleRepository.findArticleById(id);
 
-    public Optional<ArticleDTO> searchArticleByID(Long id) throws ApplicationClientException {
-        if (!searchableParam(id.toString())) {
-            throw new ApplicationClientException("Validation error: No searchable param for search.");
-        }
+        AtomicReference<Optional<ArticleDTO>> articleDTO = new AtomicReference<>(Optional.empty());
 
-        return Optional.of(buildArticleDTO(mediumRepository, articleRepository.findArticleById(id).orElseThrow()));
+        article.ifPresent(articleItem -> articleDTO.set(Optional.of(buildArticleDTO(mediumRepository, articleItem))));
+
+        return articleDTO.get();
     }
 
     /*

@@ -12,6 +12,7 @@ import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildShoppingCartDTO;
@@ -59,6 +60,7 @@ public class ShoppingCartService {
                 });
     }
 
+    // TODO: lineItem entfernen bei quantity == 0
     public void removeFromShoppingCart(UUID sessionUUID, MediumDTO mediumDTO, int amount) {
         if (!shoppingCartExists(sessionUUID)) {
             emptyShoppingCart(sessionUUID);
@@ -86,6 +88,7 @@ public class ShoppingCartService {
 
     // TODO: overload with customer
     // TODO: append paymentMethod
+    // TODO: decrease stock
     public boolean buyFromShoppingCart(UUID sessionUUID, int id) {
         if (!shoppingCartExists(sessionUUID)) {
             emptyShoppingCart(sessionUUID);
@@ -100,29 +103,20 @@ public class ShoppingCartService {
         });
 
         try {
-            createInvoice(PaymentMethod.CASH, lineItems, CustomerService.searchCustomerById(id));
+//            createInvoice(PaymentMethod.CASH, lineItems, CustomerService.findCustomerById(id));
+            createInvoice(PaymentMethod.CASH, lineItems, new Customer("Lukas", "Kaufmann", 100000000));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        sessionLineItems.put(sessionUUID, new HashSet<>());
-        return false;
-    }
 
-    public void buyFromShoppingCart(UUID sessionUUID) {
-        if (!shoppingCartExists(sessionUUID)) {
-            throw new IllegalStateException("Shopping cart does not exist.");
-        }
+        emptyShoppingCart(sessionUUID);
 
-        Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
+        // decrease quantities
         lineItems.forEach(lineItem -> {
             Medium medium = mediumRepository.findMediumById(lineItem.getMediumId()).orElseThrow();
-            if (medium.getStock().getQuantity().getValue() < lineItem.getQuantity().getValue()) {
-                throw  new RuntimeException("not enough in Stock: " + medium.getId());
-            }
+            medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity());
         });
-
-        createInvoice(PaymentMethod.CASH, lineItems);
-        sessionLineItems.put(sessionUUID, new HashSet<>());
+        return true;
     }
 
     private boolean shoppingCartExists(UUID sessionUUID) {

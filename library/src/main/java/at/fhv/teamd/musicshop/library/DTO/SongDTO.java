@@ -61,6 +61,19 @@ public final class SongDTO implements ArticleDTO, Serializable {
     private SongDTO() {
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SongDTO songDTO = (SongDTO) o;
+        return Objects.equals(id, songDTO.id) && Objects.equals(descriptorName, songDTO.descriptorName) && Objects.equals(title, songDTO.title) && Objects.equals(label, songDTO.label) && Objects.equals(releaseDate, songDTO.releaseDate) && Objects.equals(genre, songDTO.genre) && Objects.equals(musicbrainzId, songDTO.musicbrainzId) && Objects.equals(mediums, songDTO.mediums) && Objects.equals(length, songDTO.length) && Objects.equals(artists, songDTO.artists);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, descriptorName, title, label, releaseDate, genre, musicbrainzId, mediums, length, artists);
+    }
+
     public static class Builder {
         private SongDTO instance;
 

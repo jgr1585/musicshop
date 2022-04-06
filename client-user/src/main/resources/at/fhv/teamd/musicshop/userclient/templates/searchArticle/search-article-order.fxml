@@ -35,7 +35,7 @@
             <Insets left="10.0" />
          </HBox.margin>
       </Label>
-      <Button mnemonicParsing="false" onAction="#addToCard" prefWidth="100.0" style="-fx-background-color: orange;" text="Order" />
+      <Button mnemonicParsing="false" onAction="#order" prefWidth="100.0" style="-fx-background-color: orange;" text="Order" />
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

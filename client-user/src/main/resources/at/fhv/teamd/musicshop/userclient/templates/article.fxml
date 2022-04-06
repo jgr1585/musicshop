@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.DropShadow?>
@@ -7,9 +11,10 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<GridPane style="-fx-border-color: #000000; -fx-border-radius: 15;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.article.ArticleController">
+
+<GridPane alignment="CENTER" pickOnBounds="false" prefHeight="150.0" prefWidth="1000.0" style="-fx-border-color: #000000; -fx-border-radius: 15;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.article.ArticleController">
    <children>
-      <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" spacing="5.0">
+      <HBox prefHeight="150.0" spacing="5.0">
          <children>
             <ImageView fx:id="cover" fitHeight="110.0" fitWidth="110.0" pickOnBounds="true" preserveRatio="true">
                <effect>
@@ -26,24 +31,16 @@
                <children>
                   <GridPane>
                      <children>
-                        <Label text="Title:">
+                        <Label fx:id="title" text="Label1">
                            <font>
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
-                        <Label text="Artist:" GridPane.rowIndex="1" />
-                        <Label text="Genre" GridPane.rowIndex="2" />
-                        <Label fx:id="title" text="Label1" GridPane.columnIndex="1">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Label>
-                        <Label fx:id="artist" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="genre" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label fx:id="artist" text="Label" GridPane.rowIndex="1" />
+                        <Label fx:id="genre" text="Label" GridPane.rowIndex="2" />
                      </children>
                      <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -55,7 +52,7 @@
             </VBox>
          </children>
       </HBox>
-      <VBox fx:id="mediumTypeList" alignment="CENTER_RIGHT" GridPane.columnIndex="1">
+      <VBox fx:id="mediumTypeList" alignment="CENTER_RIGHT" prefWidth="400.0" GridPane.columnIndex="1">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -68,8 +65,8 @@
       </VBox>
    </children>
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="300.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="150.0" prefWidth="300.0" />
+      <ColumnConstraints hgrow="SOMETIMES" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="500.0" minWidth="500.0" prefWidth="500.0" />
    </columnConstraints>
    <opaqueInsets>
       <Insets top="5.0" />

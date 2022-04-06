@@ -54,11 +54,19 @@ public class ShoppingCartArticleController implements GenericArticleController {
 
     @FXML
     private void reduceByOne(ActionEvent actionEvent) throws RemoteException {
-        RemoteFacade.getInstance().addToShoppingCart(articleDTO, mediumDTO, 1);
+        int val = Integer.parseInt(this.mediumAmountSelected.getText());
+        if (val > 0) {
+            this.mediumAmountSelected.setText(Integer.valueOf(val - 1).toString());
+            RemoteFacade.getInstance().removeFromShoppingCart(mediumDTO, 1);
+        }
     }
     @FXML
     private void increaseByOne(ActionEvent actionEvent) throws RemoteException {
-        RemoteFacade.getInstance().removeFromShoppingCart(mediumDTO, 1);
+        int val = Integer.parseInt(this.mediumAmountSelected.getText());
+        if (val < this.lineItemDTO.medium().stockQuantity()) {
+            this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
+            RemoteFacade.getInstance().addToShoppingCart(articleDTO, mediumDTO, 1);
+        }
     }
     @FXML
     private void remove(ActionEvent actionEvent) throws RemoteException {
