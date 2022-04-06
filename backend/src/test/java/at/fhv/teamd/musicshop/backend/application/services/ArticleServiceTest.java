@@ -14,8 +14,10 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -45,7 +47,8 @@ public class ArticleServiceTest {
         Article article = DomainFactory.createArticle();
         String title = article.getTitle();
         String artistName = "";
-        Set<Article> articles = Set.of(article);
+        Set<Article> articles = new LinkedHashSet<>();
+        articles.add(article);
 
         Mockito.when(this.articleRepository.searchArticlesByAttributes(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString())).thenReturn(articles);
 

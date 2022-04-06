@@ -11,6 +11,6 @@
         <module name="musicshop.backend.test" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="13" />
+    <bytecodeTargetLevel target="11" />
   </component>
 </project>

@@ -49,6 +49,19 @@ public class LineItemDTO implements Serializable {
     private LineItemDTO() {
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LineItemDTO that = (LineItemDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(article, that.article) && Objects.equals(descriptorName, that.descriptorName) && Objects.equals(quantity, that.quantity) && Objects.equals(price, that.price) && Objects.equals(totalPrice, that.totalPrice) && Objects.equals(medium, that.medium);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, article, descriptorName, quantity, price, totalPrice, medium);
+    }
+
     public static class Builder {
         private LineItemDTO instance;
 
