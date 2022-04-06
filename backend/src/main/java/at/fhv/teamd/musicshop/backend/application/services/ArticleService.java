@@ -11,6 +11,7 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.stream.Collectors;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildArticleDTO;
 
@@ -28,14 +29,9 @@ public class ArticleService {
             throw new ApplicationClientException("Validation error: No searchable param for search.");
         }
 
-        SortedSet<Article> articles = articleRepository.searchArticlesByAttributes(title, artist);
-
-        Set<ArticleDTO> articleDTOs = new LinkedHashSet<>();
-        for (Article article : articles) {
-            articleDTOs.add(buildArticleDTO(mediumRepository, article));
-        }
-
-        return articleDTOs;
+        return articleRepository.searchArticlesByAttributes(title, artist).stream()
+                .map(article -> DTOProvider.buildArticleDTO(mediumRepository, article))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
 
