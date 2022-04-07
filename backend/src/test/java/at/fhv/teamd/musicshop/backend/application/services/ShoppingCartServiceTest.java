@@ -17,14 +17,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 @ExtendWith(MockitoExtension.class)
 class ShoppingCartServiceTest {
@@ -82,6 +86,23 @@ class ShoppingCartServiceTest {
     }
 
     @Test
+    public void given_shoppingCart_when_initializeShoppingcart_then_returnShoppingCart() {
+        //given
+        UUID uuid = UUID.randomUUID();
+        AtomicReference<Method> method = new AtomicReference<>();
+        Assertions.assertDoesNotThrow(() -> method.set(ShoppingCartService.class.getDeclaredMethod("initializeShoppingCart", UUID.class)));
+        method.get().setAccessible(true);
+
+        //when
+        Assertions.assertDoesNotThrow(() -> method.get().invoke(this.shoppingCartService, uuid));
+
+        //then
+        Assertions.assertThrows(InvocationTargetException.class, () -> method.get().invoke(this.shoppingCartService, uuid));
+    }
+
+
+
+    @Test
     public void given_shoppingCartService_when_removeFromShoppingCart_then_returnRefreshedShoppingCart() {
         //given
         UUID uuid = UUID.randomUUID();
@@ -134,6 +155,42 @@ class ShoppingCartServiceTest {
         //then
         Assertions.assertTrue(buyFromShoppingCart);
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(uuid).lineItems().isEmpty());
+    }
+
+    @Test
+    public void given_emptyShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() {
+        //given
+        UUID uuid = UUID.randomUUID();
+
+        //when
+        boolean buyFromShoppingCart = this.shoppingCartService.buyFromShoppingCart(uuid, 0);
+
+        //then
+        Assertions.assertTrue(buyFromShoppingCart);
+        Assertions.assertTrue(this.shoppingCartService.getShoppingCart(uuid).lineItems().isEmpty());
+    }
+
+    @Test
+    public void given_articlesInShoppingCart_when_buyFromShoppingCart_item_not_in_stock_then_Throw_Exeption() {
+        //given
+        UUID uuid = UUID.randomUUID();
+        Article article = DomainFactory.createArticle();
+        Medium medium = DomainFactory.createMedium(MediumType.CD);
+        int amount = 10;
+
+        Mockito.when(this.articleRepository.findArticleById(article.getId())).thenReturn(Optional.of(article));
+        Mockito.when(this.mediumRepository.findMediumById(article.getMediumIDs().stream().findFirst().get())).thenReturn(article.getMediums().stream().findFirst());
+
+        ArticleDTO articleDTO = DTOProvider.buildArticleDTO(this.mediumRepository, article);
+        MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
+
+        this.shoppingCartService.addToShoppingCart(uuid, articleDTO, mediumDTO, amount);
+
+        //when
+        Assertions.assertThrows(RuntimeException.class,() -> this.shoppingCartService.buyFromShoppingCart(uuid, 0));
+
+        //then
+        Assertions.assertFalse(this.shoppingCartService.getShoppingCart(uuid).lineItems().isEmpty());
     }
 
     @Test

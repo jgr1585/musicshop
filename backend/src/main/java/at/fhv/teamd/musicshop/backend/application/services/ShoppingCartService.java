@@ -13,14 +13,13 @@ import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 
-import javax.transaction.Transactional;
 import java.util.*;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildShoppingCartDTO;
 import static at.fhv.teamd.musicshop.backend.application.services.InvoiceService.createInvoice;
 
 public class ShoppingCartService {
-    private static Map<UUID, Set<LineItem>> sessionLineItems = new HashMap<>();
+    private static final Map<UUID, Set<LineItem>> sessionLineItems = new HashMap<>();
 
     private static MediumRepository mediumRepository;
     private static ArticleRepository articleRepository;
@@ -30,7 +29,7 @@ public class ShoppingCartService {
         articleRepository = RepositoryFactory.getArticleRepositoryInstance();
     }
 
-    private void initializeShoppingcart(UUID sessionUUID) {
+    private void initializeShoppingCart(UUID sessionUUID) {
         if (!shoppingCartExists(sessionUUID)) {
             sessionLineItems.put(sessionUUID, new HashSet<>());
         } else {
@@ -41,7 +40,7 @@ public class ShoppingCartService {
     // TODO: notification on client
     public void addToShoppingCart(UUID sessionUUID, ArticleDTO articleDTO, MediumDTO mediumDTO, int amount) {
         if (!shoppingCartExists(sessionUUID)) {
-            initializeShoppingcart(sessionUUID);
+            initializeShoppingCart(sessionUUID);
         }
         Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
 
@@ -87,7 +86,7 @@ public class ShoppingCartService {
 
     public ShoppingCartDTO getShoppingCart(UUID sessionUUID) {
         if (!shoppingCartExists(sessionUUID)) {
-            initializeShoppingcart(sessionUUID);
+            initializeShoppingCart(sessionUUID);
         }
         return buildShoppingCartDTO(articleRepository, mediumRepository, sessionLineItems.get(sessionUUID));
     }
