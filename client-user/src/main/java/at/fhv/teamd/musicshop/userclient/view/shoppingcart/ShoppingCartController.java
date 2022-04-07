@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.userclient.view.shoppingcart;
 
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
+import at.fhv.teamd.musicshop.userclient.Main;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.article.ArticleController;
@@ -8,11 +9,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -72,4 +75,19 @@ public class ShoppingCartController {
         RemoteFacade.getInstance().emptyShoppingCart();
     }
 
+    public void addCustomer(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("at/fhv/teamd/musicshop/userclient/templates/customer/customer.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+            Stage stage = new Stage();
+            stage.setTitle("MusicShop24");
+            stage.setScene(scene);
+            stage.show();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeCustomer(ActionEvent actionEvent) {
+    }
 }
