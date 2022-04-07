@@ -69,11 +69,16 @@ public class ShoppingCartService {
 
         Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
 
-        lineItems.stream()
+        LineItem lineItem = lineItems.stream()
                 .filter(li -> li.getMediumId().equals(mediumDTO.id()))
                 .findFirst()
-                .orElseThrow()
-                .decreaseQuantity(Quantity.of(amount));
+                .orElseThrow();
+
+        if (lineItem.getQuantity().getValue() > amount && amount > 0) {
+            lineItem.decreaseQuantity(Quantity.of(amount));
+        } else {
+            lineItems.remove(lineItem);
+        }
     }
 
     public void emptyShoppingCart(UUID sessionUUID) {
