@@ -157,15 +157,19 @@ class ShoppingCartServiceTest {
         MediumDTO mediumDTO2 = DTOProvider.buildMediumDTO(medium2);
 
         //when
-        ShoppingCartDTO shoppingCartDTO1 = this.shoppingCartService.getShoppingCart(uuid1);
-        ShoppingCartDTO shoppingCartDTO2 = this.shoppingCartService.getShoppingCart(uuid2);
+        this.shoppingCartService.getShoppingCart(uuid1);
+        this.shoppingCartService.getShoppingCart(uuid2);
         this.shoppingCartService.addToShoppingCart(uuid1, articleDTO1, mediumDTO1, 2);
         this.shoppingCartService.addToShoppingCart(uuid2, articleDTO2, mediumDTO2, 2);
-        ShoppingCartDTO shoppingCartDTO3 = this.shoppingCartService.getShoppingCart(uuid1);
+        ShoppingCartDTO shoppingCartDTO1 = this.shoppingCartService.getShoppingCart(uuid1);
+        ShoppingCartDTO shoppingCartDTO2 = this.shoppingCartService.getShoppingCart(uuid1);
+        ShoppingCartDTO shoppingCartDTO3 = this.shoppingCartService.getShoppingCart(uuid2);
+        ShoppingCartDTO shoppingCartDTO4 = this.shoppingCartService.getShoppingCart(uuid2);
 
         //then
-        Assertions.assertEquals(shoppingCartDTO1, shoppingCartDTO3);
-        Assertions.assertNotEquals(shoppingCartDTO1, shoppingCartDTO2);
+        Assertions.assertEquals(shoppingCartDTO1, shoppingCartDTO2);
+        Assertions.assertEquals(shoppingCartDTO3, shoppingCartDTO4);
+        Assertions.assertNotEquals(shoppingCartDTO1, shoppingCartDTO3);
 
     }
 
