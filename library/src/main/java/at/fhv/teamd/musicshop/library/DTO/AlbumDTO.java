@@ -61,6 +61,19 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
     private AlbumDTO() {
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AlbumDTO albumDTO = (AlbumDTO) o;
+        return Objects.equals(id, albumDTO.id) && Objects.equals(descriptorName, albumDTO.descriptorName) && Objects.equals(title, albumDTO.title) && Objects.equals(label, albumDTO.label) && Objects.equals(releaseDate, albumDTO.releaseDate) && Objects.equals(genre, albumDTO.genre) && Objects.equals(musicbrainzId, albumDTO.musicbrainzId) && Objects.equals(mediums, albumDTO.mediums) && Objects.equals(songs, albumDTO.songs) && Objects.equals(artists, albumDTO.artists);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, descriptorName, title, label, releaseDate, genre, musicbrainzId, mediums, songs, artists);
+    }
+
     public static class Builder {
         private final AlbumDTO instance;
 
