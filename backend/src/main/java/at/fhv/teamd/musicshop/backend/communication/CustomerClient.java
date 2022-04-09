@@ -1,5 +1,6 @@
 package at.fhv.teamd.musicshop.backend.communication;
 
+import at.fhv.teamd.musicshop.library.ApplicationClientFactory;
 import at.fhv.teamd.musicshop.library.CustomerDBClient;
 import at.fhv.teamd.musicshop.library.CustomerDBClientFactory;
 
@@ -14,14 +15,19 @@ public class CustomerClient {
     private static final String REMOTE_HOST = "localhost";
     private static final int REMOTE_PORT = 1100;
 
-    public static void initRmiRegistry() throws RemoteException, MalformedURLException, NotBoundException {
-        LocateRegistry.getRegistry(REMOTE_HOST, REMOTE_PORT);
-        CustomerDBClientFactory customerDBClientFactory = (CustomerDBClientFactory) Naming.lookup("rmi://" + REMOTE_HOST + ":" + REMOTE_PORT + "/CustomerDBClientFactory");
-        customerClient = customerDBClientFactory.createCustomerDBClient();
-        System.out.println("customerDBClient found");
-    }
+    public static CustomerDBClient getCustomerClient() throws RemoteException {
+        if (customerClient != null) {
+            return customerClient;
+        }
 
-    public static CustomerDBClient getCustomerClient() {
-        return customerClient;
+        try {
+            LocateRegistry.getRegistry(REMOTE_HOST, REMOTE_PORT);
+            CustomerDBClientFactory customerDBClientFactory = (CustomerDBClientFactory) Naming.lookup("rmi://" + REMOTE_HOST + ":" + REMOTE_PORT + "/CustomerDBClientFactory");
+            customerClient = customerDBClientFactory.createCustomerDBClient();
+            System.out.println("customerDBClient found");
+            return customerClient;
+        } catch (MalformedURLException | NotBoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

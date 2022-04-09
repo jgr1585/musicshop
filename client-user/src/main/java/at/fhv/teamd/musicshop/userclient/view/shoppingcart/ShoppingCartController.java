@@ -28,7 +28,8 @@ public class ShoppingCartController {
     @FXML
     private VBox shoppingCardElements;
 
-    // TODO: fix initialize shopping cart;
+    @FXML
+    private Label customerid;
 
     @FXML
     public void initialize() {
@@ -67,27 +68,35 @@ public class ShoppingCartController {
         } else {
             new Alert(Alert.AlertType.ERROR, "Purchase of items failed", ButtonType.CLOSE).show();
         }
-        this.reloadShoppingCart();
+        reloadShoppingCart();
+        removeCustomer();
     }
 
     @FXML
     private void removeAll(ActionEvent actionEvent) throws IOException {
         RemoteFacade.getInstance().emptyShoppingCart();
+        reloadShoppingCart();
+        removeCustomer();
     }
 
     public void addCustomer(ActionEvent actionEvent) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("at/fhv/teamd/musicshop/userclient/templates/customer/customer.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/customer/customer.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 800, 600);
             Stage stage = new Stage();
-            stage.setTitle("MusicShop24");
+            stage.setTitle("Select customer");
             stage.setScene(scene);
-            stage.show();
+            stage.showAndWait();
         } catch (Throwable e) {
             e.printStackTrace();
         }
     }
 
     public void removeCustomer(ActionEvent actionEvent) {
+        removeCustomer();
+    }
+
+    private void removeCustomer() {
+        this.customerid.setText("");
     }
 }

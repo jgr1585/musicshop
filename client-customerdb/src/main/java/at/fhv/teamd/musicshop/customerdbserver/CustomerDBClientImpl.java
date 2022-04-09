@@ -8,9 +8,7 @@ import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.*;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class CustomerDBClientImpl extends UnicastRemoteObject implements CustomerDBClient {
     private static final String DB_URL;
@@ -35,24 +33,25 @@ public class CustomerDBClientImpl extends UnicastRemoteObject implements Custome
         }
     }
 
-    public static void init() {}
+    public static void init() {
+    }
 
     public CustomerDBClientImpl() throws RemoteException {
         super();
     }
 
     @Override
-    public List<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException {
+    public Set<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM "+ DB_CUSTOMERS_TABLE +" WHERE \"givenName\" ILIKE ? OR \"familyName\" ILIKE ? OR \"birthName\" ILIKE ? LIMIT "+ LIST_MAX_RESULTS +";");) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + DB_CUSTOMERS_TABLE + " WHERE \"givenName\" ILIKE ? OR \"familyName\" ILIKE ? OR \"birthName\" ILIKE ? LIMIT " + LIST_MAX_RESULTS + ";")) {
 
-            String searchStr = "%"+name+"%";
+            String searchStr = "%" + name + "%";
             stmt.setString(1, searchStr);
             stmt.setString(2, searchStr);
             stmt.setString(3, searchStr);
             ResultSet rs = stmt.executeQuery();
 
-            List<CustomerDTO> customerDTOs = new LinkedList<>();
+            Set<CustomerDTO> customerDTOs = new LinkedHashSet<>();
 
             while (rs.next()) {
                 customerDTOs.add(buildCustomerDTOByResultSet(rs));
@@ -69,7 +68,7 @@ public class CustomerDBClientImpl extends UnicastRemoteObject implements Custome
     @Override
     public CustomerDTO findCustomerById(int customerId) throws CustomerDBClientException, CustomerNotFoundException {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM "+ DB_CUSTOMERS_TABLE +" WHERE id=?");) {
+             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + DB_CUSTOMERS_TABLE + " WHERE id=?")) {
 
             stmt.setInt(1, customerId);
             ResultSet rs = stmt.executeQuery();

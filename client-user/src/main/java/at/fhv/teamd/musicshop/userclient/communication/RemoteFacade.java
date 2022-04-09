@@ -3,9 +3,11 @@ package at.fhv.teamd.musicshop.userclient.communication;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.ApplicationClientFactory;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
+import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
+import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -13,7 +15,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Optional;
 import java.util.Set;
 
 public class RemoteFacade implements ApplicationClient {
@@ -30,7 +31,6 @@ public class RemoteFacade implements ApplicationClient {
         if (instance == null) {
             instance = new RemoteFacade();
         }
-
         return instance;
     }
 
@@ -41,12 +41,9 @@ public class RemoteFacade implements ApplicationClient {
 
         try {
             LocateRegistry.getRegistry(REMOTE_HOST, REMOTE_PORT);
-            ApplicationClientFactory applicationClientFactory
-                    = (ApplicationClientFactory) Naming.lookup("rmi://" + REMOTE_HOST + ":" + REMOTE_PORT + "/ApplicationClientFactoryImpl");
-
+            ApplicationClientFactory applicationClientFactory = (ApplicationClientFactory) Naming.lookup("rmi://" + REMOTE_HOST + ":" + REMOTE_PORT + "/ApplicationClientFactoryImpl");
             applicationClient = applicationClientFactory.createApplicationClient();
             return applicationClient;
-
         } catch (MalformedURLException | NotBoundException e) {
             throw new RuntimeException(e);
         }
@@ -55,6 +52,11 @@ public class RemoteFacade implements ApplicationClient {
     @Override
     public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException {
         return getApplicationClientOrThrow().searchArticlesByAttributes(title, artist);
+    }
+
+    @Override
+    public Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException {
+        return getApplicationClientOrThrow().searchCustomersByName(name);
     }
 
     @Override
