@@ -2,10 +2,13 @@ package at.fhv.teamd.musicshop.backend.domain.article;
 
 import lombok.Getter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Entity(name = "Song")

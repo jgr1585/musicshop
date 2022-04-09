@@ -1,8 +1,8 @@
 package at.fhv.teamd.musicshop.backend.infrastructure;
 
 import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
+import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
-import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 
 import javax.persistence.EntityManager;
@@ -10,6 +10,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ArticleHibernateRepository implements ArticleRepository {
@@ -26,47 +27,60 @@ public class ArticleHibernateRepository implements ArticleRepository {
      */
     @Override
     @Transactional
-    public Set<Article> searchArticlesByAttributes(String title, String artist) {
+    public SortedSet<Article> searchArticlesByAttributes(String title, String artist) {
         Objects.requireNonNull(title);
         Objects.requireNonNull(artist);
 
         EntityManager em = PersistenceManager.getEntityManagerInstance();
 
-        // TODO: Suche nach artist einbauen
-        //  (Tipp: TREAT könnte man verwenden, um auf Subtypen zu selektieren.
-        //  Allerdings stellt sich die Frage, ob es nicht besser wäre, wenn man direkt im Artikel nach Artists
-        //  selektieren könnte, da Album und Songs Artists haben, die Albums aber lediglich die Artists der Songs
-        //  aggregieren.)
-        // TODO: Order by case (?) verwenden, um die Direkttreffer (case-insensitive) vorzureihen
+        // this query only takes non-empty search criteria into account
         TypedQuery<Article> query = em.createQuery(
-                "SELECT DISTINCT(a) FROM Article a WHERE " +
-                        "((a.title <> '' AND LOWER(a.title) LIKE LOWER(:titlePattern)) OR a.title = '')"
+                "SELECT DISTINCT(a) FROM Article a JOIN a.artists aa WHERE " +
+                        "(:titlePattern <> '%%' OR :artistPattern <> '%%') AND " +
+                        "((:titlePattern <> '%%' AND LOWER(a.title) LIKE LOWER(:titlePattern)) OR :titlePattern = '%%') AND " +
+                        "((:artistPattern <> '%%' AND LOWER(aa.name) LIKE LOWER(:artistPattern)) OR :artistPattern = '%%')"
                 , Article.class).setMaxResults(50);
 
-        query.setParameter("titlePattern", "%" + title + "%");
-//        query.setParameter("artistPattern", "%"+artist+"%");
+        String searchTitle = title.trim().toLowerCase();
+        String searchArtist = artist.trim().toLowerCase();
+        query.setParameter("titlePattern", "%" + searchTitle + "%");
+        query.setParameter("artistPattern", "%" + searchArtist + "%");
 
-        // NOTE: Alternative to this is to order by case select in query
         Set<Article> articles = new HashSet<>(query.getResultList());
 
-        Set<Article> articlesDirectMatches = articles.stream()
-                .filter(article -> article.getTitle().equals(title)
-//                                || article.getArtists().stream().anyMatch(
-//                                        albumArtist -> albumArtist.getName().equals(artist)
-//                                    )
-                )
-                .collect(Collectors.toSet());
+        // NOTE: Alternative to manual sorting may be to order by case select in query
+        Function<Article, Integer> scoreByArticleMatchType = article -> {
+            String articleTitle = article.getTitle().toLowerCase();
 
-        Set<Article> articlesIndirectMatches = articles.stream()
-                .filter(article -> !articlesDirectMatches.contains(article))
-                .collect(Collectors.toSet());
+            if (articleTitle.equals(searchTitle)
+                    || article.getArtists().stream().anyMatch(art -> art.getName().toLowerCase().equals(searchArtist))) {
+                // direct match (case-insensitive)
+                return 1;
 
+            } else if (articleTitle.contains(searchTitle)
+                    || article.getArtists().stream().anyMatch(art -> art.getName().toLowerCase().contains(searchArtist))) {
+                // like-wise match
+                return 2;
 
-        articles.addAll(articlesDirectMatches);
-        articles.addAll(articlesIndirectMatches);
+            } else {
+                // (non-match) or match criteria not observed (isEmpty())
+                return 3;
+            }
+        };
+        Comparator<Article> compareByArticleMatchType = Comparator.comparing(scoreByArticleMatchType);
+        Comparator<Article> compareByArticleAlbumPreference = Comparator.comparing(article -> (article instanceof Album) ? 1 : 2);
+        Comparator<Article> compareByArticleId = Comparator.comparing(Article::getId);
+
+        SortedSet<Article> sortedArticles = articles.stream()
+                .collect(Collectors.toCollection(() -> new TreeSet<>(
+                        compareByArticleMatchType
+                                .thenComparing(compareByArticleAlbumPreference)
+                                .thenComparing(compareByArticleId)
+                )));
 
         em.close();
-        return articles;
+
+        return sortedArticles;
     }
 
     @Override

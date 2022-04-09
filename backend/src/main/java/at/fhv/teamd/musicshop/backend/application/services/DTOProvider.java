@@ -11,7 +11,9 @@ import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.library.DTO.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DTOProvider {
@@ -77,13 +79,10 @@ public class DTOProvider {
                 songDTOs.add((SongDTO) buildArticleDTO(mediumRepository, song));
             }
 
-            Set<ArtistDTO> artistDTOs = new HashSet<>();
-            for (Song song : album.getSongs()) {
-                artistDTOs.addAll(song.getArtists()
-                        .stream()
-                        .map(DTOProvider::buildArtistDTO)
-                        .collect(Collectors.toUnmodifiableSet()));
-            }
+            Set<ArtistDTO> artistDTOs = album.getArtists()
+                    .stream()
+                    .map(DTOProvider::buildArtistDTO)
+                    .collect(Collectors.toUnmodifiableSet());
 
             return AlbumDTO.builder().withAlbumData(
                     album.getId(),
