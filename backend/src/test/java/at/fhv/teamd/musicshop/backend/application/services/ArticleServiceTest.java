@@ -30,14 +30,12 @@ public class ArticleServiceTest {
     @Mock
     private MediumRepository mediumRepository;
 
-
     private ArticleService articleService;
 
     @BeforeEach
     public void init() {
         RepositoryFactory.setArticleRepository(this.articleRepository);
         RepositoryFactory.setMediumRepository(this.mediumRepository);
-
         this.articleService = new ArticleService();
     }
 
@@ -54,9 +52,6 @@ public class ArticleServiceTest {
 
         System.out.println(this.articleRepository.searchArticlesByAttributes(title, artistName));
 
-        //noinspection OptionalGetWithoutIsPresent
-        Mockito.when(this.mediumRepository.findMediumById(article.getMediumIDs().stream().findFirst().get())).thenReturn(article.getMediums().stream().findFirst());
-
         Set<ArticleDTO> expectedArticleDTOS = articles.stream()
                 .map(art -> DTOProvider.buildArticleDTO(this.mediumRepository, art))
                 .collect(Collectors.toSet());
@@ -69,28 +64,5 @@ public class ArticleServiceTest {
 
         // then
         Assertions.assertTrue(expectedArticleDTOS.containsAll(actualArticleDTOS.get()) && actualArticleDTOS.get().containsAll(expectedArticleDTOS));
-
     }
-
-    @Test
-    public void given_ArticleService_when_getArticleById_then_returnArticle() {
-        // given
-        Article article = DomainFactory.createArticle();
-        Long id = article.getId();
-
-        Mockito.when(this.articleRepository.findArticleById(id)).thenReturn(Optional.of(article));
-
-        //noinspection OptionalGetWithoutIsPresent
-        Mockito.when(this.mediumRepository.findMediumById(article.getMediumIDs().stream().findFirst().get())).thenReturn(article.getMediums().stream().findFirst());
-
-        // when
-        Optional<ArticleDTO> actualArticleDTO;
-
-        actualArticleDTO = this.articleService.searchArticleByID(id);
-
-        // then
-        Assertions.assertTrue(actualArticleDTO.isPresent());
-        Assertions.assertEquals(DTOProvider.buildArticleDTO(this.mediumRepository, article), actualArticleDTO.get());
-    }
-
 }

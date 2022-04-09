@@ -2,6 +2,7 @@ package at.fhv.teamd.musicshop.backend.infrastructure;
 
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.EmployeeRepository;
+import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -14,6 +15,7 @@ public class RepositoryFactory {
 
     private static EmployeeRepository employeeRepository;
 
+    private static InvoiceRepository invoiceRepository;
 
     public static ArticleRepository getArticleRepositoryInstance() {
         return articleRepository;
@@ -27,6 +29,10 @@ public class RepositoryFactory {
         return employeeRepository;
     }
 
+    public static InvoiceRepository getInvoiceRepositoryInstance() {
+        return invoiceRepository;
+    }
+
     public static void setArticleRepository(ArticleRepository articleRepository) {
         RepositoryFactory.articleRepository = articleRepository;
     }
@@ -37,5 +43,9 @@ public class RepositoryFactory {
 
     public static void setEmployeeRepository(EmployeeRepository employeeRepository) {
         RepositoryFactory.employeeRepository = employeeRepository;
+    }
+
+    public static void setInvoiceRepository(InvoiceRepository invoiceRepository) {
+        RepositoryFactory.invoiceRepository = invoiceRepository;
     }
 }

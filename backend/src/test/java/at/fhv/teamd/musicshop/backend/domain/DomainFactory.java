@@ -22,20 +22,16 @@ public class DomainFactory {
 
     public static Song createSong() {
         UUID uuid = UUID.randomUUID();
-
-        return new Song("Song " + uuid, "Label " + uuid, LocalDate.now(), "Generic", "Song description " + uuid, uuid.toString(), Set.of(createMedium(MediumType.DIGITAL)), Duration.ofSeconds(521), Set.of(createArtist()));
+        return new Song("Song " + uuid, "Label " + uuid, LocalDate.now(), "Generic",  uuid.toString(), Duration.ofSeconds(521), Set.of(createArtist()));
     }
 
     public static Artist createArtist() {
         UUID uuid = UUID.randomUUID();
-
         return new Artist("Artist " + uuid);
     }
 
     public static Medium createMedium(MediumType mediumType) {
-        UUID uuid = UUID.randomUUID();
-
-        return new Medium(BigDecimal.TEN, mediumType, Stock.of(Quantity.of(5)), createSupplier());
+        return new Medium(BigDecimal.TEN, mediumType, Stock.of(Quantity.of(5)), createSupplier(), createArticle());
     }
 
     public static Supplier createSupplier() {

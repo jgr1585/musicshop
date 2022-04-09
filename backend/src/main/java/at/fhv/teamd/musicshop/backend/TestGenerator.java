@@ -14,14 +14,13 @@ import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class TestGenerator {
 
     // TODO: postgres tables name (article_article)?
     private static void generateTestData() {
-        Set<Medium> mediums = new LinkedHashSet<>();
 
         // ALBUM 1
         Artist artistLongLive1 = new Artist("A$AP Rocky");
@@ -247,6 +246,8 @@ public class TestGenerator {
                 Set.of(songTouchBlue1, songTouchBlue2, songTouchBlue3, songTouchBlue4, songTouchBlue5, songTouchBlue6));
 
         // create mediums
+        Set<Medium> mediums = new LinkedHashSet<>();
+
         mediums.add(new Medium(BigDecimal.valueOf(12), MediumType.CD, Stock.of(Quantity.of(25)), supplier1, albumLongLive));
         mediums.add(new Medium(BigDecimal.valueOf(22), MediumType.VINYL, Stock.of(Quantity.of(5)), supplier1, albumLongLive));
         mediums.add(new Medium(BigDecimal.valueOf(10), MediumType.CD, Stock.of(Quantity.of(15)), supplier2, albumUntamedDesire));

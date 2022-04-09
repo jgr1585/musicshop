@@ -47,12 +47,12 @@ public final class MediumDTO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MediumDTO mediumDTO = (MediumDTO) o;
-        return Objects.equals(id, mediumDTO.id) && Objects.equals(price, mediumDTO.price) && Objects.equals(type, mediumDTO.type) && Objects.equals(supplier, mediumDTO.supplier) && Objects.equals(stockQuantity, mediumDTO.stockQuantity) && Objects.equals(articleIDs, mediumDTO.articleIDs);
+        return Objects.equals(id, mediumDTO.id) && Objects.equals(price, mediumDTO.price) && Objects.equals(type, mediumDTO.type) && Objects.equals(supplier, mediumDTO.supplier) && Objects.equals(stockQuantity, mediumDTO.stockQuantity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, price, type, supplier, stockQuantity, articleIDs);
+        return Objects.hash(id, price, type, supplier, stockQuantity);
     }
 
     public static class Builder {

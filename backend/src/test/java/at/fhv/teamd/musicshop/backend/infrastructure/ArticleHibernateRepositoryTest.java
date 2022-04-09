@@ -18,7 +18,4 @@ class ArticleHibernateRepositoryTest {
 
     }
 
-    @Test
-    void findArticleById() {
-    }
 }
