@@ -9,7 +9,6 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
     private static final long serialVersionUID = 1577561200659149099L;
 
     private Long id;
-    private String descriptorName;
     private String title;
     private String label;
     private LocalDate releaseDate;
@@ -25,10 +24,6 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
 
     public Long id() {
         return this.id;
-    }
-
-    public String descriptorName() {
-        return this.descriptorName;
     }
 
     public String title() {
@@ -51,7 +46,9 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
         return this.musicbrainzId;
     }
 
-    public Set<MediumDTO> mediums() { return Collections.unmodifiableSet(mediums); }
+    public Set<MediumDTO> mediums() {
+        return Collections.unmodifiableSet(mediums);
+    }
 
     public Set<SongDTO> songs() {
         return Collections.unmodifiableSet(songs);
@@ -65,7 +62,7 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
     }
 
     public static class Builder {
-        private AlbumDTO instance;
+        private final AlbumDTO instance;
 
         private Builder() {
             this.instance = new AlbumDTO();
@@ -73,7 +70,6 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
 
         public AlbumDTO.Builder withAlbumData(
                 Long id,
-                String descriptorName,
                 String title,
                 String label,
                 LocalDate releaseDate,
@@ -84,7 +80,6 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
                 Set<ArtistDTO> artists
         ) {
             this.instance.id = id;
-            this.instance.descriptorName = descriptorName;
             this.instance.title = title;
             this.instance.label = label;
             this.instance.releaseDate = releaseDate;

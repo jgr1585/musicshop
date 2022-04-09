@@ -25,7 +25,6 @@ public class SearchMediumController implements GenericArticleController {
     @FXML
     private Label mediumType;
 
-    private ArticleDTO articleDTO;
     private MediumDTO mediumDTO;
 
     @FXML
@@ -35,7 +34,6 @@ public class SearchMediumController implements GenericArticleController {
     }
 
     public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO) {
-        this.articleDTO = articleDTO;
         this.mediumDTO = mediumDTO;
         this.mediumType.setText(mediumDTO.type());
         this.mediumPrice.setText(mediumDTO.price().toString());
@@ -43,9 +41,8 @@ public class SearchMediumController implements GenericArticleController {
         this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
     }
 
-    public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO, LineItemDTO lineItemDTO) {
-        this.articleDTO = articleDTO;
-        this.mediumDTO = mediumDTO;
+    public void setMediumType(LineItemDTO lineItemDTO) {
+        this.mediumDTO = lineItemDTO.medium();
         this.mediumType.setText(mediumDTO.type());
         this.mediumPrice.setText(mediumDTO.price().toString());
         this.mediumAmount.setText(mediumDTO.stockQuantity().toString());
@@ -54,7 +51,7 @@ public class SearchMediumController implements GenericArticleController {
 
     @FXML
     private void addToCard(ActionEvent actionEvent) throws RemoteException {
-        RemoteFacade.getInstance().addToShoppingCart(this.articleDTO, this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()));
+        RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()));
     }
 
     public void reduceByOne(ActionEvent actionEvent) {

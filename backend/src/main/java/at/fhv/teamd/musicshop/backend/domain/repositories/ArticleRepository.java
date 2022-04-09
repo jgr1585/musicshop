@@ -7,6 +7,5 @@ import java.util.Set;
 
 public interface ArticleRepository {
     Set<Article> searchArticlesByAttributes(String title, String artist);
-
     Optional<Article> findArticleById(Long id);
 }

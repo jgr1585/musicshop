@@ -14,7 +14,6 @@ public final class MediumDTO implements Serializable {
     private String type;
     private SupplierDTO supplier;
     private Integer stockQuantity;
-    private Set<Long> articleIDs;
 
     public static MediumDTO.Builder builder() {
         return new MediumDTO.Builder();
@@ -40,15 +39,11 @@ public final class MediumDTO implements Serializable {
         return this.stockQuantity;
     }
 
-    public Set<Long> articleIDs() {
-        return this.articleIDs;
-    }
-
     private MediumDTO() {
     }
 
     public static class Builder {
-        private MediumDTO instance;
+        private final MediumDTO instance;
 
         private Builder() {
             this.instance = new MediumDTO();
@@ -59,15 +54,13 @@ public final class MediumDTO implements Serializable {
                 BigDecimal price,
                 SupplierDTO supplier,
                 String type,
-                Integer stockQuantity,
-                Set<Long> articleIDs
+                Integer stockQuantity
         ) {
             this.instance.id = id;
             this.instance.price = price;
             this.instance.supplier = supplier;
             this.instance.type = type;
             this.instance.stockQuantity = stockQuantity;
-            this.instance.articleIDs = articleIDs;
             return this;
         }
 

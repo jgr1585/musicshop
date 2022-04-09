@@ -27,13 +27,8 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public Optional<ArticleDTO> searchArticleByID(Long id) throws RemoteException, ApplicationClientException {
-        return ServiceFactory.getArticleServiceInstance().searchArticleByID(id);
-    }
-
-    @Override
-    public void addToShoppingCart(ArticleDTO articleDTO, MediumDTO mediumDTO, int amount) {
-        ServiceFactory.getShoppingCartServiceInstance().addToShoppingCart(sessionUUID, articleDTO, mediumDTO, amount);
+    public void addToShoppingCart(MediumDTO mediumDTO, int amount) {
+        ServiceFactory.getShoppingCartServiceInstance().addToShoppingCart(sessionUUID, mediumDTO, amount);
     }
 
     @Override

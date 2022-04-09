@@ -2,13 +2,10 @@ package at.fhv.teamd.musicshop.backend.domain.medium;
 
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Getter
 @Entity
@@ -30,21 +27,17 @@ public class Medium {
     @ManyToOne(cascade = CascadeType.ALL)
     private Supplier supplier;
 
-    @ManyToMany(mappedBy = "mediums")
-    private Set<Article> articles;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Article article;
 
     protected Medium() {
     }
 
-    public Medium(BigDecimal price, MediumType type, Stock stock, Supplier supplier) {
+    public Medium(BigDecimal price, MediumType type, Stock stock, Supplier supplier, Article article) {
         this.type = Objects.requireNonNull(type);
         this.price = Objects.requireNonNull(price);
         this.stock = Objects.requireNonNull(stock);
         this.supplier = Objects.requireNonNull(supplier);
-        this.articles = new HashSet<>();
-    }
-
-    public void appendArticle(Article article) {
-        this.articles.add(article);
+        this.article = article;
     }
 }

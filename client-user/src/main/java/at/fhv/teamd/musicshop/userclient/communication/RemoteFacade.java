@@ -23,7 +23,8 @@ public class RemoteFacade implements ApplicationClient {
     private static RemoteFacade instance;
     private static ApplicationClient applicationClient;
 
-    private RemoteFacade() {}
+    private RemoteFacade() {
+    }
 
     public static RemoteFacade getInstance() throws RemoteException {
         if (instance == null) {
@@ -41,7 +42,7 @@ public class RemoteFacade implements ApplicationClient {
         try {
             LocateRegistry.getRegistry(REMOTE_HOST, REMOTE_PORT);
             ApplicationClientFactory applicationClientFactory
-                    = (ApplicationClientFactory) Naming.lookup("rmi://"+REMOTE_HOST+"/ApplicationClientFactoryImpl");
+                    = (ApplicationClientFactory) Naming.lookup("rmi://" + REMOTE_HOST + ":" + REMOTE_PORT + "/ApplicationClientFactoryImpl");
 
             applicationClient = applicationClientFactory.createApplicationClient();
             return applicationClient;
@@ -57,13 +58,8 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public Optional<ArticleDTO> searchArticleByID(Long id) throws RemoteException, ApplicationClientException {
-        return getApplicationClientOrThrow().searchArticleByID(id);
-    }
-
-    @Override
-    public void addToShoppingCart(ArticleDTO articleDTO, MediumDTO mediumDTO, int amount) throws RemoteException {
-        getApplicationClientOrThrow().addToShoppingCart(articleDTO, mediumDTO, amount);
+    public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException {
+        getApplicationClientOrThrow().addToShoppingCart(mediumDTO, amount);
     }
 
     @Override

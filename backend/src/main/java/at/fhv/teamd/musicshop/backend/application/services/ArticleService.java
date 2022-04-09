@@ -35,14 +35,6 @@ public class ArticleService {
         return articleDTOs;
     }
 
-
-    public Optional<ArticleDTO> searchArticleByID(Long id) throws ApplicationClientException {
-        if (!searchableParam(id.toString())) {
-            throw new ApplicationClientException("Validation error: No searchable param for search.");
-        }
-        return Optional.of(buildArticleDTO(mediumRepository, articleRepository.findArticleById(id).orElseThrow()));
-    }
-
     /*
         At least one field has to be filled
         Minimum length of a field: 1 character
