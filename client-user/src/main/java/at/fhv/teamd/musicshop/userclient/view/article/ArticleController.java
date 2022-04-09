@@ -1,9 +1,6 @@
 package at.fhv.teamd.musicshop.userclient.view.article;
 
-import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.DTO.ArtistDTO;
-import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
+import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.fxml.FXML;
@@ -18,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ArticleController {
@@ -123,6 +119,8 @@ public class ArticleController {
             if (coverArt.getProgress() == 1 && !coverArt.isError()) {
                 this.cover.setImage(coverArt);
             }
+        } else if (articleDTO instanceof SongDTO) {
+            this.cover.setImage(new Image("/at/fhv/teamd/musicshop/userclient/Song-Cover.png"));
         }
     }
 
