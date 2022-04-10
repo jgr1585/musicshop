@@ -14,7 +14,7 @@ public class LineItemTest {
     @Test
     void given_quantity_when_increasequantity_then_returnincreasedqunatity() {
         //given
-        LineItem lineItem = new LineItem("", Quantity.of(30), DomainFactory.createMedium(MediumType.CD), DomainFactory.createArticle());
+        LineItem lineItem = new LineItem(Quantity.of(30), DomainFactory.createMedium(MediumType.CD));
         Quantity quantity = Quantity.of(20);
         Quantity quantityExpected = Quantity.of(50);
 
@@ -29,7 +29,7 @@ public class LineItemTest {
     @Test
     void given_quantity_when_decreasequantity_then_returndecreasedqunatity() {
         //given
-        LineItem lineItem = new LineItem("", Quantity.of(30), DomainFactory.createMedium(MediumType.CD), DomainFactory.createArticle());
+        LineItem lineItem = new LineItem(Quantity.of(30), DomainFactory.createMedium(MediumType.CD));
         Quantity quantity = Quantity.of(20);
         Quantity quantityExpected = Quantity.of(10);
 
@@ -44,27 +44,20 @@ public class LineItemTest {
     @Test
     void given_lineItemdetails_whengetdetails_then_detailsequal() {
         //given
-        String descriptorName = "Article descriptor";
         Quantity quantity = Quantity.of(60);
         Medium medium = DomainFactory.createMedium(MediumType.VINYL);
-        Article article = DomainFactory.createArticle();
         BigDecimal price = medium.getPrice();
-        long articleId = article.getId();
         long mediumId = medium.getId();
-        LineItem lineItem = new LineItem(descriptorName, quantity, medium, article);
+        LineItem lineItem = new LineItem(quantity, medium);
 
         //when
-        String descriptorNameActual = lineItem.getDescriptorName();
         Quantity quantityActual = lineItem.getQuantity();
         BigDecimal priceActual = lineItem.getPrice();
-        long articleIdActual = lineItem.getArticleId();
-        long mediumIdActual = lineItem.getMediumId();
+        long mediumIdActual = lineItem.getMedium().getId();
 
         //then
-        Assertions.assertEquals(descriptorName, descriptorNameActual);
         Assertions.assertEquals(quantity.getValue(), quantityActual.getValue());
         Assertions.assertEquals(price, priceActual);
-        Assertions.assertEquals(articleId, articleIdActual);
         Assertions.assertEquals(mediumId, mediumIdActual);
     }
 
@@ -73,8 +66,8 @@ public class LineItemTest {
         //given
         Medium medium = DomainFactory.createMedium(MediumType.DIGITAL);
         Quantity quantity = Quantity.of(20);
-        BigDecimal totalPrice = BigDecimal.valueOf(20 * medium.getPrice().intValue());
-        LineItem lineItem = new LineItem("", quantity, medium, DomainFactory.createArticle());
+        BigDecimal totalPrice = medium.getPrice().multiply(BigDecimal.valueOf(quantity.getValue()));
+        LineItem lineItem = new LineItem(quantity, medium);
 
         //when
         BigDecimal totalPriceActual = lineItem.getTotalPrice();

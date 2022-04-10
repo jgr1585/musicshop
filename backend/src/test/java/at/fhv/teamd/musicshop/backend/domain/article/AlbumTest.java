@@ -20,7 +20,7 @@ public class AlbumTest extends Article {
         Set<Artist> artistsExpected = song.getArtists();
 
         //when
-        Album album = new Album("", "", LocalDate.now(), "", "", UUID.randomUUID().toString() , Set.of(DomainFactory.createMedium(MediumType.CD)), Set.of(song));
+        Album album = new Album("", "", LocalDate.now(), "", "", Set.of(song));
         Set<Artist> artistsActual = album.getArtists();
 
         //then
