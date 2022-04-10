@@ -1,5 +1,6 @@
 package at.fhv.teamd.musicshop.backend.domain;
 
+import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.article.Artist;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
@@ -18,6 +19,12 @@ public class DomainFactory {
 
     public static Article createArticle() {
         return createSong();
+    }
+
+    public static Album createAlbum() {
+        UUID uuid = UUID.randomUUID();
+
+        return new Album("Ablum" + uuid, "Label" + uuid, LocalDate.now(), "Genre", "Album desription" + uuid, uuid.toString(), Set.of(createMedium(MediumType.CD)), Set.of(createSong()));
     }
 
     public static Song createSong() {
