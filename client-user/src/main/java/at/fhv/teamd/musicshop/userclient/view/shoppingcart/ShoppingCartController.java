@@ -29,7 +29,7 @@ public class ShoppingCartController {
     private VBox shoppingCardElements;
 
     @FXML
-    private Label customerid;
+    private int customerid;
 
     @FXML
     public void initialize() {
@@ -63,7 +63,7 @@ public class ShoppingCartController {
 
     @FXML
     private void buyAll(ActionEvent actionEvent) throws IOException {
-        if (RemoteFacade.getInstance().buyFromShoppingCart(0)) {
+        if (RemoteFacade.getInstance().buyFromShoppingCart(this.customerid)) {
             new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
         } else {
             new Alert(Alert.AlertType.ERROR, "Purchase of items failed", ButtonType.CLOSE).show();
@@ -97,6 +97,6 @@ public class ShoppingCartController {
     }
 
     private void removeCustomer() {
-        this.customerid.setText("");
+        this.customerid = 0;
     }
 }

@@ -6,10 +6,7 @@ import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.List;
 import java.util.Set;
 
 public class CustomerService {

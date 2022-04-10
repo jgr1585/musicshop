@@ -3,6 +3,7 @@ package at.fhv.teamd.musicshop.userclient.view.customer;
 import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -30,21 +31,21 @@ public class CustomerController {
         }
     }
 
-    public void search(javafx.event.ActionEvent actionEvent) throws IOException, CustomerDBClientException {
+    public void search(ActionEvent actionEvent) throws IOException, CustomerDBClientException {
         this.results.getChildren().clear();
         if (!(this.search.getText().isEmpty())) {
             Set<CustomerDTO> result = RemoteFacade.getInstance().searchCustomersByName(this.search.getText());
             if (!(result.isEmpty())) {
                 this.insertResults(result);
             } else {
-                new Alert(Alert.AlertType.NONE, "No customere found", ButtonType.CLOSE).show();
+                new Alert(Alert.AlertType.NONE, "No customers found", ButtonType.CLOSE).show();
             }
         } else {
             new Alert(Alert.AlertType.NONE, "No parameter for search provided", ButtonType.CLOSE).show();
         }
     }
 
-    public void reset(javafx.event.ActionEvent actionEvent) {
+    public void reset(ActionEvent actionEvent) {
         this.search.setText("");
         this.results.getChildren().clear();
     }
