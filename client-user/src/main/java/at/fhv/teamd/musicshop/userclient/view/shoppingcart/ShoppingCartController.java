@@ -81,7 +81,6 @@ public class ShoppingCartController {
         removeCustomer();
     }
 
-    // TODO: set customerNo
     public void addCustomer(ActionEvent actionEvent) {
         try {
             AtomicInteger customerNo = new AtomicInteger();

@@ -13,7 +13,7 @@ import java.util.Set;
 public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "invoiceID_generator")
-    @SequenceGenerator(name="invoiceID_generator", sequenceName = "invoice_sequence", allocationSize=10000)
+    @SequenceGenerator(name = "invoiceID_generator", sequenceName = "invoice_sequence", initialValue = 100, allocationSize = 1)
     private Long id;
 
     @Enumerated(EnumType.STRING)

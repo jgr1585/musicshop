@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Getter
-@Entity(name = "Album")
+@Entity
 @DiscriminatorValue("Album")
 public class Album extends Article {
     @OneToMany(cascade = CascadeType.ALL)

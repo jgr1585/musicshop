@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Getter
-@Entity(name = "Song")
+@Entity
 @DiscriminatorValue("Song")
 public class Song extends Article {
     @Column

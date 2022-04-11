@@ -19,7 +19,6 @@ import java.util.Set;
 
 public class TestGenerator {
 
-    // TODO: postgres tables name (article_article)?
     private static void generateTestData() {
 
         // ALBUM 1
