@@ -40,4 +40,14 @@ public class Medium {
         this.supplier = Objects.requireNonNull(supplier);
         this.article = article;
     }
+
+    @Deprecated(since = "Only for Test")
+    public Medium(long id, MediumType type, BigDecimal price, Stock stock, Supplier supplier, Article article) {
+        this.id = id;
+        this.type = type;
+        this.price = price;
+        this.stock = stock;
+        this.supplier = supplier;
+        this.article = article;
+    }
 }

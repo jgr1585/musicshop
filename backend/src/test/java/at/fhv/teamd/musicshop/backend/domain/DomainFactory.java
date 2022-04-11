@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
+@SuppressWarnings("deprecation")
 public class DomainFactory {
 
     public static Article createArticle() {
@@ -31,7 +32,9 @@ public class DomainFactory {
     }
 
     public static Medium createMedium(MediumType mediumType) {
-        return new Medium(BigDecimal.TEN, mediumType, Stock.of(Quantity.of(5)), createSupplier(), createArticle());
+        UUID uuid = UUID.randomUUID();
+
+        return new Medium(uuid.getMostSignificantBits(), mediumType, BigDecimal.TEN, Stock.of(Quantity.of(5)), createSupplier(), createArticle());
     }
 
     public static Supplier createSupplier() {
