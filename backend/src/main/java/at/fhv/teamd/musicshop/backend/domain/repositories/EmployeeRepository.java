@@ -1,6 +1,6 @@
 package at.fhv.teamd.musicshop.backend.domain.repositories;
 
-import at.fhv.teamd.musicshop.backend.domain.person.Employee;
+import at.fhv.teamd.musicshop.backend.domain.user.Employee;
 
 import java.util.Set;
 

@@ -12,7 +12,7 @@ import java.rmi.registry.LocateRegistry;
 
 public class CustomerClient {
     private static CustomerDBClient customerClient;
-    private static final String REMOTE_HOST = "localhost";
+    private static final String REMOTE_HOST = "10.0.40.167";
     private static final int REMOTE_PORT = 1100;
 
     public static CustomerDBClient getCustomerClient() throws RemoteException {

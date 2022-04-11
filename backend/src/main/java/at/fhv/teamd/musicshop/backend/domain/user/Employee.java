@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.backend.domain.person;
+package at.fhv.teamd.musicshop.backend.domain.user;
 
 import lombok.Getter;
 
@@ -7,17 +7,27 @@ import java.util.Set;
 
 @Entity
 @Getter
-public class Employee extends Person {
+public class Employee {
     @Id
     @GeneratedValue
     private int employeeNo;
 
+    @Column
+    private String firstname;
+
+    @Column
+    private String lastname;
+
     @ManyToMany
     @Enumerated(EnumType.STRING)
-    private final Set<UserRole> userRoles;
+    private Set<UserRole> userRoles;
+
+    protected Employee() {
+    }
 
     public Employee(String firstname, String lastname, Set<UserRole> userRoles) {
-        super(firstname, lastname);
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.userRoles = userRoles;
     }
 }

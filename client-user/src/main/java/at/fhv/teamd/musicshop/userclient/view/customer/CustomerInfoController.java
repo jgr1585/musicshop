@@ -4,6 +4,9 @@ import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CustomerInfoController {
     @FXML
@@ -16,16 +19,26 @@ public class CustomerInfoController {
     private Label birthday;
 
     @FXML
-    private Label id;
+    private Label customerNo;
 
-    public int select(ActionEvent actionEvent) {
-        return Integer.parseInt(this.id.getText());
+    private AtomicInteger atomicInteger;
+
+    @FXML
+    private void select(ActionEvent actionEvent) {
+        atomicInteger.set(Integer.parseInt(this.customerNo.getText()));
+        close();
     }
 
-    public void setFields(CustomerDTO customer) {
+    public void setFields(CustomerDTO customer, AtomicInteger atomicInteger) {
         this.firstName.setText(customer.givenName());
         this.lastName.setText(customer.familyName());
         this.birthday.setText(customer.birthDate());
-        this.id.setText(customer.customerId().toString());
+        this.customerNo.setText(customer.customerId().toString());
+        this.atomicInteger = atomicInteger;
+    }
+
+    private void close() {
+        Stage stage = (Stage) customerNo.getScene().getWindow();
+        stage.close();
     }
 }

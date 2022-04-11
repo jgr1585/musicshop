@@ -26,16 +26,16 @@ public class Invoice {
     private BigDecimal totalPrice;
 
     @Column
-    private int customerNo;
+    private Integer customerNo;
 
-    public Invoice() {
+    protected Invoice() {
     }
 
     public Invoice(PaymentMethod paymentMethod, Set<LineItem> lineItems) {
         this.paymentMethod = Objects.requireNonNull(paymentMethod);
         this.lineItems = Objects.requireNonNull(lineItems);
         this.totalPrice = calculateTotalPrice(lineItems);
-
+        this.customerNo = null;
     }
 
     public Invoice(PaymentMethod paymentMethod, Set<LineItem> lineItems, int customerNo) {

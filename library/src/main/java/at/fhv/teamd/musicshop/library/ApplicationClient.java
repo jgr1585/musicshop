@@ -19,9 +19,9 @@ public interface ApplicationClient extends Remote {
     Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException;
 
     // Shopping Cart
-    void addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException;
+    boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException;
 
-    void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException;
+    boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException;
 
     void emptyShoppingCart() throws RemoteException;
 

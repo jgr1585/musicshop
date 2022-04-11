@@ -214,7 +214,6 @@ class ShoppingCartServiceTest {
 
         //then
         Assertions.assertEquals(shoppingCartDTO1, shoppingCartDTO2);
-        // TOOD: fix test
         Assertions.assertNotEquals(shoppingCartDTO1, shoppingCartDTO3);
     }
 }

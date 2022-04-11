@@ -11,6 +11,7 @@ import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildShoppingCartDTO;
 
@@ -33,11 +34,13 @@ public class ShoppingCartService {
         }
     }
 
-    // TODO: notification on client
-    public void addToShoppingCart(UUID sessionUUID, MediumDTO mediumDTO, int amount) {
+    public boolean addToShoppingCart(UUID sessionUUID, MediumDTO mediumDTO, int amount) {
         if (!shoppingCartExists(sessionUUID)) {
             initializeShoppingcart(sessionUUID);
         }
+
+        AtomicBoolean success = new AtomicBoolean(true);
+
         Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
 
         Medium medium = mediumRepository.findMediumById(mediumDTO.id()).orElseThrow();
@@ -46,34 +49,43 @@ public class ShoppingCartService {
                 .filter(li -> li.getMedium().getId() == mediumDTO.id())
                 .findFirst()
                 .ifPresentOrElse(li -> {
-                    if (li.getQuantity().getValue() + amount <= medium.getStock().getQuantity().getValue()) {
+                    if (li.getQuantity().getValue() + amount <= medium.getStock().getQuantity().getValue() && amount > 0) {
                         li.increaseQuantity(Quantity.of(amount));
+                    } else {
+                        success.set(false);
                     }
                 }, () -> {
                     if (amount <= medium.getStock().getQuantity().getValue()) {
                         lineItems.add(new LineItem(Quantity.of(amount), medium));
                         sessionLineItems.put(sessionUUID, lineItems);
+                    } else {
+                        success.set(false);
                     }
                 });
+        return success.get();
     }
 
-    public void removeFromShoppingCart(UUID sessionUUID, MediumDTO mediumDTO, int amount) {
+    public boolean removeFromShoppingCart(UUID sessionUUID, MediumDTO mediumDTO, int amount) {
         if (!shoppingCartExists(sessionUUID)) {
             emptyShoppingCart(sessionUUID);
         }
 
+        AtomicBoolean success = new AtomicBoolean(true);
+
         Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
 
-        LineItem lineItem = lineItems.stream()
+        Optional<LineItem> lineItem = lineItems.stream()
                 .filter(li -> li.getMedium().getId() == mediumDTO.id())
-                .findFirst()
-                .orElseThrow();
+                .findFirst();
 
-        if (lineItem.getQuantity().getValue() > amount && amount > 0) {
-            lineItem.decreaseQuantity(Quantity.of(amount));
-        } else {
-            lineItems.remove(lineItem);
-        }
+        lineItem.ifPresentOrElse(li -> {
+            if (li.getQuantity().getValue() > amount && amount > 0) {
+                li.decreaseQuantity(Quantity.of(amount));
+            } else {
+                lineItems.remove(li);
+            }
+        }, () -> success.set(false));
+        return success.get();
     }
 
     public void emptyShoppingCart(UUID sessionUUID) {
@@ -88,12 +100,16 @@ public class ShoppingCartService {
     }
 
     // TODO: append paymentMethod
+    // TODO: specific exception
     public boolean buyFromShoppingCart(UUID sessionUUID, int id) {
         if (!shoppingCartExists(sessionUUID)) {
             emptyShoppingCart(sessionUUID);
         }
 
         Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
+
+        if (lineItems.isEmpty()) return false;
+
         lineItems.forEach(lineItem -> {
             Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
             if (medium.getStock().getQuantity().getValue() < lineItem.getQuantity().getValue()) {
@@ -102,8 +118,7 @@ public class ShoppingCartService {
         });
 
         try {
-            ServiceFactory.getInvoiceServiceInstance().createInvoice(PaymentMethod.CASH, lineItems);
-//            ServiceFactory.getInvoiceServiceInstance().createInvoice(PaymentMethod.CASH, lineItems, new Customer("Lukas", "Kaufmann", 1000000));
+            ServiceFactory.getInvoiceServiceInstance().createInvoice(PaymentMethod.CASH, lineItems, id);
         } catch (Exception e) {
             e.printStackTrace();
         }

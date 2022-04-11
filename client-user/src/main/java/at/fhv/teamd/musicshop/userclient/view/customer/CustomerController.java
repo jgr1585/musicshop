@@ -14,24 +14,28 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CustomerController {
     @FXML
-    public TextField search;
+    private TextField search;
     @FXML
     private VBox results;
 
-    public void insertResults(Set<CustomerDTO> results) throws IOException {
+    private AtomicInteger customerNo;
+
+    private void insertResults(Set<CustomerDTO> results) throws IOException {
         for (var customer : results) {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/customer/customer-info.fxml"));
             Parent parent = fxmlLoader.load();
             CustomerInfoController controller = fxmlLoader.getController();
-            controller.setFields(customer);
+            controller.setFields(customer, customerNo);
             this.results.getChildren().add(parent);
         }
     }
 
-    public void search(ActionEvent actionEvent) throws IOException, CustomerDBClientException {
+    @FXML
+    private void search(ActionEvent actionEvent) throws IOException, CustomerDBClientException {
         this.results.getChildren().clear();
         if (!(this.search.getText().isEmpty())) {
             Set<CustomerDTO> result = RemoteFacade.getInstance().searchCustomersByName(this.search.getText());
@@ -45,8 +49,13 @@ public class CustomerController {
         }
     }
 
-    public void reset(ActionEvent actionEvent) {
+    @FXML
+    private void reset(ActionEvent actionEvent) {
         this.search.setText("");
         this.results.getChildren().clear();
+    }
+
+    public void setAtomicInteger(AtomicInteger atomicInteger) {
+        this.customerNo = atomicInteger;
     }
 }

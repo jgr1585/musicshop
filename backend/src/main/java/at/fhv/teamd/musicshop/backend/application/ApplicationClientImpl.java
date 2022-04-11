@@ -33,13 +33,13 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public void addToShoppingCart(MediumDTO mediumDTO, int amount) {
-        ServiceFactory.getShoppingCartServiceInstance().addToShoppingCart(sessionUUID, mediumDTO, amount);
+    public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) {
+        return ServiceFactory.getShoppingCartServiceInstance().addToShoppingCart(sessionUUID, mediumDTO, amount);
     }
 
     @Override
-    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) {
-        ServiceFactory.getShoppingCartServiceInstance().removeFromShoppingCart(sessionUUID, mediumDTO, amount);
+    public boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) {
+        return ServiceFactory.getShoppingCartServiceInstance().removeFromShoppingCart(sessionUUID, mediumDTO, amount);
     }
 
     @Override
