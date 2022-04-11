@@ -2,8 +2,9 @@ package at.fhv.teamd.musicshop.library.DTO;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
 
 public final class AlbumDTO implements ArticleDTO, Serializable {
     private static final long serialVersionUID = 1577561200659149099L;

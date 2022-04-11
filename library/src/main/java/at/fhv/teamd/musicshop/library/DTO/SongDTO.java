@@ -3,8 +3,10 @@ package at.fhv.teamd.musicshop.library.DTO;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public final class SongDTO implements ArticleDTO, Serializable {
     private static final long serialVersionUID = 5897685238657995442L;

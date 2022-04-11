@@ -3,7 +3,6 @@ package at.fhv.teamd.musicshop.library.DTO;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.Set;
 
 public final class MediumDTO implements Serializable {
     private static final long serialVersionUID = -6811236899891117944L;

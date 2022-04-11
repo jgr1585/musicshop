@@ -6,19 +6,25 @@ import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
+import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 public class ApplicationClientImpl extends UnicastRemoteObject implements ApplicationClient {
     private final UUID sessionUUID;
 
-    public ApplicationClientImpl() throws RemoteException {
+    private ApplicationClientImpl() throws RemoteException {
         super();
         sessionUUID = UUID.randomUUID();
+    }
+
+    public static ApplicationClientImpl newInstance(String authUser, String authPassword) throws RemoteException, AuthenticationFailedException {
+        Authenticator.authenticate(authUser, authPassword);
+
+        return new ApplicationClientImpl();
     }
 
     @Override
