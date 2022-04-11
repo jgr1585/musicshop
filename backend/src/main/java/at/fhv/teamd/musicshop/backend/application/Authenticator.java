@@ -2,7 +2,6 @@ package at.fhv.teamd.musicshop.backend.application;
 
 import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 
-import javax.naming.AuthenticationException;
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.InitialDirContext;
@@ -19,13 +18,10 @@ public class Authenticator {
         try {
             authenticatedBind(userDN, userPassword);
 
-        } catch (AuthenticationException e) {
+        } catch (NamingException e) {
             throw new AuthenticationFailedException();
 
-        } catch (NamingException e) {
-            throw new RuntimeException("Authentication service error.");
         }
-
     }
 
     public static Context authenticatedBind(String userDN, String userPassword) throws NamingException {

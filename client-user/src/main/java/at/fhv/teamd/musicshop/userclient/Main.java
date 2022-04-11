@@ -1,5 +1,6 @@
 package at.fhv.teamd.musicshop.userclient;
 
+import at.fhv.teamd.musicshop.userclient.view.LoginController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -16,8 +17,10 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("templates/main-window.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("templates/login.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1000, 800);
+            LoginController controller = fxmlLoader.getController();
+            controller.setStage(stage);
             stage.setTitle("MusicShop24");
             stage.setScene(scene);
             stage.show();

@@ -6,6 +6,7 @@ import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
+import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -13,7 +14,6 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Optional;
 import java.util.Set;
 
 public class RemoteFacade implements ApplicationClient {
@@ -24,6 +24,19 @@ public class RemoteFacade implements ApplicationClient {
     private static ApplicationClient applicationClient;
 
     private RemoteFacade() {
+    }
+
+    public static void authenticateSession(String authUser, String authPassword) throws RemoteException, AuthenticationFailedException {
+        try {
+            LocateRegistry.getRegistry(REMOTE_HOST, REMOTE_PORT);
+            ApplicationClientFactory applicationClientFactory
+                    = (ApplicationClientFactory) Naming.lookup("rmi://" + REMOTE_HOST + ":" + REMOTE_PORT + "/ApplicationClientFactoryImpl");
+
+            applicationClient = applicationClientFactory.createApplicationClient(authUser, authPassword);
+
+        } catch (MalformedURLException | NotBoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static RemoteFacade getInstance() throws RemoteException {
@@ -39,17 +52,7 @@ public class RemoteFacade implements ApplicationClient {
             return applicationClient;
         }
 
-        try {
-            LocateRegistry.getRegistry(REMOTE_HOST, REMOTE_PORT);
-            ApplicationClientFactory applicationClientFactory
-                    = (ApplicationClientFactory) Naming.lookup("rmi://" + REMOTE_HOST + ":" + REMOTE_PORT + "/ApplicationClientFactoryImpl");
-
-            applicationClient = applicationClientFactory.createApplicationClient();
-            return applicationClient;
-
-        } catch (MalformedURLException | NotBoundException e) {
-            throw new RuntimeException(e);
-        }
+        throw new IllegalStateException("FUCK OFF");
     }
 
     @Override
