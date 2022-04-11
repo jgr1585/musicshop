@@ -88,20 +88,20 @@ class ShoppingCartServiceTest {
     }
 
     // TODO: rebuilt test
-//    @Test
-//    public void given_shoppingCart_when_initializeShoppingcart_then_returnShoppingCart() {
-//        //given
-//        UUID uuid = UUID.randomUUID();
-//        AtomicReference<Method> method = new AtomicReference<>();
-//        Assertions.assertDoesNotThrow(() -> method.set(ShoppingCartService.class.getDeclaredMethod("initializeShoppingCart", UUID.class)));
-//        method.get().setAccessible(true);
-//
-//        //when
-//        Assertions.assertDoesNotThrow(() -> method.get().invoke(this.shoppingCartService, uuid));
-//
-//        //then
-//        Assertions.assertThrows(InvocationTargetException.class, () -> method.get().invoke(this.shoppingCartService, uuid));
-//    }
+    @Test
+    public void given_shoppingCart_when_initializeShoppingcart_then_returnShoppingCart() {
+        //given
+        UUID uuid = UUID.randomUUID();
+        AtomicReference<Method> method = new AtomicReference<>();
+        Assertions.assertDoesNotThrow(() -> method.set(ShoppingCartService.class.getDeclaredMethod("initializeShoppingcart", UUID.class)));
+        method.get().setAccessible(true);
+
+        //when
+        Assertions.assertDoesNotThrow(() -> method.get().invoke(this.shoppingCartService, uuid));
+
+        //then
+        Assertions.assertThrows(InvocationTargetException.class, () -> method.get().invoke(this.shoppingCartService, uuid));
+    }
 
     @Test
     public void given_shoppingCartService_when_removeFromShoppingCart_then_returnRefreshedShoppingCart() {
@@ -138,6 +138,7 @@ class ShoppingCartServiceTest {
         UUID uuid = UUID.randomUUID();
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 1;
+        int expectedAmount = medium.getStock().getQuantity().getValue() - amount;
 
         Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
@@ -150,6 +151,7 @@ class ShoppingCartServiceTest {
 
         //then
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(uuid).lineItems().isEmpty());
+        Assertions.assertEquals(expectedAmount, medium.getStock().getQuantity().getValue());
     }
 
     @Test
@@ -167,19 +169,24 @@ class ShoppingCartServiceTest {
     @Test
     public void given_articlesInShoppingCart_when_buyFromShoppingCart_item_not_in_stock_then_Throw_Exeption() {
         //given
-        UUID uuid = UUID.randomUUID();
+        UUID uuid1 = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
         Medium medium = DomainFactory.createMedium(MediumType.CD);
-        int amount = 10;
+        int amount = 3;
+
+        Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
-        this.shoppingCartService.addToShoppingCart(uuid, mediumDTO, amount);
+        this.shoppingCartService.addToShoppingCart(uuid1, mediumDTO, amount);
+        this.shoppingCartService.addToShoppingCart(uuid2, mediumDTO, amount);
 
         //when
-        // TODO: fix test
-//        Assertions.assertThrows(RuntimeException.class,() -> this.shoppingCartService.buyFromShoppingCart(uuid, 0));
+        Assertions.assertDoesNotThrow(() -> this.shoppingCartService.buyFromShoppingCart(uuid1, 0));
+        Assertions.assertThrows(RuntimeException.class,() -> this.shoppingCartService.buyFromShoppingCart(uuid2, 0));
 
         //then
-        Assertions.assertFalse(this.shoppingCartService.getShoppingCart(uuid).lineItems().isEmpty());
+        Assertions.assertTrue(this.shoppingCartService.getShoppingCart(uuid1).lineItems().isEmpty());
+        Assertions.assertFalse(this.shoppingCartService.getShoppingCart(uuid2).lineItems().isEmpty());
     }
 
     @Test
@@ -208,6 +215,6 @@ class ShoppingCartServiceTest {
         //then
         Assertions.assertEquals(shoppingCartDTO1, shoppingCartDTO2);
         // TOOD: fix test
-//        Assertions.assertNotEquals(shoppingCartDTO1, shoppingCartDTO3);
+        Assertions.assertNotEquals(shoppingCartDTO1, shoppingCartDTO3);
     }
 }
