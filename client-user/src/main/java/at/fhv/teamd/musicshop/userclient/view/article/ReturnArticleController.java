@@ -5,8 +5,6 @@ import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 
-import java.util.Optional;
-
 public class ReturnArticleController implements GenericArticleController {
 
     @Override
@@ -15,7 +13,7 @@ public class ReturnArticleController implements GenericArticleController {
     }
 
     @Override
-    public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO, LineItemDTO lineItemDTO) {
+    public void setMediumType(LineItemDTO lineItemDTO) {
 
     }
 }

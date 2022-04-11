@@ -11,7 +11,9 @@ import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.library.DTO.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DTOProvider {
@@ -26,14 +28,13 @@ public class DTOProvider {
     }
 
     static LineItemDTO buildLineItemDTO(ArticleRepository articleRepository, MediumRepository mediumRepository, LineItem lineItem) {
-        Medium medium = mediumRepository.findMediumById(lineItem.getMediumId()).orElseThrow();
-        Article article = articleRepository.findArticleById(lineItem.getArticleId()).orElseThrow();
+        Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
+        Article article = articleRepository.findArticleById(lineItem.getMedium().getArticle().getId()).orElseThrow();
 
         return LineItemDTO.builder()
                 .withLineItemData(
                         lineItem.getId(),
                         buildArticleDTO(mediumRepository, article),
-                        lineItem.getDescriptorName(),
                         lineItem.getQuantity().getValue(),
                         lineItem.getPrice(),
                         lineItem.getTotalPrice(),
@@ -43,17 +44,13 @@ public class DTOProvider {
     }
 
     static MediumDTO buildMediumDTO(Medium medium) {
-        Set<Long> ids = new HashSet<>();
-        medium.getArticles().forEach(article -> ids.addAll(article.getMediumIDs()));
-
         return MediumDTO.builder().
                 withMediumData(
                         medium.getId(),
                         medium.getPrice(),
                         buildSupplierDTO(medium.getSupplier()),
                         medium.getType().toString(),
-                        medium.getStock().getQuantity().getValue(),
-                        ids
+                        medium.getStock().getQuantity().getValue()
                 ).build();
     }
 
@@ -73,10 +70,6 @@ public class DTOProvider {
     }
 
     static ArticleDTO buildArticleDTO(MediumRepository mediumRepository, Article article) {
-        Set<MediumDTO> mediumDTOs = new HashSet<>();
-        article.getMediumIDs().forEach(id ->
-                mediumDTOs.add(buildMediumDTO(mediumRepository.findMediumById(id).orElseThrow()))
-        );
 
         if (article instanceof Album) {
             Album album = (Album) article;
@@ -86,23 +79,19 @@ public class DTOProvider {
                 songDTOs.add((SongDTO) buildArticleDTO(mediumRepository, song));
             }
 
-            Set<ArtistDTO> artistDTOs = new HashSet<>();
-            for (Song song : album.getSongs()) {
-                artistDTOs.addAll(song.getArtists()
-                        .stream()
-                        .map(DTOProvider::buildArtistDTO)
-                        .collect(Collectors.toUnmodifiableSet()));
-            }
+            Set<ArtistDTO> artistDTOs = album.getArtists()
+                    .stream()
+                    .map(DTOProvider::buildArtistDTO)
+                    .collect(Collectors.toUnmodifiableSet());
 
             return AlbumDTO.builder().withAlbumData(
                     album.getId(),
-                    album.getDescriptorName(),
                     album.getTitle(),
                     album.getLabel(),
                     album.getReleaseDate(),
                     album.getGenre(),
                     album.getMusicbrainzId(),
-                    Collections.unmodifiableSet(mediumDTOs),
+                    mediumRepository.findMediumsByArticleId(article.getId()).stream().map(DTOProvider::buildMediumDTO).collect(Collectors.toUnmodifiableSet()),
                     Collections.unmodifiableSet(songDTOs),
                     Collections.unmodifiableSet(artistDTOs)
             ).build();
@@ -112,13 +101,11 @@ public class DTOProvider {
 
             return SongDTO.builder().withSongData(
                     song.getId(),
-                    song.getDescriptorName(),
                     song.getTitle(),
                     song.getLabel(),
                     song.getReleaseDate(),
                     song.getGenre(),
                     song.getMusicbrainzId(),
-                    Collections.unmodifiableSet(mediumDTOs),
                     song.getLength(),
                     song.getArtists().stream()
                             .map(DTOProvider::buildArtistDTO)

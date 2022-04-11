@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.layout.VBox?>
 
-<TabPane nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" prefHeight="800.0" prefWidth="1000.0" style="-fx-tab-min-width: 10em; -fx-font-size: 13; -fx-base: black; -fx-text-box-border: black; -fx-color: black; -fx-background-image: url(../73SCVNM.png); -fx-box-border: black; -fx-outer-border: black;" tabMaxHeight="25.0" tabMaxWidth="100.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" prefHeight="800.0" prefWidth="1000.0" style="-fx-tab-min-width: 10em; -fx-font-size: 13; -fx-base: #000000FF; -fx-text-box-border:  #000000FF; -fx-color:  #000000FF; -fx-box-border:  #000000FF; -fx-outer-border:  #000000FF;" tabMaxHeight="25.0" tabMaxWidth="120.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
    <tabs>
-      <Tab closable="false" style="-fx-background-color: #6495ED; -fx-background-radius: 6; -fx-padding: 10;" text="Search">
+      <Tab closable="false" style="-fx-background-color: #7565fd; -fx-background-radius: 4; -fx-padding: 10; -fx-border-color: #000000; -fx-border-radius: 4; -fx-border-width: 3;" text="Search">
          <content>
             <fx:include source="searchArticle/search.fxml" />
          </content>
+         <graphic>
+            <FontAwesomeIconView fill="#FFFFFF" glyphName="SEARCH" size="20" />
+         </graphic>
       </Tab>
-      <Tab closable="false" style="-fx-background-color: #6495ED; -fx-background-radius: 6; -fx-padding: 10;" text="Return">
+      <Tab closable="false" style="-fx-background-color: #4251b3; -fx-background-radius: 4; -fx-padding: 10; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4;" text="Return">
          <content>
             <fx:include source="returnArticle/return.fxml" />
          </content>
+         <graphic>
+            <FontAwesomeIconView fill="#FFFFFF" glyphName="UNDO" size="20" />
+         </graphic>
       </Tab>
-      <Tab closable="false" style="-fx-background-color: #6495ED; -fx-background-radius: 6; -fx-padding: 10;" text="Shopping Cart">
+      <Tab closable="false" style="-fx-background-color: #488af3; -fx-background-radius: 4; -fx-padding: 10; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4;" text="Shopping Cart">
          <content>
             <fx:include source="shoppingCart/shoppingCart.fxml" />
          </content>
+         <graphic>
+            <FontAwesomeIconView fill="#FFFFFF" glyphName="SHOPPING_CART" size="20" />
+         </graphic>
       </Tab>
    </tabs>
 </TabPane>

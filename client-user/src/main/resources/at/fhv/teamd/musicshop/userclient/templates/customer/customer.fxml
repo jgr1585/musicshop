@@ -4,9 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox onMouseClicked="#reloadShoppingCart" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartController">
+<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.customer.CustomerController">
    <children>
-      <GridPane prefHeight="800.0" prefWidth="1000.0">
+      <GridPane prefHeight="600.0" prefWidth="800.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
@@ -27,12 +27,12 @@
                <children>
                   <Pane>
                      <children>
-                        <Button layoutX="355.0" layoutY="23.0" mnemonicParsing="false" onAction="#buyAll" prefWidth="120.0" style="-fx-background-color: cornflowerblue;" text="Remove">
+                        <Button layoutX="355.0" layoutY="23.0" mnemonicParsing="false" prefWidth="120.0" style="-fx-background-color: cornflowerblue;" text="Remove">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </Button>
-                        <Button layoutX="223.0" layoutY="23.0" mnemonicParsing="false" onAction="#buyAll" prefWidth="120.0" style="-fx-background-color: cornflowerblue;" text="Select">
+                        <Button layoutX="223.0" layoutY="23.0" mnemonicParsing="false" prefWidth="120.0" style="-fx-background-color: cornflowerblue;" text="Select">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -43,12 +43,12 @@
                   </Pane>
                   <Pane GridPane.columnIndex="1">
                      <children>
-                        <Button layoutX="366.0" layoutY="24.0" mnemonicParsing="false" onAction="#buyAll" prefWidth="120.0" style="-fx-background-color: cornflowerblue;" text="Empty">
+                        <Button layoutX="366.0" layoutY="24.0" mnemonicParsing="false" prefWidth="120.0" style="-fx-background-color: cornflowerblue;" text="Empty">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </Button>
-                        <Button layoutX="232.0" layoutY="24.0" mnemonicParsing="false" onAction="#buyAll" prefWidth="120.0" style="-fx-background-color: cornflowerblue;" text="Buy">
+                        <Button layoutX="232.0" layoutY="24.0" mnemonicParsing="false" prefWidth="120.0" style="-fx-background-color: cornflowerblue;" text="Buy">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -68,7 +68,7 @@
                <children>
                   <Pane prefWidth="150.0">
                      <children>
-                        <Button layoutX="23.0" layoutY="20.0" mnemonicParsing="false" onAction="#reloadShoppingCart" prefWidth="100.0" text="Reload" />
+                        <Button layoutX="23.0" layoutY="20.0" mnemonicParsing="false" prefWidth="100.0" text="Reload" />
                      </children>
                   </Pane>
                </children>

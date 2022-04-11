@@ -10,7 +10,6 @@ public class LineItemDTO implements Serializable {
     private Long id;
 
     private ArticleDTO article;
-    private String descriptorName;
     private Integer quantity;
     private BigDecimal price;
     private BigDecimal totalPrice;
@@ -27,8 +26,6 @@ public class LineItemDTO implements Serializable {
     public ArticleDTO article() {
         return this.article;
     }
-
-    public String descriptorName() { return this.descriptorName; }
 
     public Integer quantity() {
         return this.quantity;
@@ -49,8 +46,21 @@ public class LineItemDTO implements Serializable {
     private LineItemDTO() {
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LineItemDTO that = (LineItemDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(article, that.article) && Objects.equals(quantity, that.quantity) && Objects.equals(price, that.price) && Objects.equals(totalPrice, that.totalPrice) && Objects.equals(medium, that.medium);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, article, quantity, price, totalPrice, medium);
+    }
+
     public static class Builder {
-        private LineItemDTO instance;
+        private final LineItemDTO instance;
 
         private Builder() {
             this.instance = new LineItemDTO();
@@ -59,7 +69,6 @@ public class LineItemDTO implements Serializable {
         public LineItemDTO.Builder withLineItemData(
                 Long id,
                 ArticleDTO articleDTO,
-                String descriptorName,
                 Integer quantity,
                 BigDecimal price,
                 BigDecimal totalPrice,
@@ -67,7 +76,6 @@ public class LineItemDTO implements Serializable {
         ) {
             this.instance.id = id;
             this.instance.article = articleDTO;
-            this.instance.descriptorName = descriptorName;
             this.instance.quantity = quantity;
             this.instance.price = price;
             this.instance.totalPrice = totalPrice;
@@ -78,7 +86,6 @@ public class LineItemDTO implements Serializable {
         public LineItemDTO build() {
             Objects.requireNonNull(this.instance.id, "id must be set in LineItemDTO");
             Objects.requireNonNull(this.instance.article, "article must be set in LineItemDTO");
-            Objects.requireNonNull(this.instance.descriptorName, "descriptorName must be set in LineItemDTO");
             Objects.requireNonNull(this.instance.quantity, "quantity must be set in LineItemDTO");
             Objects.requireNonNull(this.instance.price, "price must be set in LineItemDTO");
             Objects.requireNonNull(this.instance.totalPrice, "totalPrice must be set in LineItemDTO");

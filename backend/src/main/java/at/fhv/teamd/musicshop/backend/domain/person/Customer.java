@@ -24,7 +24,6 @@ public class Customer extends Person {
 
     public Customer(String firstname, String lastname, int customerNo) {
         super(firstname, lastname);
-
         this.customerNo = customerNo;
     }
 }

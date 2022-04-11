@@ -1,9 +1,6 @@
 package at.fhv.teamd.musicshop.userclient.view.article;
 
-import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.DTO.ArtistDTO;
-import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
+import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.fxml.FXML;
@@ -18,7 +15,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ArticleController {
@@ -33,11 +29,14 @@ public class ArticleController {
     private Label genre;
     @FXML
     private VBox mediumTypeList;
+    @FXML
+    private Label releaseDate;
 
-    public void addMediumTypes(ArticleDTO articleDTO,  Tabs tab) throws IOException {
+    public void addMediumTypes(ArticleDTO articleDTO, Tabs tab) throws IOException {
         this.title.setText(articleDTO.title());
         this.genre.setText(articleDTO.genre());
         this.artist.setText(articleDTO.artists().stream().map(ArtistDTO::name).collect(Collectors.joining(", ")));
+        this.releaseDate.setText(articleDTO.releaseDate().toString());
 
         //Select Cover Art for Album
         Runnable loadCoverArtRunnable = () -> {
@@ -78,6 +77,7 @@ public class ArticleController {
         this.title.setText(articleDTO.title());
         this.genre.setText(articleDTO.genre());
         this.artist.setText(articleDTO.artists().stream().map(ArtistDTO::name).collect(Collectors.joining(", ")));
+        this.releaseDate.setText(articleDTO.releaseDate().toString());
 
         //Select Cover Art for Album
         Runnable loadCoverArtRunnable = () -> {
@@ -90,27 +90,25 @@ public class ArticleController {
         };
         new Thread(loadCoverArtRunnable).start();
 
-        for (var mediumDTO : articleDTO.mediums()) {
-            FXMLLoader fxmlLoader;
-            switch (tab) {
-                case SEARCH:
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/searchArticle/search-article.fxml"));
-                    break;
-                case RETURN:
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/returnArticle/return-article.fxml"));
-                    break;
-                case SHOPPINGCART:
-                    fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/shoppingCart/shoppingCart-article.fxml"));
-                    break;
-                default:
-                    throw new RuntimeException("invalid tab-parameter for article");
-            }
-
-            Parent root = fxmlLoader.load();
-            GenericArticleController controller = fxmlLoader.getController();
-            controller.setMediumType(articleDTO, mediumDTO, lineItemDTO);
-            this.mediumTypeList.getChildren().add(root);
+        FXMLLoader fxmlLoader;
+        switch (tab) {
+            case SEARCH:
+                fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/searchArticle/search-article.fxml"));
+                break;
+            case RETURN:
+                fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/returnArticle/return-article.fxml"));
+                break;
+            case SHOPPINGCART:
+                fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/shoppingCart/shoppingCart-article.fxml"));
+                break;
+            default:
+                throw new RuntimeException("invalid tab-parameter for article");
         }
+
+        Parent root = fxmlLoader.load();
+        GenericArticleController controller = fxmlLoader.getController();
+        controller.setMediumType(lineItemDTO);
+        this.mediumTypeList.getChildren().add(root);
     }
 
     private void loadCoverArt(ArticleDTO articleDTO) throws IOException {
@@ -123,6 +121,8 @@ public class ArticleController {
             if (coverArt.getProgress() == 1 && !coverArt.isError()) {
                 this.cover.setImage(coverArt);
             }
+        } else if (articleDTO instanceof SongDTO) {
+            this.cover.setImage(new Image("/at/fhv/teamd/musicshop/userclient/Song-Cover.png"));
         }
     }
 

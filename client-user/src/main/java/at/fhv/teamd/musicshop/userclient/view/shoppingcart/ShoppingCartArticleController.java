@@ -25,7 +25,6 @@ public class ShoppingCartArticleController implements GenericArticleController {
     @FXML
     private Label mediumPrice;
 
-    private ArticleDTO articleDTO;
     private MediumDTO mediumDTO;
     private LineItemDTO lineItemDTO;
 
@@ -41,11 +40,9 @@ public class ShoppingCartArticleController implements GenericArticleController {
     }
 
     @Override
-    public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO, LineItemDTO lineItemDTO) {
-        this.articleDTO = articleDTO;
-        this.mediumDTO = mediumDTO;
+    public void setMediumType(LineItemDTO lineItemDTO) {
+        this.mediumDTO = lineItemDTO.medium();
         this.lineItemDTO = lineItemDTO;
-
         this.mediumType.setText(mediumDTO.type());
         this.mediumPrice.setText(mediumDTO.price().toString());
         this.mediumAmountStock.setText(this.lineItemDTO.medium().stockQuantity().toString());
@@ -65,7 +62,7 @@ public class ShoppingCartArticleController implements GenericArticleController {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         if (val < this.lineItemDTO.medium().stockQuantity()) {
             this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
-            RemoteFacade.getInstance().addToShoppingCart(articleDTO, mediumDTO, 1);
+            RemoteFacade.getInstance().addToShoppingCart(mediumDTO, 1);
         }
     }
     @FXML
