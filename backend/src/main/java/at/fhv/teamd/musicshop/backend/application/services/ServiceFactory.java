@@ -5,6 +5,7 @@ public class ServiceFactory {
     private static ShoppingCartService shoppingCartService;
     private static InvoiceService invoiceService;
     private static CustomerService customerService;
+    private static AuthService authService;
 
     private ServiceFactory() {}
 
@@ -34,5 +35,12 @@ public class ServiceFactory {
             customerService = new CustomerService();
         }
         return customerService;
+    }
+
+    public static AuthService getAuthServiceInstance() {
+        if (authService == null) {
+            authService = new AuthService();
+        }
+        return authService;
     }
 }

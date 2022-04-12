@@ -19,6 +19,8 @@
 
         <class>at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem</class>
 
+        <class>at.fhv.teamd.musicshop.backend.domain.user.Employee</class>
+
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
         <properties>

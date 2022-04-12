@@ -1,5 +1,6 @@
 package at.fhv.teamd.musicshop.userclient;
 
+import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.view.LoginController;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -43,9 +44,13 @@ public class Main extends Application {
     }
 
     private static void showErrorDialog(Throwable e) {
-        if (containsThrowableTypeInCauseStack(e, RemoteException.class)) {
+        Throwable cause;
+        if (getThrowableTypeInCauseStack(e, RemoteException.class) != null) {
             new Alert(Alert.AlertType.ERROR, "Connection to server failed (may be offline).", ButtonType.CLOSE).showAndWait();
+        } else if ((cause = getThrowableTypeInCauseStack(e, NotAuthorizedException.class)) != null) {
+            new Alert(Alert.AlertType.ERROR, cause.getMessage(), ButtonType.CLOSE).showAndWait();
         } else {
+            e.printStackTrace();
             // Print stack trace in alert modal
 //            StringWriter errorMsg = new StringWriter();
 //            e.printStackTrace(new PrintWriter(errorMsg));
@@ -56,19 +61,23 @@ public class Main extends Application {
         }
     }
 
-    public static boolean containsThrowableTypeInCauseStack(Throwable throwable, Class<? extends Throwable> throwableTypeInCauseStack) {
+    public static Throwable getThrowableTypeInCauseStack(Throwable throwable, Class<? extends Throwable> throwableTypeInCauseStack) {
         Objects.requireNonNull(throwable);
         Objects.requireNonNull(throwableTypeInCauseStack);
 
         Throwable cause = throwable;
         while (cause.getCause() != null && cause.getCause() != cause) {
             if (throwableTypeInCauseStack.isInstance(cause)) {
-                return true;
+                return cause;
             }
 
             cause = cause.getCause();
         }
 
-        return false;
+        if (throwableTypeInCauseStack.isInstance(cause)) {
+            return cause;
+        }
+
+        return null;
     }
 }

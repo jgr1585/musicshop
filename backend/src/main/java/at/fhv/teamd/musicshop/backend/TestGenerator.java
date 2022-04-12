@@ -9,6 +9,8 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
+import at.fhv.teamd.musicshop.backend.domain.user.Employee;
+import at.fhv.teamd.musicshop.backend.domain.user.UserRole;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -224,7 +226,7 @@ public class TestGenerator {
         Artist artistTouchBlue1 = new Artist("Miles Davis");
         Artist artistTouchBlue2 = new Artist("Bill Evans");
 
-        String mbidTouchBlue = "283bae1f-1a6d-4ac9-80d8-68818d8016e3";
+        String mbidTouchBlue = "eae41864-ecea-4c39-8fe9-2dabd150acfa";
         String labelTouchBlue = "RevOla Records";
         String genreTouchBlue = "Jazz";
         LocalDate releaseTouchBlue = LocalDate.of(2021, 1, 1);
@@ -256,11 +258,23 @@ public class TestGenerator {
         mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier6, albumEverything));
         mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier7, albumTouchBlue));
 
+        // create employees
+        Set<Employee> employees = new LinkedHashSet<>();
+
+        employees.add(new Employee("lka3333", "Lukas", "Kaufmann", UserRole.ADMIN));
+        employees.add(new Employee("ire4657", "Ivo", "Reich", UserRole.ADMIN));
+        employees.add(new Employee("jgr1585", "Julian", "Grießer", UserRole.OPERATOR));
+        employees.add(new Employee("ssa7090", "Selcan", "Sahin", UserRole.OPERATOR));
+        employees.add(new Employee("ysa1064", "Yagmur", "Sagdic", UserRole.SELLER));
+        employees.add(new Employee("bak3400", "Batuhan", "Akkus", UserRole.SELLER));
+        employees.add(new Employee("tf-test", "Thomas", "Feilhauer", UserRole.ADMIN));
+
         // persists everything
         EntityManager em = PersistenceManager.getEntityManagerInstance();
         em.getTransaction().begin();
 
         mediums.forEach(em::persist);
+        employees.forEach(em::persist);
 
         em.flush();
         em.getTransaction().commit();
