@@ -121,8 +121,7 @@ class ShoppingCartServiceTest {
 
         //then quantity should equal 2
         int expectedAmount = 2;
-        //noinspection OptionalGetWithoutIsPresent
-        Assertions.assertEquals(expectedAmount, this.shoppingCartService.getShoppingCart(uuid).lineItems().stream().findFirst().get().quantity().intValue());
+        Assertions.assertEquals(expectedAmount, this.shoppingCartService.getShoppingCart(uuid).lineItems().stream().findFirst().orElseThrow().quantity().intValue());
 
         //when remove 2 of 2
         this.shoppingCartService.removeFromShoppingCart(uuid, mediumDTO, 2);
