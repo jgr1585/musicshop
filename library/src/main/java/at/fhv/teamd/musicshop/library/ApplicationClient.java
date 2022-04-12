@@ -1,13 +1,12 @@
 package at.fhv.teamd.musicshop.library;
 
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
+import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.Optional;
 import java.util.Set;
 
 public interface ApplicationClient extends Remote {
@@ -24,4 +23,7 @@ public interface ApplicationClient extends Remote {
     boolean buyFromShoppingCart(int customerId) throws RemoteException;
 
     ShoppingCartDTO getShoppingCart() throws RemoteException;
+
+    // Application Client
+    void destroy() throws RemoteException;
 }

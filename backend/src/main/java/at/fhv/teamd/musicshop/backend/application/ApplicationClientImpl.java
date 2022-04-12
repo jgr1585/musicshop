@@ -8,6 +8,7 @@ import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Set;
@@ -48,12 +49,17 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public boolean buyFromShoppingCart(int customerId) throws RemoteException {
+    public boolean buyFromShoppingCart(int customerId) {
         return ServiceFactory.getShoppingCartServiceInstance().buyFromShoppingCart(sessionUUID, customerId);
     }
 
     @Override
     public ShoppingCartDTO getShoppingCart() {
         return ServiceFactory.getShoppingCartServiceInstance().getShoppingCart(sessionUUID);
+    }
+
+    @Override
+    public void destroy() throws NoSuchObjectException {
+        UnicastRemoteObject.unexportObject(this, true);
     }
 }

@@ -26,6 +26,17 @@ public class LoginController {
         this.stage = stage;
     }
 
+    public void logout() throws IOException {
+        RemoteFacade.getInstance().destroy();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("templates/login.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), stage.getScene().getWidth(), stage.getScene().getHeight());
+        stage.setScene(scene);
+
+        LoginController controller = fxmlLoader.getController();
+        controller.setStage(stage);
+    }
+
     @FXML
     private void onLoginAction(ActionEvent actionEvent) throws IOException {
         try {
@@ -33,6 +44,9 @@ public class LoginController {
 
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("templates/main-window.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), stage.getScene().getWidth(), stage.getScene().getHeight());
+            AppController appController = fxmlLoader.getController();
+            appController.setLoginController(this);
+
             stage.setScene(scene);
 
         } catch (AuthenticationFailedException e) {

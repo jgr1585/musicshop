@@ -52,7 +52,7 @@ public class RemoteFacade implements ApplicationClient {
             return applicationClient;
         }
 
-        throw new IllegalStateException("FUCK OFF");
+        throw new IllegalStateException("Application client unavailable yet.");
     }
 
     @Override
@@ -83,5 +83,11 @@ public class RemoteFacade implements ApplicationClient {
     @Override
     public ShoppingCartDTO getShoppingCart() throws RemoteException {
         return getApplicationClientOrThrow().getShoppingCart();
+    }
+
+    @Override
+    public void destroy() throws RemoteException {
+        getApplicationClientOrThrow().destroy();
+        applicationClient = null;
     }
 }
