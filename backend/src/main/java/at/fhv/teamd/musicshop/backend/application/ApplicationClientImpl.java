@@ -9,7 +9,6 @@ import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
-import com.sun.net.httpserver.Authenticator;
 
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
