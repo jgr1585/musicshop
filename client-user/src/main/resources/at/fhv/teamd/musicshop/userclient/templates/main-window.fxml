@@ -5,7 +5,7 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 
-<TabPane nodeOrientation="LEFT_TO_RIGHT" onKeyPressed="#onKeyPressed" pickOnBounds="false" prefHeight="800.0" prefWidth="1000.0" style="-fx-tab-min-width: 10em; -fx-font-size: 13; -fx-base: #000000FF; -fx-text-box-border:  #000000FF; -fx-color:  #000000FF; -fx-box-border:  #000000FF; -fx-outer-border:  #000000FF;" tabMaxHeight="25.0" tabMaxWidth="120.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.AppController">
+<TabPane nodeOrientation="LEFT_TO_RIGHT" onKeyPressed="#onKeyPressed" pickOnBounds="false" prefHeight="800.0" prefWidth="1000.0" style="-fx-tab-min-width: 10em; -fx-font-size: 13; -fx-base: #000000FF; -fx-text-box-border:  #000000FF; -fx-color:  #000000FF; -fx-box-border:  #000000FF; -fx-outer-border:  #000000FF;" tabMaxHeight="25.0" tabMaxWidth="120.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.AppController">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
