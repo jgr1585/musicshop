@@ -226,7 +226,7 @@ public class TestGenerator {
         Artist artistTouchBlue1 = new Artist("Miles Davis");
         Artist artistTouchBlue2 = new Artist("Bill Evans");
 
-        String mbidTouchBlue = "283bae1f-1a6d-4ac9-80d8-68818d8016e3";
+        String mbidTouchBlue = "eae41864-ecea-4c39-8fe9-2dabd150acfa";
         String labelTouchBlue = "RevOla Records";
         String genreTouchBlue = "Jazz";
         LocalDate releaseTouchBlue = LocalDate.of(2021, 1, 1);
