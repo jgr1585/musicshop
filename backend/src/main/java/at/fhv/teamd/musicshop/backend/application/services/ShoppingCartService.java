@@ -1,6 +1,5 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
-import at.fhv.teamd.musicshop.backend.domain.invoice.PaymentMethod;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
@@ -119,7 +118,7 @@ public class ShoppingCartService {
         });
 
         try {
-            ServiceFactory.getInvoiceServiceInstance().createInvoice(PaymentMethod.CASH, lineItems, id);
+            ServiceFactory.getInvoiceServiceInstance().createInvoice(lineItems, id);
         } catch (Exception e) {
             e.printStackTrace();
         }
