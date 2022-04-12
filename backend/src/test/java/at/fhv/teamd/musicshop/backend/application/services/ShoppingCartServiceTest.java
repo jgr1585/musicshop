@@ -96,7 +96,7 @@ class ShoppingCartServiceTest {
         method.get().setAccessible(true);
 
         //when
-        Assertions.assertDoesNotThrow(() -> method.get().invoke(this.shoppingCartService, uuid));
+        this.shoppingCartService.getShoppingCart(uuid);
 
         //then
         Assertions.assertThrows(InvocationTargetException.class, () -> method.get().invoke(this.shoppingCartService, uuid));
@@ -121,6 +121,7 @@ class ShoppingCartServiceTest {
 
         //then quantity should equal 2
         int expectedAmount = 2;
+        //noinspection OptionalGetWithoutIsPresent
         Assertions.assertEquals(expectedAmount, this.shoppingCartService.getShoppingCart(uuid).lineItems().stream().findFirst().get().quantity().intValue());
 
         //when remove 2 of 2
