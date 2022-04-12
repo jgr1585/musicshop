@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShoppingCartController {
@@ -55,8 +56,9 @@ public class ShoppingCartController {
             controller.addMediumTypes(lineItemDTO.article(), lineItemDTO, Tabs.SHOPPINGCART);
             this.shoppingCardElements.getChildren().add(medium);
         }
-        this.totalAmount.setText(shoppingCartDTO.totalAmount().toString());
-        System.out.println("totalAmount: " + shoppingCartDTO.totalAmount().toString());
+        DecimalFormat df = new DecimalFormat("0.00");
+        this.totalAmount.setText(df.format(shoppingCartDTO.totalAmount()));
+        System.out.println("totalAmount: " + df.format(shoppingCartDTO.totalAmount()));
     }
 
     @FXML

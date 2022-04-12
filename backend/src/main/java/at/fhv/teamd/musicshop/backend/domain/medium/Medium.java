@@ -50,4 +50,8 @@ public class Medium {
         this.supplier = supplier;
         this.article = article;
     }
+
+    public void setStock(Stock stock) {
+        this.stock = stock;
+    }
 }

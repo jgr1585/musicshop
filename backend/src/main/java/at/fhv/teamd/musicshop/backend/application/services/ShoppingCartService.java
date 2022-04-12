@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
 import at.fhv.teamd.musicshop.backend.domain.invoice.PaymentMethod;
+import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
@@ -129,7 +130,9 @@ public class ShoppingCartService {
         // decrease quantities
         lineItems.forEach(lineItem -> {
             Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
-            medium.getStock().setQuantity(medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity()));
+//            medium.getStock().setQuantity(medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity()));
+            medium.setStock(Stock.of(medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity())));
+            mediumRepository.update(medium);
         });
         return true;
     }

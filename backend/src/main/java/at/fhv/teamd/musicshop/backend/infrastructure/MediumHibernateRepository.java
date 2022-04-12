@@ -62,4 +62,19 @@ public class MediumHibernateRepository implements MediumRepository {
 
         return mediums;
     }
+
+    @Override
+    public void update(Medium medium) {
+        Objects.requireNonNull(medium);
+
+        EntityManager em = PersistenceManager.getEntityManagerInstance();
+
+        em.getTransaction().begin();
+
+        em.merge(medium);
+
+        em.getTransaction().commit();
+
+        em.close();
+    }
 }

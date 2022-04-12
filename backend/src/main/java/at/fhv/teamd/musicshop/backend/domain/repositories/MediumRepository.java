@@ -8,4 +8,5 @@ import java.util.Set;
 public interface MediumRepository {
     Optional<Medium> findMediumById(Long id);
     Set<Medium> findMediumsByArticleId(Long id);
+    void update(Medium medium);
 }
