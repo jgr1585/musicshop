@@ -18,7 +18,7 @@ public class AuthService {
     }
 
     public void authorizeAccessLevel(UserRole requiredAccessLevel) throws NotAuthorizedException {
-        if (userName == null || userName.isEmpty()) {
+        if (userRole == null) {
             throw new IllegalStateException();
         }
 
