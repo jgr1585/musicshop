@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.userclient.view.shoppingcart;
 
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
+import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.article.ArticleController;
@@ -34,12 +35,12 @@ public class ShoppingCartController {
     public void initialize() {
         try {
             reloadShoppingCart();
-        } catch (IOException e) {
+        } catch (IOException | NotAuthorizedException e) {
             clearCart();
         }
     }
 
-    public void reloadShoppingCart() throws IOException {
+    public void reloadShoppingCart() throws IOException, NotAuthorizedException {
         insertData(RemoteFacade.getInstance().getShoppingCart());
     }
 
@@ -62,7 +63,7 @@ public class ShoppingCartController {
     }
 
     @FXML
-    private void buyAll(ActionEvent actionEvent) throws IOException {
+    private void buyAll(ActionEvent actionEvent) throws IOException, NotAuthorizedException {
         int customer = 0;
         if (!customerNo.getText().equals("")) {
             customer = Integer.parseInt(customerNo.getText());
@@ -77,7 +78,7 @@ public class ShoppingCartController {
     }
 
     @FXML
-    private void removeAll(ActionEvent actionEvent) throws IOException {
+    private void removeAll(ActionEvent actionEvent) throws IOException, NotAuthorizedException {
         RemoteFacade.getInstance().emptyShoppingCart();
         reloadShoppingCart();
         removeCustomer();

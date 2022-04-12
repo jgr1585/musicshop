@@ -18,17 +18,16 @@ public class Employee {
     @Column
     private String lastname;
 
-    @ElementCollection
     @Enumerated(EnumType.STRING)
-    private Set<UserRole> userRoles;
+    private UserRole userRole;
 
     protected Employee() {
     }
 
-    public Employee(String userName, String firstname, String lastname, Set<UserRole> userRoles) {
+    public Employee(String userName, String firstname, String lastname, UserRole userRole) {
         this.userName = userName;
         this.firstname = firstname;
         this.lastname = lastname;
-        this.userRoles = userRoles;
+        this.userRole = userRole;
     }
 }

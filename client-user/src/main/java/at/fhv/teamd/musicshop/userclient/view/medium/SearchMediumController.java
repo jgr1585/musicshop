@@ -3,6 +3,7 @@ package at.fhv.teamd.musicshop.userclient.view.medium;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.event.ActionEvent;
@@ -50,7 +51,7 @@ public class SearchMediumController implements GenericArticleController {
     }
 
     @FXML
-    private void addToCard(ActionEvent actionEvent) throws RemoteException {
+    private void addToCard(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
         RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()));
     }
 

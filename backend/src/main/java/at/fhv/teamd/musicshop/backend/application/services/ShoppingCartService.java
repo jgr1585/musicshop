@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildShoppingCartDTO;
 
 public class ShoppingCartService {
-    private static final Map<UUID, Set<LineItem>> sessionLineItems = new HashMap<>();
+    private static final Map<String, Set<LineItem>> sessionLineItems = new HashMap<>();
 
     private static MediumRepository mediumRepository;
     private static ArticleRepository articleRepository;
@@ -26,22 +26,22 @@ public class ShoppingCartService {
         articleRepository = RepositoryFactory.getArticleRepositoryInstance();
     }
 
-    private void initializeShoppingcart(UUID sessionUUID) {
-        if (!shoppingCartExists(sessionUUID)) {
-            sessionLineItems.put(sessionUUID, new HashSet<>());
+    private void initializeShoppingcart(String userId) {
+        if (!shoppingCartExists(userId)) {
+            sessionLineItems.put(userId, new HashSet<>());
         } else {
             throw new IllegalStateException("Shopping cart already exists.");
         }
     }
 
-    public boolean addToShoppingCart(UUID sessionUUID, MediumDTO mediumDTO, int amount) {
-        if (!shoppingCartExists(sessionUUID)) {
-            initializeShoppingcart(sessionUUID);
+    public boolean addToShoppingCart(String userId, MediumDTO mediumDTO, int amount) {
+        if (!shoppingCartExists(userId)) {
+            initializeShoppingcart(userId);
         }
 
         AtomicBoolean success = new AtomicBoolean(true);
 
-        Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
+        Set<LineItem> lineItems = sessionLineItems.get(userId);
 
         Medium medium = mediumRepository.findMediumById(mediumDTO.id()).orElseThrow();
 
@@ -57,7 +57,7 @@ public class ShoppingCartService {
                 }, () -> {
                     if (amount <= medium.getStock().getQuantity().getValue()) {
                         lineItems.add(new LineItem(Quantity.of(amount), medium));
-                        sessionLineItems.put(sessionUUID, lineItems);
+                        sessionLineItems.put(userId, lineItems);
                     } else {
                         success.set(false);
                     }
@@ -65,14 +65,14 @@ public class ShoppingCartService {
         return success.get();
     }
 
-    public boolean removeFromShoppingCart(UUID sessionUUID, MediumDTO mediumDTO, int amount) {
-        if (!shoppingCartExists(sessionUUID)) {
-            emptyShoppingCart(sessionUUID);
+    public boolean removeFromShoppingCart(String userId, MediumDTO mediumDTO, int amount) {
+        if (!shoppingCartExists(userId)) {
+            emptyShoppingCart(userId);
         }
 
         AtomicBoolean success = new AtomicBoolean(true);
 
-        Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
+        Set<LineItem> lineItems = sessionLineItems.get(userId);
 
         Optional<LineItem> lineItem = lineItems.stream()
                 .filter(li -> li.getMedium().getId() == mediumDTO.id())
@@ -88,25 +88,25 @@ public class ShoppingCartService {
         return success.get();
     }
 
-    public void emptyShoppingCart(UUID sessionUUID) {
-        sessionLineItems.put(sessionUUID, new HashSet<>());
+    public void emptyShoppingCart(String userId) {
+        sessionLineItems.put(userId, new HashSet<>());
     }
 
-    public ShoppingCartDTO getShoppingCart(UUID sessionUUID) {
-        if (!shoppingCartExists(sessionUUID)) {
-            initializeShoppingcart(sessionUUID);
+    public ShoppingCartDTO getShoppingCart(String userId) {
+        if (!shoppingCartExists(userId)) {
+            initializeShoppingcart(userId);
         }
-        return buildShoppingCartDTO(articleRepository, mediumRepository, sessionLineItems.get(sessionUUID));
+        return buildShoppingCartDTO(articleRepository, mediumRepository, sessionLineItems.get(userId));
     }
 
     // TODO: append paymentMethod
     // TODO: specific exception
-    public boolean buyFromShoppingCart(UUID sessionUUID, int id) {
-        if (!shoppingCartExists(sessionUUID)) {
-            emptyShoppingCart(sessionUUID);
+    public boolean buyFromShoppingCart(String userId, int id) {
+        if (!shoppingCartExists(userId)) {
+            emptyShoppingCart(userId);
         }
 
-        Set<LineItem> lineItems = sessionLineItems.get(sessionUUID);
+        Set<LineItem> lineItems = sessionLineItems.get(userId);
 
         if (lineItems.isEmpty()) return false;
 
@@ -123,7 +123,7 @@ public class ShoppingCartService {
             e.printStackTrace();
         }
 
-        emptyShoppingCart(sessionUUID);
+        emptyShoppingCart(userId);
 
         // decrease quantities
         lineItems.forEach(lineItem -> {
@@ -134,7 +134,7 @@ public class ShoppingCartService {
         return true;
     }
 
-    private boolean shoppingCartExists(UUID sessionUUID) {
-        return sessionLineItems.containsKey(sessionUUID);
+    private boolean shoppingCartExists(String userId) {
+        return sessionLineItems.containsKey(userId);
     }
 }

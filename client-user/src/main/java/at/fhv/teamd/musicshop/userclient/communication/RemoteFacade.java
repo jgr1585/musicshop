@@ -9,6 +9,7 @@ import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
+import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -57,37 +58,37 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException {
+    public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException, NotAuthorizedException {
         return getApplicationClientOrThrow().searchArticlesByAttributes(title, artist);
     }
 
     @Override
-    public Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException {
+    public Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException, NotAuthorizedException {
         return getApplicationClientOrThrow().searchCustomersByName(name);
     }
 
     @Override
-    public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException {
+    public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
         return getApplicationClientOrThrow().addToShoppingCart(mediumDTO, amount);
     }
 
     @Override
-    public boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException {
+    public boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
         return getApplicationClientOrThrow().removeFromShoppingCart(mediumDTO, amount);
     }
 
     @Override
-    public void emptyShoppingCart() throws RemoteException {
+    public void emptyShoppingCart() throws RemoteException, NotAuthorizedException {
         getApplicationClientOrThrow().emptyShoppingCart();
     }
 
     @Override
-    public boolean buyFromShoppingCart(int customerId) throws RemoteException {
+    public boolean buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException {
         return getApplicationClientOrThrow().buyFromShoppingCart(customerId);
     }
 
     @Override
-    public ShoppingCartDTO getShoppingCart() throws RemoteException {
+    public ShoppingCartDTO getShoppingCart() throws RemoteException, NotAuthorizedException {
         return getApplicationClientOrThrow().getShoppingCart();
     }
 

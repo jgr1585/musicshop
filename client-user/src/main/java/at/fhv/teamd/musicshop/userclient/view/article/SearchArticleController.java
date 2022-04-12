@@ -2,6 +2,7 @@ package at.fhv.teamd.musicshop.userclient.view.article;
 
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
+import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import javafx.event.ActionEvent;
@@ -40,7 +41,7 @@ public class SearchArticleController {
     }
 
     @FXML
-    private void searchArticles(ActionEvent actionEvent) throws ApplicationClientException, IOException {
+    private void searchArticles(ActionEvent actionEvent) throws ApplicationClientException, IOException, NotAuthorizedException {
         this.searchPane.getChildren().clear();
         if (!(this.searchByTitle.getText().isEmpty() && this.searchByArtist.getText().isEmpty())) {
             Set<ArticleDTO> result = RemoteFacade.getInstance().searchArticlesByAttributes(this.searchByTitle.getText(), this.searchByArtist.getText());

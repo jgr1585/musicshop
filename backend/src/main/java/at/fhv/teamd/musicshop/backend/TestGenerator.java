@@ -261,12 +261,13 @@ public class TestGenerator {
         // create employees
         Set<Employee> employees = new LinkedHashSet<>();
 
-        employees.add(new Employee("lka3333", "Lukas", "Kaufmann", Set.of(UserRole.ADMIN)));
-        employees.add(new Employee("ire4657", "Ivo", "Reich", Set.of(UserRole.ADMIN)));
-        employees.add(new Employee("jgr1585", "Julian", "Grießer", Set.of(UserRole.SELLER, UserRole.OPERATOR)));
-        employees.add(new Employee("ssa7090", "Selcan", "Sahin", Set.of(UserRole.OPERATOR)));
-        employees.add(new Employee("ysa1064", "Yagmur", "Sagdic", Set.of(UserRole.OPERATOR, UserRole.SELLER)));
-        employees.add(new Employee("bak3400", "Batuhan", "Akkus", Set.of(UserRole.SELLER)));
+        employees.add(new Employee("lka3333", "Lukas", "Kaufmann", UserRole.ADMIN));
+        employees.add(new Employee("ire4657", "Ivo", "Reich", UserRole.ADMIN));
+        employees.add(new Employee("jgr1585", "Julian", "Grießer", UserRole.OPERATOR));
+        employees.add(new Employee("ssa7090", "Selcan", "Sahin", UserRole.OPERATOR));
+        employees.add(new Employee("ysa1064", "Yagmur", "Sagdic", UserRole.SELLER));
+        employees.add(new Employee("bak3400", "Batuhan", "Akkus", UserRole.SELLER));
+        employees.add(new Employee("tf-test", "Thomas", "Feilhauer", UserRole.ADMIN));
 
         // persists everything
         EntityManager em = PersistenceManager.getEntityManagerInstance();
