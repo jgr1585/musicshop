@@ -9,8 +9,7 @@ import java.util.Set;
 @Getter
 public class Employee {
     @Id
-    @GeneratedValue
-    private int employeeNo;
+    private String userName;
 
     @Column
     private String firstname;
@@ -25,7 +24,8 @@ public class Employee {
     protected Employee() {
     }
 
-    public Employee(String firstname, String lastname, Set<UserRole> userRoles) {
+    public Employee(String userName, String firstname, String lastname, Set<UserRole> userRoles) {
+        this.userName = userName;
         this.firstname = firstname;
         this.lastname = lastname;
         this.userRoles = userRoles;
