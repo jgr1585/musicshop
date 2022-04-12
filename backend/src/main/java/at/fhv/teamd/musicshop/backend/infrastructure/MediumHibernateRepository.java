@@ -45,6 +45,7 @@ public class MediumHibernateRepository implements MediumRepository {
     }
 
     @Override
+    @Transactional
     public Set<Medium> findMediumsByArticleId(Long id) {
         Objects.requireNonNull(id);
 

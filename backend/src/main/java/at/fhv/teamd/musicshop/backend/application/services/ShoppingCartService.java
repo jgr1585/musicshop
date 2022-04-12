@@ -10,7 +10,6 @@ import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -102,6 +101,7 @@ public class ShoppingCartService {
 
     // TODO: append paymentMethod
     // TODO: specific exception
+    // TODO: quantity not updated
     public boolean buyFromShoppingCart(UUID sessionUUID, int id) {
         if (!shoppingCartExists(sessionUUID)) {
             emptyShoppingCart(sessionUUID);
@@ -129,7 +129,7 @@ public class ShoppingCartService {
         // decrease quantities
         lineItems.forEach(lineItem -> {
             Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
-            medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity());
+            medium.getStock().setQuantity(medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity()));
         });
         return true;
     }
