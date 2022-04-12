@@ -102,7 +102,6 @@ public class ShoppingCartService {
 
     // TODO: append paymentMethod
     // TODO: specific exception
-    // TODO: quantity not updated
     public boolean buyFromShoppingCart(UUID sessionUUID, int id) {
         if (!shoppingCartExists(sessionUUID)) {
             emptyShoppingCart(sessionUUID);
@@ -130,7 +129,6 @@ public class ShoppingCartService {
         // decrease quantities
         lineItems.forEach(lineItem -> {
             Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
-//            medium.getStock().setQuantity(medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity()));
             medium.setStock(Stock.of(medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity())));
             mediumRepository.update(medium);
         });
