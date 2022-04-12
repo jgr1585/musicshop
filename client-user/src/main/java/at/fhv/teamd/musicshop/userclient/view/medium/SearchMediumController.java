@@ -8,6 +8,8 @@ import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -52,7 +54,11 @@ public class SearchMediumController implements GenericArticleController {
 
     @FXML
     private void addToCard(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
-        RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()));
+        if (RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()))) {
+            new Alert(Alert.AlertType.INFORMATION, "Successfully added items", ButtonType.CLOSE).show();
+        } else {
+            new Alert(Alert.AlertType.ERROR, "Item could not be added", ButtonType.CLOSE).show();
+        }
     }
 
     public void reduceByOne(ActionEvent actionEvent) {
