@@ -9,6 +9,8 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
+import at.fhv.teamd.musicshop.backend.domain.user.Employee;
+import at.fhv.teamd.musicshop.backend.domain.user.UserRole;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -256,11 +258,22 @@ public class TestGenerator {
         mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier6, albumEverything));
         mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier7, albumTouchBlue));
 
+        // create employees
+        Set<Employee> employees = new LinkedHashSet<>();
+
+        employees.add(new Employee("lka3333", "Lukas", "Kaufmann", Set.of(UserRole.ADMIN)));
+        employees.add(new Employee("ire4657", "Ivo", "Reich", Set.of(UserRole.ADMIN)));
+        employees.add(new Employee("jgr1585", "Julian", "Grießer", Set.of(UserRole.SELLER, UserRole.OPERATOR)));
+        employees.add(new Employee("ssa7090", "Selcan", "Sahin", Set.of(UserRole.OPERATOR)));
+        employees.add(new Employee("ysa1064", "Yagmur", "Sagdic", Set.of(UserRole.OPERATOR, UserRole.SELLER)));
+        employees.add(new Employee("bak3400", "Batuhan", "Akkus", Set.of(UserRole.SELLER)));
+
         // persists everything
         EntityManager em = PersistenceManager.getEntityManagerInstance();
         em.getTransaction().begin();
 
         mediums.forEach(em::persist);
+        employees.forEach(em::persist);
 
         em.flush();
         em.getTransaction().commit();
