@@ -28,4 +28,7 @@ public interface ApplicationClient extends Remote {
     boolean buyFromShoppingCart(int customerId) throws RemoteException;
 
     ShoppingCartDTO getShoppingCart() throws RemoteException;
+
+    // Application Client
+    void destroy() throws RemoteException;
 }

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 
-<TabPane nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" prefHeight="800.0" prefWidth="1000.0" style="-fx-tab-min-width: 10em; -fx-font-size: 13; -fx-base: #000000FF; -fx-text-box-border:  #000000FF; -fx-color:  #000000FF; -fx-box-border:  #000000FF; -fx-outer-border:  #000000FF;" tabMaxHeight="25.0" tabMaxWidth="120.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane nodeOrientation="LEFT_TO_RIGHT" onKeyPressed="#onKeyPressed" pickOnBounds="false" prefHeight="800.0" prefWidth="1000.0" style="-fx-tab-min-width: 10em; -fx-font-size: 13; -fx-base: #000000FF; -fx-text-box-border:  #000000FF; -fx-color:  #000000FF; -fx-box-border:  #000000FF; -fx-outer-border:  #000000FF;" tabMaxHeight="25.0" tabMaxWidth="120.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.AppController">
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
    <tabs>
       <Tab closable="false" style="-fx-background-color: #7565fd; -fx-background-radius: 4; -fx-padding: 10; -fx-border-color: #000000; -fx-border-radius: 4; -fx-border-width: 3;" text="Search">
          <content>

@@ -8,6 +8,7 @@ import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
+import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -27,6 +28,19 @@ public class RemoteFacade implements ApplicationClient {
     private RemoteFacade() {
     }
 
+    public static void authenticateSession(String authUser, String authPassword) throws RemoteException, AuthenticationFailedException {
+        try {
+            LocateRegistry.getRegistry(REMOTE_HOST, REMOTE_PORT);
+            ApplicationClientFactory applicationClientFactory
+                    = (ApplicationClientFactory) Naming.lookup("rmi://" + REMOTE_HOST + ":" + REMOTE_PORT + "/ApplicationClientFactoryImpl");
+
+            applicationClient = applicationClientFactory.createApplicationClient(authUser, authPassword);
+
+        } catch (MalformedURLException | NotBoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static RemoteFacade getInstance() throws RemoteException {
         if (instance == null) {
             instance = new RemoteFacade();
@@ -39,14 +53,7 @@ public class RemoteFacade implements ApplicationClient {
             return applicationClient;
         }
 
-        try {
-            LocateRegistry.getRegistry(REMOTE_HOST, REMOTE_PORT);
-            ApplicationClientFactory applicationClientFactory = (ApplicationClientFactory) Naming.lookup("rmi://" + REMOTE_HOST + ":" + REMOTE_PORT + "/ApplicationClientFactoryImpl");
-            applicationClient = applicationClientFactory.createApplicationClient();
-            return applicationClient;
-        } catch (MalformedURLException | NotBoundException e) {
-            throw new RuntimeException(e);
-        }
+        throw new IllegalStateException("Application client unavailable yet.");
     }
 
     @Override
@@ -82,5 +89,11 @@ public class RemoteFacade implements ApplicationClient {
     @Override
     public ShoppingCartDTO getShoppingCart() throws RemoteException {
         return getApplicationClientOrThrow().getShoppingCart();
+    }
+
+    @Override
+    public void destroy() throws RemoteException {
+        getApplicationClientOrThrow().destroy();
+        applicationClient = null;
     }
 }
