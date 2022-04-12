@@ -6,12 +6,12 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane accessibleRole="PASSWORD_FIELD" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.LoginController">
+<Pane accessibleRole="PASSWORD_FIELD" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: black; -fx-font-size: 13; -fx-font-weight: bold;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.LoginController">
     <children>
-        <Button defaultButton="true" layoutX="560.0" layoutY="390.0" mnemonicParsing="false" onAction="#onLoginAction" text="Login" />
-        <Button cancelButton="true" layoutX="480.0" layoutY="390.0" mnemonicParsing="false" onAction="#onResetAction" text="Reset" />
-        <Label layoutX="352.5" layoutY="264.0" prefWidth="75.0" text="Username:" />
-        <Label layoutX="352.5" layoutY="327.0" prefWidth="75.0" text="Password:" />
+        <Button defaultButton="true" layoutX="560.0" layoutY="390.0" mnemonicParsing="false" onAction="#onLoginAction" prefWidth="80.0" style="-fx-background-color: #05b789;" text="Login" />
+        <Button cancelButton="true" layoutX="468.0" layoutY="390.0" mnemonicParsing="false" onAction="#onResetAction" prefWidth="80.0" style="-fx-background-color: #c89be7;" text="Reset" />
+        <Label layoutX="352.5" layoutY="264.0" prefWidth="75.0" text="Username:" textFill="WHITE" />
+        <Label layoutX="352.5" layoutY="327.0" prefWidth="75.0" text="Password:" textFill="WHITE" />
         <TextField fx:id="username" layoutX="468.0" layoutY="259.0" />
       <PasswordField fx:id="password" layoutX="468.0" layoutY="323.0" />
     </children>
