@@ -9,7 +9,7 @@ import java.util.*;
 @Getter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "publication")
+@DiscriminatorColumn(name = "type_of_publication")
 public abstract class Article {
     @Id
     @GeneratedValue
