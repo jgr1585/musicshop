@@ -1,40 +1,80 @@
 package at.fhv.teamd.musicshop.backend.infrastructure;
 
 import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
-import at.fhv.teamd.musicshop.backend.domain.medium.AnalogMedium;
+import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MediumHibernateRepository implements MediumRepository {
 
     // package-private constructor to enable initialization only through same package classes
-    MediumHibernateRepository() {}
+    MediumHibernateRepository() {
+    }
 
     @Override
     @Transactional
-    public Optional<AnalogMedium> findAnalogMediumById(Long id) {
+    public Optional<Medium> findMediumById(Long id) {
+        Objects.requireNonNull(id);
+
         EntityManager em = PersistenceManager.getEntityManagerInstance();
 
-        TypedQuery<AnalogMedium> query = em.createQuery("SELECT m FROM AnalogMedium m " +
-                "WHERE m.id=:id", AnalogMedium.class);
+        TypedQuery<Medium> query = em.createQuery("SELECT m FROM Medium m " +
+                "WHERE m.id=:id", Medium.class);
 
         query.setParameter("id", id);
 
-        Optional<AnalogMedium> analogMediumOpt;
+        Optional<Medium> mediumOpt;
 
         try {
-            analogMediumOpt= Optional.of(query.getSingleResult());
+            mediumOpt = Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
-            analogMediumOpt= Optional.empty();
+            mediumOpt = Optional.empty();
         }
 
         em.close();
 
-        return analogMediumOpt;
+        return mediumOpt;
+    }
+
+    @Override
+    @Transactional
+    public Set<Medium> findMediumsByArticleId(Long id) {
+        Objects.requireNonNull(id);
+
+        EntityManager em = PersistenceManager.getEntityManagerInstance();
+
+        TypedQuery<Medium> query = em.createQuery("SELECT m FROM Medium m " +
+                "WHERE m.article.id=:id", Medium.class);
+
+        query.setParameter("id", id);
+
+        Set<Medium> mediums = query.getResultList().stream().collect(Collectors.toUnmodifiableSet());
+
+        em.close();
+
+        return mediums;
+    }
+
+    @Override
+    public void update(Medium medium) {
+        Objects.requireNonNull(medium);
+
+        EntityManager em = PersistenceManager.getEntityManagerInstance();
+
+        em.getTransaction().begin();
+
+        em.merge(medium);
+
+        em.getTransaction().commit();
+
+        em.close();
     }
 }

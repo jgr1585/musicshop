@@ -1,38 +1,53 @@
 package at.fhv.teamd.musicshop.backend.application;
 
-import at.fhv.teamd.musicshop.library.ApplicationClient;
-import at.fhv.teamd.musicshop.library.DTO.AnalogMediumDTO;
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
+import at.fhv.teamd.musicshop.library.ApplicationClient;
+import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
+import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
+import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
+import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
+import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class ApplicationClientImpl extends UnicastRemoteObject implements ApplicationClient {
     private final UUID sessionUUID;
 
-    public ApplicationClientImpl() throws RemoteException {
+    private ApplicationClientImpl() throws RemoteException {
         super();
         sessionUUID = UUID.randomUUID();
     }
 
+    public static ApplicationClientImpl newInstance(String authUser, String authPassword) throws RemoteException, AuthenticationFailedException {
+        Authenticator.authenticate(authUser, authPassword);
+
+        return new ApplicationClientImpl();
+    }
+
     @Override
-    public List<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException {
+    public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException {
         return ServiceFactory.getArticleServiceInstance().searchArticlesByAttributes(title, artist);
     }
 
     @Override
-    public void addToShoppingCart(ArticleDTO articleDTO, AnalogMediumDTO analogMediumDTO, int amount) {
-        ServiceFactory.getShoppingCartServiceInstance().addToShoppingCart(sessionUUID, articleDTO, analogMediumDTO, amount);
+    public Set<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException, RemoteException {
+        return ServiceFactory.getCustomerServiceInstance().searchCustomersByName(name);
     }
 
     @Override
-    public void removeFromShoppingCart(AnalogMediumDTO analogMediumDTO, int amount) {
-        ServiceFactory.getShoppingCartServiceInstance().removeFromShoppingCart(sessionUUID, analogMediumDTO, amount);
+    public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) {
+        return ServiceFactory.getShoppingCartServiceInstance().addToShoppingCart(sessionUUID, mediumDTO, amount);
+    }
+
+    @Override
+    public boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) {
+        return ServiceFactory.getShoppingCartServiceInstance().removeFromShoppingCart(sessionUUID, mediumDTO, amount);
     }
 
     @Override
@@ -41,7 +56,17 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
+    public boolean buyFromShoppingCart(int customerId) {
+        return ServiceFactory.getShoppingCartServiceInstance().buyFromShoppingCart(sessionUUID, customerId);
+    }
+
+    @Override
     public ShoppingCartDTO getShoppingCart() {
         return ServiceFactory.getShoppingCartServiceInstance().getShoppingCart(sessionUUID);
+    }
+
+    @Override
+    public void destroy() throws NoSuchObjectException {
+        UnicastRemoteObject.unexportObject(this, true);
     }
 }

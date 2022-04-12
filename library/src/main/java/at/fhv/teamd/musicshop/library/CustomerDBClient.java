@@ -6,10 +6,9 @@ import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
+import java.util.Set;
 
 public interface CustomerDBClient extends Remote {
-    List<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException;
-
+    Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException;
     CustomerDTO findCustomerById(int customerId) throws RemoteException, CustomerDBClientException, CustomerNotFoundException;
 }

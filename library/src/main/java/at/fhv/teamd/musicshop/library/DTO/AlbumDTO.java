@@ -3,23 +3,21 @@ package at.fhv.teamd.musicshop.library.DTO;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public final class AlbumDTO implements ArticleDTO, Serializable {
     private static final long serialVersionUID = 1577561200659149099L;
 
     private Long id;
-    private String descriptorName;
     private String title;
     private String label;
     private LocalDate releaseDate;
     private String genre;
     private String musicbrainzId;
-    private Map<String, AnalogMediumDTO> analogMedium;
-    private List<SongDTO> songs;
-    private List<ArtistDTO> artists;
+    private Set<MediumDTO> mediums;
+    private Set<SongDTO> songs;
+    private Set<ArtistDTO> artists;
 
     public static AlbumDTO.Builder builder() {
         return new AlbumDTO.Builder();
@@ -28,8 +26,6 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
     public Long id() {
         return this.id;
     }
-
-    public String descriptorName() { return this.descriptorName; }
 
     public String title() {
         return this.title;
@@ -47,23 +43,40 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
         return this.genre;
     }
 
-    public String musicbrainzId() { return this.musicbrainzId; }
-
-    public Map<String, AnalogMediumDTO> analogMedium() { return Collections.unmodifiableMap(analogMedium); }
-
-    public List<SongDTO> songs() {
-        return Collections.unmodifiableList(songs);
+    public String musicbrainzId() {
+        return this.musicbrainzId;
     }
 
-    public List<ArtistDTO> artists() {
-        return Collections.unmodifiableList(artists);
+    public Set<MediumDTO> mediums() {
+        return Collections.unmodifiableSet(mediums);
+    }
+
+    public Set<SongDTO> songs() {
+        return Collections.unmodifiableSet(songs);
+    }
+
+    public Set<ArtistDTO> artists() {
+        return Collections.unmodifiableSet(artists);
     }
 
     private AlbumDTO() {
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AlbumDTO albumDTO = (AlbumDTO) o;
+        return Objects.equals(id, albumDTO.id) && Objects.equals(title, albumDTO.title) && Objects.equals(label, albumDTO.label) && Objects.equals(releaseDate, albumDTO.releaseDate) && Objects.equals(genre, albumDTO.genre) && Objects.equals(musicbrainzId, albumDTO.musicbrainzId) && Objects.equals(mediums, albumDTO.mediums) && Objects.equals(songs, albumDTO.songs) && Objects.equals(artists, albumDTO.artists);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, label, releaseDate, genre, musicbrainzId, mediums, songs, artists);
+    }
+
     public static class Builder {
-        private AlbumDTO instance;
+        private final AlbumDTO instance;
 
         private Builder() {
             this.instance = new AlbumDTO();
@@ -71,24 +84,22 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
 
         public AlbumDTO.Builder withAlbumData(
                 Long id,
-                String descriptorName,
                 String title,
                 String label,
                 LocalDate releaseDate,
                 String genre,
                 String musicbrainzId,
-                Map<String, AnalogMediumDTO> analogMedium,
-                List<SongDTO> songs,
-                List<ArtistDTO> artists
+                Set<MediumDTO> mediums,
+                Set<SongDTO> songs,
+                Set<ArtistDTO> artists
         ) {
             this.instance.id = id;
-            this.instance.descriptorName = descriptorName;
             this.instance.title = title;
             this.instance.label = label;
             this.instance.releaseDate = releaseDate;
             this.instance.genre = genre;
             this.instance.musicbrainzId = musicbrainzId;
-            this.instance.analogMedium = analogMedium;
+            this.instance.mediums = mediums;
             this.instance.songs = songs;
             this.instance.artists = artists;
             return this;

@@ -31,6 +31,19 @@ public final class SupplierDTO implements Serializable {
     private SupplierDTO() {
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SupplierDTO that = (SupplierDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(supplyDuration, that.supplyDuration);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, supplyDuration);
+    }
+
     public static class Builder {
         private SupplierDTO instance;
 

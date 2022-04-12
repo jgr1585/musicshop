@@ -3,6 +3,8 @@ package at.fhv.teamd.musicshop.backend.application.services;
 public class ServiceFactory {
     private static ArticleService articleService;
     private static ShoppingCartService shoppingCartService;
+    private static InvoiceService invoiceService;
+    private static CustomerService customerService;
 
     private ServiceFactory() {}
 
@@ -10,7 +12,6 @@ public class ServiceFactory {
         if (articleService == null) {
             articleService = new ArticleService();
         }
-
         return articleService;
     }
 
@@ -18,7 +19,20 @@ public class ServiceFactory {
         if (shoppingCartService == null) {
             shoppingCartService = new ShoppingCartService();
         }
-
         return shoppingCartService;
+    }
+
+    public static InvoiceService getInvoiceServiceInstance() {
+        if (invoiceService == null) {
+            invoiceService = new InvoiceService();
+        }
+        return invoiceService;
+    }
+
+    public static CustomerService getCustomerServiceInstance() {
+        if (customerService == null) {
+            customerService = new CustomerService();
+        }
+        return customerService;
     }
 }

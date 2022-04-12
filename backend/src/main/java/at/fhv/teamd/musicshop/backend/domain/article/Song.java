@@ -1,17 +1,18 @@
 package at.fhv.teamd.musicshop.backend.domain.article;
 
-import at.fhv.teamd.musicshop.backend.domain.medium.AnalogMedium;
-import at.fhv.teamd.musicshop.backend.domain.medium.AnalogMediumType;
+import lombok.Getter;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
+@Getter
 @Entity
+@DiscriminatorValue("Song")
 public class Song extends Article {
     @Column
     private Duration length;
@@ -19,13 +20,8 @@ public class Song extends Article {
     protected Song() {
     }
 
-    public Song(String title, String label, LocalDate releaseDate, String genre, String musicbrainzId, Map<AnalogMediumType, AnalogMedium> analogMedium, Duration length, List<Artist> artists) {
-        super(title, label, releaseDate, genre, musicbrainzId, analogMedium, artists);
-
+    public Song(String title, String label, LocalDate releaseDate, String genre, String musicbrainzId, Duration length, Set<Artist> artists) {
+        super(title, label, releaseDate, genre, musicbrainzId, artists);
         this.length = Objects.requireNonNull(length);
-    }
-
-    public Duration getLength() {
-        return length;
     }
 }

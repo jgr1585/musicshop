@@ -3,21 +3,21 @@ package at.fhv.teamd.musicshop.backend.infrastructure;
 import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
 import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
-import at.fhv.teamd.musicshop.backend.domain.article.Song;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ArticleHibernateRepository implements ArticleRepository {
 
     // package-private constructor to enable initialization only through same package classes
-    ArticleHibernateRepository() {}
+    ArticleHibernateRepository() {
+    }
 
     /*
         Pattern search for the combination of each entered property
@@ -27,65 +27,83 @@ public class ArticleHibernateRepository implements ArticleRepository {
      */
     @Override
     @Transactional
-    public List<Article> searchArticlesByAttributes(String title, String artist) {
+    public SortedSet<Article> searchArticlesByAttributes(String title, String artist) {
         Objects.requireNonNull(title);
         Objects.requireNonNull(artist);
 
         EntityManager em = PersistenceManager.getEntityManagerInstance();
 
-        // NOTE: This redundant querying is done because abstract article cannot be directly queried
-        // because the required JPA inheritance strategy probably cannot be used
-        TypedQuery<Album> albumQuery = em.createQuery(
-                "SELECT DISTINCT(a) FROM Album a JOIN a.artists aa WHERE " +
-                        "((a.title <> '' AND LOWER(a.title) LIKE LOWER(:titlePattern)) OR a.title = '') AND " +
-                        "((aa.name <> '' AND LOWER(aa.name) LIKE LOWER(:artistPattern)) OR aa.name = '')"
-                , Album.class).setMaxResults(25);
+        // this query only takes non-empty search criteria into account
+        TypedQuery<Article> query = em.createQuery(
+                "SELECT DISTINCT(a) FROM Article a JOIN a.artists aa WHERE " +
+                        "(:titlePattern <> '%%' OR :artistPattern <> '%%') AND " +
+                        "((:titlePattern <> '%%' AND LOWER(a.title) LIKE LOWER(:titlePattern)) OR :titlePattern = '%%') AND " +
+                        "((:artistPattern <> '%%' AND LOWER(aa.name) LIKE LOWER(:artistPattern)) OR :artistPattern = '%%')"
+                , Article.class).setMaxResults(50);
 
-        albumQuery.setParameter("titlePattern", "%"+title+"%");
-        albumQuery.setParameter("artistPattern", "%"+artist+"%");
+        String searchTitle = title.trim().toLowerCase();
+        String searchArtist = artist.trim().toLowerCase();
+        query.setParameter("titlePattern", "%" + searchTitle + "%");
+        query.setParameter("artistPattern", "%" + searchArtist + "%");
 
-        TypedQuery<Song> songQuery = em.createQuery("SELECT DISTINCT(s) FROM Song s JOIN s.artists sa WHERE " +
-                        "((s.title <> '' AND LOWER(s.title) LIKE LOWER(:titlePattern)) OR s.title = '') AND " +
-                        "((sa.name <> '' AND LOWER(sa.name) LIKE LOWER(:artistPattern)) OR sa.name = '')"
-                , Song.class).setMaxResults(25);
+        Set<Article> articles = new HashSet<>(query.getResultList());
 
-        songQuery.setParameter("titlePattern", "%"+title+"%");
-        songQuery.setParameter("artistPattern", "%"+artist+"%");
+        // NOTE: Alternative to manual sorting may be to order by case select in query
+        Function<Article, Integer> scoreByArticleMatchType = article -> {
+            String articleTitle = article.getTitle().toLowerCase();
 
-        List<Article> articles = new ArrayList<>();
+            if (articleTitle.equals(searchTitle)
+                    || article.getArtists().stream().anyMatch(art -> art.getName().toLowerCase().equals(searchArtist))) {
+                // direct match (case-insensitive)
+                return 1;
 
-        // NOTE: Alternative to this is to order by case select in query
-        List<Album> albums = albumQuery.getResultList();
-        List<Album> albumsDirectMatches = albums.stream()
-                .filter(album -> album.getTitle().equals(title)
-                                || album.getArtists().stream().anyMatch(
-                                        albumArtist -> albumArtist.getName().equals(artist)
-                                    )
-                )
-                .collect(Collectors.toList());
-        List<Album> albumsIndirectMatches = albums.stream()
-                .filter(album -> !albumsDirectMatches.contains(album))
-                .collect(Collectors.toList());
+            } else if (articleTitle.contains(searchTitle)
+                    || article.getArtists().stream().anyMatch(art -> art.getName().toLowerCase().contains(searchArtist))) {
+                // like-wise match
+                return 2;
 
-        List<Song> songs = songQuery.getResultList();
-        List<Song> songsDirectMatches = songs.stream()
-                .filter(song -> song.getTitle().equals(title)
-                                || song.getArtists().stream().anyMatch(
-                                songArtist -> songArtist.getName().equals(artist)
-                        )
-                )
-                .collect(Collectors.toList());
-        List<Song> songsIndirectMatches = songs.stream()
-                .filter(song -> !songsDirectMatches.contains(song))
-                .collect(Collectors.toList());
+            } else {
+                // (non-match) or match criteria not observed (isEmpty())
+                return 3;
+            }
+        };
+        Comparator<Article> compareByArticleMatchType = Comparator.comparing(scoreByArticleMatchType);
+        Comparator<Article> compareByArticleAlbumPreference = Comparator.comparing(article -> (article instanceof Album) ? 1 : 2);
+        Comparator<Article> compareByArticleId = Comparator.comparing(Article::getId);
 
-        articles.addAll(albumsDirectMatches);
-        articles.addAll(songsDirectMatches);
-        articles.addAll(albumsIndirectMatches);
-        articles.addAll(songsIndirectMatches);
+        SortedSet<Article> sortedArticles = articles.stream()
+                .collect(Collectors.toCollection(() -> new TreeSet<>(
+                        compareByArticleMatchType
+                                .thenComparing(compareByArticleAlbumPreference)
+                                .thenComparing(compareByArticleId)
+                )));
 
         em.close();
 
-        return articles;
+        return sortedArticles;
+    }
+
+    @Override
+    @Transactional
+    public Optional<Article> findArticleById(Long id) {
+        Objects.requireNonNull(id);
+
+        EntityManager em = PersistenceManager.getEntityManagerInstance();
+
+        TypedQuery<Article> query = em.createQuery(
+                "SELECT a FROM Article a WHERE a.id=:id", Article.class);
+
+        query.setParameter("id", id);
+
+        Optional<Article> articleOpt;
+
+        try {
+            articleOpt = Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            articleOpt = Optional.empty();
+        }
+
+        em.close();
+        return articleOpt;
     }
 }

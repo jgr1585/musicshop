@@ -1,38 +1,57 @@
 package at.fhv.teamd.musicshop.backend.domain.medium;
 
+import at.fhv.teamd.musicshop.backend.domain.article.Article;
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+@Getter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Medium {
+public class Medium {
     @Id
     @GeneratedValue
     private long id;
 
+    @Enumerated(EnumType.STRING)
+    private MediumType type;
+
     @Column
     private BigDecimal price;
 
-    @OneToOne(cascade= CascadeType.ALL)
+    @Embedded
+    private Stock stock;
+
+    @ManyToOne(cascade = CascadeType.ALL)
     private Supplier supplier;
 
-    protected Medium() {}
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Article article;
 
-    public Medium(BigDecimal price, Supplier supplier) {
+    protected Medium() {
+    }
+
+    public Medium(BigDecimal price, MediumType type, Stock stock, Supplier supplier, Article article) {
+        this.type = Objects.requireNonNull(type);
         this.price = Objects.requireNonNull(price);
+        this.stock = Objects.requireNonNull(stock);
         this.supplier = Objects.requireNonNull(supplier);
+        this.article = article;
     }
 
-    public long getId() {
-        return id;
+    @Deprecated(since = "Only for Test")
+    public Medium(long id, MediumType type, BigDecimal price, Stock stock, Supplier supplier, Article article) {
+        this.id = id;
+        this.type = type;
+        this.price = price;
+        this.stock = stock;
+        this.supplier = supplier;
+        this.article = article;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public Supplier getSupplier() {
-        return supplier;
+    public void setStock(Stock stock) {
+        this.stock = stock;
     }
 }

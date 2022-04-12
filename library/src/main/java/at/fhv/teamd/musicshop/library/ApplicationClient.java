@@ -1,24 +1,34 @@
 package at.fhv.teamd.musicshop.library;
 
-import at.fhv.teamd.musicshop.library.DTO.AnalogMediumDTO;
+import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
+import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
+import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
+import java.util.Set;
 
 public interface ApplicationClient extends Remote {
     // Search Articles
-    List<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException;
+    Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException;
+
+    // Search Customer for Invoice
+    Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException;
 
     // Shopping Cart
-    void addToShoppingCart(ArticleDTO articleDTO, AnalogMediumDTO analogMediumDTO, int amount) throws RemoteException;
+    boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException;
 
-    void removeFromShoppingCart(AnalogMediumDTO analogMediumDTO, int amount) throws RemoteException;
+    boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException;
 
     void emptyShoppingCart() throws RemoteException;
 
+    boolean buyFromShoppingCart(int customerId) throws RemoteException;
+
     ShoppingCartDTO getShoppingCart() throws RemoteException;
+
+    // Application Client
+    void destroy() throws RemoteException;
 }

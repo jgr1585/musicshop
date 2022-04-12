@@ -1,14 +1,14 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
+import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildArticleDTO;
 
@@ -21,19 +21,14 @@ public class ArticleService {
         mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
     }
 
-    public List<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException {
+    public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException {
         if (!searchableParam(title, artist)) {
             throw new ApplicationClientException("Validation error: No searchable param for search.");
         }
 
-        List<Article> articles = articleRepository.searchArticlesByAttributes(title, artist);
-
-        List<ArticleDTO> articleDTOs = new ArrayList<>();
-        for (Article article : articles) {
-            articleDTOs.add(buildArticleDTO(mediumRepository, article));
-        }
-
-        return articleDTOs;
+        return articleRepository.searchArticlesByAttributes(title, artist).stream()
+                .map(article -> buildArticleDTO(mediumRepository, article))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     /*

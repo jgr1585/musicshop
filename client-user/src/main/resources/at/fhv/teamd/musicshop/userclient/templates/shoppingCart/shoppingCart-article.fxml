@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartArticleController">
+   <children>
+      <Label fx:id="mediumType" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="16.0" prefWidth="75.0" text="Label" />
+      <Label fx:id="mediumPrice" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" text="€€€" textFill="#26c303" GridPane.columnIndex="3">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <TextField fx:id="mediumAmountStock" alignment="CENTER" disable="true" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" text="0" GridPane.columnIndex="1" />
+      <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
+         <children>
+            <Button layoutX="1.0" layoutY="1.0" mnemonicParsing="false" onAction="#reduceByOne" prefWidth="35.0" style="-fx-background-color: red;" text="-" textFill="#101110" />
+            <TextField fx:id="mediumAmountSelected" alignment="CENTER" layoutX="37.0" layoutY="2.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" text="0" />
+            <Button layoutX="73.0" layoutY="1.0" mnemonicParsing="false" onAction="#increaseByOne" prefWidth="35.0" style="-fx-background-color: lightgreen;" text="+" />
+         </children>
+      </Pane>
+      <Button mnemonicParsing="false" onAction="#remove" prefWidth="30.0" style="-fx-background-color: red;" text="X" GridPane.columnIndex="4" />
+   </children>
+   <columnConstraints>
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="45.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="110.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+</GridPane>
