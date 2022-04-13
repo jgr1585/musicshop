@@ -39,6 +39,8 @@ public class ShoppingCartService {
             initializeShoppingcart(userId);
         }
 
+        if (amount < 1) return false;
+
         AtomicBoolean success = new AtomicBoolean(true);
 
         Set<LineItem> lineItems = sessionLineItems.get(userId);
@@ -49,7 +51,7 @@ public class ShoppingCartService {
                 .filter(li -> li.getMedium().getId() == mediumDTO.id())
                 .findFirst()
                 .ifPresentOrElse(li -> {
-                    if (li.getQuantity().getValue() + amount <= medium.getStock().getQuantity().getValue() && amount > 0) {
+                    if (li.getQuantity().getValue() + amount <= medium.getStock().getQuantity().getValue()) {
                         li.increaseQuantity(Quantity.of(amount));
                     } else {
                         success.set(false);
@@ -70,6 +72,8 @@ public class ShoppingCartService {
             emptyShoppingCart(userId);
         }
 
+        if (amount < 1) return false;
+
         AtomicBoolean success = new AtomicBoolean(true);
 
         Set<LineItem> lineItems = sessionLineItems.get(userId);
@@ -79,7 +83,7 @@ public class ShoppingCartService {
                 .findFirst();
 
         lineItem.ifPresentOrElse(li -> {
-            if (li.getQuantity().getValue() > amount && amount > 0) {
+            if (li.getQuantity().getValue() > amount) {
                 li.decreaseQuantity(Quantity.of(amount));
             } else {
                 lineItems.remove(li);
@@ -99,7 +103,6 @@ public class ShoppingCartService {
         return buildShoppingCartDTO(articleRepository, mediumRepository, sessionLineItems.get(userId));
     }
 
-    // TODO: append paymentMethod
     // TODO: specific exception
     public boolean buyFromShoppingCart(String userId, int id) {
         if (!shoppingCartExists(userId)) {
