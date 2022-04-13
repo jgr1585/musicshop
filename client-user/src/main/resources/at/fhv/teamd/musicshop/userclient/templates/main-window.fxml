@@ -5,12 +5,12 @@
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 
-<TabPane nodeOrientation="LEFT_TO_RIGHT" onKeyPressed="#onKeyPressed" pickOnBounds="false" prefHeight="800.0" prefWidth="1000.0" style="-fx-tab-min-width: 10em; -fx-font-size: 13; -fx-base: #000000FF; -fx-text-box-border:  #000000FF; -fx-color:  #000000FF; -fx-box-border:  #000000FF; -fx-outer-border:  #000000FF;" tabMaxHeight="25.0" tabMaxWidth="120.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.AppController">
+<TabPane nodeOrientation="LEFT_TO_RIGHT" pickOnBounds="false" prefHeight="800.0" prefWidth="1000.0" style="-fx-tab-min-width: 10em; -fx-font-size: 13; -fx-base: #000000FF; -fx-text-box-border: #000000FF; -fx-color: #000000FF; -fx-box-border: #000000FF; -fx-outer-border: #000000FF;" tabMaxHeight="50.0" tabMaxWidth="120.0" tabMinHeight="50.0" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.AppController">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
    <tabs>
-      <Tab closable="false" style="-fx-background-color: #7565fd; -fx-background-radius: 4; -fx-padding: 10; -fx-border-color: #000000; -fx-border-radius: 4; -fx-border-width: 3;" text="Search">
+      <Tab closable="false" style="-fx-background-color: #7565fd; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-radius: 4; -fx-border-width: 3; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="Search">
          <content>
             <fx:include source="searchArticle/search.fxml" />
          </content>
@@ -18,7 +18,7 @@
             <FontAwesomeIconView fill="#FFFFFF" glyphName="SEARCH" size="20" />
          </graphic>
       </Tab>
-      <Tab closable="false" style="-fx-background-color: #4251b3; -fx-background-radius: 4; -fx-padding: 10; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4;" text="Return">
+      <Tab closable="false" style="-fx-background-color: #4251b3; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="Return">
          <content>
             <fx:include source="returnArticle/return.fxml" />
          </content>
@@ -26,12 +26,28 @@
             <FontAwesomeIconView fill="#FFFFFF" glyphName="UNDO" size="20" />
          </graphic>
       </Tab>
-      <Tab closable="false" style="-fx-background-color: #488af3; -fx-background-radius: 4; -fx-padding: 10; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4;" text="Shopping Cart">
+      <Tab closable="false" style="-fx-background-color: #488af3; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="Shopping Cart">
          <content>
             <fx:include source="shoppingCart/shoppingCart.fxml" />
          </content>
          <graphic>
             <FontAwesomeIconView fill="#FFFFFF" glyphName="SHOPPING_CART" size="20" />
+         </graphic>
+      </Tab>
+      <Tab closable="false" style="-fx-background-color: #0261bf; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="New Message">
+         <content>
+<!--            <fx:include source="shoppingCart/shoppingCart.fxml" />-->
+         </content>
+         <graphic>
+            <FontAwesomeIconView fill="#FFFFFF" glyphName="EDIT" size="20" />
+         </graphic>
+      </Tab>
+      <Tab closable="false" style="-fx-background-color: #6c359b; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="Inbox">
+         <content>
+<!--            <fx:include source="shoppingCart/shoppingCart.fxml" />-->
+         </content>
+         <graphic>
+            <FontAwesomeIconView fill="#FFFFFF" glyphName="ENVELOPE" size="20" />
          </graphic>
       </Tab>
    </tabs>
