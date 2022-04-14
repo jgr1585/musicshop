@@ -4,6 +4,7 @@ import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.view.AppController;
 import at.fhv.teamd.musicshop.userclient.view.article.ArticleController;
 import at.fhv.teamd.musicshop.userclient.view.customer.CustomerController;
 import javafx.event.ActionEvent;
@@ -17,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import javax.naming.ldap.Control;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,6 +33,8 @@ public class ShoppingCartController {
     @FXML
     private Label customerNo;
 
+    private AppController appController;
+
     @FXML
     public void initialize() {
         try {
@@ -38,6 +42,10 @@ public class ShoppingCartController {
         } catch (IOException | NotAuthorizedException e) {
             clearCart();
         }
+    }
+
+    public void setAppController(AppController appController) {
+        this.appController = appController;
     }
 
     public void reloadShoppingCart() throws IOException, NotAuthorizedException {
@@ -75,6 +83,7 @@ public class ShoppingCartController {
         }
         reloadShoppingCart();
         removeCustomer();
+        appController.selectSearchTab();
     }
 
     @FXML
