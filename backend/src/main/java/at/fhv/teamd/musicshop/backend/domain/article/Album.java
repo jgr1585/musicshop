@@ -22,10 +22,11 @@ public class Album extends Article {
 
     public Album(String title, String label, LocalDate releaseDate, String genre, String musicbrainzId, Set<Song> songs) {
         super(title, label, releaseDate, genre, musicbrainzId, findArtistsFromSongs(songs));
-        this.songs = songs; // already checked for non-null @method:getArtistsFromSongs
+        this.songs = songs; // already checked for non-null @method:findArtistsFromSongs
     }
 
     private static Set<Artist> findArtistsFromSongs(Set<Song> songs) {
+        Objects.requireNonNull(songs);
         Set<Artist> artists = new HashSet<>();
         songs.forEach(song -> artists.addAll(song.getArtists()));
         return artists;
