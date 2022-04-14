@@ -91,9 +91,9 @@ public class DTOProvider {
                     album.getReleaseDate(),
                     album.getGenre(),
                     album.getMusicbrainzId(),
+                    Collections.unmodifiableSet(artistDTOs),
                     mediumRepository.findMediumsByArticleId(article.getId()).stream().map(DTOProvider::buildMediumDTO).collect(Collectors.toUnmodifiableSet()),
-                    Collections.unmodifiableSet(songDTOs),
-                    Collections.unmodifiableSet(artistDTOs)
+                    Collections.unmodifiableSet(songDTOs)
             ).build();
 
         } else if (article instanceof Song) {
