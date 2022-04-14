@@ -2,19 +2,17 @@ package at.fhv.teamd.musicshop.backend.domain.article;
 
 import lombok.Getter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Getter
 @Entity
 @DiscriminatorValue("Album")
 public class Album extends Article {
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     private Set<Song> songs;
 
     protected Album() {
