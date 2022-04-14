@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -20,8 +21,11 @@ import javafx.stage.Stage;
 
 import javax.naming.ldap.Control;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.text.DecimalFormat;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ShoppingCartController {
     @FXML
@@ -76,14 +80,25 @@ public class ShoppingCartController {
         if (!customerNo.getText().equals("")) {
             customer = Integer.parseInt(customerNo.getText());
         }
-        if (RemoteFacade.getInstance().buyFromShoppingCart(customer)) {
-            new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
-        } else {
-            new Alert(Alert.AlertType.ERROR, "Purchase of items failed", ButtonType.CLOSE).show();
+
+        Alert confDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confDialog.setContentText("Are you sure you want to make this purchase?");
+
+        ButtonType confirmButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType denyButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+        confDialog.getButtonTypes().setAll(confirmButton, denyButton);
+
+        Optional<ButtonType> returnValue = confDialog.showAndWait();
+        if (returnValue.isPresent() && returnValue.get() == confirmButton) {
+            if (RemoteFacade.getInstance().buyFromShoppingCart(customer)) {
+                new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Purchase of items failed", ButtonType.CLOSE).show();
+            }
+            reloadShoppingCart();
+            removeCustomer();
+            appController.selectSearchTab();
         }
-        reloadShoppingCart();
-        removeCustomer();
-        appController.selectSearchTab();
     }
 
     @FXML
