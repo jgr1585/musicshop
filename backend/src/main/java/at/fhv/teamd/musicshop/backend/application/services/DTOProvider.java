@@ -70,50 +70,64 @@ public class DTOProvider {
     }
 
     static ArticleDTO buildArticleDTO(MediumRepository mediumRepository, Article article) {
-
         if (article instanceof Album) {
-            Album album = (Album) article;
-
-            Set<SongDTO> songDTOs = new HashSet<>();
-            for (Song song : album.getSongs()) {
-                songDTOs.add((SongDTO) buildArticleDTO(mediumRepository, song));
-            }
-
-            Set<ArtistDTO> artistDTOs = album.getArtists()
-                    .stream()
-                    .map(DTOProvider::buildArtistDTO)
-                    .collect(Collectors.toUnmodifiableSet());
-
-            return AlbumDTO.builder().withAlbumData(
-                    album.getId(),
-                    album.getTitle(),
-                    album.getLabel(),
-                    album.getReleaseDate(),
-                    album.getGenre(),
-                    album.getMusicbrainzId(),
-                    Collections.unmodifiableSet(artistDTOs),
-                    mediumRepository.findMediumsByArticleId(article.getId()).stream().map(DTOProvider::buildMediumDTO).collect(Collectors.toUnmodifiableSet()),
-                    Collections.unmodifiableSet(songDTOs)
-            ).build();
+            return buildArticleDTO(mediumRepository, (Album) article, true);
 
         } else if (article instanceof Song) {
-            Song song = (Song) article;
-
-            return SongDTO.builder().withSongData(
-                    song.getId(),
-                    song.getTitle(),
-                    song.getLabel(),
-                    song.getReleaseDate(),
-                    song.getGenre(),
-                    song.getMusicbrainzId(),
-                    song.getArtists().stream()
-                            .map(DTOProvider::buildArtistDTO)
-                            .collect(Collectors.toUnmodifiableSet()),
-                    song.getLength()
-            ).build();
+            return buildArticleDTO(mediumRepository, (Song) article, true);
 
         } else {
             throw new UnsupportedOperationException();
         }
+    }
+
+    // TODO: remove this nasty medium repository at this point (this is not needed at all because if we invent medium backreference album/medium (bidirectional) we can get it from there
+    private static AlbumDTO buildArticleDTO(MediumRepository mediumRepository, Album album, boolean firstLayer) {
+        AlbumDTO.Builder builder = AlbumDTO.builder()
+                .withArticleSpecificData(
+                        album.getId(),
+                        album.getTitle(),
+                        album.getLabel(),
+                        album.getReleaseDate(),
+                        album.getGenre(),
+                        album.getMusicbrainzId(),
+                        album.getArtists()
+                                .stream()
+                                .map(DTOProvider::buildArtistDTO)
+                                .collect(Collectors.toUnmodifiableSet()));
+
+        if (firstLayer) {
+            builder.withAlbumSpecificData(
+                    mediumRepository.findMediumsByArticleId(album.getId()).stream().map(DTOProvider::buildMediumDTO).collect(Collectors.toUnmodifiableSet()),
+                    album.getSongs().stream()
+                            .map(song -> buildArticleDTO(mediumRepository, song, false))
+                            .collect(Collectors.toUnmodifiableSet()));
+        }
+
+        return builder.build();
+    }
+
+    private static SongDTO buildArticleDTO(MediumRepository mediumRepository, Song song, boolean firstLayer) {
+        SongDTO.Builder builder = SongDTO.builder()
+                .withArticleSpecificData(
+                        song.getId(),
+                        song.getTitle(),
+                        song.getLabel(),
+                        song.getReleaseDate(),
+                        song.getGenre(),
+                        song.getMusicbrainzId(),
+                        song.getArtists().stream()
+                                .map(DTOProvider::buildArtistDTO)
+                                .collect(Collectors.toUnmodifiableSet()));
+
+        if (firstLayer) {
+            builder.withSongSpecificData(
+                    song.getLength(),
+                    song.getAlbums().stream()
+                            .map(album -> buildArticleDTO(mediumRepository, album, false))
+                            .collect(Collectors.toUnmodifiableSet()));
+        }
+
+        return builder.build();
     }
 }

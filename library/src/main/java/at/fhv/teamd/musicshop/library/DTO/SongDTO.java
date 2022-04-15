@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public final class SongDTO implements ArticleDTO, Serializable {
-    private static final long serialVersionUID = -2617351973351145292L;
+    private static final long serialVersionUID = 6177922003024617967L;
 
     private Long id;
     private String title;
@@ -18,6 +18,7 @@ public final class SongDTO implements ArticleDTO, Serializable {
     private String musicbrainzId;
     private Set<ArtistDTO> artists;
     private Duration length;
+    private Set<AlbumDTO> albums;
 
     public static SongDTO.Builder builder() {
         return new SongDTO.Builder();
@@ -53,6 +54,10 @@ public final class SongDTO implements ArticleDTO, Serializable {
         return length;
     }
 
+    public Set<AlbumDTO> albums() {
+        return Collections.unmodifiableSet(albums);
+    }
+
     private SongDTO() {
     }
 
@@ -61,12 +66,12 @@ public final class SongDTO implements ArticleDTO, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SongDTO songDTO = (SongDTO) o;
-        return id.equals(songDTO.id) && title.equals(songDTO.title) && label.equals(songDTO.label) && releaseDate.equals(songDTO.releaseDate) && genre.equals(songDTO.genre) && musicbrainzId.equals(songDTO.musicbrainzId) && artists.equals(songDTO.artists) && length.equals(songDTO.length);
+        return id.equals(songDTO.id) && title.equals(songDTO.title) && label.equals(songDTO.label) && releaseDate.equals(songDTO.releaseDate) && genre.equals(songDTO.genre) && musicbrainzId.equals(songDTO.musicbrainzId) && artists.equals(songDTO.artists) && Objects.equals(length, songDTO.length) && Objects.equals(albums, songDTO.albums);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, label, releaseDate, genre, musicbrainzId, artists, length);
+        return Objects.hash(id, title, label, releaseDate, genre, musicbrainzId, artists, length, albums);
     }
 
     public static class Builder {
@@ -76,15 +81,14 @@ public final class SongDTO implements ArticleDTO, Serializable {
             this.instance = new SongDTO();
         }
 
-        public SongDTO.Builder withSongData(
+        public SongDTO.Builder withArticleSpecificData(
                 Long id,
                 String title,
                 String label,
                 LocalDate releaseDate,
                 String genre,
                 String musicbrainzId,
-                Set<ArtistDTO> artists,
-                Duration length
+                Set<ArtistDTO> artists
         ) {
             this.instance.id = id;
             this.instance.title = title;
@@ -93,7 +97,15 @@ public final class SongDTO implements ArticleDTO, Serializable {
             this.instance.genre = genre;
             this.instance.musicbrainzId = musicbrainzId;
             this.instance.artists = artists;
+            return this;
+        }
+
+        public SongDTO.Builder withSongSpecificData(
+                Duration length,
+                Set<AlbumDTO> albums
+        ) {
             this.instance.length = length;
+            this.instance.albums = albums;
             return this;
         }
 
