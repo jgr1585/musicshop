@@ -66,7 +66,7 @@ public class ShoppingCartController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/article.fxml"));
             Parent medium = fxmlLoader.load();
             ArticleController controller = fxmlLoader.getController();
-            controller.addMediumTypes(lineItemDTO.article(), lineItemDTO, Tabs.SHOPPINGCART);
+            controller.addMediumTypes(lineItemDTO, Tabs.SHOPPINGCART);
             this.shoppingCardElements.getChildren().add(medium);
         }
         DecimalFormat df = new DecimalFormat("0.00");
