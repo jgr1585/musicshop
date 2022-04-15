@@ -1,14 +1,11 @@
 package at.fhv.teamd.musicshop.backend.domain.article;
 
 import at.fhv.teamd.musicshop.backend.domain.DomainFactory;
-import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.UUID;
 
 public class AlbumTest extends Article {
 

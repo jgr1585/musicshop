@@ -10,8 +10,6 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class MediumHibernateRepository implements MediumRepository {
 

@@ -19,13 +19,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import javax.naming.ldap.Control;
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.text.DecimalFormat;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ShoppingCartController {
     @FXML

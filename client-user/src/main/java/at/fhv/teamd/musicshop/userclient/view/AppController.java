@@ -1,6 +1,5 @@
 package at.fhv.teamd.musicshop.userclient.view;
 
-import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;

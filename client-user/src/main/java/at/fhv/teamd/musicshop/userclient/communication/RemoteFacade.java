@@ -7,8 +7,8 @@ import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
-import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
+import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 
 import java.net.MalformedURLException;

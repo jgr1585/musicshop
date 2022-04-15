@@ -3,8 +3,6 @@ package at.fhv.teamd.musicshop.backend.domain.user;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
