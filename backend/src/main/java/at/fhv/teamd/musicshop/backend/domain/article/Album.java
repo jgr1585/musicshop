@@ -1,5 +1,6 @@
 package at.fhv.teamd.musicshop.backend.domain.article;
 
+import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -12,8 +13,12 @@ import java.util.Set;
 @Entity
 @DiscriminatorValue("Album")
 public class Album extends Article {
+
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Song> songs;
+
+    @OneToMany(mappedBy="album")
+    private Set<Medium> mediums;
 
     protected Album() {
     }

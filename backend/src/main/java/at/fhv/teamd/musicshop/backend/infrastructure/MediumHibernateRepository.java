@@ -45,25 +45,6 @@ public class MediumHibernateRepository implements MediumRepository {
     }
 
     @Override
-    @Transactional
-    public Set<Medium> findMediumsByArticleId(Long id) {
-        Objects.requireNonNull(id);
-
-        EntityManager em = PersistenceManager.getEntityManagerInstance();
-
-        TypedQuery<Medium> query = em.createQuery("SELECT m FROM Medium m " +
-                "WHERE m.article.id=:id", Medium.class);
-
-        query.setParameter("id", id);
-
-        Set<Medium> mediums = query.getResultList().stream().collect(Collectors.toUnmodifiableSet());
-
-        em.close();
-
-        return mediums;
-    }
-
-    @Override
     public void update(Medium medium) {
         Objects.requireNonNull(medium);
 

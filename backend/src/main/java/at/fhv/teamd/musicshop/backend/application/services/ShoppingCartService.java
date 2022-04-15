@@ -100,7 +100,7 @@ public class ShoppingCartService {
         if (!shoppingCartExists(userId)) {
             initializeShoppingcart(userId);
         }
-        return buildShoppingCartDTO(articleRepository, mediumRepository, sessionLineItems.get(userId));
+        return buildShoppingCartDTO(articleRepository, sessionLineItems.get(userId));
     }
 
     // TODO: specific exception

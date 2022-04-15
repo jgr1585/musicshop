@@ -53,7 +53,7 @@ public class ArticleServiceTest {
         System.out.println(this.articleRepository.searchArticlesByAttributes(title, artistName));
 
         Set<ArticleDTO> expectedArticleDTOS = articles.stream()
-                .map(art -> DTOProvider.buildArticleDTO(this.mediumRepository, art))
+                .map(DTOProvider::buildArticleDTO)
                 .collect(Collectors.toSet());
 
         // when
