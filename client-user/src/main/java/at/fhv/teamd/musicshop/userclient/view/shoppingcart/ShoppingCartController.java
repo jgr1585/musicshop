@@ -68,7 +68,6 @@ public class ShoppingCartController {
         }
         DecimalFormat df = new DecimalFormat("0.00");
         this.totalAmount.setText(df.format(shoppingCartDTO.totalAmount()));
-        System.out.println("totalAmount: " + df.format(shoppingCartDTO.totalAmount()));
     }
 
     @FXML
