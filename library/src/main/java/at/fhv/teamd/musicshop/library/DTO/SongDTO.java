@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public final class SongDTO implements ArticleDTO, Serializable {
-    private static final long serialVersionUID = 5897685238657995442L;
+    private static final long serialVersionUID = -2617351973351145292L;
 
     private Long id;
     private String title;
@@ -17,8 +16,8 @@ public final class SongDTO implements ArticleDTO, Serializable {
     private LocalDate releaseDate;
     private String genre;
     private String musicbrainzId;
-    private Duration length;
     private Set<ArtistDTO> artists;
+    private Duration length;
 
     public static SongDTO.Builder builder() {
         return new SongDTO.Builder();
@@ -46,16 +45,12 @@ public final class SongDTO implements ArticleDTO, Serializable {
 
     public String musicbrainzId() { return this.musicbrainzId; }
 
-    public Set<MediumDTO> mediums() {
-        return new HashSet<>();
+    public Set<ArtistDTO> artists() {
+        return Collections.unmodifiableSet(artists);
     }
 
     public Duration length() {
         return length;
-    }
-
-    public Set<ArtistDTO> artists() {
-        return Collections.unmodifiableSet(artists);
     }
 
     private SongDTO() {
@@ -66,12 +61,12 @@ public final class SongDTO implements ArticleDTO, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SongDTO songDTO = (SongDTO) o;
-        return Objects.equals(id, songDTO.id) && Objects.equals(title, songDTO.title) && Objects.equals(label, songDTO.label) && Objects.equals(releaseDate, songDTO.releaseDate) && Objects.equals(genre, songDTO.genre) && Objects.equals(musicbrainzId, songDTO.musicbrainzId) && Objects.equals(length, songDTO.length) && Objects.equals(artists, songDTO.artists);
+        return id.equals(songDTO.id) && title.equals(songDTO.title) && label.equals(songDTO.label) && releaseDate.equals(songDTO.releaseDate) && genre.equals(songDTO.genre) && musicbrainzId.equals(songDTO.musicbrainzId) && artists.equals(songDTO.artists) && length.equals(songDTO.length);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, label, releaseDate, genre, musicbrainzId, length, artists);
+        return Objects.hash(id, title, label, releaseDate, genre, musicbrainzId, artists, length);
     }
 
     public static class Builder {
@@ -88,8 +83,8 @@ public final class SongDTO implements ArticleDTO, Serializable {
                 LocalDate releaseDate,
                 String genre,
                 String musicbrainzId,
-                Duration length,
-                Set<ArtistDTO> artists
+                Set<ArtistDTO> artists,
+                Duration length
         ) {
             this.instance.id = id;
             this.instance.title = title;
@@ -97,8 +92,8 @@ public final class SongDTO implements ArticleDTO, Serializable {
             this.instance.releaseDate = releaseDate;
             this.instance.genre = genre;
             this.instance.musicbrainzId = musicbrainzId;
-            this.instance.length = length;
             this.instance.artists = artists;
+            this.instance.length = length;
             return this;
         }
 

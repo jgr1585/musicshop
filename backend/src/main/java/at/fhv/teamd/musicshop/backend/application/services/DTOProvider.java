@@ -106,10 +106,10 @@ public class DTOProvider {
                     song.getReleaseDate(),
                     song.getGenre(),
                     song.getMusicbrainzId(),
-                    song.getLength(),
                     song.getArtists().stream()
                             .map(DTOProvider::buildArtistDTO)
-                            .collect(Collectors.toUnmodifiableSet())
+                            .collect(Collectors.toUnmodifiableSet()),
+                    song.getLength()
             ).build();
 
         } else {
