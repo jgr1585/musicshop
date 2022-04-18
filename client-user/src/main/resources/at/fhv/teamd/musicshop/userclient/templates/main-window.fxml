@@ -34,7 +34,7 @@
       </Tab>
       <Tab closable="false" style="-fx-background-color: #0261bf; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="New Message">
          <content>
-<!--            <fx:include source="shoppingCart/shoppingCart.fxml" />-->
+            <fx:include source="writeMessage/write-message.fxml" />
          </content>
          <graphic>
             <FontAwesomeIconView fill="#FFFFFF" glyphName="EDIT" size="20" />
