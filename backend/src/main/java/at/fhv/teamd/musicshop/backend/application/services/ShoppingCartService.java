@@ -1,14 +1,14 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
-import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
-import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
-import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
+import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
+import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
+import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -100,7 +100,7 @@ public class ShoppingCartService {
         if (!shoppingCartExists(userId)) {
             initializeShoppingcart(userId);
         }
-        return buildShoppingCartDTO(articleRepository, mediumRepository, sessionLineItems.get(userId));
+        return buildShoppingCartDTO(articleRepository, sessionLineItems.get(userId));
     }
 
     // TODO: specific exception

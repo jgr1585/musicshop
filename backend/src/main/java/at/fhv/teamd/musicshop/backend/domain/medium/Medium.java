@@ -1,6 +1,6 @@
 package at.fhv.teamd.musicshop.backend.domain.medium;
 
-import at.fhv.teamd.musicshop.backend.domain.article.Article;
+import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -28,27 +28,27 @@ public class Medium {
     private Supplier supplier;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    private Article article;
+    private Album album;
 
     protected Medium() {
     }
 
-    public Medium(BigDecimal price, MediumType type, Stock stock, Supplier supplier, Article article) {
+    public Medium(BigDecimal price, MediumType type, Stock stock, Supplier supplier, Album album) {
         this.type = Objects.requireNonNull(type);
         this.price = Objects.requireNonNull(price);
         this.stock = Objects.requireNonNull(stock);
         this.supplier = Objects.requireNonNull(supplier);
-        this.article = article;
+        this.album = album;
     }
 
     @Deprecated(since = "Only for Test")
-    public Medium(long id, MediumType type, BigDecimal price, Stock stock, Supplier supplier, Article article) {
+    public Medium(long id, MediumType type, BigDecimal price, Stock stock, Supplier supplier, Album album) {
         this.id = id;
         this.type = type;
         this.price = price;
         this.stock = stock;
         this.supplier = supplier;
-        this.article = article;
+        this.album = album;
     }
 
     public void setStock(Stock stock) {

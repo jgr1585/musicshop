@@ -7,8 +7,8 @@ import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
-import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
+import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 
 import java.net.MalformedURLException;
@@ -20,7 +20,6 @@ import java.rmi.registry.Registry;
 import java.util.Set;
 
 public class RemoteFacade implements ApplicationClient {
-    private static final String REMOTE_HOST = "localhost";
     private static final int REMOTE_PORT = Registry.REGISTRY_PORT;
 
     private static RemoteFacade instance;
@@ -29,11 +28,11 @@ public class RemoteFacade implements ApplicationClient {
     private RemoteFacade() {
     }
 
-    public static void authenticateSession(String authUser, String authPassword) throws RemoteException, AuthenticationFailedException {
+    public static void authenticateSession(String host, String authUser, String authPassword) throws RemoteException, AuthenticationFailedException {
         try {
-            LocateRegistry.getRegistry(REMOTE_HOST, REMOTE_PORT);
+            LocateRegistry.getRegistry(host, REMOTE_PORT);
             ApplicationClientFactory applicationClientFactory
-                    = (ApplicationClientFactory) Naming.lookup("rmi://" + REMOTE_HOST + ":" + REMOTE_PORT + "/ApplicationClientFactoryImpl");
+                    = (ApplicationClientFactory) Naming.lookup("rmi://" + host + ":" + REMOTE_PORT + "/ApplicationClientFactoryImpl");
 
             applicationClient = applicationClientFactory.createApplicationClient(authUser, authPassword);
 

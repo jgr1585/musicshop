@@ -4,6 +4,7 @@ import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.view.AppController;
 import at.fhv.teamd.musicshop.userclient.view.article.ArticleController;
 import at.fhv.teamd.musicshop.userclient.view.customer.CustomerController;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
@@ -19,6 +21,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShoppingCartController {
@@ -31,6 +34,8 @@ public class ShoppingCartController {
     @FXML
     private Label customerNo;
 
+    private AppController appController;
+
     @FXML
     public void initialize() {
         try {
@@ -38,6 +43,10 @@ public class ShoppingCartController {
         } catch (IOException | NotAuthorizedException e) {
             clearCart();
         }
+    }
+
+    public void setAppController(AppController appController) {
+        this.appController = appController;
     }
 
     public void reloadShoppingCart() throws IOException, NotAuthorizedException {
@@ -54,12 +63,11 @@ public class ShoppingCartController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/article.fxml"));
             Parent medium = fxmlLoader.load();
             ArticleController controller = fxmlLoader.getController();
-            controller.addMediumTypes(lineItemDTO.article(), lineItemDTO, Tabs.SHOPPINGCART);
+            controller.addMediumTypes(lineItemDTO, Tabs.SHOPPINGCART);
             this.shoppingCardElements.getChildren().add(medium);
         }
         DecimalFormat df = new DecimalFormat("0.00");
         this.totalAmount.setText(df.format(shoppingCartDTO.totalAmount()));
-        System.out.println("totalAmount: " + df.format(shoppingCartDTO.totalAmount()));
     }
 
     @FXML
@@ -68,13 +76,25 @@ public class ShoppingCartController {
         if (!customerNo.getText().equals("")) {
             customer = Integer.parseInt(customerNo.getText());
         }
-        if (RemoteFacade.getInstance().buyFromShoppingCart(customer)) {
-            new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
-        } else {
-            new Alert(Alert.AlertType.ERROR, "Purchase of items failed", ButtonType.CLOSE).show();
+
+        Alert confDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confDialog.setContentText("Are you sure you want to make this purchase?");
+
+        ButtonType confirmButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType denyButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+        confDialog.getButtonTypes().setAll(confirmButton, denyButton);
+
+        Optional<ButtonType> returnValue = confDialog.showAndWait();
+        if (returnValue.isPresent() && returnValue.get() == confirmButton) {
+            if (RemoteFacade.getInstance().buyFromShoppingCart(customer)) {
+                new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Purchase of items failed", ButtonType.CLOSE).show();
+            }
+            reloadShoppingCart();
+            removeCustomer();
+            appController.selectSearchTab();
         }
-        reloadShoppingCart();
-        removeCustomer();
     }
 
     @FXML

@@ -1,6 +1,5 @@
 package at.fhv.teamd.musicshop.backend.communication;
 
-import at.fhv.teamd.musicshop.library.ApplicationClientFactory;
 import at.fhv.teamd.musicshop.library.CustomerDBClient;
 import at.fhv.teamd.musicshop.library.CustomerDBClientFactory;
 

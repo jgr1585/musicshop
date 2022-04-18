@@ -7,17 +7,16 @@ import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.LinkedHashSet;
-import java.util.Optional;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -53,7 +52,7 @@ public class ArticleServiceTest {
         System.out.println(this.articleRepository.searchArticlesByAttributes(title, artistName));
 
         Set<ArticleDTO> expectedArticleDTOS = articles.stream()
-                .map(art -> DTOProvider.buildArticleDTO(this.mediumRepository, art))
+                .map(DTOProvider::buildArticleDTO)
                 .collect(Collectors.toSet());
 
         // when

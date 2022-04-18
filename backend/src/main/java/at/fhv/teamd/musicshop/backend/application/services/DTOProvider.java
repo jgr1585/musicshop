@@ -7,12 +7,9 @@ import at.fhv.teamd.musicshop.backend.domain.article.Song;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
-import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.library.DTO.*;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,20 +18,23 @@ public class DTOProvider {
     private DTOProvider() {
     }
 
-    static ShoppingCartDTO buildShoppingCartDTO(ArticleRepository articleRepository, MediumRepository mediumRepository, Set<LineItem> lineItems) {
+    static ShoppingCartDTO buildShoppingCartDTO(ArticleRepository articleRepository, Set<LineItem> lineItems) {
         return ShoppingCartDTO.builder()
-                .withLineItems(lineItems.stream().map(li -> buildLineItemDTO(articleRepository, mediumRepository, li)).collect(Collectors.toUnmodifiableSet()))
+                .withLineItems(lineItems.stream().map(li -> buildLineItemDTO(articleRepository, li)).collect(Collectors.toUnmodifiableSet()))
                 .build();
     }
 
-    static LineItemDTO buildLineItemDTO(ArticleRepository articleRepository, MediumRepository mediumRepository, LineItem lineItem) {
-        Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
-        Article article = articleRepository.findArticleById(lineItem.getMedium().getArticle().getId()).orElseThrow();
+    static LineItemDTO buildLineItemDTO(ArticleRepository articleRepository, LineItem lineItem) {
+        Album album = (Album) articleRepository.findArticleById(lineItem.getMedium().getAlbum().getId()).orElseThrow();
+        Medium medium = album.getMediums().stream()
+                .filter(m -> Long.valueOf(m.getId()).equals(lineItem.getMedium().getId()))
+                .findFirst()
+                .orElseThrow();
 
         return LineItemDTO.builder()
                 .withLineItemData(
                         lineItem.getId(),
-                        buildArticleDTO(mediumRepository, article),
+                        buildArticleDTO(album),
                         lineItem.getQuantity().getValue(),
                         lineItem.getPrice(),
                         lineItem.getTotalPrice(),
@@ -69,51 +69,64 @@ public class DTOProvider {
         ).build();
     }
 
-    static ArticleDTO buildArticleDTO(MediumRepository mediumRepository, Article article) {
-
+    static ArticleDTO buildArticleDTO(Article article) {
         if (article instanceof Album) {
-            Album album = (Album) article;
-
-            Set<SongDTO> songDTOs = new HashSet<>();
-            for (Song song : album.getSongs()) {
-                songDTOs.add((SongDTO) buildArticleDTO(mediumRepository, song));
-            }
-
-            Set<ArtistDTO> artistDTOs = album.getArtists()
-                    .stream()
-                    .map(DTOProvider::buildArtistDTO)
-                    .collect(Collectors.toUnmodifiableSet());
-
-            return AlbumDTO.builder().withAlbumData(
-                    album.getId(),
-                    album.getTitle(),
-                    album.getLabel(),
-                    album.getReleaseDate(),
-                    album.getGenre(),
-                    album.getMusicbrainzId(),
-                    mediumRepository.findMediumsByArticleId(article.getId()).stream().map(DTOProvider::buildMediumDTO).collect(Collectors.toUnmodifiableSet()),
-                    Collections.unmodifiableSet(songDTOs),
-                    Collections.unmodifiableSet(artistDTOs)
-            ).build();
+            return buildArticleDTO((Album) article, true);
 
         } else if (article instanceof Song) {
-            Song song = (Song) article;
-
-            return SongDTO.builder().withSongData(
-                    song.getId(),
-                    song.getTitle(),
-                    song.getLabel(),
-                    song.getReleaseDate(),
-                    song.getGenre(),
-                    song.getMusicbrainzId(),
-                    song.getLength(),
-                    song.getArtists().stream()
-                            .map(DTOProvider::buildArtistDTO)
-                            .collect(Collectors.toUnmodifiableSet())
-            ).build();
+            return buildArticleDTO((Song) article, true);
 
         } else {
             throw new UnsupportedOperationException();
         }
+    }
+
+    private static AlbumDTO buildArticleDTO(Album album, boolean firstLayer) {
+        AlbumDTO.Builder builder = AlbumDTO.builder()
+                .withArticleSpecificData(
+                        album.getId(),
+                        album.getTitle(),
+                        album.getLabel(),
+                        album.getReleaseDate(),
+                        album.getGenre(),
+                        album.getMusicbrainzId(),
+                        album.getArtists()
+                                .stream()
+                                .map(DTOProvider::buildArtistDTO)
+                                .collect(Collectors.toUnmodifiableSet()));
+
+        if (firstLayer) {
+            builder.withAlbumSpecificData(
+                    album.getMediums().stream().map(DTOProvider::buildMediumDTO).collect(Collectors.toUnmodifiableSet()),
+                    album.getSongs().stream()
+                            .map(song -> buildArticleDTO(song, false))
+                            .collect(Collectors.toUnmodifiableSet()));
+        }
+
+        return builder.build();
+    }
+
+    private static SongDTO buildArticleDTO(Song song, boolean firstLayer) {
+        SongDTO.Builder builder = SongDTO.builder()
+                .withArticleSpecificData(
+                        song.getId(),
+                        song.getTitle(),
+                        song.getLabel(),
+                        song.getReleaseDate(),
+                        song.getGenre(),
+                        song.getMusicbrainzId(),
+                        song.getArtists().stream()
+                                .map(DTOProvider::buildArtistDTO)
+                                .collect(Collectors.toUnmodifiableSet()));
+
+        if (firstLayer) {
+            builder.withSongSpecificData(
+                    song.getLength(),
+                    song.getAlbums().stream()
+                            .map(album -> buildArticleDTO(album, false))
+                            .collect(Collectors.toUnmodifiableSet()));
+        }
+
+        return builder.build();
     }
 }

@@ -1,7 +1,6 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
-import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
@@ -10,15 +9,11 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildArticleDTO;
-
 public class ArticleService {
     private static ArticleRepository articleRepository;
-    private static MediumRepository mediumRepository;
 
     ArticleService() {
         articleRepository = RepositoryFactory.getArticleRepositoryInstance();
-        mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
     }
 
     public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException {
@@ -27,7 +22,7 @@ public class ArticleService {
         }
 
         return articleRepository.searchArticlesByAttributes(title, artist).stream()
-                .map(article -> buildArticleDTO(mediumRepository, article))
+                .map(DTOProvider::buildArticleDTO)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 

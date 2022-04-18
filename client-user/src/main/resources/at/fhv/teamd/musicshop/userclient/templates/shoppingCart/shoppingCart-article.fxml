@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartArticleController">
+<GridPane xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartArticleController">
    <children>
       <Label fx:id="mediumType" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="16.0" prefWidth="75.0" text="Label" />
       <Label fx:id="mediumPrice" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" text="€€€" textFill="#26c303" GridPane.columnIndex="3">
@@ -15,12 +11,12 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <TextField fx:id="mediumAmountStock" alignment="CENTER" disable="true" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" text="0" GridPane.columnIndex="1" />
+      <TextField fx:id="mediumAmountStock" alignment="CENTER" editable="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" style="-fx-background-color: lightgrey;" text="0" GridPane.columnIndex="1" />
       <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2">
          <children>
-            <Button layoutX="1.0" layoutY="1.0" mnemonicParsing="false" onAction="#reduceByOne" prefWidth="35.0" style="-fx-background-color: red;" text="-" textFill="#101110" />
-            <TextField fx:id="mediumAmountSelected" alignment="CENTER" layoutX="37.0" layoutY="2.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" text="0" />
-            <Button layoutX="73.0" layoutY="1.0" mnemonicParsing="false" onAction="#increaseByOne" prefWidth="35.0" style="-fx-background-color: lightgreen;" text="+" />
+            <Button layoutX="1.0" layoutY="1.0" mnemonicParsing="false" onAction="#reduceByOne" prefWidth="35.0" style="-fx-background-color: red; -fx-text-fill: white;" text="-" textFill="#101110" />
+            <TextField fx:id="mediumAmountSelected" alignment="CENTER" layoutX="37.0" layoutY="2.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" style="-fx-background-color: white;" text="0" />
+            <Button layoutX="73.0" layoutY="1.0" mnemonicParsing="false" onAction="#increaseByOne" prefWidth="35.0" style="-fx-background-color: lightgreen; -fx-text-fill: black;" text="+" />
          </children>
       </Pane>
       <Button mnemonicParsing="false" onAction="#remove" prefWidth="30.0" style="-fx-background-color: red;" text="X" GridPane.columnIndex="4" />

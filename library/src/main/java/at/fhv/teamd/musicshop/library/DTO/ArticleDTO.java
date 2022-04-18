@@ -16,7 +16,5 @@ public interface ArticleDTO {
 
     String musicbrainzId();
 
-    Set<MediumDTO> mediums();
-
     Set<ArtistDTO> artists();
 }
