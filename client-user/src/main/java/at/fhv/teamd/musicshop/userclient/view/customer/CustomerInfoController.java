@@ -9,17 +9,19 @@ import javafx.stage.Stage;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CustomerInfoController {
-    @FXML
-    private Label firstName;
-
-    @FXML
-    private Label lastName;
-
-    @FXML
-    private Label birthday;
 
     @FXML
     private Label customerNo;
+    @FXML
+    private Label firstName;
+    @FXML
+    private Label lastName;
+    @FXML
+    public Label country;
+    @FXML
+    public Label street;
+    @FXML
+    public Label zipcode;
 
     private AtomicInteger atomicInteger;
 
@@ -32,9 +34,11 @@ public class CustomerInfoController {
     public void setFields(CustomerDTO customer, AtomicInteger atomicInteger) {
         this.firstName.setText(customer.givenName());
         this.lastName.setText(customer.familyName());
-        this.birthday.setText(customer.birthDate());
         this.customerNo.setText(customer.customerId().toString());
         this.atomicInteger = atomicInteger;
+        this.country.setText(customer.addressCountry());
+        this.street.setText(customer.addressStreet() + " " + customer.addressHouseNumber());
+        this.zipcode.setText(customer.addressPostalCode());
     }
 
     private void close() {
