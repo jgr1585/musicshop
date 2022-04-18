@@ -18,13 +18,15 @@ public class WriteMessageController {
     @FXML
     private TextArea messageBody;
 
+    private Topic selectedTopic;
+
     @FXML
     public void initialize() {
-        this.setMessageTopic();
+        this.initMessageTopic();
     }
 
-    private void setMessageTopic() {
-        this.messageTopic.setConverter(new StringConverter<Topic>() {
+    private void initMessageTopic() {
+        this.messageTopic.setConverter(new StringConverter<>() {
             @Override
             public String toString(Topic topic) {
                 return topic.getName();
@@ -36,6 +38,8 @@ public class WriteMessageController {
             }
         });
         this.messageTopic.setItems(FXCollections.observableArrayList(Topic.values()));
+
+        this.messageTopic.valueProperty().addListener((observable, oldValue, newValue) -> this.selectedTopic = newValue);
     }
 
     @FXML
