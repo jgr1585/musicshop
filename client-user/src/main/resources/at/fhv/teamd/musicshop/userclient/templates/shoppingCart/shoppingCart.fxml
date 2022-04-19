@@ -62,7 +62,7 @@
             </GridPane>
             <ScrollPane GridPane.rowIndex="1">
                <content>
-                  <VBox fx:id="shoppingCardElements">
+                  <VBox fx:id="shoppingCartElements">
                      <children>
                         <ImageView fitHeight="644.0" fitWidth="990.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                            <image>

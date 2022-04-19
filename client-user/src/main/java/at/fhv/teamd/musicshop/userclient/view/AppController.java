@@ -1,6 +1,9 @@
 package at.fhv.teamd.musicshop.userclient.view;
 
+import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartController;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -39,4 +42,10 @@ public class AppController {
             loginController.logout();
         }
     }
+
+    @FXML
+    public void loadOnSelection(Event event) throws IOException, NotAuthorizedException {
+        shoppingCartController.reloadShoppingCart();
+    }
+
 }

@@ -6,8 +6,8 @@
 <?import javafx.scene.text.Font?>
 <GridPane prefHeight="30.0" prefWidth="517.0" style="-fx-background-color: #000000FF;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.medium.SearchMediumController">
    <children>
-      <Button mnemonicParsing="false" onAction="#addToCard" prefWidth="90.0" style="-fx-background-color: #547af9; -fx-text-fill: black;" text="Add to Card" GridPane.columnIndex="5" />
-      <Button mnemonicParsing="false" onAction="#addToCard" prefWidth="90.0" style="-fx-background-color: orange; -fx-text-fill: black;" text="Order" GridPane.columnIndex="4" />
+      <Button mnemonicParsing="false" onAction="#addToCart" prefWidth="90.0" style="-fx-background-color: #547af9; -fx-text-fill: black;" text="Add to Cart" GridPane.columnIndex="5" />
+      <Button mnemonicParsing="false" onAction="#addToCart" prefWidth="90.0" style="-fx-background-color: orange; -fx-text-fill: black;" text="Order" GridPane.columnIndex="4" />
       <Label fx:id="mediumPrice" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" text="€€€" textFill="#26c303" GridPane.columnIndex="3">
          <font>
             <Font name="System Bold" size="12.0" />

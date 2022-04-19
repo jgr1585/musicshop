@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<VBox pickOnBounds="false" prefHeight="800.0" prefWidth="1000.0" style="-fx-font-size: 13; -fx-background-color: #000000FF; -fx-base: #000000FF;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.article.ReturnArticleController">
+
+<VBox pickOnBounds="false" prefHeight="800.0" prefWidth="1000.0" style="-fx-font-size: 13; -fx-background-color: #000000FF; -fx-base: #000000FF;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.article.ReturnArticleController">
    <children>
       <GridPane maxHeight="75.0" minHeight="75.0" style="-fx-background-color: #547af9;">
         <columnConstraints>
@@ -20,7 +24,7 @@
             <Pane pickOnBounds="false" prefHeight="200.0" prefWidth="200.0">
                <children>
                   <Label layoutX="47.0" layoutY="30.0" minWidth="-Infinity" pickOnBounds="false" text="Value" />
-                  <TextField layoutX="109.0" layoutY="25.0" minWidth="120.0" pickOnBounds="false" prefHeight="26.0" prefWidth="139.0" />
+                  <TextField layoutX="109.0" layoutY="25.0" minWidth="120.0" pickOnBounds="false" prefHeight="26.0" prefWidth="139.0" style="-fx-background-color: lavender;" />
                </children></Pane>
             <Pane pickOnBounds="false" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                <children>

@@ -10,6 +10,7 @@ public class WriteMessageController {
 
     @FXML
     private ComboBox<Topic> messageTopic;
+
     @FXML
     private TextField messageTitle;
 

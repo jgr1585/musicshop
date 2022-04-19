@@ -53,7 +53,7 @@ public class SearchMediumController implements GenericArticleController {
     }
 
     @FXML
-    private void addToCard(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
+    private void addToCart(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
         if (RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()))) {
             new Alert(Alert.AlertType.INFORMATION, "Successfully added items", ButtonType.OK).show();
         } else {
