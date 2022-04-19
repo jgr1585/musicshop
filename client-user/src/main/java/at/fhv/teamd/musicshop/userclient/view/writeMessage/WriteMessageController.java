@@ -3,9 +3,7 @@ package at.fhv.teamd.musicshop.userclient.view.writeMessage;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.util.StringConverter;
 
 public class WriteMessageController {
@@ -50,6 +48,12 @@ public class WriteMessageController {
 
     @FXML
     private void sendMessage(ActionEvent actionEvent) {
+        if (this.selectedTopic == null) {
+            new Alert(Alert.AlertType.ERROR, "No Topic is selected", ButtonType.CLOSE).show();
+        }
+        else if (this.messageTitle.getText().equals("")) {
+            new Alert(Alert.AlertType.ERROR, "Message Title is missing", ButtonType.CLOSE).show();
+        }
         //TODO: after implementation of Backend
     }
 }
