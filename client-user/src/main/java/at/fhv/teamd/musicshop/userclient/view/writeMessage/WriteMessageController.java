@@ -9,11 +9,12 @@ import javafx.scene.control.*;
 import javafx.util.StringConverter;
 
 import java.rmi.RemoteException;
+import java.util.Arrays;
 
 public class WriteMessageController {
 
     @FXML
-    private ComboBox<Topic> messageTopic;
+    private ComboBox<String> messageTopic;
 
     @FXML
     private TextField messageTitle;
@@ -21,7 +22,7 @@ public class WriteMessageController {
     @FXML
     private TextArea messageBody;
 
-    private Topic selectedTopic;
+    private String selectedTopic;
 
     @FXML
     public void initialize() {
@@ -29,18 +30,8 @@ public class WriteMessageController {
     }
 
     private void initMessageTopic() {
-        this.messageTopic.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(Topic topic) {
-                return topic.getName();
-            }
 
-            @Override
-            public Topic fromString(String string) {
-                return null;
-            }
-        });
-        this.messageTopic.setItems(FXCollections.observableArrayList(Topic.values()));
+        this.messageTopic.setItems(FXCollections.observableArrayList(Arrays.stream(Topic.values()).map(Topic::getName).toArray(String[]::new)));
 
         this.messageTopic.valueProperty().addListener((observable, oldValue, newValue) -> this.selectedTopic = newValue);
     }
@@ -52,7 +43,7 @@ public class WriteMessageController {
         } else if (this.messageTitle.getText().equals("")) {
             new Alert(Alert.AlertType.ERROR, "Message Title is missing", ButtonType.CLOSE).show();
         } else {
-            if (RemoteFacade.getInstance().publishMessage(selectedTopic.getName(), messageTitle.getText(), messageBody.getText())) {
+            if (RemoteFacade.getInstance().publishMessage(selectedTopic, messageTitle.getText(), messageBody.getText())) {
                 new Alert(Alert.AlertType.INFORMATION, "Message successfully sent", ButtonType.CLOSE).show();
                 resetMessage();
             } else {
