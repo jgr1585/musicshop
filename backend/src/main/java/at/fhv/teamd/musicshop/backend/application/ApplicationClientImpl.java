@@ -13,6 +13,7 @@ import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 
+import javax.naming.NamingException;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -82,6 +83,14 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
 
         return ServiceFactory.getShoppingCartServiceInstance().getShoppingCart(userId);
     }
+
+    @Override
+    public boolean publishMessage(String topic, String title, String message) throws RemoteException, NotAuthorizedException {
+        authService.authorizeAccessLevel(UserRole.OPERATOR);
+
+        return ServiceFactory.getMessageServiceInstance().publish(topic, title, message);
+    }
+
 
     @Override
     public void destroy() throws NoSuchObjectException {

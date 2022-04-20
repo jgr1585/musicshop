@@ -92,6 +92,11 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
+    public boolean publishMessage(String topic, String title, String message) throws RemoteException, NotAuthorizedException {
+        return getApplicationClientOrThrow().publishMessage(topic, title, message);
+    }
+
+    @Override
     public void destroy() throws RemoteException {
         getApplicationClientOrThrow().destroy();
         applicationClient = null;

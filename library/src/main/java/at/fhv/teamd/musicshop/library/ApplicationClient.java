@@ -8,8 +8,11 @@ import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 
+import javax.naming.NamingException;
+import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Set;
 
 public interface ApplicationClient extends Remote {
@@ -29,6 +32,8 @@ public interface ApplicationClient extends Remote {
     boolean buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException;
 
     ShoppingCartDTO getShoppingCart() throws RemoteException, NotAuthorizedException;
+
+    boolean publishMessage(String topic, String title, String message) throws RemoteException, NotAuthorizedException;
 
     // Application Client
     void destroy() throws RemoteException;
