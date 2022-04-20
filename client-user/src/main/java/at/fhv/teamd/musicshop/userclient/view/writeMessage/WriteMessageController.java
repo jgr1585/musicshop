@@ -1,12 +1,12 @@
 package at.fhv.teamd.musicshop.userclient.view.writeMessage;
 
+import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.util.StringConverter;
 
 import java.rmi.RemoteException;
 import java.util.Arrays;
@@ -43,7 +43,15 @@ public class WriteMessageController {
         } else if (this.messageTitle.getText().equals("")) {
             new Alert(Alert.AlertType.ERROR, "Message Title is missing", ButtonType.CLOSE).show();
         } else {
-            if (RemoteFacade.getInstance().publishMessage(selectedTopic, messageTitle.getText(), messageBody.getText())) {
+
+            MessageDTO message = MessageDTO.builder()
+                    .withMessageData(
+                            selectedTopic,
+                            messageTitle.getText(),
+                            messageBody.getText())
+                    .build();
+
+            if (RemoteFacade.getInstance().publishMessage(message)) {
                 new Alert(Alert.AlertType.INFORMATION, "Message successfully sent", ButtonType.CLOSE).show();
                 resetMessage();
             } else {

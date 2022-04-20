@@ -1,5 +1,6 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
+import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
@@ -15,7 +16,7 @@ public class MessageService {
 
     private static final String DEFAULT_BROKER_BIND_URL = "tcp://10.0.40.166:61616";
 
-    public boolean publish(String topic, String title, String message) {
+    public boolean publish(MessageDTO message) {
         try {
 
 //            // Get the JNDI Initial Context to do JNDI lookups
@@ -41,10 +42,10 @@ public class MessageService {
             connection.start();
             Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
-            MessageProducer messageProducer = session.createProducer(session.createTopic(topic));
+            MessageProducer messageProducer = session.createProducer(session.createTopic(message.topic()));
             messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
-            TextMessage textMessage = session.createTextMessage(message);
-            textMessage.setJMSCorrelationID(title);
+            TextMessage textMessage = session.createTextMessage(message.body());
+            textMessage.setJMSCorrelationID(message.title());
             textMessage.setJMSExpiration(TimeUnit.DAYS.toMillis(3));
             messageProducer.send(textMessage);
 

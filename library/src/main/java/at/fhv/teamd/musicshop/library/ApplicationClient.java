@@ -1,9 +1,6 @@
 package at.fhv.teamd.musicshop.library;
 
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
-import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
+import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
@@ -33,7 +30,9 @@ public interface ApplicationClient extends Remote {
 
     ShoppingCartDTO getShoppingCart() throws RemoteException, NotAuthorizedException;
 
-    boolean publishMessage(String topic, String title, String message) throws RemoteException, NotAuthorizedException;
+    boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException;
+
+    boolean publishOrder(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException;
 
     // Application Client
     void destroy() throws RemoteException;

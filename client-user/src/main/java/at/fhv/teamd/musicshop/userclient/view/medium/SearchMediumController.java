@@ -3,6 +3,7 @@ package at.fhv.teamd.musicshop.userclient.view.medium;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartObserver;
@@ -62,6 +63,7 @@ public class SearchMediumController implements GenericArticleController {
         } else {
             new Alert(Alert.AlertType.ERROR, "Item could not be added", ButtonType.CLOSE).show();
         }
+        this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
     }
 
     public void reduceByOne(ActionEvent actionEvent) {
@@ -73,11 +75,15 @@ public class SearchMediumController implements GenericArticleController {
 
     public void increaseByOne(ActionEvent actionEvent) {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
-        if (val < this.mediumDTO.stockQuantity()) {
-            this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
-        }
+        this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
     }
 
-    public void order(ActionEvent actionEvent) {
+    public void order(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
+        if (RemoteFacade.getInstance().publishOrder(mediumDTO, mediumAmountSelected.getText())) {
+            new Alert(Alert.AlertType.INFORMATION, "Message successfully sent", ButtonType.CLOSE).show();
+        } else {
+            new Alert(Alert.AlertType.ERROR, "Send message failed", ButtonType.CLOSE).show();
+        }
+        this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
     }
 }
