@@ -25,6 +25,11 @@ public class LoginController {
     private PasswordField password;
     private Stage stage;
 
+    @FXML
+    private void initialize() {
+        this.serverhost.setText("localhost");
+    }
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
