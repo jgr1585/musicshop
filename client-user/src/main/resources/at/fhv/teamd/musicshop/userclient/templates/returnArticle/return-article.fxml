@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-font-family: sans-serif; -fx-font-size: 13;" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.article.ReturnArticleController">
+
+<HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-font-family: sans-serif; -fx-font-size: 13;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.article.ReturnArticleController">
    <children>
       <Label fx:id="mediumType" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" text="Label">
          <HBox.margin>
@@ -16,12 +19,12 @@
             <Insets left="20.0" right="60.0" />
          </HBox.margin>
       </TextField>
-      <Button mnemonicParsing="false" prefWidth="35.0" style="-fx-background-color: red;" text="-" textFill="#101110">
+      <Button mnemonicParsing="false" prefWidth="35.0" style="-fx-background-color: #FF0000;" text="-" textFill="#101110">
          <HBox.margin>
             <Insets left="30.0" right="5.0" />
          </HBox.margin></Button>
       <TextField fx:id="mediumAmount1" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" text="0" />
-      <Button mnemonicParsing="false" prefWidth="35.0" style="-fx-background-color: lightgreen;" text="+">
+      <Button mnemonicParsing="false" prefWidth="35.0" style="-fx-background-color: #90EE90;" text="+">
          <HBox.margin>
             <Insets left="5.0" right="60.0" />
          </HBox.margin></Button>
