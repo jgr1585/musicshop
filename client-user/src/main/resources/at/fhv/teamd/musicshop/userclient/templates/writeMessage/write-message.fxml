@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane style="-fx-background-color: black; -fx-base: black;" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.writeMessage.WriteMessageController">
+<GridPane style="-fx-background-color: #000000; -fx-base: #000000;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.writeMessage.WriteMessageController">
    <children>
       <GridPane prefHeight="75.0" style="-fx-background-color: #547af9;">
          <columnConstraints>
@@ -15,7 +16,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <ComboBox fx:id="messageTopic" promptText="Topic" style="-fx-control-inner-background: lavender;">
+            <ComboBox fx:id="messageTopic" promptText="Topic" style="-fx-control-inner-background: #E6E6FA;">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin></ComboBox>
@@ -23,11 +24,11 @@
       </GridPane>
       <VBox GridPane.rowIndex="1">
          <children>
-            <TextField fx:id="messageTitle" promptText="Message Title" style="-fx-background-color: lavender;">
+            <TextField fx:id="messageTitle" promptText="Message Title" style="-fx-background-color: #E6E6FA;">
                <VBox.margin>
                   <Insets bottom="5.0" left="15.0" right="15.0" top="15.0" />
                </VBox.margin></TextField>
-            <TextArea fx:id="messageBody" prefHeight="4000.0" style="-fx-control-inner-background: lavender;">
+            <TextArea fx:id="messageBody" prefHeight="4000.0" style="-fx-control-inner-background: #E6E6FA;">
                <VBox.margin>
                   <Insets bottom="10.0" left="15.0" right="15.0" top="5.0" />
                </VBox.margin></TextArea>
