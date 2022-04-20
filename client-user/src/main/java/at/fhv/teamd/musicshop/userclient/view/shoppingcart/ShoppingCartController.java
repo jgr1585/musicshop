@@ -4,6 +4,7 @@ import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartObserver;
 import at.fhv.teamd.musicshop.userclient.view.AppController;
 import at.fhv.teamd.musicshop.userclient.view.article.ArticleController;
 import at.fhv.teamd.musicshop.userclient.view.customer.CustomerController;
@@ -24,7 +25,7 @@ import java.text.DecimalFormat;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ShoppingCartController {
+public class ShoppingCartController implements ShoppingCartObserver {
     @FXML
     private Label totalAmount;
 
@@ -127,5 +128,14 @@ public class ShoppingCartController {
 
     private void removeCustomer() {
         this.customerNo.setText("");
+    }
+
+    @Override
+    public void updateShoppingCart() {
+        try {
+            reloadShoppingCart();
+        } catch (IOException | NotAuthorizedException e) {
+            clearCart();
+        }
     }
 }

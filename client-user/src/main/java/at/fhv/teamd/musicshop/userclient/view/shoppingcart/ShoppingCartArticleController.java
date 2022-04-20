@@ -5,6 +5,7 @@ import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartSubject;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -75,5 +76,6 @@ public class ShoppingCartArticleController implements GenericArticleController {
     @FXML
     private void remove(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
         RemoteFacade.getInstance().removeFromShoppingCart(mediumDTO, lineItemDTO.quantity());
+        ShoppingCartSubject.notifyShoppingCartUpdate();
     }
 }

@@ -5,6 +5,8 @@ import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartObserver;
+import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartSubject;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -56,6 +58,7 @@ public class SearchMediumController implements GenericArticleController {
     private void addToCart(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
         if (RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()))) {
             new Alert(Alert.AlertType.INFORMATION, "Successfully added items", ButtonType.OK).show();
+            ShoppingCartSubject.notifyShoppingCartUpdate();
         } else {
             new Alert(Alert.AlertType.ERROR, "Item could not be added", ButtonType.CLOSE).show();
         }
