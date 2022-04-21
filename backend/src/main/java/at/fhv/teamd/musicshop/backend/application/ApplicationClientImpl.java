@@ -4,15 +4,13 @@ import at.fhv.teamd.musicshop.backend.application.services.AuthService;
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.backend.domain.user.UserRole;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
-import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
+import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 
+import javax.naming.NamingException;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -81,6 +79,26 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
         authService.authorizeAccessLevel(UserRole.SELLER);
 
         return ServiceFactory.getShoppingCartServiceInstance().getShoppingCart(userId);
+    }
+
+    @Override
+    public boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
+        authService.authorizeAccessLevel(UserRole.OPERATOR);
+
+        return ServiceFactory.getMessageServiceInstance().publish(message);
+    }
+
+    @Override
+    public boolean publishOrder(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException {
+        authService.authorizeAccessLevel(UserRole.SELLER);
+
+        MessageDTO message = MessageDTO.builder().withMessageData(
+                "Order",
+                "Medium: " + mediumDTO.id(),
+                quantity
+        ).build();
+
+        return ServiceFactory.getMessageServiceInstance().publish(message);
     }
 
     @Override

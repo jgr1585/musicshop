@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<GridPane prefHeight="113.0" prefWidth="602.0" style="-fx-border-color: #000000; -fx-border-radius: 15;" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.article.ReturnArticleController">
+
+<GridPane prefHeight="113.0" prefWidth="602.0" style="-fx-border-color: #000000; -fx-border-radius: 15;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.article.ReturnArticleController">
    <children>
       <HBox prefHeight="110.0" prefWidth="306.0" spacing="5.0">
          <children>
             <VBox alignment="CENTER" prefHeight="150.0" prefWidth="477.0">
                <children>
-                  <GridPane prefHeight="90.0" prefWidth="318.0" style="-fx-background-color: azure;">
+                  <GridPane prefHeight="90.0" prefWidth="318.0" style="-fx-background-color: #F0FFFF;">
                      <children>
                         <Label text="Customer-ID" textAlignment="CENTER">
                            <font>
@@ -60,7 +62,7 @@
             <Insets />
          </GridPane.margin>
          <children>
-            <Button mnemonicParsing="false" prefWidth="120.0" style="-fx-background-color: lightgreen;" text="Select">
+            <Button mnemonicParsing="false" prefWidth="120.0" style="-fx-background-color: #90EE90;" text="Select">
                <font>
                   <Font size="15.0" />
                </font>

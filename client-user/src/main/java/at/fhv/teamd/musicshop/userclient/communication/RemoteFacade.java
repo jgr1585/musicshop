@@ -2,10 +2,7 @@ package at.fhv.teamd.musicshop.userclient.communication;
 
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.ApplicationClientFactory;
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
-import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
+import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
@@ -89,6 +86,16 @@ public class RemoteFacade implements ApplicationClient {
     @Override
     public ShoppingCartDTO getShoppingCart() throws RemoteException, NotAuthorizedException {
         return getApplicationClientOrThrow().getShoppingCart();
+    }
+
+    @Override
+    public boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
+        return getApplicationClientOrThrow().publishMessage(message);
+    }
+
+    @Override
+    public boolean publishOrder(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException {
+        return getApplicationClientOrThrow().publishOrder(mediumDTO, quantity);
     }
 
     @Override

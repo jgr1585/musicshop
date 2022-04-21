@@ -4,6 +4,7 @@ import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartObserver;
 import at.fhv.teamd.musicshop.userclient.view.AppController;
 import at.fhv.teamd.musicshop.userclient.view.article.ArticleController;
 import at.fhv.teamd.musicshop.userclient.view.customer.CustomerController;
@@ -24,12 +25,12 @@ import java.text.DecimalFormat;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ShoppingCartController {
+public class ShoppingCartController implements ShoppingCartObserver {
     @FXML
     private Label totalAmount;
 
     @FXML
-    private VBox shoppingCardElements;
+    private VBox shoppingCartElements;
 
     @FXML
     private Label customerNo;
@@ -54,7 +55,7 @@ public class ShoppingCartController {
     }
 
     private void clearCart() {
-        this.shoppingCardElements.getChildren().clear();
+        this.shoppingCartElements.getChildren().clear();
     }
 
     private void insertData(ShoppingCartDTO shoppingCartDTO) throws IOException {
@@ -64,7 +65,7 @@ public class ShoppingCartController {
             Parent medium = fxmlLoader.load();
             ArticleController controller = fxmlLoader.getController();
             controller.addMediumTypes(lineItemDTO, Tabs.SHOPPINGCART);
-            this.shoppingCardElements.getChildren().add(medium);
+            this.shoppingCartElements.getChildren().add(medium);
         }
         DecimalFormat df = new DecimalFormat("0.00");
         this.totalAmount.setText(df.format(shoppingCartDTO.totalAmount()));
@@ -127,5 +128,14 @@ public class ShoppingCartController {
 
     private void removeCustomer() {
         this.customerNo.setText("");
+    }
+
+    @Override
+    public void updateShoppingCart() {
+        try {
+            reloadShoppingCart();
+        } catch (IOException | NotAuthorizedException e) {
+            clearCart();
+        }
     }
 }
