@@ -14,7 +14,7 @@ public class MessageService {
     // TODO: JNDI ConnectionFactory
     // TODO: Topic
 
-    private static final String DEFAULT_BROKER_BIND_URL = "tcp://10.0.40.166:61616";
+    private static final String BROKER_URL = "tcp://10.0.40.166:61616";
 
     public boolean publish(MessageDTO message) {
         try {
@@ -37,7 +37,7 @@ public class MessageService {
 //            // Close the connection
 //            con.close();
 
-            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_BROKER_BIND_URL);
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
             Connection connection = connectionFactory.createConnection();
             connection.start();
             Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
