@@ -21,12 +21,12 @@ public class CustomerDBClientImpl extends UnicastRemoteObject implements Custome
     private static final int LIST_MAX_RESULTS;
 
     static {
-        DB_URL = Objects.requireNonNull(System.getProperty("DB_URL"), "DB_URL system property must be set");
-        DB_USER = Objects.requireNonNull(System.getProperty("DB_USER"), "DB_USER system property must be set");
-        DB_PASS = Objects.requireNonNull(System.getProperty("DB_PASS"), "DB_PASS system property must be set");
-        DB_CUSTOMERS_TABLE = Objects.requireNonNull(System.getProperty("DB_CUSTOMERS_TABLE"), "DB_CUSTOMERS_TABLE system property must be set");
-        DB_DRIVER_FULLY_QUALIFIED_CLASSNAME = Objects.requireNonNull(System.getProperty("DB_DRIVER_FULLY_QUALIFIED_CLASSNAME"), "DB_DRIVER_FULLY_QUALIFIED_CLASSNAME system property must be set");
-        LIST_MAX_RESULTS = Integer.parseInt(Objects.requireNonNull(System.getProperty("LIST_MAX_RESULTS"), "LIST_MAX_RESULTS system property must be set"));
+        DB_URL = Objects.requireNonNull(System.getenv("DB_URL"), "DB_URL system property must be set");
+        DB_USER = Objects.requireNonNull(System.getenv("DB_USER"), "DB_USER system property must be set");
+        DB_PASS = Objects.requireNonNull(System.getenv("DB_PASS"), "DB_PASS system property must be set");
+        DB_CUSTOMERS_TABLE = Objects.requireNonNull(System.getenv("DB_CUSTOMERS_TABLE"), "DB_CUSTOMERS_TABLE system property must be set");
+        DB_DRIVER_FULLY_QUALIFIED_CLASSNAME = Objects.requireNonNull(System.getenv("DB_DRIVER_FULLY_QUALIFIED_CLASSNAME"), "DB_DRIVER_FULLY_QUALIFIED_CLASSNAME system property must be set");
+        LIST_MAX_RESULTS = Integer.parseInt(Objects.requireNonNull(System.getenv("LIST_MAX_RESULTS"), "LIST_MAX_RESULTS system property must be set"));
 
         try {
             Class.forName(DB_DRIVER_FULLY_QUALIFIED_CLASSNAME);
