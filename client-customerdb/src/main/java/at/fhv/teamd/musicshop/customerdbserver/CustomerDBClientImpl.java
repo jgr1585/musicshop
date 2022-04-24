@@ -39,7 +39,7 @@ public class CustomerDBClientImpl extends UnicastRemoteObject implements Custome
     }
 
     public CustomerDBClientImpl() throws RemoteException {
-        super();
+        super(CustomerDBServer.BIND_PORT);
     }
 
     @Override
