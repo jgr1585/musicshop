@@ -6,7 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
 public class CustomerDBServer {
-    private static final int BIND_PORT = 1100;
+    public static final int BIND_PORT = 1100;
 
     public static void main(String[] args) throws RemoteException, MalformedURLException {
         CustomerDBClientImpl.init();
