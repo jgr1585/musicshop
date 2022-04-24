@@ -3,6 +3,7 @@ package at.fhv.teamd.musicshop.userclient.view;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartController;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
@@ -48,4 +49,8 @@ public class AppController {
         shoppingCartController.reloadShoppingCart();
     }
 
+    @FXML
+    private void logout(ActionEvent actionEvent) throws IOException {
+        this.loginController.logout();
+    }
 }

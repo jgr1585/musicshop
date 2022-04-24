@@ -5,6 +5,7 @@ import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartObserver;
+import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartSubject;
 import at.fhv.teamd.musicshop.userclient.view.AppController;
 import at.fhv.teamd.musicshop.userclient.view.article.ArticleController;
 import at.fhv.teamd.musicshop.userclient.view.customer.CustomerController;
@@ -44,6 +45,8 @@ public class ShoppingCartController implements ShoppingCartObserver {
         } catch (IOException | NotAuthorizedException e) {
             clearCart();
         }
+
+        ShoppingCartSubject.addObserver(this);
     }
 
     public void setAppController(AppController appController) {
