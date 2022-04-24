@@ -10,8 +10,6 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class MediumHibernateRepository implements MediumRepository {
 
@@ -42,25 +40,6 @@ public class MediumHibernateRepository implements MediumRepository {
         em.close();
 
         return mediumOpt;
-    }
-
-    @Override
-    @Transactional
-    public Set<Medium> findMediumsByArticleId(Long id) {
-        Objects.requireNonNull(id);
-
-        EntityManager em = PersistenceManager.getEntityManagerInstance();
-
-        TypedQuery<Medium> query = em.createQuery("SELECT m FROM Medium m " +
-                "WHERE m.article.id=:id", Medium.class);
-
-        query.setParameter("id", id);
-
-        Set<Medium> mediums = query.getResultList().stream().collect(Collectors.toUnmodifiableSet());
-
-        em.close();
-
-        return mediums;
     }
 
     @Override

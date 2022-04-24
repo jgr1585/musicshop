@@ -19,3 +19,13 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes 'Main-Class': 'at.fhv.teamd.musicshop.customerdbserver.CustomerDBServer'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

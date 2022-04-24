@@ -8,7 +8,9 @@ import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.*;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public class CustomerDBClientImpl extends UnicastRemoteObject implements CustomerDBClient {
     private static final String DB_URL;
@@ -37,7 +39,7 @@ public class CustomerDBClientImpl extends UnicastRemoteObject implements Custome
     }
 
     public CustomerDBClientImpl() throws RemoteException {
-        super();
+        super(CustomerDBServer.BIND_PORT);
     }
 
     @Override

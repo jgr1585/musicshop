@@ -1,7 +1,6 @@
 package at.fhv.teamd.musicshop.backend.domain.shoppingcart;
 
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
-import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import lombok.Getter;
 

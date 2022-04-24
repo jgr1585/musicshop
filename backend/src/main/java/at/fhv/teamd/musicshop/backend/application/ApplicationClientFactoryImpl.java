@@ -10,7 +10,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class ApplicationClientFactoryImpl extends UnicastRemoteObject implements ApplicationClientFactory {
 
     public ApplicationClientFactoryImpl() throws RemoteException {
-        super();
+        super(ApplicationServer.RMI_BIND_PORT);
     }
 
     @Override

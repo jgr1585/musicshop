@@ -1,7 +1,6 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
 import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
-import at.fhv.teamd.musicshop.backend.domain.invoice.PaymentMethod;
 import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
@@ -15,12 +14,12 @@ public class InvoiceService {
         invoiceRepository = RepositoryFactory.getInvoiceRepositoryInstance();
     }
 
-    public boolean createInvoice(PaymentMethod paymentMethod, Set<LineItem> lineItems, int assignedCustomer) {
+    public boolean createInvoice(Set<LineItem> lineItems, int assignedCustomer) {
         try {
             if (assignedCustomer != 0) {
-                invoiceRepository.addInvoice(new Invoice(paymentMethod, lineItems, assignedCustomer));
+                invoiceRepository.addInvoice(new Invoice(lineItems, assignedCustomer));
             } else {
-                invoiceRepository.addInvoice(new Invoice(paymentMethod, lineItems));
+                invoiceRepository.addInvoice(new Invoice(lineItems));
             }
             System.out.println("created new invoice");
             return true;

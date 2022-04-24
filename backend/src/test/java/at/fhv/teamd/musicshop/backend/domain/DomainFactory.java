@@ -25,7 +25,7 @@ public class DomainFactory {
     public static Album createAlbum() {
         UUID uuid = UUID.randomUUID();
 
-        return new Album("Ablum" + uuid, "Label" + uuid, LocalDate.now(), "Genre", uuid.toString(), Set.of(createSong()));
+        return new Album("Album" + uuid, "Label" + uuid, LocalDate.now(), "Genre", uuid.toString(), Set.of(createSong()));
     }
 
     public static Song createSong() {
@@ -41,7 +41,7 @@ public class DomainFactory {
     public static Medium createMedium(MediumType mediumType) {
         UUID uuid = UUID.randomUUID();
 
-        return new Medium(uuid.getMostSignificantBits(), mediumType, BigDecimal.TEN, Stock.of(Quantity.of(5)), createSupplier(), createArticle());
+        return new Medium(uuid.getMostSignificantBits(), mediumType, BigDecimal.TEN, Stock.of(Quantity.of(5)), createSupplier(), createAlbum());
     }
 
     public static Supplier createSupplier() {

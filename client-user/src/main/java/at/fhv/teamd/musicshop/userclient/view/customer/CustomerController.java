@@ -2,6 +2,7 @@ package at.fhv.teamd.musicshop.userclient.view.customer;
 
 import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
+import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,7 +36,7 @@ public class CustomerController {
     }
 
     @FXML
-    private void search(ActionEvent actionEvent) throws IOException, CustomerDBClientException {
+    private void search(ActionEvent actionEvent) throws IOException, CustomerDBClientException, NotAuthorizedException {
         this.results.getChildren().clear();
         if (!(this.search.getText().isEmpty())) {
             Set<CustomerDTO> result = RemoteFacade.getInstance().searchCustomersByName(this.search.getText());

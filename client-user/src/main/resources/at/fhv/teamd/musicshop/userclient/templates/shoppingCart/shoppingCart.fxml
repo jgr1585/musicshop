@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
 <VBox prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #000000FF;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartController">
@@ -63,7 +65,7 @@
             </GridPane>
             <ScrollPane GridPane.rowIndex="1">
                <content>
-                  <VBox fx:id="shoppingCardElements">
+                  <VBox fx:id="shoppingCartElements">
                      <children>
                         <ImageView fitHeight="644.0" fitWidth="990.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -76,15 +78,7 @@
                      </children></VBox>
                </content>
             </ScrollPane>
-            <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #547af9;">
-               <children>
-                  <Pane prefWidth="150.0">
-                     <children>
-                        <Button layoutX="23.0" layoutY="20.0" mnemonicParsing="false" onAction="#reloadShoppingCart" prefWidth="100.0" style="-fx-background-color: #000000FF;" text="Reload" textFill="WHITE" />
-                     </children>
-                  </Pane>
-               </children>
-            </HBox>
+            <HBox alignment="CENTER_RIGHT" style="-fx-background-color: #547af9;" />
          </children>
       </GridPane>
    </children>

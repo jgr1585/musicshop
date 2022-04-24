@@ -23,10 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,28 +56,28 @@ class ShoppingCartServiceTest {
     @Test
     public void given_shoppingCartService_when_addToShoppingCart_then_returnRefreshedShoppingCart() {
         //given
-        UUID uuid = UUID.randomUUID();
+        String userId = "user1234";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 2;
 
-        Mockito.when(this.articleRepository.findArticleById(medium.getArticle().getId())).thenReturn(Optional.of(medium.getArticle()));
+        Mockito.when(this.articleRepository.findArticleById(medium.getAlbum().getId())).thenReturn(Optional.of(medium.getAlbum()));
         Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
 
         LineItem lineItem = new LineItem(Quantity.of(amount), medium);
-        Set<LineItemDTO> expectedLineItems = Set.of(DTOProvider.buildLineItemDTO(this.articleRepository, this.mediumRepository, lineItem));
+        Set<LineItemDTO> expectedLineItems = Set.of(DTOProvider.buildLineItemDTO(this.articleRepository, lineItem));
 
         LineItem lineItemIncreasedAmount = new LineItem(Quantity.of(amount * 2), medium);
-        Set<LineItemDTO> expectedLineItemsIncreasedAmount = Set.of(DTOProvider.buildLineItemDTO(this.articleRepository, this.mediumRepository, lineItemIncreasedAmount));
+        Set<LineItemDTO> expectedLineItemsIncreasedAmount = Set.of(DTOProvider.buildLineItemDTO(this.articleRepository, lineItemIncreasedAmount));
 
         //when
-        this.shoppingCartService.addToShoppingCart(uuid, mediumDTO, amount);
-        ShoppingCartDTO shoppingCartDTO = this.shoppingCartService.getShoppingCart(uuid);
+        this.shoppingCartService.addToShoppingCart(userId, mediumDTO, amount);
+        ShoppingCartDTO shoppingCartDTO = this.shoppingCartService.getShoppingCart(userId);
         Set<LineItemDTO> actualLineItems = shoppingCartDTO.lineItems();
 
-        this.shoppingCartService.addToShoppingCart(uuid, mediumDTO, amount);
-        ShoppingCartDTO shoppingCartDTOIncreasedAmount = this.shoppingCartService.getShoppingCart(uuid);
+        this.shoppingCartService.addToShoppingCart(userId, mediumDTO, amount);
+        ShoppingCartDTO shoppingCartDTOIncreasedAmount = this.shoppingCartService.getShoppingCart(userId);
         Set<LineItemDTO> actualLineItemsIncreasedAmount = shoppingCartDTOIncreasedAmount.lineItems();
 
         //then
@@ -90,52 +88,52 @@ class ShoppingCartServiceTest {
     @Test
     public void given_shoppingCart_when_initializeShoppingcart_then_returnShoppingCart() {
         //given
-        UUID uuid = UUID.randomUUID();
+        String userId = "user1234";
         AtomicReference<Method> method = new AtomicReference<>();
-        Assertions.assertDoesNotThrow(() -> method.set(ShoppingCartService.class.getDeclaredMethod("initializeShoppingcart", UUID.class)));
+        Assertions.assertDoesNotThrow(() -> method.set(ShoppingCartService.class.getDeclaredMethod("initializeShoppingcart", String.class)));
         method.get().setAccessible(true);
 
         //when
-        this.shoppingCartService.getShoppingCart(uuid);
+        this.shoppingCartService.getShoppingCart(userId);
 
         //then
-        Assertions.assertThrows(InvocationTargetException.class, () -> method.get().invoke(this.shoppingCartService, uuid));
+        Assertions.assertThrows(InvocationTargetException.class, () -> method.get().invoke(this.shoppingCartService, userId));
     }
 
     @Test
     public void given_shoppingCartService_when_removeFromShoppingCart_then_returnRefreshedShoppingCart() {
         //given
-        UUID uuid = UUID.randomUUID();
+        String userId = "user1234";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 3;
 
-        Mockito.when(this.articleRepository.findArticleById(medium.getArticle().getId())).thenReturn(Optional.of(medium.getArticle()));
+        Mockito.when(this.articleRepository.findArticleById(medium.getAlbum().getId())).thenReturn(Optional.of(medium.getAlbum()));
         Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
 
-        this.shoppingCartService.addToShoppingCart(uuid, mediumDTO, amount);
+        this.shoppingCartService.addToShoppingCart(userId, mediumDTO, amount);
 
         //when remove 1 of 3
-        this.shoppingCartService.removeFromShoppingCart(uuid, mediumDTO, 1);
+        this.shoppingCartService.removeFromShoppingCart(userId, mediumDTO, 1);
 
         //then quantity should equal 2
         int expectedAmount = 2;
-        Assertions.assertEquals(expectedAmount, this.shoppingCartService.getShoppingCart(uuid).lineItems().stream().findFirst().orElseThrow().quantity().intValue());
+        Assertions.assertEquals(expectedAmount, this.shoppingCartService.getShoppingCart(userId).lineItems().stream().findFirst().orElseThrow().quantity().intValue());
 
         //when remove 2 of 2
-        this.shoppingCartService.removeFromShoppingCart(uuid, mediumDTO, 2);
+        this.shoppingCartService.removeFromShoppingCart(userId, mediumDTO, 2);
 
         //then quantity should equal 2
-        Assertions.assertTrue(this.shoppingCartService.getShoppingCart(uuid).lineItems().isEmpty());
-        Assertions.assertFalse(this.shoppingCartService.removeFromShoppingCart(UUID.randomUUID(), mediumDTO, 10));
+        Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
+        Assertions.assertFalse(this.shoppingCartService.removeFromShoppingCart("user0000", mediumDTO, 10));
     }
 
     // TODO: fix update of quantity
     @Test
     public void given_articlesInShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() {
         //given
-        UUID uuid = UUID.randomUUID();
+        String userId = "user1234";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 1;
         int expectedAmount = medium.getStock().getQuantity().getValue() - amount;
@@ -144,63 +142,63 @@ class ShoppingCartServiceTest {
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
 
-        this.shoppingCartService.addToShoppingCart(uuid, mediumDTO, amount);
+        this.shoppingCartService.addToShoppingCart(userId, mediumDTO, amount);
 
         //when
-        this.shoppingCartService.buyFromShoppingCart(uuid, 0);
+        this.shoppingCartService.buyFromShoppingCart(userId, 0);
 
         //then
-        Assertions.assertTrue(this.shoppingCartService.getShoppingCart(uuid).lineItems().isEmpty());
+        Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
 //        Assertions.assertEquals(expectedAmount, medium.getStock().getQuantity().getValue());
     }
 
     @Test
     public void given_emptyShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() {
         //given
-        UUID uuid = UUID.randomUUID();
+        String userId = "user1234";
 
         //when
-        this.shoppingCartService.buyFromShoppingCart(uuid, 0);
+        this.shoppingCartService.buyFromShoppingCart(userId, 0);
 
         //then
-        Assertions.assertTrue(this.shoppingCartService.getShoppingCart(uuid).lineItems().isEmpty());
+        Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
     }
 
     // TODO: not in stock exception
     @Test
     public void given_articlesInShoppingCart_when_buyFromShoppingCart_item_not_in_stock_then_Throw_Exeption() {
         //given
-        UUID uuid1 = UUID.randomUUID();
-        UUID uuid2 = UUID.randomUUID();
+        String userId1 = "user1234";
+        String userId2 = "user5678";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 3;
 
-        Mockito.when(this.articleRepository.findArticleById(medium.getArticle().getId())).thenReturn(Optional.of(medium.getArticle()));
+        Mockito.when(this.articleRepository.findArticleById(medium.getAlbum().getId())).thenReturn(Optional.of(medium.getAlbum()));
         Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
-        this.shoppingCartService.addToShoppingCart(uuid1, mediumDTO, amount);
-        this.shoppingCartService.addToShoppingCart(uuid2, mediumDTO, amount);
+        this.shoppingCartService.addToShoppingCart(userId1, mediumDTO, amount);
+        this.shoppingCartService.addToShoppingCart(userId2, mediumDTO, amount);
 
         //when
-        Assertions.assertDoesNotThrow(() -> this.shoppingCartService.buyFromShoppingCart(uuid1, 0));
-//        Assertions.assertThrows(RuntimeException.class,() -> this.shoppingCartService.buyFromShoppingCart(uuid2, 0));
+        Assertions.assertDoesNotThrow(() -> this.shoppingCartService.buyFromShoppingCart(userId1, 0));
+//        Assertions.assertThrows(RuntimeException.class,() -> this.shoppingCartService.buyFromShoppingCart(userId2, 0));
 
         //then
-        Assertions.assertTrue(this.shoppingCartService.getShoppingCart(uuid1).lineItems().isEmpty());
-        Assertions.assertFalse(this.shoppingCartService.getShoppingCart(uuid2).lineItems().isEmpty());
+        Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId1).lineItems().isEmpty());
+        Assertions.assertFalse(this.shoppingCartService.getShoppingCart(userId2).lineItems().isEmpty());
     }
 
     @Test
     public void given_shoppingCart_when_initializeShoppingCart_then_returnEqual(){
         //given
-        UUID uuid1 = UUID.randomUUID();
-        UUID uuid2 = UUID.randomUUID();
+        String userId1 = "user1234";
+        String userId2 = "user5678";
         Medium medium1 = DomainFactory.createMedium(MediumType.CD);
         Medium medium2 = DomainFactory.createMedium(MediumType.CASSETTE);
 
-        Mockito.when(this.articleRepository.findArticleById(medium1.getArticle().getId())).thenReturn(Optional.of(medium1.getArticle()));
-        Mockito.when(this.articleRepository.findArticleById(medium2.getArticle().getId())).thenReturn(Optional.of(medium2.getArticle()));
+        Mockito.when(this.articleRepository.findArticleById(medium1.getAlbum().getId())).thenReturn(Optional.of(medium1.getAlbum()));
+        Mockito.when(this.articleRepository.findArticleById(medium2.getAlbum().getId())).thenReturn(Optional.of(medium2.getAlbum()));
         Mockito.when(this.mediumRepository.findMediumById(medium1.getId())).thenReturn(Optional.of(medium1));
         Mockito.when(this.mediumRepository.findMediumById(medium2.getId())).thenReturn(Optional.of(medium2));
 
@@ -208,11 +206,11 @@ class ShoppingCartServiceTest {
         MediumDTO mediumDTO2 = DTOProvider.buildMediumDTO(medium2);
 
         //when
-        this.shoppingCartService.addToShoppingCart(uuid1, mediumDTO1, 2);
-        this.shoppingCartService.addToShoppingCart(uuid2, mediumDTO2, 2);
-        ShoppingCartDTO shoppingCartDTO1 = this.shoppingCartService.getShoppingCart(uuid1);
-        ShoppingCartDTO shoppingCartDTO2 = this.shoppingCartService.getShoppingCart(uuid1);
-        ShoppingCartDTO shoppingCartDTO3 = this.shoppingCartService.getShoppingCart(uuid2);
+        this.shoppingCartService.addToShoppingCart(userId1, mediumDTO1, 2);
+        this.shoppingCartService.addToShoppingCart(userId2, mediumDTO2, 2);
+        ShoppingCartDTO shoppingCartDTO1 = this.shoppingCartService.getShoppingCart(userId1);
+        ShoppingCartDTO shoppingCartDTO2 = this.shoppingCartService.getShoppingCart(userId1);
+        ShoppingCartDTO shoppingCartDTO3 = this.shoppingCartService.getShoppingCart(userId2);
 
         //then
         Assertions.assertEquals(shoppingCartDTO1, shoppingCartDTO2);

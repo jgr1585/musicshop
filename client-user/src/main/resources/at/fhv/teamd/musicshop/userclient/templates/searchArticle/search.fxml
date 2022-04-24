@@ -22,9 +22,9 @@
             <Pane maxWidth="750.0" minWidth="750.0" prefHeight="75.0" style="-fx-background-color: #547af9;">
                <children>
                   <Label layoutX="36.0" layoutY="29.0" minWidth="-Infinity" text="Title:" />
-                  <TextField fx:id="searchByTitle" layoutX="71.0" layoutY="24.0" minWidth="120.0" />
+                  <TextField fx:id="searchByTitle" layoutX="71.0" layoutY="24.0" minWidth="120.0" style="-fx-background-color: lavender;" />
                   <Label layoutX="277.0" layoutY="29.0" minWidth="-Infinity" text="Artist:" />
-                  <TextField fx:id="searchByArtist" layoutX="325.0" layoutY="24.0" minWidth="120.0" />
+                  <TextField fx:id="searchByArtist" layoutX="325.0" layoutY="24.0" minWidth="120.0" style="-fx-background-color: lavender;" />
                   <Label layoutX="555.0" layoutY="29.0" minWidth="-Infinity" text="Medium:" />
                   <MenuButton fx:id="searchByMedium" disable="true" layoutX="612.0" layoutY="24.0" minWidth="-Infinity" mnemonicParsing="false" prefWidth="80.0" style="-fx-background-color: white;" text="Select">
                      <items>
@@ -36,8 +36,8 @@
             </Pane>
             <Pane style="-fx-background-color: #547af9;" GridPane.columnIndex="1">
                <children>
-                  <Button cancelButton="true" defaultButton="true" layoutX="43.0" layoutY="24.0" minWidth="70.0" mnemonicParsing="false" onAction="#resetSearch" pickOnBounds="false" style="-fx-background-color: #c89be7; -fx-border-color: black; -fx-border-width: 2; -fx-border-radius: 4;" text="Reset" />
-                  <Button defaultButton="true" layoutX="136.0" layoutY="24.0" minWidth="70.0" mnemonicParsing="false" onAction="#searchArticles" pickOnBounds="false" style="-fx-background-color: #05b789; -fx-border-color: black; -fx-border-radius: 4; -fx-border-width: 2;" text="Search" />
+                  <Button cancelButton="true" defaultButton="true" layoutX="43.0" layoutY="24.0" minWidth="70.0" mnemonicParsing="false" onAction="#resetSearch" pickOnBounds="false" style="-fx-background-color: #c89be7; -fx-border-color: #000000; -fx-border-width: 2; -fx-border-radius: 4;" text="Reset" />
+                  <Button defaultButton="true" layoutX="136.0" layoutY="24.0" minWidth="70.0" mnemonicParsing="false" onAction="#searchArticles" pickOnBounds="false" style="-fx-background-color: #05b789; -fx-border-color: #000000; -fx-border-radius: 4; -fx-border-width: 2;" text="Search" />
                </children>
             </Pane>
          </children>

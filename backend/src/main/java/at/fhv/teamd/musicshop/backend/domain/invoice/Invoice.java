@@ -16,9 +16,6 @@ public class Invoice {
     @SequenceGenerator(name = "invoiceID_generator", sequenceName = "invoice_sequence", initialValue = 100, allocationSize = 1)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private PaymentMethod paymentMethod;
-
     @OneToMany(cascade = CascadeType.ALL)
     private Set<LineItem> lineItems;
 
@@ -31,15 +28,13 @@ public class Invoice {
     protected Invoice() {
     }
 
-    public Invoice(PaymentMethod paymentMethod, Set<LineItem> lineItems) {
-        this.paymentMethod = Objects.requireNonNull(paymentMethod);
+    public Invoice(Set<LineItem> lineItems) {
         this.lineItems = Objects.requireNonNull(lineItems);
         this.totalPrice = calculateTotalPrice(lineItems);
         this.customerNo = null;
     }
 
-    public Invoice(PaymentMethod paymentMethod, Set<LineItem> lineItems, int customerNo) {
-        this.paymentMethod = Objects.requireNonNull(paymentMethod);
+    public Invoice(Set<LineItem> lineItems, int customerNo) {
         this.lineItems = Objects.requireNonNull(lineItems);
         this.totalPrice = calculateTotalPrice(lineItems);
         this.customerNo = customerNo;

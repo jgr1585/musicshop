@@ -1,10 +1,14 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
+import java.util.logging.Handler;
+
 public class ServiceFactory {
     private static ArticleService articleService;
     private static ShoppingCartService shoppingCartService;
     private static InvoiceService invoiceService;
     private static CustomerService customerService;
+    private static AuthService authService;
+    private static MessageService messageService;
 
     private ServiceFactory() {}
 
@@ -34,5 +38,19 @@ public class ServiceFactory {
             customerService = new CustomerService();
         }
         return customerService;
+    }
+
+    public static AuthService getAuthServiceInstance() {
+        if (authService == null) {
+            authService = new AuthService();
+        }
+        return authService;
+    }
+
+    public static MessageService getMessageServiceInstance() {
+        if (messageService == null) {
+            messageService = new MessageService();
+        }
+        return messageService;
     }
 }

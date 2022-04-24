@@ -16,11 +16,19 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class LoginController {
+
+    @FXML
+    private TextField serverhost;
     @FXML
     private TextField username;
     @FXML
     private PasswordField password;
     private Stage stage;
+
+    @FXML
+    private void initialize() {
+        this.serverhost.setText("localhost");
+    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -40,7 +48,7 @@ public class LoginController {
     @FXML
     private void onLoginAction(ActionEvent actionEvent) throws IOException {
         try {
-            RemoteFacade.authenticateSession(username.getText(), password.getText());
+            RemoteFacade.authenticateSession(serverhost.getText(), username.getText(), password.getText());
 
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("templates/main-window.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), stage.getScene().getWidth(), stage.getScene().getHeight());
@@ -57,6 +65,7 @@ public class LoginController {
 
     @FXML
     private void onResetAction(ActionEvent actionEvent) {
+        serverhost.setText("");
         username.setText("");
         password.setText("");
     }

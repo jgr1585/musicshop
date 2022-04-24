@@ -10,7 +10,7 @@ import java.rmi.server.UnicastRemoteObject;
 public class CustomerDBClientFactoryImpl extends UnicastRemoteObject implements CustomerDBClientFactory {
 
     public CustomerDBClientFactoryImpl() throws RemoteException {
-        super();
+        super(CustomerDBServer.BIND_PORT);
     }
 
     @Override

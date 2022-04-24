@@ -4,9 +4,6 @@ import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.EmployeeRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 public class RepositoryFactory {
     private static ArticleRepository articleRepository;
