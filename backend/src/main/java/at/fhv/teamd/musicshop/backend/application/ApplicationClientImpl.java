@@ -10,7 +10,6 @@ import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 
-import javax.naming.NamingException;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -21,7 +20,7 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     private final String userId;
 
     private ApplicationClientImpl(String userId) throws RemoteException {
-        super();
+        super(ApplicationServer.RMI_BIND_PORT);
         authService = ServiceFactory.getAuthServiceInstance();
         this.userId = userId;
     }
