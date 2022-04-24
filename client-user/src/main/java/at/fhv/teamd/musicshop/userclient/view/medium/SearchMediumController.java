@@ -3,6 +3,7 @@ package at.fhv.teamd.musicshop.userclient.view.medium;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
@@ -74,12 +75,18 @@ public class SearchMediumController implements GenericArticleController {
         this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
     }
 
+    // TODO: Think about outsourcing and using dedicated orderController for delegating orders to (this has nothing to-do with "search medium"..)
     public void order(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
-        if (RemoteFacade.getInstance().publishOrder(mediumDTO, mediumAmountSelected.getText())) {
+        try {
             new Alert(Alert.AlertType.INFORMATION, "Message successfully sent", ButtonType.CLOSE).show();
-        } else {
+            // TODO: Only order when order amount > 0
+            RemoteFacade.getInstance().publishOrderMessage(mediumDTO, mediumAmountSelected.getText());
+
+        } catch (MessagingException e) {
             new Alert(Alert.AlertType.ERROR, "Send message failed", ButtonType.CLOSE).show();
+
         }
+
         this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
     }
 }

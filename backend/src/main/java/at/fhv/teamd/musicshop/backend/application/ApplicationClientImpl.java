@@ -5,10 +5,7 @@ import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.backend.domain.user.UserRole;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.DTO.*;
-import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
-import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
-import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
-import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.exceptions.*;
 
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
@@ -81,21 +78,21 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public boolean publishOrder(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException {
+    public void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevel(UserRole.SELLER);
 
-        return ServiceFactory.getMessageServiceInstance().publish(mediumDTO, quantity);
+        ServiceFactory.getMessageServiceInstance().publishOrder(mediumDTO, quantity);
     }
 
     @Override
-    public boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
+    public void publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevel(UserRole.OPERATOR);
 
-        return ServiceFactory.getMessageServiceInstance().publish(message);
+        ServiceFactory.getMessageServiceInstance().publish(message);
     }
 
     @Override
-    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException {
+    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevel(UserRole.SELLER);
 
         return ServiceFactory.getMessageServiceInstance().receiveMessages(userId);

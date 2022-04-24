@@ -3,10 +3,7 @@ package at.fhv.teamd.musicshop.userclient.communication;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.ApplicationClientFactory;
 import at.fhv.teamd.musicshop.library.DTO.*;
-import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
-import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
-import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
-import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.exceptions.*;
 import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartSubject;
 
 import java.net.MalformedURLException;
@@ -103,17 +100,17 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public boolean publishOrder(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException {
-        return getApplicationClientOrThrow().publishOrder(mediumDTO, quantity);
+    public void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException, MessagingException {
+        getApplicationClientOrThrow().publishOrderMessage(mediumDTO, quantity);
     }
 
     @Override
-    public boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
-        return getApplicationClientOrThrow().publishMessage(message);
+    public void publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+        getApplicationClientOrThrow().publishMessage(message);
     }
 
     @Override
-    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException {
+    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException {
         return getApplicationClientOrThrow().receiveMessages();
     }
 

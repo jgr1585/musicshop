@@ -1,20 +1,22 @@
 package at.fhv.teamd.musicshop.library.DTO;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public final class MessageDTO implements Serializable {
+    private static final long serialVersionUID = -1774324891200598985L;
 
-    private String topic;
+    private TopicDTO topic;
+
     private String title;
+
     private String body;
 
     public static MessageDTO.Builder builder() {
         return new MessageDTO.Builder();
     }
 
-    public String topic() {
+    public TopicDTO topic() {
         return this.topic;
     }
 
@@ -50,7 +52,7 @@ public final class MessageDTO implements Serializable {
         }
 
         public MessageDTO.Builder withMessageData(
-                String topic,
+                TopicDTO topic,
                 String title,
                 String body
         ) {
