@@ -14,7 +14,7 @@ public class CustomerDBServer {
         LocateRegistry.createRegistry(BIND_PORT);
         System.out.println("Registry started @ port " + BIND_PORT);
 
-        Naming.rebind("CustomerDBClientFactory", new CustomerDBClientFactoryImpl());
+        Naming.rebind("rmi://localhost:" +BIND_PORT+ "/CustomerDBClientFactory", new CustomerDBClientFactoryImpl());
         System.out.println("CustomerDBClientFactory bound in registry");
     }
 }
