@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<GridPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartArticleController">
+<GridPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartArticleController">
    <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
@@ -34,7 +29,7 @@
       <TextField fx:id="mediumAmountSelected" alignment="CENTER" layoutX="37.0" layoutY="2.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" style="-fx-background-color: white;" text="0" />
       <Button layoutX="76.0" layoutY="1.0" mnemonicParsing="false" onAction="#increaseByOne" prefWidth="25.0" style="-fx-background-color: #05b789; -fx-text-fill: #FFFFFF;" text="+" />
    </Pane>
-   <Button mnemonicParsing="false" onAction="#remove" prefWidth="25.0" style="-fx-background-color: #000000;" GridPane.columnIndex="5">
+   <Button mnemonicParsing="false" onAction="#remove" prefWidth="25.0" style="-fx-background-color: #00000000;" GridPane.columnIndex="5">
       <graphic>
          <FontAwesomeIconView fill="WHITE" glyphName="TRASH" size="22" text="" wrappingWidth="17.285715103149414" />
       </graphic></Button>

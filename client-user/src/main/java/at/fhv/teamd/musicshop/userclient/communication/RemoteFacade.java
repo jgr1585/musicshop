@@ -7,6 +7,7 @@ import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartSubject;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -65,22 +66,35 @@ public class RemoteFacade implements ApplicationClient {
 
     @Override
     public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
-        return getApplicationClientOrThrow().addToShoppingCart(mediumDTO, amount);
+        boolean returnValue = getApplicationClientOrThrow().addToShoppingCart(mediumDTO, amount);
+        if (returnValue) {
+            ShoppingCartSubject.notifyShoppingCartUpdate();
+        }
+        return returnValue;
     }
 
     @Override
     public boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
-        return getApplicationClientOrThrow().removeFromShoppingCart(mediumDTO, amount);
+        boolean returnValue = getApplicationClientOrThrow().removeFromShoppingCart(mediumDTO, amount);
+        if (returnValue) {
+            ShoppingCartSubject.notifyShoppingCartUpdate();
+        }
+        return returnValue;
     }
 
     @Override
     public void emptyShoppingCart() throws RemoteException, NotAuthorizedException {
         getApplicationClientOrThrow().emptyShoppingCart();
+        ShoppingCartSubject.notifyShoppingCartUpdate();
     }
 
     @Override
     public boolean buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException {
-        return getApplicationClientOrThrow().buyFromShoppingCart(customerId);
+        boolean returnValue = getApplicationClientOrThrow().buyFromShoppingCart(customerId);
+        if (returnValue) {
+            ShoppingCartSubject.notifyShoppingCartUpdate();
+        }
+        return returnValue;
     }
 
     @Override
