@@ -101,6 +101,20 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
+    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException {
+        authService.authorizeAccessLevel(UserRole.SELLER);
+
+        return ServiceFactory.getMessageServiceInstance().receiveMessages(userId);
+    }
+
+    @Override
+    public Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException {
+        authService.authorizeAccessLevel(UserRole.SELLER);
+
+        return ServiceFactory.getMessageServiceInstance().getAllTopics();
+    }
+
+    @Override
     public void destroy() throws NoSuchObjectException {
         UnicastRemoteObject.unexportObject(this, true);
     }
