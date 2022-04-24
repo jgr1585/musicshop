@@ -103,18 +103,23 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
-        return getApplicationClientOrThrow().publishMessage(message);
-    }
-
-    @Override
     public boolean publishOrder(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException {
         return getApplicationClientOrThrow().publishOrder(mediumDTO, quantity);
     }
 
     @Override
-    public Set<TopicDTO> getAllSubscribedTopics(String userName) throws RemoteException {
-        return getApplicationClientOrThrow().getAllSubscribedTopics(userName);
+    public boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
+        return getApplicationClientOrThrow().publishMessage(message);
+    }
+
+    @Override
+    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException {
+        return getApplicationClientOrThrow().receiveMessages();
+    }
+
+    @Override
+    public Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException {
+        return getApplicationClientOrThrow().getAllTopics();
     }
 
     @Override

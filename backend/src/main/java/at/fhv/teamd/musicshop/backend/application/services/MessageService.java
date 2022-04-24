@@ -1,5 +1,6 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
+import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
 import at.fhv.teamd.musicshop.library.DTO.TopicDTO;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -17,6 +18,16 @@ public class MessageService {
     // TODO: Topic
 
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
+
+    public boolean publish(MediumDTO mediumDTO, String quantity) {
+        MessageDTO message = MessageDTO.builder().withMessageData(
+                "Order",
+                "Medium: " + mediumDTO.id(),
+                quantity
+        ).build();
+
+        return publish(message);
+    }
 
     public boolean publish(MessageDTO message) {
         try {

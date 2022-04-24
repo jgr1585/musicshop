@@ -81,21 +81,15 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.OPERATOR);
-
-        return ServiceFactory.getMessageServiceInstance().publish(message);
-    }
-
-    @Override
     public boolean publishOrder(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException {
         authService.authorizeAccessLevel(UserRole.SELLER);
 
-        MessageDTO message = MessageDTO.builder().withMessageData(
-                "Order",
-                "Medium: " + mediumDTO.id(),
-                quantity
-        ).build();
+        return ServiceFactory.getMessageServiceInstance().publish(mediumDTO, quantity);
+    }
+
+    @Override
+    public boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
+        authService.authorizeAccessLevel(UserRole.OPERATOR);
 
         return ServiceFactory.getMessageServiceInstance().publish(message);
     }
