@@ -31,7 +31,7 @@ public class WriteMessageController {
 
     private void initMessageTopic() {
         //TODO: Get Topics from Backend
-        this.messageTopic.setItems(FXCollections.observableArrayList(Arrays.stream(Topic.values()).map(Topic::getName).toArray(String[]::new)));
+//        this.messageTopic.setItems(FXCollections.observableArrayList(Arrays.stream(Topic.values()).map(Topic::getName).toArray(String[]::new)));
 
         this.messageTopic.valueProperty().addListener((observable, oldValue, newValue) -> this.selectedTopic = newValue);
     }
