@@ -4,6 +4,7 @@ import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -28,10 +29,10 @@ public class Employee {
     }
 
     public Employee(String userName, String firstname, String lastname, UserRole userRole, Set<Topic> subscribedTopics) {
-        this.userName = userName;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.userRole = userRole;
-        this.subscribedTopics = subscribedTopics;
+        this.userName = Objects.requireNonNull(userName);
+        this.firstname = Objects.requireNonNull(firstname);
+        this.lastname = Objects.requireNonNull(lastname);
+        this.userRole = Objects.requireNonNull(userRole);
+        this.subscribedTopics = Objects.requireNonNull(subscribedTopics);
     }
 }
