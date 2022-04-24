@@ -34,6 +34,11 @@ public interface ApplicationClient extends Remote {
 
     boolean publishOrder(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException;
 
+    Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException;
+
+    Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException;
+
+
     // Application Client
     void destroy() throws RemoteException;
 }

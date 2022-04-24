@@ -2,13 +2,17 @@ package at.fhv.teamd.musicshop.backend.infrastructure;
 
 import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
 import at.fhv.teamd.musicshop.backend.domain.repositories.EmployeeRepository;
+import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 import at.fhv.teamd.musicshop.backend.domain.user.Employee;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 public class EmployeeHibernateRepository implements EmployeeRepository {
 
@@ -33,4 +37,5 @@ public class EmployeeHibernateRepository implements EmployeeRepository {
         em.close();
         return employeeOpt;
     }
+
 }

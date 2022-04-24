@@ -113,6 +113,11 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
+    public Set<TopicDTO> getAllSubscribedTopics(String userName) throws RemoteException {
+        return getApplicationClientOrThrow().getAllSubscribedTopics(userName);
+    }
+
+    @Override
     public void destroy() throws RemoteException {
         getApplicationClientOrThrow().destroy();
         applicationClient = null;

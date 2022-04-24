@@ -1,10 +1,12 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
 import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
+import at.fhv.teamd.musicshop.library.DTO.TopicDTO;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class MessageService {
@@ -57,5 +59,15 @@ public class MessageService {
             return false;
         }
         return true;
+    }
+
+    public Set<MessageDTO> receiveMessages(String userId) {
+
+        return null;
+    }
+
+    public Set<TopicDTO> getAllTopics() {
+
+        return null;
     }
 }
