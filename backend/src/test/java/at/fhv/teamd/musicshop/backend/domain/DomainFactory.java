@@ -24,11 +24,18 @@ public class DomainFactory {
 
     public static Album createAlbum() {
         UUID uuid = UUID.randomUUID();
-
-        return new Album("Album" + uuid, "Label" + uuid, LocalDate.now(), "Genre", uuid.toString(), Set.of(createSong()));
+        Song song = createPrivateSong();
+        Album album = new Album("Album" + uuid, "Label" + uuid, LocalDate.now(), "Genre", uuid.toString(), Set.of(song));
+        song.setAlbums(Set.of(album));
+        return album;
     }
 
     public static Song createSong() {
+        Album album = createAlbum();
+        return album.getSongs().iterator().next();
+    }
+
+    private static Song createPrivateSong() {
         UUID uuid = UUID.randomUUID();
         return new Song("Song " + uuid, "Label " + uuid, LocalDate.now(), "Generic",  uuid.toString(), Duration.ofSeconds(521), Set.of(createArtist()));
     }
@@ -40,13 +47,14 @@ public class DomainFactory {
 
     public static Medium createMedium(MediumType mediumType) {
         UUID uuid = UUID.randomUUID();
-
-        return new Medium(uuid.getMostSignificantBits(), mediumType, BigDecimal.TEN, Stock.of(Quantity.of(5)), createSupplier(), createAlbum());
+        Album album = createAlbum();
+        Medium medium = new Medium(uuid.getMostSignificantBits(), mediumType, BigDecimal.TEN, Stock.of(Quantity.of(5)), createSupplier(), album);
+        album.setMediums(Set.of(medium));
+        return medium;
     }
 
     public static Supplier createSupplier() {
         UUID uuid = UUID.randomUUID();
-
         return new Supplier("Supplier " + uuid, Duration.ofHours(24));
     }
 }
