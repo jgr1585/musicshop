@@ -9,6 +9,7 @@ import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -18,19 +19,38 @@ import java.util.UUID;
 @SuppressWarnings("deprecation")
 public class DomainFactory {
 
-    public static Article createArticle() {
+    public static Article createArticle() throws NoSuchFieldException, IllegalAccessException {
         return createSong();
     }
 
-    public static Album createAlbum() {
+    public static Album createAlbum() throws NoSuchFieldException, IllegalAccessException {
         UUID uuid = UUID.randomUUID();
         Song song = createPrivateSong();
         Album album = new Album("Album" + uuid, "Label" + uuid, LocalDate.now(), "Genre", uuid.toString(), Set.of(song));
-        song.setAlbums(Set.of(album));
+        setSongAlbums(song, Set.of(album));
+
         return album;
     }
 
-    public static Song createSong() {
+    private static void setSongAlbums(Song song, Set<Album> albums) throws IllegalAccessException, NoSuchFieldException {
+        setObjField(song, "albums", albums);
+    }
+
+    private static void setAlbumMediums(Album album, Set<Medium> mediums) throws IllegalAccessException, NoSuchFieldException {
+        setObjField(album, "mediums", mediums);
+    }
+
+    // set (private) object field by reflection
+    private static void setObjField(Object obj, String fieldName, Object fieldValue) throws IllegalAccessException, NoSuchFieldException {
+        // reference field of obj
+        Field field = obj.getClass().getDeclaredField(fieldName);
+        // suppress checks for Java language access control for field (required to access private field)
+        field.setAccessible(true);
+        // set field of object to value
+        field.set(obj, fieldValue);
+    }
+
+    public static Song createSong() throws NoSuchFieldException, IllegalAccessException {
         Album album = createAlbum();
         return album.getSongs().iterator().next();
     }
@@ -45,11 +65,11 @@ public class DomainFactory {
         return new Artist("Artist " + uuid);
     }
 
-    public static Medium createMedium(MediumType mediumType) {
+    public static Medium createMedium(MediumType mediumType) throws NoSuchFieldException, IllegalAccessException {
         UUID uuid = UUID.randomUUID();
         Album album = createAlbum();
         Medium medium = new Medium(uuid.getMostSignificantBits(), mediumType, BigDecimal.TEN, Stock.of(Quantity.of(5)), createSupplier(), album);
-        album.setMediums(Set.of(medium));
+        setAlbumMediums(album, Set.of(medium));
         return medium;
     }
 

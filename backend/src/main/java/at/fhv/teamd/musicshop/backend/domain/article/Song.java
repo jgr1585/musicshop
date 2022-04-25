@@ -1,7 +1,6 @@
 package at.fhv.teamd.musicshop.backend.domain.article;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -16,10 +15,12 @@ import java.util.Set;
 @Entity
 @DiscriminatorValue("Song")
 public class Song extends Article {
+
     @Column
     private Duration length;
+
     @ManyToMany(mappedBy="songs")
-    @Setter private Set<Album> albums;
+    private Set<Album> albums;
 
     protected Song() {
     }
