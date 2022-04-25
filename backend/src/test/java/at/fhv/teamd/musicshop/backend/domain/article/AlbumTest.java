@@ -10,7 +10,7 @@ import java.util.Set;
 public class AlbumTest extends Article {
 
     @Test
-    void given_setsongs_when_findartistsfromsongs_then_returnartists() {
+    void given_setsongs_when_findartistsfromsongs_then_returnartists() throws NoSuchFieldException, IllegalAccessException {
 
         //given
         Song song = DomainFactory.createSong();
