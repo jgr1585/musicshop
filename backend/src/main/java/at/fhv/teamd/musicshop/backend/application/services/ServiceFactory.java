@@ -1,7 +1,5 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
-import java.util.logging.Handler;
-
 public class ServiceFactory {
     private static ArticleService articleService;
     private static ShoppingCartService shoppingCartService;

@@ -29,15 +29,13 @@ public class MessageService {
         topicRepository = RepositoryFactory.getTopicRepositoryInstance();
     }
 
-
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
     private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7); // Time To Live (set to 0 for no expiry)
-    private static final long MSG_RECEIVE_TIMEOUT = 50; // in milliseconds
+    private static final long MSG_RECEIVE_TIMEOUT = 500; // in milliseconds
 
     private static Connection createConnection() throws JMSException {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
         Connection connection = connectionFactory.createConnection();
-        connection.start();
 
         return connection;
     }
@@ -56,9 +54,18 @@ public class MessageService {
     public void publish(MessageDTO message) throws MessagingException {
         try {
             Connection connection = createConnection();
+            connection.start();
             Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
-            MessageProducer messageProducer = session.createProducer(session.createTopic(message.topic().name()));
+            Topic topic = RepositoryFactory.getTopicRepositoryInstance().findAllTopics().stream().filter(topic1 -> {
+                try {
+                    return topic1.getTopicName().equals(message.topic().name());
+                } catch (JMSException e) {
+                    throw new RuntimeException(e);
+                }
+            }).findFirst().get();
+
+            MessageProducer messageProducer = session.createProducer(topic);
             messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
             messageProducer.setTimeToLive(MSG_TTL);
 
@@ -81,16 +88,19 @@ public class MessageService {
 
         try {
             Connection connection = createConnection();
+            connection.setClientID(userId);
+            connection.start();
+
             Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
             for (Topic subscribedTopic : subscribedTopics) {
-                MessageConsumer messageConsumer = session.createConsumer(session.createTopic(subscribedTopic.getName()));
+                MessageConsumer messageConsumer = session.createDurableSubscriber(subscribedTopic, "consumer1");
 
                 // TODO: Think about using an message listener with onMessage event and client callback for non-blocking message receiving
-                // TODO: Test is message receive works
+                // TODO: Test if message receive works
                 TextMessage textMessage;
                 while ((textMessage = (TextMessage) messageConsumer.receive(MSG_RECEIVE_TIMEOUT)) != null) {
-                    messages.add(DTOProvider.buildMessageDTO(Message.of(subscribedTopic.getName(), textMessage.getJMSCorrelationID(), textMessage.getText())));
+                    messages.add(DTOProvider.buildMessageDTO(Message.of(subscribedTopic.getTopicName(), textMessage.getJMSCorrelationID(), textMessage.getText())));
                 }
 
                 messageConsumer.close();

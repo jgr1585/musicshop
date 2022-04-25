@@ -12,6 +12,7 @@ import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 import at.fhv.teamd.musicshop.library.DTO.*;
 
+import javax.jms.JMSException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,11 @@ public class DTOProvider {
     }
 
     static TopicDTO buildTopicDTO(Topic topic) {
-        return buildTopicDTO(topic.getName());
+        try {
+            return buildTopicDTO(topic.getTopicName());
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static TopicDTO buildTopicDTO(String topicName) {
