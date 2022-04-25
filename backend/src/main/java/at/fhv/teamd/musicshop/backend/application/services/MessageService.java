@@ -32,6 +32,7 @@ public class MessageService {
 
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
     private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7); // Time To Live (set to 0 for no expiry)
+    private static final long MSG_RECEIVE_TIMEOUT = 50; // in milliseconds
 
     private static Connection createConnection() throws JMSException {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
@@ -86,12 +87,12 @@ public class MessageService {
                 MessageConsumer messageConsumer = session.createConsumer(session.createTopic(subscribedTopic.getName()));
 
                 // TODO: Think about using an message listener with onMessage event and client callback for non-blocking message receiving
-                // TODO: Fix this crap (check-out how receive works and how multiple messages can be received)
-                //  -> Receive ALL messages for the given topic (maybe receive until textMessage=null?)
-                TextMessage textMessage = (TextMessage) messageConsumer.receive(5L);
-
-                if (textMessage != null)
+                // TODO: Test is message receive works
+                TextMessage textMessage;
+                while ((textMessage = (TextMessage) messageConsumer.receive(MSG_RECEIVE_TIMEOUT)) != null) {
                     messages.add(DTOProvider.buildMessageDTO(Message.of(subscribedTopic.getName(), textMessage.getJMSCorrelationID(), textMessage.getText())));
+                }
+
                 messageConsumer.close();
             }
 
