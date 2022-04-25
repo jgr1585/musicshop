@@ -29,7 +29,7 @@
             <Insets right="40.0" />
          </GridPane.margin>
          <graphic>
-            <FontAwesomeIconView glyphName="SHOPPING_CART" size="18" />
+            <FontAwesomeIconView glyphName="CART_PLUS" size="18" />
          </graphic></Button>
       <Button alignment="CENTER" contentDisplay="CENTER" minWidth="35.0" mnemonicParsing="false" onAction="#order" style="-fx-background-color: #ffa500;" GridPane.columnIndex="4">
          <GridPane.margin>

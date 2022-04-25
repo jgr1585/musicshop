@@ -61,7 +61,7 @@
          <children>
             <Button mnemonicParsing="false" onAction="#logout" style="-fx-background-color: #00000000; -fx-font-weight: lighter;" textAlignment="CENTER">
                <graphic>
-                  <FontAwesomeIconView fill="RED" glyphName="SIGN_OUT" size="23" style="-fx-font-size: 25; -fx-font-weight: lighter;" textAlignment="CENTER" />
+                  <FontAwesomeIconView fill="RED" glyphName="SIGN_OUT" size="23" textAlignment="CENTER" />
                </graphic></Button>
          </children>
       </HBox>
