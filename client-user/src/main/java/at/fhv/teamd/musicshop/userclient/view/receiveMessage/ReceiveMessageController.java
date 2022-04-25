@@ -6,26 +6,29 @@ import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Set;
 
 public class ReceiveMessageController {
 
     @FXML
-    private TableColumn colDate;
+    private TableColumn<MessageDTO, ?> colDate;
 
     @FXML
-    private TableColumn colTopic;
+    private TableColumn<MessageDTO, ?> colTopic;
 
     @FXML
-    private TableColumn colSubject;
+    private TableColumn<MessageDTO, ?> colSubject;
 
     @FXML
-    private TableColumn colTrash;
+    private TableColumn<MessageDTO, ?> colTrash;
 
     @FXML
     private TableView<MessageDTO> inbox;
@@ -49,6 +52,37 @@ public class ReceiveMessageController {
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
         Set<MessageDTO> messages = RemoteFacade.getInstance().receiveMessages();
 
+        this.colTopic.setCellValueFactory(new PropertyValueFactory<>("topic"));
+        this.colSubject.setCellValueFactory(new PropertyValueFactory<>("subject"));
+
+        inbox.getColumns().addAll(this.colDate, this.colTopic, this.colSubject, this.colTrash);
         inbox.setItems(FXCollections.observableArrayList(messages));
+
+        inbox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/receiveMessage/message-content.fxml"));
+            MessageContentController controller = loader.getController();
+
+            controller.setMessage(newValue);
+
+            try {
+                stage.setScene(loader.load());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            stage.show();
+        });
+    }
+
+    private void deleteMessage() {
+        //TODO: implement deleteMessage
+//        MessageDTO message = inbox.getSelectionModel().getSelectedItem();
+//        if (message != null) {
+//            try {
+//                RemoteFacade.getInstance().deleteMessage(message);
+//            } catch (RemoteException | NotAuthorizedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 }
