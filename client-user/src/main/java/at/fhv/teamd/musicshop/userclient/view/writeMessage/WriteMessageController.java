@@ -66,6 +66,14 @@ public class WriteMessageController {
                 new Alert(Alert.AlertType.ERROR, "Send message failed", ButtonType.CLOSE).show();;
             }
         }
+
+
+        // TODO: remove; just an auto-call for testing
+        try {
+            RemoteFacade.getInstance().receiveMessages();
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

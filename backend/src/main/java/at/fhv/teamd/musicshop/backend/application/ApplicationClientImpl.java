@@ -20,14 +20,6 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
         super(ApplicationServer.RMI_BIND_PORT);
         authService = ServiceFactory.getAuthServiceInstance();
         this.userId = userId;
-
-        // TODO: remove; just an auto-call for testing
-        // TODO: maybe remove this one if startup error
-        try {
-            ServiceFactory.getMessageServiceInstance().receiveMessages(userId);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static ApplicationClientImpl newInstance(String authUser, String authPassword) throws RemoteException, AuthenticationFailedException {
@@ -95,13 +87,6 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     @Override
     public void publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevel(UserRole.OPERATOR);
-
-        // TODO: remove; just an auto-call for testing
-        try {
-            ServiceFactory.getMessageServiceInstance().receiveMessages(userId);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
 
         ServiceFactory.getMessageServiceInstance().publish(message);
     }

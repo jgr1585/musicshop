@@ -31,7 +31,7 @@ public class MessageService {
 
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
     private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7); // Time To Live (set to 0 for no expiry)
-    private static final long MSG_RECEIVE_TIMEOUT = 500; // in milliseconds
+    private static final long MSG_RECEIVE_TIMEOUT = 5000; // in milliseconds
 
     private static Connection createConnection() throws JMSException {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
@@ -94,7 +94,7 @@ public class MessageService {
             Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
             for (Topic subscribedTopic : subscribedTopics) {
-                MessageConsumer messageConsumer = session.createDurableSubscriber(subscribedTopic, "consumer1");
+                MessageConsumer messageConsumer = session.createDurableSubscriber(subscribedTopic, userId+"_"+subscribedTopic.getTopicName());
 
                 // TODO: Think about using an message listener with onMessage event and client callback for non-blocking message receiving
                 // TODO: Test if message receive works
@@ -110,7 +110,7 @@ public class MessageService {
             connection.close();
 
         } catch (JMSException e) {
-            throw new MessagingException("An error occurred sending a message.");
+            throw new MessagingException("An error occurred receiving a message.");
         }
 
         return messages;
