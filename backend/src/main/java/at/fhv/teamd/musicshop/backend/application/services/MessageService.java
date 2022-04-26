@@ -44,7 +44,7 @@ public class MessageService {
         MessageDTO message = DTOProvider.buildMessageDTO(Message.of(
                 "Order",
                 "Order Inquiry",
-                "Order medium ID: " + mediumDTO + "\n" +
+                "Order medium ID: " + mediumDTO.id() + "\n" +
                         "Order medium amount: " + quantity
         ));
 
