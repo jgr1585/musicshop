@@ -5,6 +5,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
+
 public class MessageContentController {
 
     @FXML
@@ -20,9 +25,14 @@ public class MessageContentController {
     private TextArea messageBody;
 
     public void setMessage(MessageDTO message) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+                .withLocale(Locale.GERMAN)
+                .withZone(ZoneId.systemDefault());
+
         topic.setText(message.topic().name());
         subject.setText(message.title());
         messageBody.setText(message.body());
+        date.setText(formatter.format(message.sentOnTimestamp()));
     }
 
 }
