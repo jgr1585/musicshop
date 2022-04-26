@@ -27,9 +27,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Locale;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class ReceiveMessageController {
 
@@ -49,13 +47,17 @@ public class ReceiveMessageController {
     private TableView<MessageDTO> inbox;
 
     private Stage stage;
+    private FontAwesomeIconView trashIcon;
+    private List<MessageDTO> messages;
 
     @FXML
     public void initialize() {
+        this.stage = new Stage();
+        this.trashIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
+        this.trashIcon.setFill(Paint.valueOf("#ff0000"));
+        this.messages = new LinkedList<>();
 
         formatTable();
-
-        this.stage = new Stage();
 
         // TODO: replace busy-wait
         new Thread(() -> {
@@ -75,12 +77,15 @@ public class ReceiveMessageController {
     }
 
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
-        Set<MessageDTO> messages = RemoteFacade.getInstance().receiveMessages();
-        messages.forEach(System.out::println);
-        ObservableList<MessageDTO> messageList = FXCollections.observableArrayList(messages);
+        Set<MessageDTO> newMessages = RemoteFacade.getInstance().receiveMessages();
+
+        this.messages.forEach(newMessages::remove);
+
+        newMessages.forEach(System.out::println);
+        ObservableList<MessageDTO> messageList = FXCollections.observableArrayList(newMessages);
 
         //Add Data to the TableView
-        inbox.setItems(messageList);
+        this.inbox.getItems().addAll(messageList);
 
         inbox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
@@ -101,14 +106,14 @@ public class ReceiveMessageController {
     private void deleteMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
         if (message != null) {
             RemoteFacade.getInstance().acknowledgeMessage(message);
+            this.messages.remove(message);
+            this.inbox.getItems().remove(message);
         }
     }
 
     private Button createTrashButton(MessageDTO message) {
-        FontAwesomeIconView trashIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
         Button trashButton = new Button("", trashIcon);
 
-        trashIcon.setFill(Paint.valueOf("#FF0000"));
         trashButton.setStyle("-fx-background-color: transparent;");
 
         trashButton.setOnAction(event -> {
@@ -132,8 +137,5 @@ public class ReceiveMessageController {
         this.colTopic.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().topic().name()));
         this.colSubject.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().title()));
         this.colTrash.setCellValueFactory(cellData -> new SimpleObjectProperty<>(createTrashButton(cellData.getValue())));
-
-        inbox.getColumns().clear();
-        inbox.getColumns().addAll(this.colDate, this.colTopic, this.colSubject, this.colTrash);
     }
 }
