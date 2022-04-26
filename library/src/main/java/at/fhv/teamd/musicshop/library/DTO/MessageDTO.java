@@ -8,6 +8,8 @@ public final class MessageDTO implements Serializable {
 
     private TopicDTO topic;
 
+    private String uuid;
+
     private String title;
 
     private String body;
@@ -18,6 +20,10 @@ public final class MessageDTO implements Serializable {
 
     public TopicDTO topic() {
         return this.topic;
+    }
+
+    public String uuid() {
+        return this.uuid;
     }
 
     public String title() {
@@ -53,10 +59,12 @@ public final class MessageDTO implements Serializable {
 
         public MessageDTO.Builder withMessageData(
                 TopicDTO topic,
+                String uuid,
                 String title,
                 String body
         ) {
             this.instance.topic = topic;
+            this.instance.uuid = uuid;
             this.instance.title = title;
             this.instance.body = body;
             return this;

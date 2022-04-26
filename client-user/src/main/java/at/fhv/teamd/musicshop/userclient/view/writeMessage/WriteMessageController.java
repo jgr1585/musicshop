@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.rmi.RemoteException;
+import java.util.UUID;
 
 public class WriteMessageController {
 
@@ -52,6 +53,7 @@ public class WriteMessageController {
             MessageDTO message = MessageDTO.builder()
                     .withMessageData(
                             TopicDTO.builder().withTopicData(selectedTopic).build(),
+                            UUID.randomUUID().toString(),
                             messageTitle.getText(),
                             messageBody.getText())
                     .build();
