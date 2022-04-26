@@ -52,6 +52,9 @@ public class ReceiveMessageController {
 
     @FXML
     public void initialize() {
+
+        formatTable();
+
         this.stage = new Stage();
 
         // TODO: replace busy-wait
@@ -63,7 +66,7 @@ public class ReceiveMessageController {
                     e.printStackTrace();
                 }
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -72,36 +75,12 @@ public class ReceiveMessageController {
     }
 
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
-        //TODO: Fix ReceiveMessageController.receiveMessage()
-        //Set<MessageDTO> messages = RemoteFacade.getInstance().receiveMessages();
-        Set<MessageDTO> messages = Set.of(
-                MessageDTO.builder()
-                        .withMessageData(TopicDTO.builder().withTopicData("Test").build(), UUID.randomUUID().toString(), "Test0", "Test")
-                        .withMessageSentOnTimestamp(Instant.now())
-                        .build(),
-                MessageDTO.builder()
-                        .withMessageData(TopicDTO.builder().withTopicData("Test").build(), UUID.randomUUID().toString(), "Test1", "Test")
-                        .withMessageSentOnTimestamp(Instant.now())
-                        .build(),
-                MessageDTO.builder()
-                        .withMessageData(TopicDTO.builder().withTopicData("Test").build(), UUID.randomUUID().toString(), "Test2", "Test")
-                        .withMessageSentOnTimestamp(Instant.now())
-                        .build()
-        );
+        Set<MessageDTO> messages = RemoteFacade.getInstance().receiveMessages();
+        messages.forEach(System.out::println);
         ObservableList<MessageDTO> messageList = FXCollections.observableArrayList(messages);
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
-                .withLocale(Locale.GERMAN)
-                .withZone(ZoneId.systemDefault());
-
-        //Set up the columns Formatting
-        this.colDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(formatter.format(cellData.getValue().sentOnTimestamp())));
-        this.colTopic.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().topic().name()));
-        this.colSubject.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().title()));
-        this.colTrash.setCellValueFactory(cellData -> new SimpleObjectProperty<>(createTrashButton(cellData.getValue())));
 
         //Add Data to the TableView
         inbox.setItems(messageList);
-        inbox.getColumns().addAll(this.colDate, this.colTopic, this.colSubject, this.colTrash);
 
         inbox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
@@ -118,7 +97,6 @@ public class ReceiveMessageController {
             }
         });
     }
-
 
     private void deleteMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
         if (message != null) {
@@ -142,5 +120,20 @@ public class ReceiveMessageController {
             }
         });
         return trashButton;
+    }
+
+    private void formatTable() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
+                .withLocale(Locale.GERMAN)
+                .withZone(ZoneId.systemDefault());
+
+        //Set up the columns Formatting
+        this.colDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(formatter.format(cellData.getValue().sentOnTimestamp())));
+        this.colTopic.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().topic().name()));
+        this.colSubject.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().title()));
+        this.colTrash.setCellValueFactory(cellData -> new SimpleObjectProperty<>(createTrashButton(cellData.getValue())));
+
+        inbox.getColumns().clear();
+        inbox.getColumns().addAll(this.colDate, this.colTopic, this.colSubject, this.colTrash);
     }
 }

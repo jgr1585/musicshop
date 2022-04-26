@@ -14,9 +14,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
 import java.time.Instant;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -33,6 +31,7 @@ public class MessageService {
 
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
     private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7); // Time To Live (set to 0 for no expiry)
+    private static final long TIMEOUT = 1000;
 
     private Connection createConnection(String userId) throws JMSException {
         Connection connection = new ActiveMQConnectionFactory(BROKER_URL).createConnection();
@@ -54,12 +53,7 @@ public class MessageService {
     }
 
     public void publishOrder(ApplicationClientSession applicationClientSession, MediumDTO mediumDTO, String quantity) throws MessagingException {
-        Message sendMsg = Message.of(
-                "Order",
-                "Order Inquiry",
-                "Order medium ID: " + mediumDTO.id() + "\n" +
-                        "Order medium amount: " + quantity
-        );
+        Message sendMsg = Message.of("Order", "Order Inquiry", "Order medium ID: " + mediumDTO.id() + "\n" + "Order medium amount: " + quantity);
 
         publish(applicationClientSession, sendMsg);
     }
@@ -77,7 +71,7 @@ public class MessageService {
             messageProducer.setTimeToLive(MSG_TTL);
 
             TextMessage textMessage = session.createTextMessage(message.getBody());
-            textMessage.setJMSMessageID(String.valueOf(UUID.randomUUID()));
+            textMessage.setJMSMessageID(message.getUuid().toString());
             textMessage.setStringProperty("title", message.getTitle());
             messageProducer.send(textMessage);
 
@@ -94,23 +88,24 @@ public class MessageService {
         }
         Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
 
-        return messages.stream()
-                .sorted()
-                .map(message -> {
-                    System.out.println(message);
-                    try {
-                        return DTOProvider.buildMessageDTO(
+        Set<MessageDTO> messageDTOs = new LinkedHashSet<>();
+
+        messages.forEach(message -> {
+            try {
+                messageDTOs.add(
+                        DTOProvider.buildMessageDTO(
                                 Message.of(
                                         message.getJMSDestination().toString(),
                                         message.getStringProperty("title"),
                                         ((TextMessage) message).getText(),
                                         Instant.ofEpochSecond(message.getJMSTimestamp()))
-                        );
-                    } catch (JMSException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                        )
+                );
+            } catch (JMSException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return messageDTOs;
     }
 
     public void acknowledge(ApplicationClientSession applicationClientSession, MessageDTO message) {
@@ -118,15 +113,13 @@ public class MessageService {
         try {
             Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
 
-            messages.stream()
-                    .filter(message1 -> {
-                        try {
-                            return message1.getJMSMessageID().equals(message.uuid());
-                        } catch (JMSException e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .findFirst().orElseThrow().acknowledge();
+            messages.stream().filter(message1 -> {
+                try {
+                    return message1.getJMSMessageID().equals(message.uuid());
+                } catch (JMSException e) {
+                    throw new RuntimeException(e);
+                }
+            }).findFirst().orElseThrow().acknowledge();
         } catch (JMSException e) {
             throw new RuntimeException(e);
         }
@@ -138,9 +131,18 @@ public class MessageService {
         try {
             Session session = initJMS(applicationClientSession);
 
+            Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
+
             for (Topic subscribedTopic : subscribedTopics) {
                 MessageConsumer messageConsumer = session.createDurableSubscriber(subscribedTopic, applicationClientSession.getUserId() + "_" + subscribedTopic.getTopicName());
-                messageConsumer.setMessageListener(new ConsumerMessageListener(applicationClientSession.getUserId() + "_" + subscribedTopic.getTopicName(), applicationClientSession));
+//                messageConsumer.setMessageListener(new ConsumerMessageListener(applicationClientSession.getUserId() + "_" + subscribedTopic.getTopicName(), applicationClientSession));
+
+                javax.jms.Message message;
+                while ((message = messageConsumer.receive(TIMEOUT)) != null) {
+                    messages.add(message);
+                    System.out.println("received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
+                }
+
             }
         } catch (JMSException e) {
             System.out.println(e.getMessage());
@@ -150,31 +152,28 @@ public class MessageService {
     }
 
     public Set<TopicDTO> getAllTopics() {
-        return topicRepository.findAllTopics().stream()
-                .sorted()
-                .map(DTOProvider::buildTopicDTO)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+        return topicRepository.findAllTopics().stream().sorted().map(DTOProvider::buildTopicDTO).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    private static class ConsumerMessageListener implements MessageListener {
-        private final String consumerName;
-        private final ApplicationClientSession applicationClientSession;
-
-        public ConsumerMessageListener(String consumerName, ApplicationClientSession applicationClientSession) {
-            this.consumerName = consumerName;
-            this.applicationClientSession = applicationClientSession;
-        }
-
-        @Override
-        public void onMessage(javax.jms.Message message) {
-            try {
-                Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
-
-                System.out.println(consumerName + " received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
-                messages.add(message);
-            } catch (JMSException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    private static class ConsumerMessageListener implements MessageListener {
+//        private final String consumerName;
+//        private final ApplicationClientSession applicationClientSession;
+//
+//        public ConsumerMessageListener(String consumerName, ApplicationClientSession applicationClientSession) {
+//            this.consumerName = consumerName;
+//            this.applicationClientSession = applicationClientSession;
+//        }
+//
+//        @Override
+//        public void onMessage(javax.jms.Message message) {
+//            try {
+//                Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
+//
+//                System.out.println(consumerName + " received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
+//                messages.add(message);
+//            } catch (JMSException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }
