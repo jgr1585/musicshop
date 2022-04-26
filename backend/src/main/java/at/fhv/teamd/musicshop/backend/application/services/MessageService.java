@@ -1,5 +1,6 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
+import at.fhv.teamd.musicshop.backend.application.SessionObject;
 import at.fhv.teamd.musicshop.backend.domain.message.Message;
 import at.fhv.teamd.musicshop.backend.domain.repositories.EmployeeRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.TopicRepository;
@@ -12,9 +13,10 @@ import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
-import java.util.HashSet;
+import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,6 @@ public class MessageService {
     private static EmployeeRepository employeeRepository;
     private static TopicRepository topicRepository;
 
-    // TODO: TTL (Time To Live / Expiration Date) individually for message? (is this really a requirement?)
     // TODO: JNDI ConnectionFactory instead of ActiveMQConnectionFactory?
 
     MessageService() {
@@ -44,7 +45,7 @@ public class MessageService {
         }
     }
 
-    public void publishOrder(at.fhv.teamd.musicshop.backend.communication.Session clientsession, MediumDTO mediumDTO, String quantity) throws MessagingException {
+    public void publishOrder(SessionObject sessionObject, MediumDTO mediumDTO, String quantity) throws MessagingException {
         Message sendMsg = Message.of(
                 "Order",
                 "Order Inquiry",
@@ -52,22 +53,23 @@ public class MessageService {
                         "Order medium amount: " + quantity
         );
 
-        publish(clientsession, sendMsg);
+        publish(sessionObject, sendMsg);
     }
 
-    public void publish(at.fhv.teamd.musicshop.backend.communication.Session session, MessageDTO message) throws MessagingException {
-        publish(session, Message.of(message.topic().name(), message.title(), message.body()));
+    public void publish(SessionObject sessionObject, MessageDTO message) throws MessagingException {
+        publish(sessionObject, Message.of(message.topic().name(), message.title(), message.body()));
     }
 
-    private void publish(at.fhv.teamd.musicshop.backend.communication.Session session, Message message) throws MessagingException {
+    private void publish(SessionObject sessionObject, Message message) throws MessagingException {
         try {
 
-            MessageProducer messageProducer = session.getActiveMQSession().createProducer(session.getActiveMQSession().createTopic(message.getTopicName()));
+            MessageProducer messageProducer = sessionObject.getActiveMQSession().createProducer(sessionObject.getActiveMQSession().createTopic(message.getTopicName()));
             messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
             messageProducer.setTimeToLive(MSG_TTL);
 
-            TextMessage textMessage = session.getActiveMQSession().createTextMessage(message.getBody());
-            textMessage.setJMSCorrelationID(message.getTitle());
+            TextMessage textMessage = sessionObject.getActiveMQSession().createTextMessage(message.getBody());
+            textMessage.setJMSMessageID(String.valueOf(UUID.randomUUID()));
+            textMessage.setStringProperty("title", message.getTitle());
             messageProducer.send(textMessage);
 
             messageProducer.close();
@@ -77,22 +79,19 @@ public class MessageService {
         }
     }
 
-    public Set<MessageDTO> receiveMessages(at.fhv.teamd.musicshop.backend.communication.Session session) throws MessagingException {
-        Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(session.getUserId()).orElseThrow().getSubscribedTopics();
-        Set<MessageDTO> messages = new HashSet<>();
+    public void receiveMessages(SessionObject sessionObject) throws MessagingException {
+        Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(sessionObject.getUserId()).orElseThrow().getSubscribedTopics();
 
         try {
             for (Topic subscribedTopic : subscribedTopics) {
-                MessageConsumer messageConsumer = session.getActiveMQSession().createDurableSubscriber(subscribedTopic, session.getUserId() + "_" + subscribedTopic.getTopicName());
-                messageConsumer.setMessageListener(new ConsumerMessageListener(session.getUserId() + "_" + subscribedTopic.getTopicName()));
+                MessageConsumer messageConsumer = sessionObject.getActiveMQSession().createDurableSubscriber(subscribedTopic, sessionObject.getUserId() + "_" + subscribedTopic.getTopicName());
+                messageConsumer.setMessageListener(new ConsumerMessageListener(sessionObject.getUserId() + "_" + subscribedTopic.getTopicName(), sessionObject));
             }
         } catch (JMSException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
             throw new MessagingException("An error occurred receiving a message.");
         }
-
-        return messages;
     }
 
     public Set<TopicDTO> getAllTopics() {
@@ -100,5 +99,32 @@ public class MessageService {
                 .sorted()
                 .map(DTOProvider::buildTopicDTO)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    private static class ConsumerMessageListener implements MessageListener {
+        private final String consumerName;
+        private final SessionObject sessionObject;
+
+        public ConsumerMessageListener(String consumerName, SessionObject sessionObject) {
+            this.consumerName = consumerName;
+            this.sessionObject = sessionObject;
+        }
+
+        @Override
+        public void onMessage(javax.jms.Message message) {
+            try {
+                Message message1 = Message.of(
+                        message.getJMSDestination().toString(),
+                        message.getStringProperty("title"),
+                        ((TextMessage) message).getText(),
+                        Instant.ofEpochSecond(message.getJMSTimestamp())
+                );
+                System.out.println(consumerName + " received " + ((TextMessage) message).getText() + "; ID: " + message.getJMSMessageID());
+                sessionObject.getMessages().add(DTOProvider.buildMessageDTO(message1));
+                System.out.println("Message added to Set, ID:" + message.getJMSMessageID());
+            } catch (JMSException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
