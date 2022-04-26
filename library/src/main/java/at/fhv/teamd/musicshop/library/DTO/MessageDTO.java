@@ -1,16 +1,19 @@
 package at.fhv.teamd.musicshop.library.DTO;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 public final class MessageDTO implements Serializable {
-    private static final long serialVersionUID = -1774324891200598985L;
+    private static final long serialVersionUID = -135325125784608818L;
 
     private TopicDTO topic;
 
     private String title;
 
     private String body;
+
+    private Instant sentOnTimestamp;
 
     public static MessageDTO.Builder builder() {
         return new MessageDTO.Builder();
@@ -28,6 +31,8 @@ public final class MessageDTO implements Serializable {
         return this.body;
     }
 
+    public Instant sentOnTimestamp() { return this.sentOnTimestamp; }
+
     private MessageDTO() {
     }
 
@@ -36,12 +41,12 @@ public final class MessageDTO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MessageDTO that = (MessageDTO) o;
-        return Objects.equals(topic, that.topic) && Objects.equals(title, that.title) && Objects.equals(body, that.body);
+        return topic.equals(that.topic) && title.equals(that.title) && body.equals(that.body) && Objects.equals(sentOnTimestamp, that.sentOnTimestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(topic, title, body);
+        return Objects.hash(topic, title, body, sentOnTimestamp);
     }
 
     public static class Builder {
@@ -59,6 +64,11 @@ public final class MessageDTO implements Serializable {
             this.instance.topic = topic;
             this.instance.title = title;
             this.instance.body = body;
+            return this;
+        }
+
+        public MessageDTO.Builder withMessageSentOnTimestamp(Instant sentOnTimestamp) {
+            this.instance.sentOnTimestamp = sentOnTimestamp;
             return this;
         }
 

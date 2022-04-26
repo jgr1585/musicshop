@@ -12,6 +12,7 @@ import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 import at.fhv.teamd.musicshop.library.DTO.*;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,9 @@ public class DTOProvider {
                         buildTopicDTO(message.getTopicName()),
                         message.getTitle(),
                         message.getBody()
-                ).build();
+                )
+                .withMessageSentOnTimestamp(Objects.requireNonNull(message.getSentOnTimestamp()))
+                .build();
     }
 
     static ShoppingCartDTO buildShoppingCartDTO(ArticleRepository articleRepository, Set<LineItem> lineItems) {

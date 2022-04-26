@@ -45,25 +45,29 @@ public class MessageService {
     }
 
     public void publishOrder(at.fhv.teamd.musicshop.backend.communication.Session clientsession, MediumDTO mediumDTO, String quantity) throws MessagingException {
-        MessageDTO message = DTOProvider.buildMessageDTO(Message.of(
+        Message sendMsg = Message.of(
                 "Order",
                 "Order Inquiry",
                 "Order medium ID: " + mediumDTO.id() + "\n" +
                         "Order medium amount: " + quantity
-        ));
+        );
 
-        publish(clientsession, message);
+        publish(clientsession, sendMsg);
     }
 
     public void publish(at.fhv.teamd.musicshop.backend.communication.Session session, MessageDTO message) throws MessagingException {
+        publish(session, Message.of(message.topic().name(), message.title(), message.body()));
+    }
+
+    private void publish(at.fhv.teamd.musicshop.backend.communication.Session session, Message message) throws MessagingException {
         try {
 
-            MessageProducer messageProducer = session.getActiveMQSession().createProducer(session.getActiveMQSession().createTopic(message.topic().name()));
+            MessageProducer messageProducer = session.getActiveMQSession().createProducer(session.getActiveMQSession().createTopic(message.getTopicName()));
             messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
             messageProducer.setTimeToLive(MSG_TTL);
 
-            TextMessage textMessage = session.getActiveMQSession().createTextMessage(message.body());
-            textMessage.setJMSCorrelationID(message.title());
+            TextMessage textMessage = session.getActiveMQSession().createTextMessage(message.getBody());
+            textMessage.setJMSCorrelationID(message.getTitle());
             messageProducer.send(textMessage);
 
             messageProducer.close();

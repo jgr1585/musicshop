@@ -2,6 +2,7 @@ package at.fhv.teamd.musicshop.backend.domain.message;
 
 import lombok.Getter;
 
+import java.time.Instant;
 import java.util.Objects;
 
 @Getter
@@ -12,6 +13,8 @@ public class Message {
 
     private String body;
 
+    private Instant sentOnTimestamp;
+
     private Message(String topicName, String title, String body) {
         this.topicName = Objects.requireNonNull(topicName);
         this.title = Objects.requireNonNull(title);
@@ -20,5 +23,9 @@ public class Message {
 
     public static Message of(String topicName, String title, String body) {
         return new Message(topicName, title, body);
+    }
+
+    public void markAsSent(Instant sentOnTimestamp) {
+        this.sentOnTimestamp = sentOnTimestamp;
     }
 }
