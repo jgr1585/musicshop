@@ -1,6 +1,5 @@
 package at.fhv.teamd.musicshop.backend.domain.topic;
 
-import javax.jms.JMSException;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Objects;
@@ -18,7 +17,7 @@ public class Topic implements javax.jms.Topic {
     }
 
     @Override
-    public String getTopicName() throws JMSException {
+    public String getTopicName() {
         return this.name;
     }
 }

@@ -57,13 +57,9 @@ public class MessageService {
             connection.start();
             Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
-            Topic topic = RepositoryFactory.getTopicRepositoryInstance().findAllTopics().stream().filter(topic1 -> {
-                try {
-                    return topic1.getTopicName().equals(message.topic().name());
-                } catch (JMSException e) {
-                    throw new RuntimeException(e);
-                }
-            }).findFirst().get();
+            Topic topic = RepositoryFactory.getTopicRepositoryInstance().findAllTopics().stream().filter(topic1 ->
+                topic1.getTopicName().equals(message.topic().name())
+            ).findFirst().get();
 
             MessageProducer messageProducer = session.createProducer(topic);
             messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
