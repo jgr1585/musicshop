@@ -47,15 +47,10 @@ public class ReceiveMessageController {
     private TableView<MessageDTO> inbox;
 
     private Stage stage;
-    private FontAwesomeIconView trashIcon;
-    private List<MessageDTO> messages;
 
     @FXML
     public void initialize() {
         this.stage = new Stage();
-        this.trashIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
-        this.trashIcon.setFill(Paint.valueOf("#ff0000"));
-        this.messages = new LinkedList<>();
 
         formatTable();
 
@@ -79,9 +74,9 @@ public class ReceiveMessageController {
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
         Set<MessageDTO> newMessages = RemoteFacade.getInstance().receiveMessages();
 
-        this.messages.forEach(newMessages::remove);
-
+        this.inbox.getItems().forEach(newMessages::remove);
         newMessages.forEach(System.out::println);
+
         ObservableList<MessageDTO> messageList = FXCollections.observableArrayList(newMessages);
 
         //Add Data to the TableView
@@ -106,14 +101,15 @@ public class ReceiveMessageController {
     private void deleteMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
         if (message != null) {
             RemoteFacade.getInstance().acknowledgeMessage(message);
-            this.messages.remove(message);
             this.inbox.getItems().remove(message);
         }
     }
 
     private Button createTrashButton(MessageDTO message) {
+        FontAwesomeIconView trashIcon = new FontAwesomeIconView(FontAwesomeIcon.TRASH);
         Button trashButton = new Button("", trashIcon);
 
+        trashIcon.setFill(Paint.valueOf("#ff0000"));
         trashButton.setStyle("-fx-background-color: transparent;");
 
         trashButton.setOnAction(event -> {

@@ -19,6 +19,19 @@ public class TopicDTO implements Serializable {
     private TopicDTO() {
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TopicDTO topicDTO = (TopicDTO) o;
+        return Objects.equals(name, topicDTO.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
     public static class Builder {
         private TopicDTO instance;
 

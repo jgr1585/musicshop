@@ -47,12 +47,12 @@ public final class MessageDTO implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MessageDTO that = (MessageDTO) o;
-        return topic.equals(that.topic) && title.equals(that.title) && body.equals(that.body) && Objects.equals(sentOnTimestamp, that.sentOnTimestamp);
+        return topic.equals(that.topic) && uuid.equals(that.uuid) && title.equals(that.title) && body.equals(that.body) && Objects.equals(sentOnTimestamp, that.sentOnTimestamp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(topic, title, body, sentOnTimestamp);
+        return Objects.hash(topic, uuid, title, body, sentOnTimestamp);
     }
 
     public static class Builder {
