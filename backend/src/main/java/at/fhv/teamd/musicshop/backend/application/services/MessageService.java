@@ -155,25 +155,4 @@ public class MessageService {
         return topicRepository.findAllTopics().stream().sorted().map(DTOProvider::buildTopicDTO).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-//    private static class ConsumerMessageListener implements MessageListener {
-//        private final String consumerName;
-//        private final ApplicationClientSession applicationClientSession;
-//
-//        public ConsumerMessageListener(String consumerName, ApplicationClientSession applicationClientSession) {
-//            this.consumerName = consumerName;
-//            this.applicationClientSession = applicationClientSession;
-//        }
-//
-//        @Override
-//        public void onMessage(javax.jms.Message message) {
-//            try {
-//                Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
-//
-//                System.out.println(consumerName + " received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
-//                messages.add(message);
-//            } catch (JMSException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 }
