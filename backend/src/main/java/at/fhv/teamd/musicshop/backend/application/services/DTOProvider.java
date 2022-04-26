@@ -34,6 +34,7 @@ public class DTOProvider {
         return MessageDTO.builder()
                 .withMessageData(
                         buildTopicDTO(message.getTopicName()),
+                        message.getUuid().toString(),
                         message.getTitle(),
                         message.getBody()
                 ).build();
