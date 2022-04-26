@@ -45,7 +45,7 @@ public class MessageService {
         return connection.createSession(false, javax.jms.Session.CLIENT_ACKNOWLEDGE);
     }
 
-    private Session getOrInitJmsSession(ApplicationClientSession applicationClientSession) {
+    private Session initJMS(ApplicationClientSession applicationClientSession) {
         Connection connection = applicationClientSession.getSessionObjectOrCallInitializer("activeMQConnection", () -> createConnection(applicationClientSession.getUserId()), Connection.class);
         Session session = applicationClientSession.getSessionObjectOrCallInitializer("activeMQSession", () -> createSession(connection), Session.class);
         applicationClientSession.getSessionObjectOrCallInitializer("messages", LinkedHashSet::new);
@@ -70,7 +70,7 @@ public class MessageService {
 
     private void publish(ApplicationClientSession applicationClientSession, Message message) throws MessagingException {
         try {
-            Session session = getOrInitJmsSession(applicationClientSession);
+            Session session = initJMS(applicationClientSession);
 
             MessageProducer messageProducer = session.createProducer(session.createTopic(message.getTopicName()));
             messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
@@ -135,7 +135,7 @@ public class MessageService {
         Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(applicationClientSession.getUserId()).orElseThrow().getSubscribedTopics();
 
         try {
-            Session session = getOrInitJmsSession(applicationClientSession);
+            Session session = initJMS(applicationClientSession);
 
             for (Topic subscribedTopic : subscribedTopics) {
                 MessageConsumer messageConsumer = session.createDurableSubscriber(subscribedTopic, applicationClientSession.getUserId() + "_" + subscribedTopic.getTopicName());
