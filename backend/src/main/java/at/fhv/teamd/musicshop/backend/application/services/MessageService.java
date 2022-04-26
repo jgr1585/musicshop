@@ -88,8 +88,10 @@ public class MessageService {
         }
     }
 
-    // TODO: fix?
-    public Set<MessageDTO> receive(ApplicationClientSession applicationClientSession) {
+    public Set<MessageDTO> receive(ApplicationClientSession applicationClientSession) throws MessagingException {
+        if (!applicationClientSession.containsSessionObject("messages")) {
+            receiveMessages(applicationClientSession);
+        }
         Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
 
         return messages.stream()
@@ -130,8 +132,7 @@ public class MessageService {
         }
     }
 
-    // TODO: private static?
-    public void receiveMessages(ApplicationClientSession applicationClientSession) throws MessagingException {
+    private void receiveMessages(ApplicationClientSession applicationClientSession) throws MessagingException {
         Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(applicationClientSession.getUserId()).orElseThrow().getSubscribedTopics();
 
         try {

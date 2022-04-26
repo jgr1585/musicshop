@@ -17,6 +17,10 @@ public class ApplicationClientSession {
         this.userId = userId;
     }
 
+    public boolean containsSessionObject(String sessionObjKey) {
+        return sessionObjects.containsKey(sessionObjKey);
+    }
+
     public Object getSessionObject(String sessionObjKey) {
         return sessionObjects.get(sessionObjKey);
     }
