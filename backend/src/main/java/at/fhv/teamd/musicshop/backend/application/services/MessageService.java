@@ -32,16 +32,19 @@ public class MessageService {
 
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
     private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7); // Time To Live (set to 0 for no expiry)
-    private static final long MSG_RECEIVE_TIMEOUT = 5000; // in milliseconds
 
-    private static Connection createConnection() throws JMSException {
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(BROKER_URL);
-        Connection connection = connectionFactory.createConnection();
-
-        return connection;
+    public Connection createConnection(String userId) {
+        try {
+            Connection connection = new ActiveMQConnectionFactory(BROKER_URL).createConnection();
+            connection.setClientID(userId);
+            connection.start();
+            return connection;
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void publishOrder(MediumDTO mediumDTO, String quantity) throws MessagingException {
+    public void publishOrder(at.fhv.teamd.musicshop.backend.communication.Session clientsession, MediumDTO mediumDTO, String quantity) throws MessagingException {
         MessageDTO message = DTOProvider.buildMessageDTO(Message.of(
                 "Order",
                 "Order Inquiry",
@@ -49,64 +52,39 @@ public class MessageService {
                         "Order medium amount: " + quantity
         ));
 
-        publish(message);
+        publish(clientsession, message);
     }
 
-    public void publish(MessageDTO message) throws MessagingException {
+    public void publish(at.fhv.teamd.musicshop.backend.communication.Session session, MessageDTO message) throws MessagingException {
         try {
-            Connection connection = createConnection();
-            connection.start();
-            Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 
-            Topic topic = RepositoryFactory.getTopicRepositoryInstance().findAllTopics().stream().filter(topic1 ->
-                topic1.getTopicName().equals(message.topic().name())
-            ).findFirst().get();
-
-            MessageProducer messageProducer = session.createProducer(topic);
+            MessageProducer messageProducer = session.getActiveMQSession().createProducer(session.getActiveMQSession().createTopic(message.topic().name()));
             messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
             messageProducer.setTimeToLive(MSG_TTL);
 
-            TextMessage textMessage = session.createTextMessage(message.body());
+            TextMessage textMessage = session.getActiveMQSession().createTextMessage(message.body());
             textMessage.setJMSCorrelationID(message.title());
             messageProducer.send(textMessage);
 
             messageProducer.close();
-            session.close();
-            connection.close();
 
         } catch (JMSException e) {
             throw new MessagingException("An error occurred sending a message.");
         }
     }
 
-    public Set<MessageDTO> receiveMessages(String userId) throws MessagingException {
-        Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(userId).orElseThrow().getSubscribedTopics();
+    public Set<MessageDTO> receiveMessages(at.fhv.teamd.musicshop.backend.communication.Session session) throws MessagingException {
+        Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(session.getUserId()).orElseThrow().getSubscribedTopics();
         Set<MessageDTO> messages = new HashSet<>();
 
         try {
-            Connection connection = createConnection();
-            connection.setClientID(userId);
-            connection.start();
-
-            Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
-
             for (Topic subscribedTopic : subscribedTopics) {
-                MessageConsumer messageConsumer = session.createDurableSubscriber(subscribedTopic, userId+"_"+subscribedTopic.getTopicName());
-
-                // TODO: Think about using an message listener with onMessage event and client callback for non-blocking message receiving
-                // TODO: Test if message receive works
-                TextMessage textMessage;
-                while ((textMessage = (TextMessage) messageConsumer.receive(MSG_RECEIVE_TIMEOUT)) != null) {
-                    messages.add(DTOProvider.buildMessageDTO(Message.of(subscribedTopic.getTopicName(), textMessage.getJMSCorrelationID(), textMessage.getText())));
-                }
-
-                messageConsumer.close();
+                MessageConsumer messageConsumer = session.getActiveMQSession().createDurableSubscriber(subscribedTopic, session.getUserId() + "_" + subscribedTopic.getTopicName());
+                messageConsumer.setMessageListener(new ConsumerMessageListener(session.getUserId() + "_" + subscribedTopic.getTopicName()));
             }
-
-            session.close();
-            connection.close();
-
         } catch (JMSException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
             throw new MessagingException("An error occurred receiving a message.");
         }
 

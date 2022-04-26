@@ -37,7 +37,6 @@ public interface ApplicationClient extends Remote {
 
     Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException;
 
-
     // Application Client
     void destroy() throws RemoteException;
 }
