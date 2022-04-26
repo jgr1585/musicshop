@@ -54,7 +54,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    public void given_shoppingCartService_when_addToShoppingCart_then_returnRefreshedShoppingCart() {
+    public void given_shoppingCartService_when_addToShoppingCart_then_returnRefreshedShoppingCart() throws NoSuchFieldException, IllegalAccessException {
         //given
         String userId = "user1234";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
@@ -101,7 +101,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    public void given_shoppingCartService_when_removeFromShoppingCart_then_returnRefreshedShoppingCart() {
+    public void given_shoppingCartService_when_removeFromShoppingCart_then_returnRefreshedShoppingCart() throws NoSuchFieldException, IllegalAccessException {
         //given
         String userId = "user1234";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
@@ -131,7 +131,7 @@ class ShoppingCartServiceTest {
 
     // TODO: fix update of quantity
     @Test
-    public void given_articlesInShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() {
+    public void given_articlesInShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() throws NoSuchFieldException, IllegalAccessException {
         //given
         String userId = "user1234";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
@@ -166,7 +166,7 @@ class ShoppingCartServiceTest {
 
     // TODO: not in stock exception
     @Test
-    public void given_articlesInShoppingCart_when_buyFromShoppingCart_item_not_in_stock_then_Throw_Exeption() {
+    public void given_articlesInShoppingCart_when_buyFromShoppingCart_item_not_in_stock_then_Throw_Exeption() throws NoSuchFieldException, IllegalAccessException {
         //given
         String userId1 = "user1234";
         String userId2 = "user5678";
@@ -190,7 +190,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    public void given_shoppingCart_when_initializeShoppingCart_then_returnEqual(){
+    public void given_shoppingCart_when_initializeShoppingCart_then_returnEqual() throws NoSuchFieldException, IllegalAccessException {
         //given
         String userId1 = "user1234";
         String userId2 = "user5678";
