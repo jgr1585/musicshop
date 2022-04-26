@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.StringConverter;
 
 import java.rmi.RemoteException;
 import java.util.UUID;
@@ -16,7 +17,7 @@ import java.util.UUID;
 public class WriteMessageController {
 
     @FXML
-    private ComboBox<String> messageTopic;
+    private ComboBox<TopicDTO> messageTopic;
 
     @FXML
     private TextField messageTitle;
@@ -24,7 +25,7 @@ public class WriteMessageController {
     @FXML
     private TextArea messageBody;
 
-    private String selectedTopic;
+    private TopicDTO selectedTopic;
 
     @FXML
     public void initialize() throws NotAuthorizedException, RemoteException {
@@ -32,13 +33,18 @@ public class WriteMessageController {
     }
 
     private void initMessageTopic() throws RemoteException, NotAuthorizedException {
-        this.messageTopic.setItems(
-                FXCollections.observableArrayList(
-                        RemoteFacade.getInstance().getAllTopics().stream()
-                                .map(TopicDTO::name)
-                                .toArray(String[]::new)
-                ));
+        this.messageTopic.setItems(FXCollections.observableArrayList(RemoteFacade.getInstance().getAllTopics()));
+        this.messageTopic.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(TopicDTO object) {
+                return object.name();
+            }
 
+            @Override
+            public TopicDTO fromString(String string) {
+                return null;
+            }
+        });
         this.messageTopic.valueProperty().addListener((observable, oldValue, newValue) -> this.selectedTopic = newValue);
     }
 
@@ -52,7 +58,7 @@ public class WriteMessageController {
 
             MessageDTO message = MessageDTO.builder()
                     .withMessageData(
-                            TopicDTO.builder().withTopicData(selectedTopic).build(),
+                            TopicDTO.builder().withTopicData(selectedTopic.name()).build(),
                             UUID.randomUUID().toString(),
                             messageTitle.getText(),
                             messageBody.getText())

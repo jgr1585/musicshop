@@ -15,8 +15,10 @@ import java.util.Set;
 @Entity
 @DiscriminatorValue("Song")
 public class Song extends Article {
+
     @Column
     private Duration length;
+
     @ManyToMany(mappedBy="songs")
     private Set<Album> albums;
 
