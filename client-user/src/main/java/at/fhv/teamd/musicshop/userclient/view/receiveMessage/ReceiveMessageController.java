@@ -63,7 +63,7 @@ public class ReceiveMessageController {
                     e.printStackTrace();
                 }
                 try {
-                    Thread.sleep(10000);
+                    Thread.sleep(30000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -72,22 +72,8 @@ public class ReceiveMessageController {
     }
 
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
-        //TODO: Fix ReceiveMessageController.receiveMessage()
-        //Set<MessageDTO> messages = RemoteFacade.getInstance().receiveMessages();
-        Set<MessageDTO> messages = Set.of(
-                MessageDTO.builder()
-                        .withMessageData(TopicDTO.builder().withTopicData("Test").build(), UUID.randomUUID().toString(), "Test0", "Test")
-                        .withMessageSentOnTimestamp(Instant.now())
-                        .build(),
-                MessageDTO.builder()
-                        .withMessageData(TopicDTO.builder().withTopicData("Test").build(), UUID.randomUUID().toString(), "Test1", "Test")
-                        .withMessageSentOnTimestamp(Instant.now())
-                        .build(),
-                MessageDTO.builder()
-                        .withMessageData(TopicDTO.builder().withTopicData("Test").build(), UUID.randomUUID().toString(), "Test2", "Test")
-                        .withMessageSentOnTimestamp(Instant.now())
-                        .build()
-        );
+        Set<MessageDTO> messages = RemoteFacade.getInstance().receiveMessages();
+        messages.forEach(System.out::println);
         ObservableList<MessageDTO> messageList = FXCollections.observableArrayList(messages);
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
                 .withLocale(Locale.GERMAN)

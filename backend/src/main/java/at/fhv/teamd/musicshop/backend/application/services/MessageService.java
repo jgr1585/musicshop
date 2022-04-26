@@ -33,6 +33,7 @@ public class MessageService {
 
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
     private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7); // Time To Live (set to 0 for no expiry)
+    private static final long TIMEOUT = 10000;
 
     private Connection createConnection(String userId) throws JMSException {
         Connection connection = new ActiveMQConnectionFactory(BROKER_URL).createConnection();
@@ -138,9 +139,17 @@ public class MessageService {
         try {
             Session session = initJMS(applicationClientSession);
 
+            Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
+
             for (Topic subscribedTopic : subscribedTopics) {
                 MessageConsumer messageConsumer = session.createDurableSubscriber(subscribedTopic, applicationClientSession.getUserId() + "_" + subscribedTopic.getTopicName());
-                messageConsumer.setMessageListener(new ConsumerMessageListener(applicationClientSession.getUserId() + "_" + subscribedTopic.getTopicName(), applicationClientSession));
+//                messageConsumer.setMessageListener(new ConsumerMessageListener(applicationClientSession.getUserId() + "_" + subscribedTopic.getTopicName(), applicationClientSession));
+
+                javax.jms.Message message;
+                while((message = messageConsumer.receive(TIMEOUT)) != null) {
+                    messages.add(message);
+                }
+
             }
         } catch (JMSException e) {
             System.out.println(e.getMessage());
@@ -156,25 +165,25 @@ public class MessageService {
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    private static class ConsumerMessageListener implements MessageListener {
-        private final String consumerName;
-        private final ApplicationClientSession applicationClientSession;
-
-        public ConsumerMessageListener(String consumerName, ApplicationClientSession applicationClientSession) {
-            this.consumerName = consumerName;
-            this.applicationClientSession = applicationClientSession;
-        }
-
-        @Override
-        public void onMessage(javax.jms.Message message) {
-            try {
-                Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
-
-                System.out.println(consumerName + " received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
-                messages.add(message);
-            } catch (JMSException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    private static class ConsumerMessageListener implements MessageListener {
+//        private final String consumerName;
+//        private final ApplicationClientSession applicationClientSession;
+//
+//        public ConsumerMessageListener(String consumerName, ApplicationClientSession applicationClientSession) {
+//            this.consumerName = consumerName;
+//            this.applicationClientSession = applicationClientSession;
+//        }
+//
+//        @Override
+//        public void onMessage(javax.jms.Message message) {
+//            try {
+//                Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
+//
+//                System.out.println(consumerName + " received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
+//                messages.add(message);
+//            } catch (JMSException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 }
