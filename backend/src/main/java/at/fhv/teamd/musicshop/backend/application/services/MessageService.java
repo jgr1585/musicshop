@@ -31,7 +31,7 @@ public class MessageService {
 
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
     private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7); // Time To Live (set to 0 for no expiry)
-    private static final long TIMEOUT = 1000;
+    private static final long TIMEOUT = 500;
 
     private Connection createConnection(String userId) throws JMSException {
         Connection connection = new ActiveMQConnectionFactory(BROKER_URL).createConnection();
@@ -71,7 +71,7 @@ public class MessageService {
             messageProducer.setTimeToLive(MSG_TTL);
 
             TextMessage textMessage = session.createTextMessage(message.getBody());
-            textMessage.setJMSMessageID(message.getUuid().toString());
+            textMessage.setStringProperty("id", message.getId());
             textMessage.setStringProperty("title", message.getTitle());
             messageProducer.send(textMessage);
 
@@ -82,11 +82,27 @@ public class MessageService {
         }
     }
 
-    public Set<MessageDTO> receive(ApplicationClientSession applicationClientSession) throws MessagingException {
-        if (!applicationClientSession.containsSessionObject("messages")) {
-            receiveMessages(applicationClientSession);
+    public Set<MessageDTO> receive(ApplicationClientSession applicationClientSession) {
+        Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(applicationClientSession.getUserId()).orElseThrow().getSubscribedTopics();
+
+        Session session = initJMS(applicationClientSession);
+
+        Set<javax.jms.Message> messages = new LinkedHashSet<>();
+
+        for (Topic subscribedTopic : subscribedTopics) {
+            try {
+                MessageConsumer messageConsumer = session.createDurableSubscriber(subscribedTopic, applicationClientSession.getUserId() + "_" + subscribedTopic.getTopicName());
+                javax.jms.Message message;
+                while ((message = messageConsumer.receive(TIMEOUT)) != null) {
+                    messages.add(message);
+                    System.out.println("received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
+                }
+            } catch (JMSException e) {
+                throw new RuntimeException(e);
+            }
         }
-        Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
+
+        applicationClientSession.setSessionObject("messages", messages);
 
         Set<MessageDTO> messageDTOs = new LinkedHashSet<>();
 
@@ -95,6 +111,7 @@ public class MessageService {
                 messageDTOs.add(
                         DTOProvider.buildMessageDTO(
                                 Message.of(
+                                        message.getStringProperty("id"),
                                         message.getJMSDestination().toString(),
                                         message.getStringProperty("title"),
                                         ((TextMessage) message).getText(),
@@ -110,49 +127,25 @@ public class MessageService {
 
     public void acknowledge(ApplicationClientSession applicationClientSession, MessageDTO message) {
         // TODO: exceptions
-        try {
-            Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
+        Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
 
-            messages.stream().filter(message1 -> {
-                try {
-                    return message1.getJMSMessageID().equals(message.uuid());
-                } catch (JMSException e) {
-                    throw new RuntimeException(e);
+        messages.forEach(message1 -> {
+            try {
+                if (message1.getStringProperty("id").equals(message.uuid())) {
+                    message1.acknowledge();
                 }
-            }).findFirst().orElseThrow().acknowledge();
-        } catch (JMSException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void receiveMessages(ApplicationClientSession applicationClientSession) throws MessagingException {
-        Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(applicationClientSession.getUserId()).orElseThrow().getSubscribedTopics();
-
-        try {
-            Session session = initJMS(applicationClientSession);
-
-            Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
-
-            for (Topic subscribedTopic : subscribedTopics) {
-                MessageConsumer messageConsumer = session.createDurableSubscriber(subscribedTopic, applicationClientSession.getUserId() + "_" + subscribedTopic.getTopicName());
-//                messageConsumer.setMessageListener(new ConsumerMessageListener(applicationClientSession.getUserId() + "_" + subscribedTopic.getTopicName(), applicationClientSession));
-
-                javax.jms.Message message;
-                while ((message = messageConsumer.receive(TIMEOUT)) != null) {
-                    messages.add(message);
-                    System.out.println("received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
-                }
-
+            } catch (JMSException e) {
+                throw new RuntimeException(e);
             }
-        } catch (JMSException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            throw new MessagingException("An error occurred receiving a message.");
-        }
+        });
     }
 
     public Set<TopicDTO> getAllTopics() {
-        return topicRepository.findAllTopics().stream().sorted().map(DTOProvider::buildTopicDTO).collect(Collectors.toCollection(LinkedHashSet::new));
+        return topicRepository.findAllTopics()
+                .stream()
+                .sorted()
+                .map(DTOProvider::buildTopicDTO)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
 }

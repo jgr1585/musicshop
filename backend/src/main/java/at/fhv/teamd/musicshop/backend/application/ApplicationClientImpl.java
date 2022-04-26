@@ -98,7 +98,7 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException {
+    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException {
         authService.authorizeAccessLevel(UserRole.SELLER);
 
         return messageService.receive(applicationClientSession);

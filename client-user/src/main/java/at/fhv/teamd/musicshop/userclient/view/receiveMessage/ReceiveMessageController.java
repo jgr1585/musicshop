@@ -73,6 +73,7 @@ public class ReceiveMessageController {
 
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
         Set<MessageDTO> newMessages = RemoteFacade.getInstance().receiveMessages();
+        System.out.println("poll");
 
         this.inbox.getItems().forEach(newMessages::remove);
         newMessages.forEach(System.out::println);
