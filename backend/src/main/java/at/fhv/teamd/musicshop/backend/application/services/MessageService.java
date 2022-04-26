@@ -13,6 +13,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -114,7 +115,8 @@ public class MessageService {
 
     public Set<TopicDTO> getAllTopics() {
         return topicRepository.findAllTopics().stream()
+                .sorted()
                 .map(DTOProvider::buildTopicDTO)
-                .collect(Collectors.toUnmodifiableSet());
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 }

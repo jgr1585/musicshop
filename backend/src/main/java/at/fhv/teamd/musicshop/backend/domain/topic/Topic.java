@@ -5,7 +5,7 @@ import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
-public class Topic implements javax.jms.Topic {
+public class Topic implements javax.jms.Topic, Comparable<Topic> {
     @Id
     private String name;
 
@@ -19,5 +19,10 @@ public class Topic implements javax.jms.Topic {
     @Override
     public String getTopicName() {
         return this.name;
+    }
+
+    @Override
+    public int compareTo(Topic o) {
+        return name.compareTo(o.getTopicName());
     }
 }
