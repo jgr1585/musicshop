@@ -32,7 +32,6 @@ public class ReceiveMessageController {
 
     @FXML
     private TableView<MessageDTO> inbox;
-    // TODO: Implement Message Receive (use-> RemoteFacade.getInstance().receiveMessages())
 
     @FXML
     public void initialize() {
@@ -52,37 +51,35 @@ public class ReceiveMessageController {
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
         Set<MessageDTO> messages = RemoteFacade.getInstance().receiveMessages();
 
-        this.colTopic.setCellValueFactory(new PropertyValueFactory<>("topic"));
-        this.colSubject.setCellValueFactory(new PropertyValueFactory<>("subject"));
+        System.out.println("looking for messages");
+        messages.forEach(System.out::println);
 
-        inbox.getColumns().addAll(this.colDate, this.colTopic, this.colSubject, this.colTrash);
-        inbox.setItems(FXCollections.observableArrayList(messages));
-
-        inbox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            Stage stage = new Stage();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/receiveMessage/message-content.fxml"));
-            MessageContentController controller = loader.getController();
-
-            controller.setMessage(newValue);
-
-            try {
-                stage.setScene(loader.load());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            stage.show();
-        });
+//        this.colTopic.setCellValueFactory(new PropertyValueFactory<>("topic"));
+//        this.colSubject.setCellValueFactory(new PropertyValueFactory<>("subject"));
+//
+//        inbox.getColumns().addAll(this.colDate, this.colTopic, this.colSubject, this.colTrash);
+//        inbox.setItems(FXCollections.observableArrayList(messages));
+//
+//        inbox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//            Stage stage = new Stage();
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/view/receiveMessage/message-content.fxml"));
+//            MessageContentController controller = loader.getController();
+//
+//            controller.setMessage(newValue);
+//
+//            try {
+//                stage.setScene(loader.load());
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//            stage.show();
+//        });
     }
 
-    private void deleteMessage() {
-        //TODO: implement deleteMessage
-//        MessageDTO message = inbox.getSelectionModel().getSelectedItem();
-//        if (message != null) {
-//            try {
-//                RemoteFacade.getInstance().deleteMessage(message);
-//            } catch (RemoteException | NotAuthorizedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+    private void deleteMessage() throws RemoteException, NotAuthorizedException, MessagingException {
+        MessageDTO message = inbox.getSelectionModel().getSelectedItem();
+        if (message != null) {
+            RemoteFacade.getInstance().acknowledgeMessage(message);
+        }
     }
 }

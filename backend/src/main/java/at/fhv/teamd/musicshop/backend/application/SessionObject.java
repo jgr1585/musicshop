@@ -8,6 +8,7 @@ import lombok.Getter;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
+import javax.jms.Message;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ public class SessionObject {
     private final Connection activeMQConnection;
     private final javax.jms.Session activeMQSession;
 
-    private final Set<MessageDTO> messages = new LinkedHashSet<>();
+    private final Set<Message> messages = new LinkedHashSet<>();
 
     public SessionObject(String userId, AuthService authService, Connection activeMQConnection) {
         this.userId = userId;

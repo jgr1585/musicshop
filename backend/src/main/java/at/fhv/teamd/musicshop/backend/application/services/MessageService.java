@@ -79,6 +79,45 @@ public class MessageService {
         }
     }
 
+    // TODO: fix?
+    public Set<MessageDTO> receive(SessionObject sessionObject) {
+        return sessionObject.getMessages().stream()
+                .sorted()
+                .map(message -> {
+                    System.out.println(message);
+                    try {
+                        return DTOProvider.buildMessageDTO(
+                                Message.of(
+                                        message.getJMSDestination().toString(),
+                                        message.getStringProperty("title"),
+                                        ((TextMessage) message).getText(),
+                                        Instant.ofEpochSecond(message.getJMSTimestamp()))
+                        );
+                    } catch (JMSException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    public void acknowledge(SessionObject sessionObject, MessageDTO message) {
+        // TODO: exceptions
+        try {
+            sessionObject.getMessages().stream()
+                    .filter(message1 -> {
+                        try {
+                            return message1.getJMSMessageID().equals(message.uuid());
+                        } catch (JMSException e) {
+                            throw new RuntimeException(e);
+                        }
+                    })
+                    .findFirst().orElseThrow().acknowledge();
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // TODO: private static?
     public void receiveMessages(SessionObject sessionObject) throws MessagingException {
         Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(sessionObject.getUserId()).orElseThrow().getSubscribedTopics();
 
@@ -113,15 +152,8 @@ public class MessageService {
         @Override
         public void onMessage(javax.jms.Message message) {
             try {
-                Message message1 = Message.of(
-                        message.getJMSDestination().toString(),
-                        message.getStringProperty("title"),
-                        ((TextMessage) message).getText(),
-                        Instant.ofEpochSecond(message.getJMSTimestamp())
-                );
-                System.out.println(consumerName + " received " + ((TextMessage) message).getText() + "; ID: " + message.getJMSMessageID());
-                sessionObject.getMessages().add(DTOProvider.buildMessageDTO(message1));
-                System.out.println("Message added to Set, ID:" + message.getJMSMessageID());
+                System.out.println(consumerName + " received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
+                sessionObject.getMessages().add(message);
             } catch (JMSException e) {
                 e.printStackTrace();
             }

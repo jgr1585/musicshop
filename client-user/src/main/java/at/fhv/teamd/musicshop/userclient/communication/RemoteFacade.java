@@ -115,6 +115,11 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
+    public void acknowledgeMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+        getApplicationClientOrThrow().acknowledgeMessage(message);
+    }
+
+    @Override
     public Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException {
         return getApplicationClientOrThrow().getAllTopics();
     }
