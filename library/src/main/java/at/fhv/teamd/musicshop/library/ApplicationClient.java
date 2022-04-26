@@ -33,7 +33,7 @@ public interface ApplicationClient extends Remote {
 
     void publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException;
 
-    Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException;
+    boolean receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException;
 
     Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException;
 

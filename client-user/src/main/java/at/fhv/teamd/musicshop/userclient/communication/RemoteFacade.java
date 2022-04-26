@@ -110,7 +110,7 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException {
+    public boolean receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException {
         return getApplicationClientOrThrow().receiveMessages();
     }
 

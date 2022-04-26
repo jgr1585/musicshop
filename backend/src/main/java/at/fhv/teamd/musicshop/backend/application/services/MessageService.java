@@ -15,6 +15,7 @@ import javax.jms.*;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -67,7 +68,8 @@ public class MessageService {
             messageProducer.setTimeToLive(MSG_TTL);
 
             TextMessage textMessage = session.getActiveMQSession().createTextMessage(message.getBody());
-            textMessage.setJMSCorrelationID(message.getTitle());
+            textMessage.setJMSMessageID(String.valueOf(UUID.randomUUID()));
+            textMessage.setStringProperty("title", message.getTitle());
             messageProducer.send(textMessage);
 
             messageProducer.close();
@@ -77,22 +79,20 @@ public class MessageService {
         }
     }
 
-    public Set<MessageDTO> receiveMessages(at.fhv.teamd.musicshop.backend.communication.Session session) throws MessagingException {
+    public boolean receiveMessages(at.fhv.teamd.musicshop.backend.communication.Session session) throws MessagingException {
         Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(session.getUserId()).orElseThrow().getSubscribedTopics();
-        Set<MessageDTO> messages = new HashSet<>();
 
         try {
             for (Topic subscribedTopic : subscribedTopics) {
                 MessageConsumer messageConsumer = session.getActiveMQSession().createDurableSubscriber(subscribedTopic, session.getUserId() + "_" + subscribedTopic.getTopicName());
-                messageConsumer.setMessageListener(new ConsumerMessageListener(session.getUserId() + "_" + subscribedTopic.getTopicName()));
+                messageConsumer.setMessageListener(new ConsumerMessageListener(session.getUserId() + "_" + subscribedTopic.getTopicName(), session));
             }
         } catch (JMSException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
             throw new MessagingException("An error occurred receiving a message.");
         }
-
-        return messages;
+        return true;
     }
 
     public Set<TopicDTO> getAllTopics() {
