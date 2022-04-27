@@ -5,7 +5,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
@@ -25,14 +27,15 @@ public class MessageContentController {
     private TextArea messageBody;
 
     public void setMessage(MessageDTO message) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
-                .withLocale(Locale.GERMAN)
-                .withZone(ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.GERMAN);
+
+        LocalDateTime test = LocalDateTime.ofEpochSecond(message.sentOnTimestamp().getEpochSecond(), message.sentOnTimestamp().getNano(), ZoneOffset.UTC);
+        System.out.println(test);
 
         topic.setText(message.topic().name());
         subject.setText(message.title());
         messageBody.setText(message.body());
-        date.setText(formatter.format(message.sentOnTimestamp()));
+        date.setText(formatter.format(LocalDateTime.ofInstant(message.sentOnTimestamp(), ZoneId.systemDefault())));
     }
 
 }

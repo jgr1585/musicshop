@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -81,8 +82,8 @@ public class ReceiveMessageController {
     }
 
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
-        Set<MessageDTO> newMessages = RemoteFacade.getInstance().receiveMessages();
         System.out.println("poll");
+        Set<MessageDTO> newMessages = RemoteFacade.getInstance().receiveMessages();
 
         this.inbox.getItems().forEach(newMessages::remove);
         newMessages.forEach(System.out::println);
@@ -135,12 +136,10 @@ public class ReceiveMessageController {
     }
 
     private void formatTable() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
-                .withLocale(Locale.GERMAN)
-                .withZone(ZoneId.systemDefault());
+        DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.GERMAN);
 
         //Set up the columns Formatting
-        this.colDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(formatter.format(cellData.getValue().sentOnTimestamp())));
+        this.colDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(formatter.format(LocalDateTime.ofInstant(cellData.getValue().sentOnTimestamp(), ZoneId.systemDefault()))));
         this.colTopic.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().topic().name()));
         this.colSubject.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().title()));
         this.colTrash.setCellValueFactory(cellData -> new SimpleObjectProperty<>(createTrashButton(cellData.getValue())));
