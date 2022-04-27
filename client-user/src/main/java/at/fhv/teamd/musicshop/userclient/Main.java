@@ -26,7 +26,7 @@ public class Main extends Application {
             Scene scene = new Scene(fxmlLoader.load(), 1000, 800);
             LoginController controller = fxmlLoader.getController();
             controller.setStage(stage);
-            stage.setTitle("MusicShop24");
+            stage.setTitle("MusicShop24 - Login");
             stage.setScene(scene);
             stage.show();
         } catch (Throwable e) {
