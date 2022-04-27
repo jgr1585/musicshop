@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.backend.domain.user;
 
 import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
+import at.fhv.teamd.musicshop.library.permission.UserRole;
 import lombok.Getter;
 
 import javax.persistence.*;

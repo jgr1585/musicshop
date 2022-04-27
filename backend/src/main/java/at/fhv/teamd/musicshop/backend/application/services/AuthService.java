@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
-import at.fhv.teamd.musicshop.backend.domain.user.UserRole;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
+import at.fhv.teamd.musicshop.library.permission.UserRole;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
@@ -17,22 +18,12 @@ public class AuthService {
     AuthService() {
     }
 
-    public void authorizeAccessLevel(UserRole requiredAccessLevel) throws NotAuthorizedException {
+    public void authorizeAccessLevels(RemoteFunctionPermission permission) throws NotAuthorizedException {
         if (userRole == null) {
             throw new IllegalStateException();
         }
 
-        boolean isAuthorized = false;
-        switch (userRole) {
-            case ADMIN:
-                isAuthorized = true;
-            case OPERATOR:
-                isAuthorized = isAuthorized || requiredAccessLevel.equals(UserRole.OPERATOR);
-            case SELLER:
-                isAuthorized = isAuthorized || requiredAccessLevel.equals(UserRole.SELLER);
-        }
-
-        if (!isAuthorized) {
+        if (!permission.isAllowedForRole(userRole)) {
             throw new NotAuthorizedException();
         }
     }

@@ -11,13 +11,12 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 import at.fhv.teamd.musicshop.backend.domain.user.Employee;
-import at.fhv.teamd.musicshop.backend.domain.user.UserRole;
+import at.fhv.teamd.musicshop.library.permission.UserRole;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

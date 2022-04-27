@@ -5,14 +5,12 @@ import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.rmi.RemoteException;
 
@@ -20,6 +18,10 @@ import static at.fhv.teamd.musicshop.userclient.view.FieldValidationHelper.numbe
 
 public class SearchMediumController implements GenericArticleController {
 
+    @FXML
+    private Button addToCartButton;
+    @FXML
+    private Button orderButton;
     @FXML
     private Label mediumPrice;
     @FXML
@@ -35,6 +37,15 @@ public class SearchMediumController implements GenericArticleController {
     public void initialize() {
         // force the field to be numeric only
         numberOnly(this.mediumAmount);
+
+        new Thread(() -> {
+            try {
+                this.addToCartButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.addToShoppingCart));
+                this.orderButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.publishOrderMessage));
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO) {

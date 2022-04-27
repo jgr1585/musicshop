@@ -5,6 +5,7 @@ import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -38,6 +39,8 @@ public interface ApplicationClient extends Remote {
     void acknowledgeMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException;
 
     Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException;
+
+    boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) throws RemoteException;
 
     // Application Client
     void destroy() throws RemoteException;

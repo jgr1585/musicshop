@@ -1,7 +1,7 @@
 package at.fhv.teamd.musicshop.backend.application;
 
 import at.fhv.teamd.musicshop.backend.application.services.*;
-import at.fhv.teamd.musicshop.backend.domain.user.UserRole;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.library.exceptions.*;
@@ -36,86 +36,96 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
 
     @Override
     public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException, NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.searchArticlesByAttributes);
 
         return articleService.searchArticlesByAttributes(title, artist);
     }
 
     @Override
     public Set<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException, RemoteException, NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.searchCustomersByName);
 
         return customerService.searchCustomersByName(name);
     }
 
     @Override
     public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.ADMIN); // TODO: For presentation/demonstration purposes only (normally only requires SELLER)
+        authService.authorizeAccessLevels(RemoteFunctionPermission.addToShoppingCart);
 
         return shoppingCartService.addToShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
     }
 
     @Override
     public boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.removeFromShoppingCart);
 
         return shoppingCartService.removeFromShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
     }
 
     @Override
     public void emptyShoppingCart() throws NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.emptyShoppingCart);
 
         shoppingCartService.emptyShoppingCart(applicationClientSession.getUserId());
     }
 
     @Override
     public boolean buyFromShoppingCart(int customerId) throws NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.buyFromShoppingCart);
 
         return shoppingCartService.buyFromShoppingCart(applicationClientSession.getUserId(), customerId);
     }
 
     @Override
     public ShoppingCartDTO getShoppingCart() throws NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.getShoppingCart);
 
         return shoppingCartService.getShoppingCart(applicationClientSession.getUserId());
     }
 
     @Override
     public void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException, MessagingException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.publishOrderMessage);
 
         messageService.publishOrder(applicationClientSession, mediumDTO, quantity);
     }
 
     @Override
     public void publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
-        authService.authorizeAccessLevel(UserRole.OPERATOR);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.publishMessage);
 
         messageService.publish(applicationClientSession, message);
     }
 
     @Override
     public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.receiveMessages);
 
         return messageService.receive(applicationClientSession);
     }
 
     @Override
     public void acknowledgeMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.acknowledgeMessage);
 
         messageService.acknowledge(applicationClientSession, message);
     }
 
     @Override
     public Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.getAllTopics);
 
         return messageService.getAllTopics();
+    }
+
+    @Override
+    public boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) throws RemoteException {
+        try {
+            authService.authorizeAccessLevels(functionPermission);
+            return true;
+        } catch (NotAuthorizedException e) {
+            return false;
+        }
     }
 
     @Override
