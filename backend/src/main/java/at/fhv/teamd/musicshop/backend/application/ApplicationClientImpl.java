@@ -35,6 +35,11 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
+    public String getSessionUserId() {
+        return applicationClientSession.getUserId();
+    }
+
+    @Override
     public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException, NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.searchArticlesByAttributes);
 

@@ -53,6 +53,7 @@ public class ReceiveMessageController {
     @FXML
     public void initialize() {
         this.stage = new Stage();
+        this.stage.setTitle("Inbox");
 
         formatTable();
 

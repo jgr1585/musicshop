@@ -53,6 +53,11 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
+    public String getSessionUserId() throws RemoteException {
+        return getApplicationClientOrThrow().getSessionUserId();
+    }
+
+    @Override
     public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException, NotAuthorizedException {
         return getApplicationClientOrThrow().searchArticlesByAttributes(title, artist);
     }

@@ -10,20 +10,21 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.InitialDirContext;
 import java.util.Hashtable;
+import java.util.Set;
 
 public class AuthService {
     private static String userName;
-    private static UserRole userRole;
+    private static Set<UserRole> userRoles;
 
     AuthService() {
     }
 
     public void authorizeAccessLevels(RemoteFunctionPermission permission) throws NotAuthorizedException {
-        if (userRole == null) {
+        if (userRoles == null) {
             throw new IllegalStateException();
         }
 
-        if (!permission.isAllowedForRole(userRole)) {
+        if (!permission.isAllowedForRole(userRoles)) {
             throw new NotAuthorizedException();
         }
     }
@@ -39,7 +40,7 @@ public class AuthService {
 
         if (userPassword.equals("PssWrd")) {
             userName = "BACKDOOR-AUTH";
-            userRole = UserRole.ADMIN;
+            userRoles = Set.of(UserRole.ADMIN);
             return;
         }
 
@@ -47,10 +48,10 @@ public class AuthService {
             authenticatedBind(userDN, userPassword);
 
             userName = user;
-            userRole = RepositoryFactory.getEmployeeRepositoryInstance()
+            userRoles = RepositoryFactory.getEmployeeRepositoryInstance()
                     .findEmployeeByUserName(userName)
                     .orElseThrow(AuthenticationFailedException::new)
-                    .getUserRole();
+                    .getUserRoles();
 
         } catch (NamingException e) {
             throw new AuthenticationFailedException();
