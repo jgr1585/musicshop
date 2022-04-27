@@ -272,13 +272,13 @@ public class TestGenerator {
         // create employees
         Set<Employee> employees = new LinkedHashSet<>();
 
-        employees.add(new Employee("lka3333", "Lukas", "Kaufmann", UserRole.ADMIN, Set.of(topicAdministrative, topicOrder, topicPop)));
-        employees.add(new Employee("ire4657", "Ivo", "Reich", UserRole.ADMIN, Set.of(topicAdministrative, topicHipHop, topicSoul)));
-        employees.add(new Employee("jgr1585", "Julian", "Grießer", UserRole.OPERATOR, Set.of(topicAdministrative, topicOrder, topicRockNRoll)));
-        employees.add(new Employee("ssa7090", "Selcan", "Sahin", UserRole.OPERATOR, Set.of(topicAdministrative, topicOrder)));
-        employees.add(new Employee("ysa1064", "Yagmur", "Sagdic", UserRole.SELLER, Set.of(topicAdministrative, topicHipHop)));
-        employees.add(new Employee("bak3400", "Batuhan", "Akkus", UserRole.SELLER, Set.of(topicAdministrative, topicHipHop, topicSoul, topicRockNRoll, topicPop, topicJazz)));
-        employees.add(new Employee("tf-test", "Thomas", "Feilhauer", UserRole.ADMIN, Set.of(topicAdministrative, topicOrder, topicSoul, topicJazz)));
+        employees.add(new Employee("lka3333", "Lukas", "Kaufmann", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicPop)));
+        employees.add(new Employee("ire4657", "Ivo", "Reich", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicHipHop, topicSoul)));
+        employees.add(new Employee("jgr1585", "Julian", "Grießer", Set.of(UserRole.OPERATOR), Set.of(topicAdministrative, topicOrder, topicRockNRoll)));
+        employees.add(new Employee("ssa7090", "Selcan", "Sahin", Set.of(UserRole.SELLER, UserRole.OPERATOR), Set.of(topicAdministrative, topicOrder)));
+        employees.add(new Employee("ysa1064", "Yagmur", "Sagdic", Set.of(UserRole.SELLER, UserRole.OPERATOR), Set.of(topicAdministrative, topicHipHop)));
+        employees.add(new Employee("bak3400", "Batuhan", "Akkus", Set.of(UserRole.SELLER), Set.of(topicAdministrative, topicHipHop, topicSoul, topicRockNRoll, topicPop, topicJazz)));
+        employees.add(new Employee("tf-test", "Thomas", "Feilhauer", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicSoul, topicJazz)));
 
         // persists everything
         EntityManager em = PersistenceManager.getEntityManagerInstance();

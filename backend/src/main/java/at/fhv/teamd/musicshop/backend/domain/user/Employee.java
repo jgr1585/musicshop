@@ -20,8 +20,9 @@ public class Employee {
     @Column
     private String lastname;
 
+    @ElementCollection
     @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    private Set<UserRole> userRoles;
 
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Topic> subscribedTopics;
@@ -29,11 +30,11 @@ public class Employee {
     protected Employee() {
     }
 
-    public Employee(String userName, String firstname, String lastname, UserRole userRole, Set<Topic> subscribedTopics) {
+    public Employee(String userName, String firstname, String lastname, Set<UserRole> userRoles, Set<Topic> subscribedTopics) {
         this.userName = Objects.requireNonNull(userName);
         this.firstname = Objects.requireNonNull(firstname);
         this.lastname = Objects.requireNonNull(lastname);
-        this.userRole = Objects.requireNonNull(userRole);
+        this.userRoles = Objects.requireNonNull(userRoles);
         this.subscribedTopics = Objects.requireNonNull(subscribedTopics);
     }
 }

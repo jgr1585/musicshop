@@ -12,6 +12,8 @@ import java.rmi.RemoteException;
 import java.util.Set;
 
 public interface ApplicationClient extends Remote {
+    String getSessionUserId() throws RemoteException;
+
     // Search Articles
     Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException, NotAuthorizedException;
 
