@@ -50,7 +50,7 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
 
     @Override
     public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.ADMIN); // TODO: For presentation/demonstration purposes only (normally only requires SELLER)
+        authService.authorizeAccessLevel(UserRole.SELLER);
 
         return shoppingCartService.addToShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
     }
@@ -98,14 +98,14 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException {
+    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevel(UserRole.SELLER);
 
         return messageService.receive(applicationClientSession);
     }
 
     @Override
-    public void acknowledgeMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
+    public void acknowledgeMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevel(UserRole.SELLER);
 
         messageService.acknowledge(applicationClientSession, message);

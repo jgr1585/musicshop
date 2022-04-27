@@ -33,7 +33,7 @@ public class ApplicationClientSession {
         sessionObjects.put(sessionObjKey, sessionObj);
     }
 
-    public void getSessionObjectOrCallInitializer(String sessionObjKey, Callable<?> callable) {
+    private void getSessionObjectOrCallInitializer(String sessionObjKey, Callable<?> callable) {
         if (!sessionObjects.containsKey(sessionObjKey)) {
             try {
                 sessionObjects.put(sessionObjKey, callable.call());
