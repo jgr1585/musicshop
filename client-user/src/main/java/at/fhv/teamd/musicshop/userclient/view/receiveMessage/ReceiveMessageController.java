@@ -4,6 +4,7 @@ import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
 import at.fhv.teamd.musicshop.library.DTO.TopicDTO;
 import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -47,6 +48,7 @@ public class ReceiveMessageController {
     private TableView<MessageDTO> inbox;
 
     private Stage stage;
+    private boolean canAcknowledgeMessage;
 
     @FXML
     public void initialize() {
@@ -56,6 +58,13 @@ public class ReceiveMessageController {
 
         // TODO: replace busy-wait
         new Thread(() -> {
+            try {
+                this.canAcknowledgeMessage = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.acknowledgeMessage);
+                final boolean isAuthorized = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+
             while (true) {
                 try {
                     this.loadMessage();
@@ -112,6 +121,7 @@ public class ReceiveMessageController {
 
         trashIcon.setFill(Paint.valueOf("#ff0000"));
         trashButton.setStyle("-fx-background-color: transparent;");
+        trashButton.setDisable(!this.canAcknowledgeMessage);
 
         trashButton.setOnAction(event -> {
             System.out.println("Trash Button Pressed: " + message.title());
