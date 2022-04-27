@@ -7,7 +7,6 @@ import javafx.scene.control.TextField;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
@@ -28,9 +27,6 @@ public class MessageContentController {
 
     public void setMessage(MessageDTO message) {
         DateTimeFormatter formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.GERMAN);
-
-        LocalDateTime test = LocalDateTime.ofEpochSecond(message.sentOnTimestamp().getEpochSecond(), message.sentOnTimestamp().getNano(), ZoneOffset.UTC);
-        System.out.println(test);
 
         topic.setText(message.topic().name());
         subject.setText(message.title());

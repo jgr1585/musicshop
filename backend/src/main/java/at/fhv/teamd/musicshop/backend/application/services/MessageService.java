@@ -14,7 +14,9 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
 import java.time.Instant;
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -124,7 +126,7 @@ public class MessageService {
                                         message.getJMSDestination().toString(),
                                         message.getStringProperty("title"),
                                         ((TextMessage) message).getText(),
-                                        Instant.ofEpochSecond(message.getJMSTimestamp()))
+                                        Instant.ofEpochMilli(message.getJMSTimestamp()))
                         )
                 );
             } catch (JMSException e) {
