@@ -3,10 +3,8 @@ package at.fhv.teamd.musicshop.userclient.communication;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.ApplicationClientFactory;
 import at.fhv.teamd.musicshop.library.DTO.*;
-import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
-import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
-import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
-import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.exceptions.*;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartSubject;
 
 import java.net.MalformedURLException;
@@ -52,6 +50,11 @@ public class RemoteFacade implements ApplicationClient {
         }
 
         throw new IllegalStateException("Application client unavailable yet.");
+    }
+
+    @Override
+    public String getSessionUserId() throws RemoteException {
+        return getApplicationClientOrThrow().getSessionUserId();
     }
 
     @Override
@@ -103,13 +106,33 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
-        return getApplicationClientOrThrow().publishMessage(message);
+    public void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException, MessagingException {
+        getApplicationClientOrThrow().publishOrderMessage(mediumDTO, quantity);
     }
 
     @Override
-    public boolean publishOrder(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException {
-        return getApplicationClientOrThrow().publishOrder(mediumDTO, quantity);
+    public void publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+        getApplicationClientOrThrow().publishMessage(message);
+    }
+
+    @Override
+    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException {
+        return getApplicationClientOrThrow().receiveMessages();
+    }
+
+    @Override
+    public void acknowledgeMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+        getApplicationClientOrThrow().acknowledgeMessage(message);
+    }
+
+    @Override
+    public Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException {
+        return getApplicationClientOrThrow().getAllTopics();
+    }
+
+    @Override
+    public boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) throws RemoteException {
+        return getApplicationClientOrThrow().isAuthorizedFor(functionPermission);
     }
 
     @Override

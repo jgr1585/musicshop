@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+// TODO: Think about using dedicated non-persistent ShoppingCart class
 @Getter
 @Entity
 public class LineItem {

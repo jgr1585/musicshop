@@ -2,6 +2,7 @@ package at.fhv.teamd.musicshop.userclient.view.shoppingcart;
 
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartObserver;
@@ -14,19 +15,26 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.text.DecimalFormat;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShoppingCartController implements ShoppingCartObserver {
+
+    @FXML
+    private Button removeButton;
+    @FXML
+    private Button selectButton;
+    @FXML
+    private Button emptyButton;
+    @FXML
+    private Button buyButton;
     @FXML
     private Label totalAmount;
 
@@ -47,6 +55,19 @@ public class ShoppingCartController implements ShoppingCartObserver {
         }
 
         ShoppingCartSubject.addObserver(this);
+
+        new Thread(() -> {
+            try {
+                this.emptyButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.emptyShoppingCart));
+                this.buyButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.buyFromShoppingCart));
+
+                final boolean canAddCustomer = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.searchCustomersByName);
+                this.removeButton.setDisable(!canAddCustomer);
+                this.selectButton.setDisable(!canAddCustomer);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
     public void setAppController(AppController appController) {

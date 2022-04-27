@@ -1,20 +1,23 @@
 package at.fhv.teamd.musicshop.userclient.view.writeMessage;
 
 import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
+import at.fhv.teamd.musicshop.library.DTO.TopicDTO;
+import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.StringConverter;
 
 import java.rmi.RemoteException;
-import java.util.Arrays;
+import java.util.UUID;
 
 public class WriteMessageController {
 
     @FXML
-    private ComboBox<String> messageTopic;
+    private ComboBox<TopicDTO> messageTopic;
 
     @FXML
     private TextField messageTitle;
@@ -22,17 +25,26 @@ public class WriteMessageController {
     @FXML
     private TextArea messageBody;
 
-    private String selectedTopic;
+    private TopicDTO selectedTopic;
 
     @FXML
-    public void initialize() {
+    public void initialize() throws NotAuthorizedException, RemoteException {
         this.initMessageTopic();
     }
 
-    private void initMessageTopic() {
-        //TODO: Get Topics from Backend
-        this.messageTopic.setItems(FXCollections.observableArrayList(Arrays.stream(Topic.values()).map(Topic::getName).toArray(String[]::new)));
+    private void initMessageTopic() throws RemoteException, NotAuthorizedException {
+        this.messageTopic.setItems(FXCollections.observableArrayList(RemoteFacade.getInstance().getAllTopics()));
+        this.messageTopic.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(TopicDTO object) {
+                return object.name();
+            }
 
+            @Override
+            public TopicDTO fromString(String string) {
+                return null;
+            }
+        });
         this.messageTopic.valueProperty().addListener((observable, oldValue, newValue) -> this.selectedTopic = newValue);
     }
 
@@ -46,15 +58,19 @@ public class WriteMessageController {
 
             MessageDTO message = MessageDTO.builder()
                     .withMessageData(
-                            selectedTopic,
+                            TopicDTO.builder().withTopicData(selectedTopic.name()).build(),
+                            UUID.randomUUID().toString(),
                             messageTitle.getText(),
                             messageBody.getText())
                     .build();
 
-            if (RemoteFacade.getInstance().publishMessage(message)) {
+            try {
+                RemoteFacade.getInstance().publishMessage(message);
+
                 new Alert(Alert.AlertType.INFORMATION, "Message successfully sent", ButtonType.CLOSE).show();
                 resetMessage();
-            } else {
+
+            } catch (MessagingException e) {
                 new Alert(Alert.AlertType.ERROR, "Send message failed", ButtonType.CLOSE).show();
             }
         }

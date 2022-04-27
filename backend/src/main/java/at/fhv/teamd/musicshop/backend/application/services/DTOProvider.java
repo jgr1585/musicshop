@@ -6,16 +6,41 @@ import at.fhv.teamd.musicshop.backend.domain.article.Artist;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
+import at.fhv.teamd.musicshop.backend.domain.message.Message;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
+import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 import at.fhv.teamd.musicshop.library.DTO.*;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DTOProvider {
 
     private DTOProvider() {
+    }
+
+    static TopicDTO buildTopicDTO(Topic topic) {
+        return buildTopicDTO(topic.getTopicName());
+    }
+
+    private static TopicDTO buildTopicDTO(String topicName) {
+        return TopicDTO.builder()
+                .withTopicData(topicName)
+                .build();
+    }
+
+    static MessageDTO buildMessageDTO(Message message) {
+        return MessageDTO.builder()
+                .withMessageData(
+                        buildTopicDTO(message.getTopicName()),
+                        message.getId(),
+                        message.getTitle(),
+                        message.getBody()
+                )
+                .withMessageSentOnTimestamp(Objects.requireNonNull(message.getSentOnTimestamp()))
+                .build();
     }
 
     static ShoppingCartDTO buildShoppingCartDTO(ArticleRepository articleRepository, Set<LineItem> lineItems) {

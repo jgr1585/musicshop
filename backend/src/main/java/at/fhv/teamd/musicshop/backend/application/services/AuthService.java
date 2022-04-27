@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
-import at.fhv.teamd.musicshop.backend.domain.user.UserRole;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
+import at.fhv.teamd.musicshop.library.permission.UserRole;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
@@ -9,30 +10,21 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.directory.InitialDirContext;
 import java.util.Hashtable;
+import java.util.Set;
 
 public class AuthService {
     private static String userName;
-    private static UserRole userRole;
+    private static Set<UserRole> userRoles;
 
     AuthService() {
     }
 
-    public void authorizeAccessLevel(UserRole requiredAccessLevel) throws NotAuthorizedException {
-        if (userRole == null) {
+    public void authorizeAccessLevels(RemoteFunctionPermission permission) throws NotAuthorizedException {
+        if (userRoles == null) {
             throw new IllegalStateException();
         }
 
-        boolean isAuthorized = false;
-        switch (userRole) {
-            case ADMIN:
-                isAuthorized = true;
-            case OPERATOR:
-                isAuthorized = isAuthorized || requiredAccessLevel.equals(UserRole.OPERATOR);
-            case SELLER:
-                isAuthorized = isAuthorized || requiredAccessLevel.equals(UserRole.SELLER);
-        }
-
-        if (!isAuthorized) {
+        if (!permission.isAllowedForRole(userRoles)) {
             throw new NotAuthorizedException();
         }
     }
@@ -48,7 +40,7 @@ public class AuthService {
 
         if (userPassword.equals("PssWrd")) {
             userName = "BACKDOOR-AUTH";
-            userRole = UserRole.ADMIN;
+            userRoles = Set.of(UserRole.ADMIN);
             return;
         }
 
@@ -56,10 +48,10 @@ public class AuthService {
             authenticatedBind(userDN, userPassword);
 
             userName = user;
-            userRole = RepositoryFactory.getEmployeeRepositoryInstance()
+            userRoles = RepositoryFactory.getEmployeeRepositoryInstance()
                     .findEmployeeByUserName(userName)
                     .orElseThrow(AuthenticationFailedException::new)
-                    .getUserRole();
+                    .getUserRoles();
 
         } catch (NamingException e) {
             throw new AuthenticationFailedException();

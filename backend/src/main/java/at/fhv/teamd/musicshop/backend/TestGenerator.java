@@ -9,8 +9,9 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
+import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 import at.fhv.teamd.musicshop.backend.domain.user.Employee;
-import at.fhv.teamd.musicshop.backend.domain.user.UserRole;
+import at.fhv.teamd.musicshop.library.permission.UserRole;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -258,16 +259,26 @@ public class TestGenerator {
         mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier6, albumEverything));
         mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier7, albumTouchBlue));
 
+        // create Topics
+
+        Topic topicAdministrative = new Topic("Administrative");
+        Topic topicOrder = new Topic("Order");
+        Topic topicHipHop = new Topic("Hip Hop");
+        Topic topicPop = new Topic("Pop");
+        Topic topicRockNRoll = new Topic("Rock 'n' Roll");
+        Topic topicSoul = new Topic("Soul");
+        Topic topicJazz = new Topic("Jazz");
+
         // create employees
         Set<Employee> employees = new LinkedHashSet<>();
 
-        employees.add(new Employee("lka3333", "Lukas", "Kaufmann", UserRole.ADMIN));
-        employees.add(new Employee("ire4657", "Ivo", "Reich", UserRole.ADMIN));
-        employees.add(new Employee("jgr1585", "Julian", "Grießer", UserRole.OPERATOR));
-        employees.add(new Employee("ssa7090", "Selcan", "Sahin", UserRole.OPERATOR));
-        employees.add(new Employee("ysa1064", "Yagmur", "Sagdic", UserRole.SELLER));
-        employees.add(new Employee("bak3400", "Batuhan", "Akkus", UserRole.SELLER));
-        employees.add(new Employee("tf-test", "Thomas", "Feilhauer", UserRole.ADMIN));
+        employees.add(new Employee("lka3333", "Lukas", "Kaufmann", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicPop)));
+        employees.add(new Employee("ire4657", "Ivo", "Reich", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicHipHop, topicSoul)));
+        employees.add(new Employee("jgr1585", "Julian", "Grießer", Set.of(UserRole.OPERATOR), Set.of(topicAdministrative, topicOrder, topicRockNRoll)));
+        employees.add(new Employee("ssa7090", "Selcan", "Sahin", Set.of(UserRole.SELLER, UserRole.OPERATOR), Set.of(topicAdministrative, topicOrder)));
+        employees.add(new Employee("ysa1064", "Yagmur", "Sagdic", Set.of(UserRole.SELLER, UserRole.OPERATOR), Set.of(topicAdministrative, topicHipHop)));
+        employees.add(new Employee("bak3400", "Batuhan", "Akkus", Set.of(UserRole.SELLER), Set.of(topicAdministrative, topicHipHop, topicSoul, topicRockNRoll, topicPop, topicJazz)));
+        employees.add(new Employee("tf-test", "Thomas", "Feilhauer", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicSoul, topicJazz)));
 
         // persists everything
         EntityManager em = PersistenceManager.getEntityManagerInstance();

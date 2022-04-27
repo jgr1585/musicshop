@@ -3,16 +3,17 @@ package at.fhv.teamd.musicshop.library;
 import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
+import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 
-import javax.naming.NamingException;
-import java.rmi.NoSuchObjectException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Set;
 
 public interface ApplicationClient extends Remote {
+    String getSessionUserId() throws RemoteException;
+
     // Search Articles
     Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException, NotAuthorizedException;
 
@@ -30,9 +31,18 @@ public interface ApplicationClient extends Remote {
 
     ShoppingCartDTO getShoppingCart() throws RemoteException, NotAuthorizedException;
 
-    boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException;
+    // Messaging
+    void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException, MessagingException;
 
-    boolean publishOrder(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException;
+    void publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException;
+
+    Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException;
+
+    void acknowledgeMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException;
+
+    Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException;
+
+    boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) throws RemoteException;
 
     // Application Client
     void destroy() throws RemoteException;

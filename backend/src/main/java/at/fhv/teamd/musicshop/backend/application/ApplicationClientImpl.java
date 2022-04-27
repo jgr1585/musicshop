@@ -1,28 +1,31 @@
 package at.fhv.teamd.musicshop.backend.application;
 
-import at.fhv.teamd.musicshop.backend.application.services.AuthService;
-import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
-import at.fhv.teamd.musicshop.backend.domain.user.UserRole;
+import at.fhv.teamd.musicshop.backend.application.services.*;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.DTO.*;
-import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
-import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
-import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
-import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.exceptions.*;
 
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Set;
 
+// TODO: still to-do: remove services constructor dependency injection of applicationClientSession and use field-based approach (may use a SessionService to register ApplicationClientSessions -> but think this well-through as this might be hacky)
 public class ApplicationClientImpl extends UnicastRemoteObject implements ApplicationClient {
-    private final AuthService authService;
-    private final String userId;
+
+    private final AuthService authService = ServiceFactory.getAuthServiceInstance();
+    private final ArticleService articleService = ServiceFactory.getArticleServiceInstance();
+    private final CustomerService customerService = ServiceFactory.getCustomerServiceInstance();
+    private final MessageService messageService = ServiceFactory.getMessageServiceInstance();
+    private final ShoppingCartService shoppingCartService = ServiceFactory.getShoppingCartServiceInstance();
+
+    private final ApplicationClientSession applicationClientSession;
 
     private ApplicationClientImpl(String userId) throws RemoteException {
         super(ApplicationServer.RMI_BIND_PORT);
-        authService = ServiceFactory.getAuthServiceInstance();
-        this.userId = userId;
+
+        this.applicationClientSession = new ApplicationClientSession(userId);
     }
 
     public static ApplicationClientImpl newInstance(String authUser, String authPassword) throws RemoteException, AuthenticationFailedException {
@@ -32,76 +35,108 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException, NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+    public String getSessionUserId() {
+        return applicationClientSession.getUserId();
+    }
 
-        return ServiceFactory.getArticleServiceInstance().searchArticlesByAttributes(title, artist);
+    @Override
+    public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException, NotAuthorizedException {
+        authService.authorizeAccessLevels(RemoteFunctionPermission.searchArticlesByAttributes);
+
+        return articleService.searchArticlesByAttributes(title, artist);
     }
 
     @Override
     public Set<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException, RemoteException, NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.searchCustomersByName);
 
-        return ServiceFactory.getCustomerServiceInstance().searchCustomersByName(name);
+        return customerService.searchCustomersByName(name);
     }
 
     @Override
     public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.ADMIN); // TODO: For presentation/demonstration purposes only (normally only requires SELLER)
+        authService.authorizeAccessLevels(RemoteFunctionPermission.addToShoppingCart);
 
-        return ServiceFactory.getShoppingCartServiceInstance().addToShoppingCart(userId, mediumDTO, amount);
+        return shoppingCartService.addToShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
     }
 
     @Override
     public boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.removeFromShoppingCart);
 
-        return ServiceFactory.getShoppingCartServiceInstance().removeFromShoppingCart(userId, mediumDTO, amount);
+        return shoppingCartService.removeFromShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
     }
 
     @Override
     public void emptyShoppingCart() throws NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.emptyShoppingCart);
 
-        ServiceFactory.getShoppingCartServiceInstance().emptyShoppingCart(userId);
+        shoppingCartService.emptyShoppingCart(applicationClientSession.getUserId());
     }
 
     @Override
     public boolean buyFromShoppingCart(int customerId) throws NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.buyFromShoppingCart);
 
-        return ServiceFactory.getShoppingCartServiceInstance().buyFromShoppingCart(userId, customerId);
+        return shoppingCartService.buyFromShoppingCart(applicationClientSession.getUserId(), customerId);
     }
 
     @Override
     public ShoppingCartDTO getShoppingCart() throws NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.getShoppingCart);
 
-        return ServiceFactory.getShoppingCartServiceInstance().getShoppingCart(userId);
+        return shoppingCartService.getShoppingCart(applicationClientSession.getUserId());
     }
 
     @Override
-    public boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.OPERATOR);
+    public void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException, MessagingException {
+        authService.authorizeAccessLevels(RemoteFunctionPermission.publishOrderMessage);
 
-        return ServiceFactory.getMessageServiceInstance().publish(message);
+        messageService.publishOrder(applicationClientSession, mediumDTO, quantity);
     }
 
     @Override
-    public boolean publishOrder(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException {
-        authService.authorizeAccessLevel(UserRole.SELLER);
+    public void publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+        authService.authorizeAccessLevels(RemoteFunctionPermission.publishMessage);
 
-        MessageDTO message = MessageDTO.builder().withMessageData(
-                "Order",
-                "Medium: " + mediumDTO.id(),
-                quantity
-        ).build();
+        messageService.publish(applicationClientSession, message);
+    }
 
-        return ServiceFactory.getMessageServiceInstance().publish(message);
+    @Override
+    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException {
+        authService.authorizeAccessLevels(RemoteFunctionPermission.receiveMessages);
+
+        return messageService.receive(applicationClientSession);
+    }
+
+    @Override
+    public void acknowledgeMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+        authService.authorizeAccessLevels(RemoteFunctionPermission.acknowledgeMessage);
+
+        messageService.acknowledge(applicationClientSession, message);
+    }
+
+    @Override
+    public Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException {
+        authService.authorizeAccessLevels(RemoteFunctionPermission.getAllTopics);
+
+        return messageService.getAllTopics();
+    }
+
+    @Override
+    public boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) throws RemoteException {
+        try {
+            authService.authorizeAccessLevels(functionPermission);
+            return true;
+        } catch (NotAuthorizedException e) {
+            return false;
+        }
     }
 
     @Override
     public void destroy() throws NoSuchObjectException {
         UnicastRemoteObject.unexportObject(this, true);
+
+        applicationClientSession.purge();
     }
 }

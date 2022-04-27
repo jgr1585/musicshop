@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 
-<ScrollPane fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #000000; -fx-font-size: 13; -fx-font-weight: bold;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.receiveMessage.ReceiveMessageController">
+<ScrollPane fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #000000; -fx-font-size: 13; -fx-font-weight: bold;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.receiveMessage.ReceiveMessageController">
    <content>
-      <TableView prefHeight="582.0" prefWidth="970.0" style="-fx-background-color: #E6E6FA; -fx-text-fill: #000000;">
+      <TableView fx:id="inbox" prefHeight="582.0" prefWidth="970.0" style="-fx-background-color: #E6E6FA; -fx-text-fill: #000000;">
          <columns>
-            <TableColumn prefWidth="133.6666717529297" text="Date" />
-            <TableColumn prefWidth="185.0" text="Topic" />
-            <TableColumn prefWidth="611.6666870117188" text="Subject" />
-            <TableColumn prefWidth="70.33331298828125" />
+            <TableColumn fx:id="colDate" prefWidth="133.6666717529297" text="Date" />
+            <TableColumn fx:id="colTopic" prefWidth="185.0" text="Topic" />
+            <TableColumn fx:id="colSubject" prefWidth="611.6666870117188" text="Subject" />
+            <TableColumn fx:id="colTrash" prefWidth="70.33331298828125" />
          </columns>
       </TableView>
    </content>
