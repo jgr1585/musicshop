@@ -64,7 +64,6 @@ public class ReceiveMessageController {
         new Thread(() -> {
             try {
                 this.canAcknowledgeMessage = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.acknowledgeMessage);
-                final boolean isAuthorized = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
