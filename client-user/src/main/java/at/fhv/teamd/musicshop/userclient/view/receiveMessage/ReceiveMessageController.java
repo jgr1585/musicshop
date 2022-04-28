@@ -96,10 +96,8 @@ public class ReceiveMessageController {
         this.inbox.getItems().forEach(newMessages::remove);
         newMessages.forEach(System.out::println);
 
-        ObservableList<MessageDTO> messageList = FXCollections.observableArrayList(newMessages);
-
         //Add Data to the TableView
-        this.inbox.getItems().addAll(messageList);
+        newMessages.forEach(message -> this.inbox.getItems().add(0, message));
 
         inbox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
