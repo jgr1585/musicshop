@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.paint.Paint;
@@ -69,14 +70,23 @@ public class ReceiveMessageController {
             }
         }).start();
 
-        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+        final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+        //Stop the executor service when the stage is closed
+        executorService.schedule(() -> {
+            final Stage stage = (Stage) this.inbox.getScene().getWindow();
+            stage.setOnCloseRequest(event -> executorService.shutdown());
+        }, 1, TimeUnit.SECONDS);
+
+        //Create a scheduled executor service to update the table 10 seconds
         executorService.scheduleAtFixedRate(() -> {
             try {
                 this.loadMessage();
             } catch (MessagingException | NotAuthorizedException | RemoteException e) {
                 e.printStackTrace();
             }
-        }, 1, 10, TimeUnit.SECONDS);
+        }, 3, 10, TimeUnit.SECONDS);
     }
 
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
