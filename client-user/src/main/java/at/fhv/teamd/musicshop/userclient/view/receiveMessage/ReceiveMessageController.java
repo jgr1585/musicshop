@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.paint.Paint;
@@ -29,6 +30,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ReceiveMessageController {
 
@@ -57,28 +62,31 @@ public class ReceiveMessageController {
 
         formatTable();
 
-        // TODO: replace busy-wait
         new Thread(() -> {
             try {
                 this.canAcknowledgeMessage = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.acknowledgeMessage);
-                final boolean isAuthorized = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
-
-            while (true) {
-                try {
-                    this.loadMessage();
-                } catch (MessagingException | NotAuthorizedException | RemoteException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
         }).start();
+
+
+        final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+        //Stop the executor service when the stage is closed
+        executorService.schedule(() -> {
+            final Stage stage = (Stage) this.inbox.getScene().getWindow();
+            stage.setOnCloseRequest(event -> executorService.shutdown());
+        }, 1, TimeUnit.SECONDS);
+
+        //Create a scheduled executor service to update the table 10 seconds
+        executorService.scheduleAtFixedRate(() -> {
+            try {
+                this.loadMessage();
+            } catch (MessagingException | NotAuthorizedException | RemoteException e) {
+                e.printStackTrace();
+            }
+        }, 3, 10, TimeUnit.SECONDS);
     }
 
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
@@ -88,10 +96,8 @@ public class ReceiveMessageController {
         this.inbox.getItems().forEach(newMessages::remove);
         newMessages.forEach(System.out::println);
 
-        ObservableList<MessageDTO> messageList = FXCollections.observableArrayList(newMessages);
-
         //Add Data to the TableView
-        this.inbox.getItems().addAll(messageList);
+        newMessages.forEach(message -> this.inbox.getItems().add(0, message));
 
         inbox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
