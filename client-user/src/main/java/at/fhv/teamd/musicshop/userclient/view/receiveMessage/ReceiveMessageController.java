@@ -29,6 +29,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ReceiveMessageController {
 
@@ -57,7 +61,6 @@ public class ReceiveMessageController {
 
         formatTable();
 
-        // TODO: replace busy-wait
         new Thread(() -> {
             try {
                 this.canAcknowledgeMessage = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.acknowledgeMessage);
@@ -65,20 +68,16 @@ public class ReceiveMessageController {
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
-
-            while (true) {
-                try {
-                    this.loadMessage();
-                } catch (MessagingException | NotAuthorizedException | RemoteException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
         }).start();
+
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.scheduleAtFixedRate(() -> {
+            try {
+                this.loadMessage();
+            } catch (MessagingException | NotAuthorizedException | RemoteException e) {
+                e.printStackTrace();
+            }
+        }, 1, 10, TimeUnit.SECONDS);
     }
 
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
