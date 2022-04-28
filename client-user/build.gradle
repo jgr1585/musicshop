@@ -12,9 +12,6 @@ repositories {
     mavenCentral()
 }
 
-//sourceCompatibility = '11'
-//targetCompatibility = '11'
-
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
@@ -30,6 +27,8 @@ javafx {
 }
 
 dependencies {
+    implementation 'org.wildfly:wildfly-client-all:26.1.0.Final'
+
     implementation project(':library')
     implementation('org.controlsfx:controlsfx:11.1.1')
     implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
