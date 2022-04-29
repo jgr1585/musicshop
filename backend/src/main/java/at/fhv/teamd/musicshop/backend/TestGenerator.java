@@ -14,11 +14,23 @@ import at.fhv.teamd.musicshop.backend.domain.user.Employee;
 import at.fhv.teamd.musicshop.library.permission.UserRole;
 
 import javax.persistence.EntityManager;
+import javax.persistence.FlushModeType;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class TestGenerator {
 
@@ -292,7 +304,48 @@ public class TestGenerator {
         em.close();
     }
 
+    private static void readSqlFile() {
+        //Read SQL File
+        try {
+            EntityManager em = PersistenceManager.getEntityManagerInstance();
+            BufferedReader sqlFile = new BufferedReader(new InputStreamReader(Objects.requireNonNull(TestGenerator.class.getClassLoader().getResourceAsStream("musicbrainz_db.sql"))));
+            String line;
+            AtomicLong totalLines = new AtomicLong(0);
+            em.getTransaction().begin();
+            em.setFlushMode(FlushModeType.COMMIT);
+
+            new Thread(() -> totalLines.set(getLineCount(Objects.requireNonNull(TestGenerator.class.getClassLoader().getResource("musicbrainz_db.sql"))))).start();
+
+            for ( long i = 0; (line = sqlFile.readLine()) != null; i++) {
+                System.out.print("\rUpdate Line " + i + " of " + totalLines.get());
+                em.createNativeQuery(line).executeUpdate();
+            }
+
+            System.out.println("\n");
+            em.flush();
+            em.getTransaction().commit();
+            em.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static long getLineCount(URL fileName) {
+        Path path = Paths.get(fileName.getPath());
+
+        long lines = 0;
+        try {
+            lines = Files.lines(path).parallel().count();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return lines;
+
+    }
+
     public static void main(String[] args) {
         generateTestData();
+        //readSqlFile();
     }
 }

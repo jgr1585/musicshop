@@ -1,0 +1,31 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Drop Database" type="DatabaseScript">
+    <data-source id="7eb01dad-b83a-48e7-bd17-918682b0632f" namespace="database/&quot;postgres&quot;/schema/&quot;public&quot;" />
+    <script-text>drop table article_article;
+
+drop table article_artist;
+
+drop table artist;
+
+drop table employee_topic;
+
+drop table employee_userroles;
+
+drop table employee;
+
+drop table invoice_lineitem;
+
+drop table invoice;
+
+drop table lineitem;
+
+drop table medium;
+
+drop table article;
+
+drop table supplier;
+
+drop table topic;</script-text>
+    <method v="2" />
+  </configuration>
+</component>

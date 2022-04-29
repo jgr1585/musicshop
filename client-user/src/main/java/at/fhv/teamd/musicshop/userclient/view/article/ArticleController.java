@@ -3,9 +3,12 @@ package at.fhv.teamd.musicshop.userclient.view.article;
 import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -32,6 +35,8 @@ public class ArticleController {
     private VBox mediumTypeList;
     @FXML
     private Label releaseDate;
+
+    private SearchArticleController searchArticleController;
 
     // select cover art for album
     private final Consumer<ArticleDTO> loadCoverArtConsumer = articleDTO -> {
@@ -71,6 +76,8 @@ public class ArticleController {
                 controller.setMediumType(articleDTO, mediumDTO);
                 this.mediumTypeList.getChildren().add(root);
             }
+        } else if (articleDTO instanceof SongDTO && this.searchArticleController != null) {
+            this.mediumTypeList.getChildren().add(this.createFindAlbumButton((SongDTO) articleDTO));
         }
     }
 
@@ -103,6 +110,10 @@ public class ArticleController {
         GenericArticleController controller = fxmlLoader.getController();
         controller.setMediumType(lineItemDTO);
         this.mediumTypeList.getChildren().add(root);
+    }
+
+    public void setSearchArticleController(SearchArticleController searchArticleController) {
+        this.searchArticleController = searchArticleController;
     }
 
     private void loadCoverArt(ArticleDTO articleDTO) throws IOException {
@@ -144,5 +155,16 @@ public class ArticleController {
             default:
                 return this.getImageURL(location, depth + 1);
         }
+    }
+
+    private Button createFindAlbumButton(SongDTO songDTO) {
+        FontAwesomeIconView findIcon = new FontAwesomeIconView(FontAwesomeIcon.SEARCH);
+        Button findButton = new Button("", findIcon);
+
+        findButton.setStyle("-fx-background-color: transparent;");
+
+        findButton.setOnAction(event -> this.searchArticleController.searchAlbum(songDTO));
+
+        return findButton;
     }
 }
