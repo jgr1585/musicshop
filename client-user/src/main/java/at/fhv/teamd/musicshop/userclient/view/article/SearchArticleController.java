@@ -25,8 +25,6 @@ public class SearchArticleController {
     private TextField searchByTitle;
     @FXML
     private TextField searchByArtist;
-    @FXML
-    private MenuButton searchByMedium;
 
     @FXML
     private VBox searchPane;
@@ -72,7 +70,6 @@ public class SearchArticleController {
         this.searchPane.getChildren().clear();
         this.searchByTitle.setText("");
         this.searchByArtist.setText("");
-        this.searchByMedium.setText("");
     }
 
 }
