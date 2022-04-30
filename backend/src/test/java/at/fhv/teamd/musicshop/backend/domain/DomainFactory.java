@@ -18,7 +18,6 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.util.UUID;
 
-@SuppressWarnings("deprecation")
 public class DomainFactory {
 
     public static Article createArticle() {
@@ -74,7 +73,8 @@ public class DomainFactory {
     public static Medium createMedium(MediumType mediumType) {
         UUID uuid = UUID.randomUUID();
         Album album = createAlbum();
-        Medium medium = new Medium(uuid.getMostSignificantBits(), mediumType, BigDecimal.TEN, Stock.of(Quantity.of(5)), createSupplier(), album);
+        Medium medium = new Medium(BigDecimal.TEN, mediumType, Stock.of(Quantity.of(5)), createSupplier(), album);
+        setObjField(medium, "id", uuid.getLeastSignificantBits());
         setAlbumMediums(album, Set.of(medium));
         return medium;
     }
