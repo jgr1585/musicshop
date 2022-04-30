@@ -18,12 +18,12 @@ import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.bu
 public class ShoppingCartService {
     private static final Map<String, Set<LineItem>> sessionLineItems = new HashMap<>();
 
-    private static MediumRepository mediumRepository;
     private static ArticleRepository articleRepository;
+    private static MediumRepository mediumRepository;
 
     ShoppingCartService() {
-        mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
         articleRepository = RepositoryFactory.getArticleRepositoryInstance();
+        mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
     }
 
     private void initializeShoppingcart(String userId) {

@@ -37,7 +37,6 @@ public class ArticleController {
     private final Consumer<ArticleDTO> loadCoverArtConsumer = articleDTO -> {
         try {
             this.loadCoverArt(articleDTO);
-
         } catch (IOException ignored) {}
     };
 

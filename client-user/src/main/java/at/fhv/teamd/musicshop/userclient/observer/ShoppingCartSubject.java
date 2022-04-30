@@ -21,6 +21,5 @@ public class ShoppingCartSubject {
 
     public static void notifyShoppingCartUpdate() {
         observers.forEach(ShoppingCartObserver::updateShoppingCart);
-
     }
 }
