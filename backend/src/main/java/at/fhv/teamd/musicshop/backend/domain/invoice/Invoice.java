@@ -1,9 +1,5 @@
 package at.fhv.teamd.musicshop.backend.domain.invoice;
 
-import at.fhv.teamd.musicshop.backend.domain.article.Album;
-import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
-import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
-import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import lombok.Getter;
 
