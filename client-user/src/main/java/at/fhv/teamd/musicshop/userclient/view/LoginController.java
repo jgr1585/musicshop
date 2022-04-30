@@ -67,7 +67,7 @@ public class LoginController {
 
     @FXML
     private void onResetAction(ActionEvent actionEvent) {
-        serverhost.setText("");
+        serverhost.setText("localhost");
         username.setText("");
         password.setText("");
     }
