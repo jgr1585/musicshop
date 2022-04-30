@@ -7,7 +7,6 @@ import at.fhv.teamd.musicshop.backend.domain.article.Song;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.message.Message;
-import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 import at.fhv.teamd.musicshop.library.DTO.*;
@@ -44,14 +43,14 @@ public class DTOProvider {
                 .build();
     }
 
-    static ShoppingCartDTO buildShoppingCartDTO(ArticleRepository articleRepository, Set<LineItem> lineItems) {
+    static ShoppingCartDTO buildShoppingCartDTO(Set<LineItem> lineItems) {
         return ShoppingCartDTO.builder()
-                .withLineItems(lineItems.stream().map(li -> buildLineItemDTO(articleRepository, li)).collect(Collectors.toUnmodifiableSet()))
+                .withLineItems(lineItems.stream().map(DTOProvider::buildLineItemDTO).collect(Collectors.toUnmodifiableSet()))
                 .build();
     }
 
-    static LineItemDTO buildLineItemDTO(ArticleRepository articleRepository, LineItem lineItem) {
-        Album album = (Album) articleRepository.findArticleById(lineItem.getMedium().getAlbum().getId()).orElseThrow();
+    static LineItemDTO buildLineItemDTO(LineItem lineItem) {
+        Album album = lineItem.getMedium().getAlbum();
         Medium medium = album.getMediums().stream()
                 .filter(m -> Long.valueOf(m.getId()).equals(lineItem.getMedium().getId()))
                 .findFirst()
