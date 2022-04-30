@@ -44,8 +44,8 @@ public class SearchController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/article.fxml"));
             Parent medium = fxmlLoader.load();
             ArticleController controller = fxmlLoader.getController();
-            controller.addMediumTypes(article, Tabs.SEARCH);
             controller.setSearchController(this);
+            controller.addMediumTypes(article, Tabs.SEARCH);
             this.searchPane.getChildren().add(medium);
         }
     }
