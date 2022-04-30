@@ -28,16 +28,24 @@ public class Invoice {
     protected Invoice() {
     }
 
-    public Invoice(Set<LineItem> lineItems) {
+    private Invoice(Set<LineItem> lineItems, int customerNo) {
+        this.lineItems = Objects.requireNonNull(lineItems);
+        this.totalPrice = calculateTotalPrice(lineItems);
+        this.customerNo = customerNo;
+    }
+
+    private Invoice(Set<LineItem> lineItems) {
         this.lineItems = Objects.requireNonNull(lineItems);
         this.totalPrice = calculateTotalPrice(lineItems);
         this.customerNo = null;
     }
 
-    public Invoice(Set<LineItem> lineItems, int customerNo) {
-        this.lineItems = Objects.requireNonNull(lineItems);
-        this.totalPrice = calculateTotalPrice(lineItems);
-        this.customerNo = customerNo;
+    public static Invoice of(Set<LineItem> lineItems, int customerNo) {
+        return new Invoice(lineItems, customerNo);
+    }
+
+    public static Invoice of(Set<LineItem> lineItems) {
+        return new Invoice(lineItems);
     }
 
     private BigDecimal calculateTotalPrice(Set<LineItem> lineItems) {

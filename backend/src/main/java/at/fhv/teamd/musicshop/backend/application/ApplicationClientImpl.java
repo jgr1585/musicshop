@@ -17,6 +17,7 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     private final AuthService authService = ServiceFactory.getAuthServiceInstance();
     private final ArticleService articleService = ServiceFactory.getArticleServiceInstance();
     private final CustomerService customerService = ServiceFactory.getCustomerServiceInstance();
+    private final InvoiceService invoiceService = ServiceFactory.getInvoiceServiceInstance();
     private final MessageService messageService = ServiceFactory.getMessageServiceInstance();
     private final ShoppingCartService shoppingCartService = ServiceFactory.getShoppingCartServiceInstance();
 
@@ -51,6 +52,20 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
         authService.authorizeAccessLevels(RemoteFunctionPermission.searchCustomersByName);
 
         return customerService.searchCustomersByName(name);
+    }
+
+    @Override
+    public InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException {
+        authService.authorizeAccessLevels(RemoteFunctionPermission.findInvoiceById);
+
+        return invoiceService.searchInvoiceById(id);
+    }
+
+    @Override
+    public boolean returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException {
+        authService.authorizeAccessLevels(RemoteFunctionPermission.returnItem);
+
+        return invoiceService.returnItem(lineItem, quantity);
     }
 
     @Override

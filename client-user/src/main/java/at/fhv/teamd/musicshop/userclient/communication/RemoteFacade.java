@@ -5,6 +5,7 @@ import at.fhv.teamd.musicshop.library.ApplicationClientFactory;
 import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.library.exceptions.*;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
+import at.fhv.teamd.musicshop.userclient.observer.ReturnSubject;
 import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartSubject;
 
 import java.net.MalformedURLException;
@@ -68,20 +69,28 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
+    public InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException {
+        return getApplicationClientOrThrow().findInvoiceById(id);
+    }
+
+    @Override
+    public boolean returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException {
+        boolean returnValue = getApplicationClientOrThrow().returnItem(lineItem, quantity);
+        if (returnValue) ReturnSubject.notifyReturnUpdate();
+        return returnValue;
+    }
+
+    @Override
     public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
         boolean returnValue = getApplicationClientOrThrow().addToShoppingCart(mediumDTO, amount);
-        if (returnValue) {
-            ShoppingCartSubject.notifyShoppingCartUpdate();
-        }
+        if (returnValue) ShoppingCartSubject.notifyShoppingCartUpdate();
         return returnValue;
     }
 
     @Override
     public boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
         boolean returnValue = getApplicationClientOrThrow().removeFromShoppingCart(mediumDTO, amount);
-        if (returnValue) {
-            ShoppingCartSubject.notifyShoppingCartUpdate();
-        }
+        if (returnValue) ShoppingCartSubject.notifyShoppingCartUpdate();
         return returnValue;
     }
 
@@ -94,9 +103,7 @@ public class RemoteFacade implements ApplicationClient {
     @Override
     public boolean buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException {
         boolean returnValue = getApplicationClientOrThrow().buyFromShoppingCart(customerId);
-        if (returnValue) {
-            ShoppingCartSubject.notifyShoppingCartUpdate();
-        }
+        if (returnValue) ShoppingCartSubject.notifyShoppingCartUpdate();
         return returnValue;
     }
 

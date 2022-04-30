@@ -17,8 +17,14 @@ public interface ApplicationClient extends Remote {
     // Search Articles
     Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException, NotAuthorizedException;
 
-    // Search Customer for Invoice
+    // Search Customers
     Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException, NotAuthorizedException;
+
+    // Invoice
+    InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException;
+
+    // Return
+    boolean returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException;
 
     // Shopping Cart
     boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException;
@@ -42,6 +48,7 @@ public interface ApplicationClient extends Remote {
 
     Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException;
 
+    // Authorization
     boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) throws RemoteException;
 
     // Application Client

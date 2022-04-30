@@ -4,6 +4,7 @@ import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.article.Artist;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
+import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.message.Message;
@@ -61,6 +62,7 @@ public class DTOProvider {
                         lineItem.getId(),
                         buildArticleDTO(album),
                         lineItem.getQuantity().getValue(),
+                        lineItem.getQuantityReturn().getValue(),
                         lineItem.getPrice(),
                         lineItem.getTotalPrice(),
                         buildMediumDTO(medium)
@@ -91,6 +93,15 @@ public class DTOProvider {
         return ArtistDTO.builder().withArtistData(
                 artist.getId(),
                 artist.getName()
+        ).build();
+    }
+
+    static InvoiceDTO buildInvoiceDTO(ArticleRepository articleRepository, Invoice invoice) {
+        return InvoiceDTO.builder().withInvoiceData(
+                invoice.getId(),
+                invoice.getLineItems().stream().map(li -> buildLineItemDTO(articleRepository, li)).collect(Collectors.toUnmodifiableSet()),
+                invoice.getTotalPrice(),
+                invoice.getCustomerNo()
         ).build();
     }
 
