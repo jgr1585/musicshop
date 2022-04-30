@@ -6,43 +6,61 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 // TODO: Think about using dedicated non-persistent ShoppingCart class
-@Getter
 @Entity
 public class LineItem {
     @Id
     @GeneratedValue
-    private long id;
+    @Getter private long id;
 
-    @Embedded
-    private Quantity quantity;
+    @ElementCollection
+    private final Map<String, Quantity> quantities = new HashMap<>();
 
     @Column(nullable = false)
-    private BigDecimal price;
+    @Getter private BigDecimal price;
 
     @OneToOne(cascade = CascadeType.MERGE)
-    private Medium medium;
+    @Getter private Medium medium;
 
     protected LineItem() {
     }
 
     public LineItem(Quantity quantity, Medium medium) {
-        this.quantity = Objects.requireNonNull(quantity);
+        this.quantities.put("quantity", quantity);
+        this.quantities.put("quantityReturn", Quantity.of(0));
         this.medium = Objects.requireNonNull(medium);
         this.price = medium.getPrice();
     }
 
     public void increaseQuantity(Quantity quantity) {
-        this.quantity = this.quantity.increaseBy(quantity);
+        this.quantities.put("quantity", this.quantities.get("quantity").increaseBy(quantity));
     }
 
     public void decreaseQuantity(Quantity quantity) {
-        this.quantity = this.quantity.decreaseBy(quantity);
+        this.quantities.put("quantity", this.quantities.get("quantity").decreaseBy(quantity));
+    }
+
+    // TODO: exception
+    public void increaseQuantityReturned(Quantity quantity) {
+        if (this.quantities.get("quantityReturn").getValue() + quantity.getValue() > this.quantities.get("quantity").getValue()) {
+            throw new IllegalArgumentException("ReturnQuantity to big");
+        }
+        this.quantities.put("quantityReturn", this.quantities.get("quantityReturn").increaseBy(quantity));
     }
 
     public BigDecimal getTotalPrice() {
-        return price.multiply(BigDecimal.valueOf(quantity.getValue()));
+        return price.multiply(BigDecimal.valueOf(this.quantities.get("quantity").getValue()));
+    }
+
+    public Quantity getQuantity() {
+        return this.quantities.get("quantity");
+    }
+
+    public Quantity getQuantityReturn() {
+        return this.quantities.get("quantityReturn");
     }
 }
