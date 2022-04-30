@@ -35,7 +35,7 @@ public class ArticleServiceTest {
     }
 
     @Test
-    public void given_ArticleService_when_searchArticles_then_returnListOfArticles() throws NoSuchFieldException, IllegalAccessException {
+    public void given_ArticleService_when_searchArticles_then_returnListOfArticles() {
         // given
         Article article = DomainFactory.createArticle();
         String title = article.getTitle();
