@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane style="-fx-background-color: #000000FF; -fx-font-size: 13; -fx-font-weight: bold;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.medium.SearchMediumController">
+<GridPane style="-fx-background-color: #000000FF; -fx-font-size: 13; -fx-font-weight: bold;" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.article.SearchArticleController">
    <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="45.0" />
