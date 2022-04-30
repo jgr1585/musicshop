@@ -25,7 +25,6 @@ public class ArticleServiceTest {
 
     @Mock
     private ArticleRepository articleRepository;
-
     @Mock
     private MediumRepository mediumRepository;
 
@@ -48,8 +47,6 @@ public class ArticleServiceTest {
         articles.add(article);
 
         Mockito.when(this.articleRepository.searchArticlesByAttributes(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString())).thenReturn(articles);
-
-        System.out.println(this.articleRepository.searchArticlesByAttributes(title, artistName));
 
         Set<ArticleDTO> expectedArticleDTOS = articles.stream()
                 .map(DTOProvider::buildArticleDTO)

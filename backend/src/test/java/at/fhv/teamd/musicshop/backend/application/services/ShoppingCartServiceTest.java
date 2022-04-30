@@ -31,14 +31,11 @@ import java.util.concurrent.atomic.AtomicReference;
 class ShoppingCartServiceTest {
 
     @Mock
-    private MediumRepository mediumRepository;
-
-    @Mock
     private ArticleRepository articleRepository;
-
+    @Mock
+    private MediumRepository mediumRepository;
     @Mock
     private EmployeeRepository employeeRepository;
-
     @Mock
     private InvoiceRepository invoiceRepository;
 

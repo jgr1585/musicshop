@@ -1,5 +1,9 @@
 package at.fhv.teamd.musicshop.backend.domain.invoice;
 
+import at.fhv.teamd.musicshop.backend.domain.article.Album;
+import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
+import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
+import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import lombok.Getter;
 
@@ -54,5 +58,18 @@ public class Invoice {
             totalPrice = totalPrice.add(lineItem.getTotalPrice());
         }
         return totalPrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Invoice invoice = (Invoice) o;
+        return Objects.equals(id, invoice.id) && lineItems.equals(invoice.lineItems);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, lineItems);
     }
 }
