@@ -86,10 +86,11 @@ class InvoiceServiceTest {
 
         int amountToReturn = 1;
 
-        Mockito.when(invoiceRepository.findInvoiceByLineItemId(lineItem.getId())).thenReturn(Optional.of(invoice).get());
+        Mockito.when(invoiceRepository.findInvoiceByLineItemId(lineItem.getId())).thenReturn(invoice);
 
         // when .. then
         Assertions.assertTrue(invoiceService.returnItem(DTOProvider.buildLineItemDTO(lineItem), amountToReturn));
         Assertions.assertEquals(amountToReturn, lineItem.getQuantityReturn().getValue());
+        Mockito.verify(this.invoiceRepository).update(invoice);
     }
 }
