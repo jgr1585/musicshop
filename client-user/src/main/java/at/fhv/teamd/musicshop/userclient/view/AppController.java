@@ -18,17 +18,15 @@ import java.rmi.RemoteException;
 public class AppController {
 
     @FXML
+    private Tab searchTab;
+    @FXML
     private Tab returnTab;
     @FXML
     private Tab shoppingCartTab;
     @FXML
     private Tab newMessageTab;
     @FXML
-    private Tab inboxTab;
-    @FXML
     private TabPane tabs;
-    @FXML
-    private Tab searchTab;
     @FXML
     private ShoppingCartController shoppingCartController;
 
@@ -40,9 +38,10 @@ public class AppController {
 
         new Thread(() -> {
             try {
+                this.searchTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.searchArticlesByAttributes));
+                this.returnTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.returnItem));
                 this.shoppingCartTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.getShoppingCart));
                 this.newMessageTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.publishMessage));
-                this.inboxTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages));
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
