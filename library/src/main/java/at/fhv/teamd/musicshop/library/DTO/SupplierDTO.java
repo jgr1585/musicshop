@@ -45,7 +45,7 @@ public final class SupplierDTO implements Serializable {
     }
 
     public static class Builder {
-        private SupplierDTO instance;
+        private final SupplierDTO instance;
 
         private Builder() {
             this.instance = new SupplierDTO();

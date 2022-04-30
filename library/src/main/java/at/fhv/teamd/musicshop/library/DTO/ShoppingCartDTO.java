@@ -42,7 +42,7 @@ public class ShoppingCartDTO implements Serializable {
     }
 
     public static class Builder {
-        private ShoppingCartDTO instance;
+        private final ShoppingCartDTO instance;
 
         private Builder() {
             this.instance = new ShoppingCartDTO();

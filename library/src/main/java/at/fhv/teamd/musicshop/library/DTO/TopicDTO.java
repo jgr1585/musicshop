@@ -33,7 +33,7 @@ public class TopicDTO implements Serializable {
     }
 
     public static class Builder {
-        private TopicDTO instance;
+        private final TopicDTO instance;
 
         private Builder() {
             this.instance = new TopicDTO();

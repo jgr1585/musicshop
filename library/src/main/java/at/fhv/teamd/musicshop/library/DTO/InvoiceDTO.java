@@ -49,7 +49,7 @@ public class InvoiceDTO implements Serializable {
     }
 
     public static class Builder {
-        private InvoiceDTO instance;
+        private final InvoiceDTO instance;
 
         private Builder() {
             this.instance = new InvoiceDTO();
