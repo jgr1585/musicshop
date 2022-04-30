@@ -15,6 +15,13 @@
                   <TextField fx:id="searchByTitle" layoutX="71.0" layoutY="24.0" minWidth="120.0" style="-fx-background-color: lavender;" />
                   <Label layoutX="277.0" layoutY="29.0" minWidth="-Infinity" text="Artist:" />
                   <TextField fx:id="searchByArtist" layoutX="325.0" layoutY="24.0" minWidth="120.0" style="-fx-background-color: lavender;" />
+                  <Label layoutX="555.0" layoutY="29.0" minWidth="-Infinity" text="Medium:" />
+                  <MenuButton fx:id="searchByMedium" disable="true" layoutX="612.0" layoutY="24.0" minWidth="-Infinity" mnemonicParsing="false" prefWidth="80.0" style="-fx-background-color: white;" text="Select">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                     </items>
+                  </MenuButton>
                </children>
             </Pane>
             <Pane style="-fx-background-color: #547af9;" GridPane.columnIndex="1">

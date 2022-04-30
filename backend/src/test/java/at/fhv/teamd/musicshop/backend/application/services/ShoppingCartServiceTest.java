@@ -4,9 +4,6 @@ import at.fhv.teamd.musicshop.backend.domain.DomainFactory;
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
-import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
-import at.fhv.teamd.musicshop.backend.domain.repositories.EmployeeRepository;
-import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
@@ -31,22 +28,14 @@ import java.util.concurrent.atomic.AtomicReference;
 class ShoppingCartServiceTest {
 
     @Mock
-    private ArticleRepository articleRepository;
-    @Mock
     private MediumRepository mediumRepository;
-    @Mock
-    private EmployeeRepository employeeRepository;
-    @Mock
-    private InvoiceRepository invoiceRepository;
+
 
     private ShoppingCartService shoppingCartService;
 
     @BeforeEach
     public void init() {
-        RepositoryFactory.setArticleRepository(this.articleRepository);
         RepositoryFactory.setMediumRepository(this.mediumRepository);
-        RepositoryFactory.setEmployeeRepository(this.employeeRepository);
-        RepositoryFactory.setInvoiceRepository(this.invoiceRepository);
         this.shoppingCartService = new ShoppingCartService();
     }
 
@@ -57,16 +46,15 @@ class ShoppingCartServiceTest {
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 2;
 
-        Mockito.when(this.articleRepository.findArticleById(medium.getAlbum().getId())).thenReturn(Optional.of(medium.getAlbum()));
         Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
 
         LineItem lineItem = new LineItem(Quantity.of(amount), medium);
-        Set<LineItemDTO> expectedLineItems = Set.of(DTOProvider.buildLineItemDTO(this.articleRepository, lineItem));
+        Set<LineItemDTO> expectedLineItems = Set.of(DTOProvider.buildLineItemDTO(lineItem));
 
         LineItem lineItemIncreasedAmount = new LineItem(Quantity.of(amount * 2), medium);
-        Set<LineItemDTO> expectedLineItemsIncreasedAmount = Set.of(DTOProvider.buildLineItemDTO(this.articleRepository, lineItemIncreasedAmount));
+        Set<LineItemDTO> expectedLineItemsIncreasedAmount = Set.of(DTOProvider.buildLineItemDTO(lineItemIncreasedAmount));
 
         //when
         this.shoppingCartService.addToShoppingCart(userId, mediumDTO, amount);
@@ -104,7 +92,6 @@ class ShoppingCartServiceTest {
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 3;
 
-        Mockito.when(this.articleRepository.findArticleById(medium.getAlbum().getId())).thenReturn(Optional.of(medium.getAlbum()));
         Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
@@ -170,7 +157,6 @@ class ShoppingCartServiceTest {
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 3;
 
-        Mockito.when(this.articleRepository.findArticleById(medium.getAlbum().getId())).thenReturn(Optional.of(medium.getAlbum()));
         Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
@@ -194,8 +180,6 @@ class ShoppingCartServiceTest {
         Medium medium1 = DomainFactory.createMedium(MediumType.CD);
         Medium medium2 = DomainFactory.createMedium(MediumType.CASSETTE);
 
-        Mockito.when(this.articleRepository.findArticleById(medium1.getAlbum().getId())).thenReturn(Optional.of(medium1.getAlbum()));
-        Mockito.when(this.articleRepository.findArticleById(medium2.getAlbum().getId())).thenReturn(Optional.of(medium2.getAlbum()));
         Mockito.when(this.mediumRepository.findMediumById(medium1.getId())).thenReturn(Optional.of(medium1));
         Mockito.when(this.mediumRepository.findMediumById(medium2.getId())).thenReturn(Optional.of(medium2));
 

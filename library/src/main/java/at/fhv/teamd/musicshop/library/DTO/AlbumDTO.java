@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class AlbumDTO implements ArticleDTO, Serializable {
     private static final long serialVersionUID = -3423050844004290443L;
@@ -67,12 +68,20 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AlbumDTO albumDTO = (AlbumDTO) o;
-        return id.equals(albumDTO.id) && title.equals(albumDTO.title) && label.equals(albumDTO.label) && releaseDate.equals(albumDTO.releaseDate) && genre.equals(albumDTO.genre) && musicbrainzId.equals(albumDTO.musicbrainzId) && artists.equals(albumDTO.artists) && Objects.equals(mediums, albumDTO.mediums) && Objects.equals(songs, albumDTO.songs);
+        return this.equalsWithoutSongs(albumDTO) && this.songs.stream().allMatch(songDTO -> albumDTO.songs.stream().anyMatch(songDTO::equalsWithoutAlbums));
+    }
+
+    boolean equalsWithoutSongs(AlbumDTO albumDTO) {
+        return id.equals(albumDTO.id) && title.equals(albumDTO.title) && label.equals(albumDTO.label) && releaseDate.equals(albumDTO.releaseDate) && genre.equals(albumDTO.genre) && musicbrainzId.equals(albumDTO.musicbrainzId) && artists.equals(albumDTO.artists) && Objects.equals(mediums, albumDTO.mediums);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, label, releaseDate, genre, musicbrainzId, artists, mediums, songs);
+        return Objects.hash(this.hashCodeWithoutSongs(), this.songs.stream().map(SongDTO::hashCodeWithoutAlbums).collect(Collectors.toSet()));
+    }
+
+    int hashCodeWithoutSongs() {
+        return Objects.hash(id, title, label, releaseDate, genre, musicbrainzId, artists, mediums);
     }
 
     public static class Builder {
@@ -102,10 +111,15 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
         }
 
         public AlbumDTO.Builder withAlbumSpecificData(
-                Set<MediumDTO> mediums,
-                Set<SongDTO> songs
+                Set<MediumDTO> mediums
         ) {
             this.instance.mediums = mediums;
+            return this;
+        }
+
+        public AlbumDTO.Builder withSongs(
+                Set<SongDTO> songs
+        ) {
             this.instance.songs = songs;
             return this;
         }

@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public final class SongDTO implements ArticleDTO, Serializable {
     private static final long serialVersionUID = 6177922003024617967L;
@@ -66,12 +67,20 @@ public final class SongDTO implements ArticleDTO, Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SongDTO songDTO = (SongDTO) o;
-        return id.equals(songDTO.id) && title.equals(songDTO.title) && label.equals(songDTO.label) && releaseDate.equals(songDTO.releaseDate) && genre.equals(songDTO.genre) && musicbrainzId.equals(songDTO.musicbrainzId) && artists.equals(songDTO.artists) && Objects.equals(length, songDTO.length) && Objects.equals(albums, songDTO.albums);
+        return this.equalsWithoutAlbums(songDTO) && this.albums.stream().allMatch(albumDTO -> songDTO.albums.stream().anyMatch(albumDTO::equalsWithoutSongs));
+    }
+
+    boolean equalsWithoutAlbums(SongDTO songDTO) {
+        return id.equals(songDTO.id) && title.equals(songDTO.title) && label.equals(songDTO.label) && releaseDate.equals(songDTO.releaseDate) && genre.equals(songDTO.genre) && musicbrainzId.equals(songDTO.musicbrainzId) && artists.equals(songDTO.artists) && Objects.equals(length, songDTO.length);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, label, releaseDate, genre, musicbrainzId, artists, length, albums);
+        return Objects.hash(this.hashCodeWithoutAlbums(), this.albums.stream().map(AlbumDTO::hashCodeWithoutSongs).collect(Collectors.toSet()));
+    }
+
+    int hashCodeWithoutAlbums() {
+        return Objects.hash(id, title, label, releaseDate, genre, musicbrainzId, artists, length);
     }
 
     public static class Builder {
@@ -101,10 +110,15 @@ public final class SongDTO implements ArticleDTO, Serializable {
         }
 
         public SongDTO.Builder withSongSpecificData(
-                Duration length,
-                Set<AlbumDTO> albums
+                Duration length
         ) {
             this.instance.length = length;
+            return this;
+        }
+
+        public SongDTO.Builder withAlbums(
+                Set<AlbumDTO> albums
+        ) {
             this.instance.albums = albums;
             return this;
         }
