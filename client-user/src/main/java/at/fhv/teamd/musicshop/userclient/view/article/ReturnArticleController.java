@@ -28,7 +28,6 @@ public class ReturnArticleController implements GenericArticleController {
     @FXML
     private Label mediumType;
 
-    private MediumDTO mediumDTO;
     private LineItemDTO lineItemDTO;
 
     @FXML
@@ -52,7 +51,7 @@ public class ReturnArticleController implements GenericArticleController {
 
     public void setMediumType(LineItemDTO lineItemDTO) {
         this.lineItemDTO = lineItemDTO;
-        this.mediumDTO = lineItemDTO.medium();
+        MediumDTO mediumDTO = lineItemDTO.medium();
         this.mediumType.setText(mediumDTO.type());
         this.mediumAmount.setText(lineItemDTO.quantity().toString());
         this.mediumAmountSelected.setText(String.valueOf(0));
