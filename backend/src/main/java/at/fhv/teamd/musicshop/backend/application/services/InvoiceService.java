@@ -16,11 +16,9 @@ import java.util.Set;
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildInvoiceDTO;
 
 public class InvoiceService {
-    private static ArticleRepository articleRepository;
     private static InvoiceRepository invoiceRepository;
 
     InvoiceService() {
-        articleRepository = RepositoryFactory.getArticleRepositoryInstance();
         invoiceRepository = RepositoryFactory.getInvoiceRepositoryInstance();
     }
 
@@ -34,7 +32,7 @@ public class InvoiceService {
     }
 
     public InvoiceDTO searchInvoiceById(Long id) {
-        return buildInvoiceDTO(articleRepository, invoiceRepository.findInvoiceById(id).orElseThrow());
+        return buildInvoiceDTO(invoiceRepository.findInvoiceById(id).orElseThrow());
     }
 
     public boolean returnItem(LineItemDTO lineItem, int quantity) {

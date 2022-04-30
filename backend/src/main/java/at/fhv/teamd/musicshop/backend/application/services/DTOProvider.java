@@ -96,10 +96,10 @@ public class DTOProvider {
         ).build();
     }
 
-    static InvoiceDTO buildInvoiceDTO(ArticleRepository articleRepository, Invoice invoice) {
+    static InvoiceDTO buildInvoiceDTO(Invoice invoice) {
         return InvoiceDTO.builder().withInvoiceData(
                 invoice.getId(),
-                invoice.getLineItems().stream().map(li -> buildLineItemDTO(articleRepository, li)).collect(Collectors.toUnmodifiableSet()),
+                invoice.getLineItems().stream().map(DTOProvider::buildLineItemDTO).collect(Collectors.toUnmodifiableSet()),
                 invoice.getTotalPrice(),
                 invoice.getCustomerNo()
         ).build();

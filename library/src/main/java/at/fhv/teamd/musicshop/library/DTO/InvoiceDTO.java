@@ -35,6 +35,19 @@ public class InvoiceDTO implements Serializable {
     private InvoiceDTO() {
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InvoiceDTO that = (InvoiceDTO) o;
+        return Objects.equals(id, that.id) && Objects.equals(lineItems, that.lineItems) && Objects.equals(totalPrice, that.totalPrice) && Objects.equals(customerNo, that.customerNo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, lineItems, totalPrice, customerNo);
+    }
+
     public static class Builder {
         private InvoiceDTO instance;
 

@@ -11,6 +11,7 @@ import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.DTO.InvoiceDTO;
+import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
+import javax.sound.sampled.Line;
 import java.util.Optional;
 import java.util.Set;
 
@@ -46,14 +48,10 @@ class InvoiceServiceTest {
     @Test
     public void given_InvoiceService_when_createInvoice_then_repository_contains_invoiceWithoutCustomer() {
         // given
-        Medium medium = DomainFactory.createMedium(MediumType.CD);
-        int amount = 2;
-
-        LineItem lineItem = new LineItem(Quantity.of(amount), medium);
-        Invoice expectedInvoice = Invoice.of(Set.of(lineItem));
+        Invoice expectedInvoice = Invoice.of(Set.of(DomainFactory.createLineItem()));
 
         // when
-        invoiceService.createInvoice(Set.of(lineItem), 0);
+        invoiceService.createInvoice(expectedInvoice.getLineItems(), 0);
 
         // then
         Mockito.verify(invoiceRepository).addInvoice(expectedInvoice);
@@ -62,14 +60,10 @@ class InvoiceServiceTest {
     @Test
     public void given_InvoiceService_when_createInvoice_then_repository_contains_invoiceWithCustomer() {
         // given
-        Medium medium = DomainFactory.createMedium(MediumType.CD);
-        int amount = 2;
-
-        LineItem lineItem = new LineItem(Quantity.of(amount), medium);
-        Invoice expectedInvoice = Invoice.of(Set.of(lineItem), 1);
+        Invoice expectedInvoice = Invoice.of(Set.of(DomainFactory.createLineItem()), 2);
 
         // when
-        invoiceService.createInvoice(Set.of(lineItem), 1);
+        invoiceService.createInvoice(expectedInvoice.getLineItems(), 2);
 
         // then
         Mockito.verify(invoiceRepository).addInvoice(expectedInvoice);
@@ -78,16 +72,9 @@ class InvoiceServiceTest {
     @Test
     public void given_InvoiceService_when_searchInvoiceById_then_return_InvoiceDTO() {
         // given
-        Medium medium = DomainFactory.createMedium(MediumType.CD);
-
-        Mockito.when(this.articleRepository.findArticleById(medium.getAlbum().getId())).thenReturn(Optional.of(medium.getAlbum()));
-        Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
-
         Invoice invoice = DomainFactory.createInvoice();
-
         Mockito.when(invoiceRepository.findInvoiceById(invoice.getId())).thenReturn(Optional.of(invoice));
-
-        InvoiceDTO expectedInvoiceDTO = DTOProvider.buildInvoiceDTO(articleRepository, invoice);
+        InvoiceDTO expectedInvoiceDTO = DTOProvider.buildInvoiceDTO(invoice);
 
         // when
         InvoiceDTO actualInvoiceDTO = invoiceService.searchInvoiceById(invoice.getId());
@@ -98,6 +85,16 @@ class InvoiceServiceTest {
 
     @Test
     public void given_InvoiceService_when_returnItem_then_return_quantity_increased() {
+        // given
+        Invoice invoice = DomainFactory.createInvoice();
+        LineItem lineItem = invoice.getLineItems().iterator().next();
 
+        int amountToReturn = 1;
+
+        Mockito.when(invoiceRepository.findInvoiceByLineItemId(lineItem.getId())).thenReturn(Optional.of(invoice).get());
+
+        // when .. then
+        Assertions.assertTrue(invoiceService.returnItem(DTOProvider.buildLineItemDTO(lineItem), amountToReturn));
+        Assertions.assertEquals(amountToReturn, lineItem.getQuantityReturn().getValue());
     }
 }

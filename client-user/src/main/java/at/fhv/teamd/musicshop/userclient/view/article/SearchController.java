@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.userclient.view.article;
 
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
+import at.fhv.teamd.musicshop.library.DTO.SongDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.Tabs;
@@ -13,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 public class SearchController {
@@ -24,12 +26,26 @@ public class SearchController {
     @FXML
     private VBox searchPane;
 
+    public void searchAlbum(SongDTO song) {
+        this.searchPane.getChildren().clear();
+
+        this.searchByTitle.setText(song.title());
+        this.searchByArtist.setText(song.artists().iterator().next().name());
+
+        try {
+            this.insertResults(new HashSet<>(song.albums()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void insertResults(Set<ArticleDTO> results) throws IOException {
         for (var article : results) {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/article.fxml"));
             Parent medium = fxmlLoader.load();
             ArticleController controller = fxmlLoader.getController();
             controller.addMediumTypes(article, Tabs.SEARCH);
+            controller.setSearchController(this);
             this.searchPane.getChildren().add(medium);
         }
     }
