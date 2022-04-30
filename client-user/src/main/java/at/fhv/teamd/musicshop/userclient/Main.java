@@ -15,10 +15,6 @@ import java.util.Objects;
 
 public class Main extends Application {
 
-    // TODO: hide features if not authorized
-    // TODO: hide features if not authorized
-    // TODO: hide features if not authorized
-
     @Override
     public void start(Stage stage) {
         try {
