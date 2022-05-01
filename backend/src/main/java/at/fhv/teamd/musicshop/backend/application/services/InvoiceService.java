@@ -7,7 +7,9 @@ import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.DTO.InvoiceDTO;
 import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
+import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 
+import java.util.Optional;
 import java.util.Set;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildInvoiceDTO;
@@ -28,21 +30,29 @@ public class InvoiceService {
         System.out.println("created new invoice");
     }
 
-    public InvoiceDTO searchInvoiceById(Long id) {
-        return buildInvoiceDTO(invoiceRepository.findInvoiceById(id).orElseThrow());
+    public InvoiceDTO searchInvoiceById(Long id) throws InvoiceException {
+        Optional<Invoice> invoiceOpt = invoiceRepository.findInvoiceById(id);
+        if (invoiceOpt.isPresent()) {
+            return buildInvoiceDTO(invoiceOpt.get());
+        } else {
+            throw new InvoiceException("Invoice not found");
+        }
     }
 
-    public boolean returnItem(LineItemDTO lineItem, int quantity) {
-        Invoice invoice = invoiceRepository.findInvoiceByLineItemId(lineItem.id());
+    public void returnItem(LineItemDTO lineItem, int quantity) throws InvoiceException {
+        Optional<Invoice> invoiceOpt = invoiceRepository.findInvoiceByLineItemId(lineItem.id());
 
-        invoice.getLineItems()
-                .stream()
-                .filter(lineItem1 -> lineItem1.getId() == lineItem.id())
-                .findFirst()
-                .orElseThrow()
-                .increaseQuantityReturned(Quantity.of(quantity));
-
-        invoiceRepository.update(invoice);
-        return true;
+        if (invoiceOpt.isPresent()) {
+            Invoice invoice = invoiceOpt.get();
+            invoice.getLineItems()
+                    .stream()
+                    .filter(lineItem1 -> lineItem1.getId() == lineItem.id())
+                    .findFirst()
+                    .orElseThrow(() -> new InvoiceException("LineItem not found"))
+                    .increaseQuantityReturned(Quantity.of(quantity));
+            invoiceRepository.update(invoice);
+        } else {
+            throw new InvoiceException("Invoice not found");
+        }
     }
 }

@@ -58,16 +58,16 @@ public class InvoiceHibernateRepository implements InvoiceRepository {
 
     @Override
     @Transactional
-    public Invoice findInvoiceByLineItemId(Long lineItemId) {
+    public Optional<Invoice> findInvoiceByLineItemId(Long lineItemId) {
         Objects.requireNonNull(lineItemId);
 
         EntityManager em = PersistenceManager.getEntityManagerInstance();
 
         TypedQuery<Invoice> query = em.createQuery("SELECT i FROM Invoice i ", Invoice.class);
 
-        Invoice invoiceToReturn = query.getResultList().stream()
+        Optional<Invoice> invoiceToReturn = query.getResultList().stream()
                 .filter(invoice -> invoice.getLineItems().stream().anyMatch(lineItem -> lineItem.getId() == lineItemId))
-                .findFirst().orElseThrow();
+                .findFirst();
 
         em.close();
 
