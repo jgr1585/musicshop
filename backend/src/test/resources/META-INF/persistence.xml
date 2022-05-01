@@ -16,7 +16,12 @@
         <class>at.fhv.teamd.musicshop.backend.domain.medium.Stock</class>
         <class>at.fhv.teamd.musicshop.backend.domain.medium.Supplier</class>
 
+        <class>at.fhv.teamd.musicshop.backend.domain.invoice.Invoice</class>
+
         <class>at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem</class>
+
+        <class>at.fhv.teamd.musicshop.backend.domain.user.Employee</class>
+        <class>at.fhv.teamd.musicshop.backend.domain.topic.Topic</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
