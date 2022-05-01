@@ -8,13 +8,21 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
+import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
+import at.fhv.teamd.musicshop.backend.domain.user.Employee;
+import at.fhv.teamd.musicshop.library.permission.UserRole;
+import org.hibernate.mapping.Collection;
 
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class BaseRepositoryData {
 
@@ -152,9 +160,11 @@ public abstract class BaseRepositoryData {
                 mbidUnion,
                 Set.of(songUnion1, songUnion2, songUnion3, songUnion4, songUnion5, songUnion6, songUnion7));
 
+        albumUnion.getSongs()
+                .forEach(song -> setObjField(song, "albums", Set.of(albumUnion)));
+
         //ALBUM 4
         Artist artistAnti1 = new Artist("Rihanna");
-        Artist artistAnti2 = new Artist("SZA");
 
         String mbidAnti = "a84dea70-f81b-4761-a39c-2dd3a9e985cc";
         String labelAnti = "Westbury Road Entertainment";
@@ -182,6 +192,9 @@ public abstract class BaseRepositoryData {
                 genreAnti,
                 mbidAnti,
                 Set.of(songAnti1, songAnti2, songAnti3, songAnti4, songAnti5, songAnti6, songAnti7, songAnti8, songAnti9, songAnti10, songAnti11, songAnti12, songAnti13));
+
+        albumAnti.getSongs()
+                .forEach(song -> setObjField(song, "albums", Set.of(albumAnti)));
 
         //ALBUM 5
         Artist artistLetItBe1 = new Artist("The Beatles");
@@ -237,6 +250,9 @@ public abstract class BaseRepositoryData {
                 mbidEverything,
                 Set.of(songEverything1, songEverything2, songEverything3, songEverything4, songEverything5, songEverything6, songEverything7, songEverything8));
 
+        albumEverything.getSongs()
+                .forEach(song -> setObjField(song, "albums", Set.of(albumEverything)));
+
         //ALBUM 7
         Artist artistTouchBlue1 = new Artist("Miles Davis");
         Artist artistTouchBlue2 = new Artist("Bill Evans");
@@ -260,6 +276,30 @@ public abstract class BaseRepositoryData {
                 genreTouchBlue,
                 mbidTouchBlue,
                 Set.of(songTouchBlue1, songTouchBlue2, songTouchBlue3, songTouchBlue4, songTouchBlue5, songTouchBlue6));
+
+        // create album
+        albums.add(albumLongLive);
+        albums.add(albumUntamedDesire);
+        albums.add(albumUnion);
+        albums.add(albumAnti);
+        albums.add(albumLetItBe);
+        albums.add(albumEverything);
+        albums.add(albumTouchBlue);
+
+        // create song
+        songs.addAll(albums.stream()
+                .map(Album::getSongs)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet()));
+
+        // create artist
+        artists.addAll(songs.stream()
+                .map(Song::getArtists)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet()));
+
+        albumTouchBlue.getSongs()
+                .forEach(song -> setObjField(song, "albums", Set.of(albumTouchBlue)));
 
         // create mediums
         Set<Medium> mediums = new LinkedHashSet<>();

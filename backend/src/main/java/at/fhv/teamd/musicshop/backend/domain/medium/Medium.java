@@ -44,4 +44,19 @@ public class Medium {
     public void setStock(Stock stock) {
         this.stock = stock;
     }
+
+    //TODO: Look over it again
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Medium medium = (Medium) o;
+        return id == medium.id && type == medium.type;
+    }
+
+    //TODO: FIX
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(id, type);
+//    }
 }

@@ -141,7 +141,7 @@ class ShoppingCartServiceTest {
     @Test
     public void given_emptyShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() {
         //given
-        String userId = "user1234";
+        String userId = "user1239";
 
         //when
         Assertions.assertThrows(IllegalArgumentException.class, () -> this.shoppingCartService.buyFromShoppingCart(userId, 0));
@@ -176,20 +176,17 @@ class ShoppingCartServiceTest {
     @Test
     public void given_shoppingCart_when_initializeShoppingCart_then_returnEqual() {
         //given
-        String userId1 = "user1234";
-        String userId2 = "user5678";
-        Medium medium1 = DomainFactory.createMedium(MediumType.CD);
-        Medium medium2 = DomainFactory.createMedium(MediumType.CASSETTE);
+        String userId1 = "user1236";
+        String userId2 = "user5679";
+        Medium medium = DomainFactory.createMedium(MediumType.CD);
 
-        Mockito.when(this.mediumRepository.findMediumById(medium1.getId())).thenReturn(Optional.of(medium1));
-        Mockito.when(this.mediumRepository.findMediumById(medium2.getId())).thenReturn(Optional.of(medium2));
+        Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
-        MediumDTO mediumDTO1 = DTOProvider.buildMediumDTO(medium1);
-        MediumDTO mediumDTO2 = DTOProvider.buildMediumDTO(medium2);
+        MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
+        this.shoppingCartService.addToShoppingCart(userId1, mediumDTO, 2);
+        this.shoppingCartService.addToShoppingCart(userId2, mediumDTO, 4);
 
         //when
-        this.shoppingCartService.addToShoppingCart(userId1, mediumDTO1, 2);
-        this.shoppingCartService.addToShoppingCart(userId2, mediumDTO2, 2);
         ShoppingCartDTO shoppingCartDTO1 = this.shoppingCartService.getShoppingCart(userId1);
         ShoppingCartDTO shoppingCartDTO2 = this.shoppingCartService.getShoppingCart(userId1);
         ShoppingCartDTO shoppingCartDTO3 = this.shoppingCartService.getShoppingCart(userId2);

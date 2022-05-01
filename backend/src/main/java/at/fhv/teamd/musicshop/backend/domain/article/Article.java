@@ -45,4 +45,17 @@ public abstract class Article {
         this.musicbrainzId = Objects.requireNonNull(musicbrainzId);
         this.artists = Objects.requireNonNull(artists);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return id == article.id && Objects.equals(title, article.title) && Objects.equals(label, article.label) && Objects.equals(releaseDate, article.releaseDate) && Objects.equals(genre, article.genre) && Objects.equals(musicbrainzId, article.musicbrainzId) && this.artists.containsAll(article.artists) && article.artists.containsAll(this.artists);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, label, releaseDate, genre, musicbrainzId, artists);
+    }
 }
