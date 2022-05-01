@@ -6,6 +6,5 @@ import java.util.Optional;
 
 public interface MediumRepository {
     Optional<Medium> findMediumById(Long id);
-
     void update(Medium medium);
 }

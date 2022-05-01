@@ -37,13 +37,12 @@ public class ArticleController {
     @FXML
     private Label releaseDate;
 
-    private SearchArticleController searchArticleController;
+    private SearchController searchController;
 
     // select cover art for album
     private final Consumer<ArticleDTO> loadCoverArtConsumer = articleDTO -> {
         try {
             this.loadCoverArt(articleDTO);
-
         } catch (IOException ignored) {}
     };
 
@@ -77,7 +76,7 @@ public class ArticleController {
                 controller.setMediumType(articleDTO, mediumDTO);
                 this.mediumTypeList.getChildren().add(root);
             }
-        } else if (articleDTO instanceof SongDTO && this.searchArticleController != null) {
+        } else if (articleDTO instanceof SongDTO && this.searchController != null) {
             this.mediumTypeList.getChildren().add(this.createFindAlbumButton((SongDTO) articleDTO));
         }
     }
@@ -113,8 +112,8 @@ public class ArticleController {
         this.mediumTypeList.getChildren().add(root);
     }
 
-    public void setSearchArticleController(SearchArticleController searchArticleController) {
-        this.searchArticleController = searchArticleController;
+    public void setSearchController(SearchController searchController) {
+        this.searchController = searchController;
     }
 
     private void loadCoverArt(ArticleDTO articleDTO) throws IOException {
@@ -169,7 +168,7 @@ public class ArticleController {
         findButton.setMaxHeight(26);
         findButton.setStyle("-fx-background-color: #547af9;");
 
-        findButton.setOnAction(event -> this.searchArticleController.searchAlbum(songDTO));
+        findButton.setOnAction(event -> this.searchController.searchAlbum(songDTO));
 
         return findButton;
     }

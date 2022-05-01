@@ -17,6 +17,7 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     private final AuthService authService = ServiceFactory.getAuthServiceInstance();
     private final ArticleService articleService = ServiceFactory.getArticleServiceInstance();
     private final CustomerService customerService = ServiceFactory.getCustomerServiceInstance();
+    private final InvoiceService invoiceService = ServiceFactory.getInvoiceServiceInstance();
     private final MessageService messageService = ServiceFactory.getMessageServiceInstance();
     private final ShoppingCartService shoppingCartService = ServiceFactory.getShoppingCartServiceInstance();
 
@@ -54,17 +55,31 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.addToShoppingCart);
+    public InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException, InvoiceException {
+        authService.authorizeAccessLevels(RemoteFunctionPermission.findInvoiceById);
 
-        return shoppingCartService.addToShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
+        return invoiceService.searchInvoiceById(id);
     }
 
     @Override
-    public boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
+    public void returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException, InvoiceException {
+        authService.authorizeAccessLevels(RemoteFunctionPermission.returnItem);
+
+        invoiceService.returnItem(lineItem, quantity);
+    }
+
+    @Override
+    public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
+        authService.authorizeAccessLevels(RemoteFunctionPermission.addToShoppingCart);
+
+        shoppingCartService.addToShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
+    }
+
+    @Override
+    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.removeFromShoppingCart);
 
-        return shoppingCartService.removeFromShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
+        shoppingCartService.removeFromShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
     }
 
     @Override
@@ -75,10 +90,10 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public boolean buyFromShoppingCart(int customerId) throws NotAuthorizedException {
+    public void buyFromShoppingCart(int customerId) throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.buyFromShoppingCart);
 
-        return shoppingCartService.buyFromShoppingCart(applicationClientSession.getUserId(), customerId);
+        shoppingCartService.buyFromShoppingCart(applicationClientSession.getUserId(), customerId);
     }
 
     @Override

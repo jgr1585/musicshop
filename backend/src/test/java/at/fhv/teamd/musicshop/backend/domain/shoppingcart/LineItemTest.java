@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 public class LineItemTest {
     @Test
-    void given_quantity_when_increasequantity_then_returnincreasedqunatity() throws NoSuchFieldException, IllegalAccessException {
+    void given_quantity_when_increasequantity_then_returnincreasedqunatity() {
         //given
         LineItem lineItem = new LineItem(Quantity.of(30), DomainFactory.createMedium(MediumType.CD));
         Quantity quantity = Quantity.of(20);
@@ -26,7 +26,7 @@ public class LineItemTest {
     }
 
     @Test
-    void given_quantity_when_decreasequantity_then_returndecreasedqunatity() throws NoSuchFieldException, IllegalAccessException {
+    void given_quantity_when_decreasequantity_then_returndecreasedqunatity() {
         //given
         LineItem lineItem = new LineItem(Quantity.of(30), DomainFactory.createMedium(MediumType.CD));
         Quantity quantity = Quantity.of(20);
@@ -41,7 +41,7 @@ public class LineItemTest {
     }
 
     @Test
-    void given_lineItemdetails_whengetdetails_then_detailsequal() throws NoSuchFieldException, IllegalAccessException {
+    void given_lineItemdetails_whengetdetails_then_detailsequal() {
         //given
         Quantity quantity = Quantity.of(60);
         Medium medium = DomainFactory.createMedium(MediumType.VINYL);
@@ -61,7 +61,7 @@ public class LineItemTest {
     }
 
     @Test
-    void given_priceandquantity_when_gettotalprice_then_returntotalprice() throws NoSuchFieldException, IllegalAccessException {
+    void given_priceandquantity_when_gettotalprice_then_returntotalprice() {
         //given
         Medium medium = DomainFactory.createMedium(MediumType.DIGITAL);
         Quantity quantity = Quantity.of(20);

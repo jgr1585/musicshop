@@ -8,7 +8,7 @@ class QuantityTest {
     @Test
     void given_quantity_when_lessthen0_then_throwsillegalargumentexception() {
         //given
-        Integer value = -6;
+        int value = -6;
 
         //when...then
         Assertions.assertThrows(IllegalArgumentException.class,() -> Quantity.of(value));

@@ -140,7 +140,7 @@ public final class CustomerDTO implements Serializable {
     }
 
     public static class Builder {
-        private CustomerDTO instance;
+        private final CustomerDTO instance;
 
         private Builder() {
             this.instance = new CustomerDTO();

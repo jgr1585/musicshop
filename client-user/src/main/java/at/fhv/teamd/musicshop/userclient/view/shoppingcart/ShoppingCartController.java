@@ -111,11 +111,8 @@ public class ShoppingCartController implements ShoppingCartObserver {
 
         Optional<ButtonType> returnValue = confDialog.showAndWait();
         if (returnValue.isPresent() && returnValue.get() == confirmButton) {
-            if (RemoteFacade.getInstance().buyFromShoppingCart(customer)) {
-                new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
-            } else {
-                new Alert(Alert.AlertType.ERROR, "Purchase of items failed", ButtonType.CLOSE).show();
-            }
+            RemoteFacade.getInstance().buyFromShoppingCart(customer);
+            new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
             reloadShoppingCart();
             removeCustomer();
             appController.selectSearchTab();

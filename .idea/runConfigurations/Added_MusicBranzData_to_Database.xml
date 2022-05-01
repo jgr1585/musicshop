@@ -1,7 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Added MusicBranzData to Database" type="DatabaseScript">
     <data-source id="7eb01dad-b83a-48e7-bd17-918682b0632f" namespace="database/&quot;postgres&quot;/schema/&quot;public&quot;" />
-    <script-text>CREATE EXTENSION IF NOT EXISTS postgres_fdw;
+    <script-text>-- noinspection SqlWithoutWhereForFile
+
+CREATE EXTENSION IF NOT EXISTS postgres_fdw;
 
 CREATE SERVER IF NOT EXISTS server_name FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host '10.0.40.166',
     dbname 'postgres', port '5432');

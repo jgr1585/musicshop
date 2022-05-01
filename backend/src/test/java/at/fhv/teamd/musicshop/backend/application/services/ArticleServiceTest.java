@@ -35,7 +35,7 @@ public class ArticleServiceTest {
     }
 
     @Test
-    public void given_ArticleService_when_searchArticles_then_returnListOfArticles() throws NoSuchFieldException, IllegalAccessException {
+    public void given_ArticleService_when_searchArticles_then_returnListOfArticles() {
         // given
         Article article = DomainFactory.createArticle();
         String title = article.getTitle();
@@ -44,8 +44,6 @@ public class ArticleServiceTest {
         articles.add(article);
 
         Mockito.when(this.articleRepository.searchArticlesByAttributes(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString())).thenReturn(articles);
-
-        System.out.println(this.articleRepository.searchArticlesByAttributes(title, artistName));
 
         Set<ArticleDTO> expectedArticleDTOS = articles.stream()
                 .map(DTOProvider::buildArticleDTO)

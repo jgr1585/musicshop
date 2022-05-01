@@ -4,6 +4,7 @@ import at.fhv.teamd.musicshop.backend.domain.DomainFactory;
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
+import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
@@ -29,20 +30,22 @@ class ShoppingCartServiceTest {
 
     @Mock
     private MediumRepository mediumRepository;
-
+    @Mock
+    private InvoiceRepository invoiceRepository;
 
     private ShoppingCartService shoppingCartService;
 
     @BeforeEach
     public void init() {
         RepositoryFactory.setMediumRepository(this.mediumRepository);
+        RepositoryFactory.setInvoiceRepository(this.invoiceRepository);
         this.shoppingCartService = new ShoppingCartService();
     }
 
     @Test
-    public void given_shoppingCartService_when_addToShoppingCart_then_returnRefreshedShoppingCart() throws NoSuchFieldException, IllegalAccessException {
+    public void given_shoppingCartService_when_addToShoppingCart_then_returnRefreshedShoppingCart() {
         //given
-        String userId = "user1234";
+        String userId = "user123456";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 2;
 
@@ -86,9 +89,9 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    public void given_shoppingCartService_when_removeFromShoppingCart_then_returnRefreshedShoppingCart() throws NoSuchFieldException, IllegalAccessException {
+    public void given_shoppingCartService_when_removeFromShoppingCart_then_returnRefreshedShoppingCart() {
         //given
-        String userId = "user1234";
+        String userId = "user12345";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 3;
 
@@ -108,16 +111,15 @@ class ShoppingCartServiceTest {
         //when remove 2 of 2
         this.shoppingCartService.removeFromShoppingCart(userId, mediumDTO, 2);
 
-        //then quantity should equal 2
+        //then quantity should equal 0
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
-        Assertions.assertFalse(this.shoppingCartService.removeFromShoppingCart("user0000", mediumDTO, 10));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.shoppingCartService.removeFromShoppingCart("user0000", mediumDTO, 10));
     }
 
-    // TODO: fix update of quantity
     @Test
-    public void given_articlesInShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() throws NoSuchFieldException, IllegalAccessException {
+    public void given_articlesInShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() {
         //given
-        String userId = "user1234";
+        String userId = "user1234567";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 1;
         int expectedAmount = medium.getStock().getQuantity().getValue() - amount;
@@ -133,7 +135,7 @@ class ShoppingCartServiceTest {
 
         //then
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
-//        Assertions.assertEquals(expectedAmount, medium.getStock().getQuantity().getValue());
+        Assertions.assertEquals(expectedAmount, medium.getStock().getQuantity().getValue());
     }
 
     @Test
@@ -142,15 +144,14 @@ class ShoppingCartServiceTest {
         String userId = "user1234";
 
         //when
-        this.shoppingCartService.buyFromShoppingCart(userId, 0);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.shoppingCartService.buyFromShoppingCart(userId, 0));
 
         //then
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
     }
 
-    // TODO: not in stock exception
     @Test
-    public void given_articlesInShoppingCart_when_buyFromShoppingCart_item_not_in_stock_then_Throw_Exeption() throws NoSuchFieldException, IllegalAccessException {
+    public void given_articlesInShoppingCart_when_buyFromShoppingCart_item_not_in_stock_then_Throw_Exeption() {
         //given
         String userId1 = "user1234";
         String userId2 = "user5678";
@@ -165,7 +166,7 @@ class ShoppingCartServiceTest {
 
         //when
         Assertions.assertDoesNotThrow(() -> this.shoppingCartService.buyFromShoppingCart(userId1, 0));
-//        Assertions.assertThrows(RuntimeException.class,() -> this.shoppingCartService.buyFromShoppingCart(userId2, 0));
+        Assertions.assertThrows(RuntimeException.class,() -> this.shoppingCartService.buyFromShoppingCart(userId2, 0));
 
         //then
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId1).lineItems().isEmpty());
@@ -173,7 +174,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    public void given_shoppingCart_when_initializeShoppingCart_then_returnEqual() throws NoSuchFieldException, IllegalAccessException {
+    public void given_shoppingCart_when_initializeShoppingCart_then_returnEqual() {
         //given
         String userId1 = "user1234";
         String userId2 = "user5678";

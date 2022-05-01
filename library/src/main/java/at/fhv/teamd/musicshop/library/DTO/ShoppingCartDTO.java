@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
-public class ShoppingCartDTO implements Serializable {
+public final class ShoppingCartDTO implements Serializable {
     private static final long serialVersionUID = -4652034296336248491L;
 
     private Set<LineItemDTO> lineItems;
@@ -42,7 +42,7 @@ public class ShoppingCartDTO implements Serializable {
     }
 
     public static class Builder {
-        private ShoppingCartDTO instance;
+        private final ShoppingCartDTO instance;
 
         private Builder() {
             this.instance = new ShoppingCartDTO();
