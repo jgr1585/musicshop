@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.userclient.view.article;
 
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
+import at.fhv.teamd.musicshop.library.DTO.SongDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
@@ -15,7 +16,9 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SearchArticleController {
 
@@ -25,6 +28,8 @@ public class SearchArticleController {
     private TextField searchByTitle;
     @FXML
     private TextField searchByArtist;
+    @FXML
+    private MenuButton searchByMedium;
 
     @FXML
     private VBox searchPane;
@@ -45,8 +50,22 @@ public class SearchArticleController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/article.fxml"));
             Parent medium = fxmlLoader.load();
             ArticleController controller = fxmlLoader.getController();
+            controller.setSearchArticleController(this);
             controller.addMediumTypes(article, Tabs.SEARCH);
             this.searchPane.getChildren().add(medium);
+        }
+    }
+
+    public void searchAlbum(SongDTO song) {
+        this.searchPane.getChildren().clear();
+
+        this.searchByTitle.setText(song.title());
+        this.searchByArtist.setText(song.artists().iterator().next().name());
+
+        try {
+            this.insertResults(new HashSet<>(song.albums()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -70,6 +89,7 @@ public class SearchArticleController {
         this.searchPane.getChildren().clear();
         this.searchByTitle.setText("");
         this.searchByArtist.setText("");
+        this.searchByMedium.setText("");
     }
 
 }
