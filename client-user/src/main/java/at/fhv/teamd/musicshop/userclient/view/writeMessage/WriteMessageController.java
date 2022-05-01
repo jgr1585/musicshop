@@ -49,7 +49,7 @@ public class WriteMessageController {
     }
 
     @FXML
-    private void sendMessage(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
+    private void sendMessage(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException, MessagingException {
         if (this.selectedTopic == null) {
             new Alert(Alert.AlertType.ERROR, "No Topic is selected", ButtonType.CLOSE).show();
         } else if (this.messageTitle.getText().equals("")) {
@@ -64,15 +64,9 @@ public class WriteMessageController {
                             messageBody.getText())
                     .build();
 
-            try {
-                RemoteFacade.getInstance().publishMessage(message);
-
-                new Alert(Alert.AlertType.INFORMATION, "Message successfully sent", ButtonType.CLOSE).show();
-                resetMessage();
-
-            } catch (MessagingException e) {
-                new Alert(Alert.AlertType.ERROR, "Send message failed", ButtonType.CLOSE).show();
-            }
+            RemoteFacade.getInstance().publishMessage(message);
+            new Alert(Alert.AlertType.INFORMATION, "Message successfully sent", ButtonType.CLOSE).show();
+            resetMessage();
         }
     }
 
