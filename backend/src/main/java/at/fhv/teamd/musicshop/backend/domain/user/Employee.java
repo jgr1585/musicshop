@@ -7,6 +7,7 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -43,7 +44,7 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return Objects.equals(userName, employee.userName);
+        return userName.equals(employee.userName);
     }
 
     @Override

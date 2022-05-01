@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 public class Artist {
@@ -12,12 +13,16 @@ public class Artist {
     @GeneratedValue
     private long id;
 
+    @Column(unique = true)
+    private UUID uuid;
+
     @Column
     private String name;
 
     protected Artist() {}
 
     public Artist(String name) {
+        this.uuid = UUID.randomUUID();
         this.name = Objects.requireNonNull(name);
     }
 
