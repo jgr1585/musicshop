@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class LineItemDTO implements Serializable {
+public final class LineItemDTO implements Serializable {
     private static final long serialVersionUID = 7231320470816137658L;
 
     private Long id;

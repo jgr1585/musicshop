@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
 
-public class InvoiceDTO implements Serializable {
+public final class InvoiceDTO implements Serializable {
 
     private Long id;
     private Set<LineItemDTO> lineItems;
