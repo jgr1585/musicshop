@@ -10,6 +10,7 @@ import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
+import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -85,12 +86,18 @@ public class DomainFactory {
     }
 
     public static LineItem createLineItem() {
-        return new LineItem(Quantity.of(3), createMedium(MediumType.CD));
+        LineItem lineItem = new LineItem(Quantity.of(3), createMedium(MediumType.CD));
+        setObjField(lineItem, "id", UUID.randomUUID().getMostSignificantBits());
+        return lineItem;
     }
 
     public static Invoice createInvoice() {
         Invoice invoice = Invoice.of(Set.of(createLineItem()));
         setObjField(invoice, "id", UUID.randomUUID().getMostSignificantBits());
         return invoice;
+    }
+
+    public static Topic createTopic(String name) {
+        return new Topic(name);
     }
 }
