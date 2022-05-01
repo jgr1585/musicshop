@@ -55,31 +55,31 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException {
+    public InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException, InvoiceException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.findInvoiceById);
 
         return invoiceService.searchInvoiceById(id);
     }
 
     @Override
-    public boolean returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException {
+    public void returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException, InvoiceException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.returnItem);
 
-        return invoiceService.returnItem(lineItem, quantity);
+        invoiceService.returnItem(lineItem, quantity);
     }
 
     @Override
-    public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
+    public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.addToShoppingCart);
 
-        return shoppingCartService.addToShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
+        shoppingCartService.addToShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
     }
 
     @Override
-    public boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
+    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.removeFromShoppingCart);
 
-        return shoppingCartService.removeFromShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
+        shoppingCartService.removeFromShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
     }
 
     @Override
@@ -90,10 +90,10 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public boolean buyFromShoppingCart(int customerId) throws NotAuthorizedException {
+    public void buyFromShoppingCart(int customerId) throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.buyFromShoppingCart);
 
-        return shoppingCartService.buyFromShoppingCart(applicationClientSession.getUserId(), customerId);
+        shoppingCartService.buyFromShoppingCart(applicationClientSession.getUserId(), customerId);
     }
 
     @Override

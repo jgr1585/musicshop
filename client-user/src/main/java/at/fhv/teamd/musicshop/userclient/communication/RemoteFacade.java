@@ -69,29 +69,26 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException {
+    public InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException, InvoiceException {
         return getApplicationClientOrThrow().findInvoiceById(id);
     }
 
     @Override
-    public boolean returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException {
-        boolean returnValue = getApplicationClientOrThrow().returnItem(lineItem, quantity);
-        if (returnValue) ReturnSubject.notifyReturnUpdate();
-        return returnValue;
+    public void returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException, InvoiceException {
+        getApplicationClientOrThrow().returnItem(lineItem, quantity);
+        ReturnSubject.notifyReturnUpdate();
     }
 
     @Override
-    public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
-        boolean returnValue = getApplicationClientOrThrow().addToShoppingCart(mediumDTO, amount);
-        if (returnValue) ShoppingCartSubject.notifyShoppingCartUpdate();
-        return returnValue;
+    public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
+        getApplicationClientOrThrow().addToShoppingCart(mediumDTO, amount);
+        ShoppingCartSubject.notifyShoppingCartUpdate();
     }
 
     @Override
-    public boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
-        boolean returnValue = getApplicationClientOrThrow().removeFromShoppingCart(mediumDTO, amount);
-        if (returnValue) ShoppingCartSubject.notifyShoppingCartUpdate();
-        return returnValue;
+    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
+        getApplicationClientOrThrow().removeFromShoppingCart(mediumDTO, amount);
+        ShoppingCartSubject.notifyShoppingCartUpdate();
     }
 
     @Override
@@ -101,10 +98,9 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public boolean buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException {
-        boolean returnValue = getApplicationClientOrThrow().buyFromShoppingCart(customerId);
-        if (returnValue) ShoppingCartSubject.notifyShoppingCartUpdate();
-        return returnValue;
+    public void buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException {
+        getApplicationClientOrThrow().buyFromShoppingCart(customerId);
+        ShoppingCartSubject.notifyShoppingCartUpdate();
     }
 
     @Override

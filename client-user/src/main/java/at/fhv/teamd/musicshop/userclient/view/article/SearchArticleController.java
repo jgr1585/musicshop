@@ -67,11 +67,8 @@ public class SearchArticleController implements GenericArticleController {
 
     @FXML
     private void addToCart(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
-        if (RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()))) {
-            new Alert(Alert.AlertType.INFORMATION, "Successfully added items", ButtonType.OK).show();
-        } else {
-            new Alert(Alert.AlertType.ERROR, "Item could not be added", ButtonType.CLOSE).show();
-        }
+        RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()));
+        new Alert(Alert.AlertType.INFORMATION, "Successfully added items", ButtonType.OK).show();
         this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
     }
 
@@ -87,18 +84,9 @@ public class SearchArticleController implements GenericArticleController {
         this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
     }
 
-    // TODO: Think about outsourcing and using dedicated orderController for delegating orders to (this has nothing to-do with "search medium"..)
-    public void order(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
-        try {
-            new Alert(Alert.AlertType.INFORMATION, "Message successfully sent", ButtonType.CLOSE).show();
-            // TODO: Only order when order amount > 0
-            RemoteFacade.getInstance().publishOrderMessage(mediumDTO, mediumAmountSelected.getText());
-
-        } catch (MessagingException e) {
-            new Alert(Alert.AlertType.ERROR, "Send message failed", ButtonType.CLOSE).show();
-
-        }
-
+    public void order(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException, MessagingException {
+        RemoteFacade.getInstance().publishOrderMessage(mediumDTO, mediumAmountSelected.getText());
+        new Alert(Alert.AlertType.INFORMATION, "Message successfully sent", ButtonType.CLOSE).show();
         this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
     }
 }

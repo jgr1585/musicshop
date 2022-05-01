@@ -65,9 +65,7 @@ public class ShoppingCartArticleController implements GenericArticleController {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         if (val > 0) {
             this.mediumAmountSelected.setText(Integer.valueOf(val - 1).toString());
-            if (!RemoteFacade.getInstance().removeFromShoppingCart(mediumDTO, 1)) {
-                new Alert(Alert.AlertType.ERROR, "Error on remove from shoppingcart", ButtonType.CLOSE).show();
-            }
+            RemoteFacade.getInstance().removeFromShoppingCart(mediumDTO, 1);
         }
     }
     @FXML
@@ -75,9 +73,7 @@ public class ShoppingCartArticleController implements GenericArticleController {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         if (val < this.lineItemDTO.medium().stockQuantity()) {
             this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
-            if (!RemoteFacade.getInstance().addToShoppingCart(mediumDTO, 1)) {
-                new Alert(Alert.AlertType.ERROR, "Error on add from shoppingcart", ButtonType.CLOSE).show();
-            }
+            RemoteFacade.getInstance().addToShoppingCart(mediumDTO, 1);
         }
     }
     @FXML

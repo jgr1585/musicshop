@@ -1,5 +1,7 @@
 package at.fhv.teamd.musicshop.userclient;
 
+import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
+import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.view.LoginController;
 import javafx.application.Application;
@@ -48,6 +50,12 @@ public class Main extends Application {
         if (getThrowableTypeInCauseStack(e, RemoteException.class) != null) {
             new Alert(Alert.AlertType.ERROR, "Connection to server failed (may be offline).", ButtonType.CLOSE).showAndWait();
         } else if ((cause = getThrowableTypeInCauseStack(e, NotAuthorizedException.class)) != null) {
+            new Alert(Alert.AlertType.ERROR, cause.getMessage(), ButtonType.CLOSE).showAndWait();
+        } else if ((cause = getThrowableTypeInCauseStack(e, MessagingException.class)) != null) {
+            new Alert(Alert.AlertType.ERROR, cause.getMessage(), ButtonType.CLOSE).showAndWait();
+        } else if ((cause = getThrowableTypeInCauseStack(e, InvoiceException.class)) != null) {
+            new Alert(Alert.AlertType.ERROR, cause.getMessage(), ButtonType.CLOSE).showAndWait();
+        } else if ((cause = getThrowableTypeInCauseStack(e, IllegalArgumentException.class)) != null) {
             new Alert(Alert.AlertType.ERROR, cause.getMessage(), ButtonType.CLOSE).showAndWait();
         } else {
             e.printStackTrace();

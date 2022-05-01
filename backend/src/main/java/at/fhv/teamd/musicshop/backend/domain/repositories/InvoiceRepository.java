@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface InvoiceRepository {
     void addInvoice(Invoice invoice);
     Optional<Invoice> findInvoiceById(Long id);
-    Invoice findInvoiceByLineItemId(Long lineItemId);
+    Optional<Invoice> findInvoiceByLineItemId(Long lineItemId);
     void update(Invoice invoice);
 }
