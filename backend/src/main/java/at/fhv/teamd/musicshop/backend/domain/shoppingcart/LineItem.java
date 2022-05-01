@@ -46,10 +46,10 @@ public class LineItem {
 
     public void increaseQuantityReturned(Quantity quantity) {
         if (quantity.getValue() < 1) {
-            throw new IllegalArgumentException("ReturnQuantity must be greater than zero");
+            throw new IllegalArgumentException("Quantity to return must be greater than zero");
         }
         if (this.quantities.get("quantityReturn").getValue() + quantity.getValue() > this.quantities.get("quantity").getValue()) {
-            throw new IllegalArgumentException("ReturnQuantity to big");
+            throw new IllegalArgumentException("Quantity to return is to big");
         }
         this.quantities.put("quantityReturn", this.quantities.get("quantityReturn").increaseBy(quantity));
     }
