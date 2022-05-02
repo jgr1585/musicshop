@@ -32,7 +32,7 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     public static ApplicationClientImpl newInstance(String authUser, String authPassword) throws RemoteException, AuthenticationFailedException {
         AuthService.authenticate(authUser, authPassword);
 
-        return new ApplicationClientImpl(authUser);
+        return new ApplicationClientImpl(AuthService.getUserName());
     }
 
     @Override
