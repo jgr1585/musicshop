@@ -21,6 +21,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.mockito.ArgumentMatchers.any;
+
 @ExtendWith(MockitoExtension.class)
 class InvoiceServiceTest {
 
@@ -50,7 +52,7 @@ class InvoiceServiceTest {
         invoiceService.createInvoice(expectedInvoice.getLineItems(), 0);
 
         // then
-        Mockito.verify(invoiceRepository).addInvoice(expectedInvoice);
+        Mockito.verify(invoiceRepository).addInvoice(any(Invoice.class));
     }
 
     @Test
@@ -62,7 +64,7 @@ class InvoiceServiceTest {
         invoiceService.createInvoice(expectedInvoice.getLineItems(), 2);
 
         // then
-        Mockito.verify(invoiceRepository).addInvoice(expectedInvoice);
+        Mockito.verify(invoiceRepository).addInvoice(any(Invoice.class));
     }
 
     @Test
