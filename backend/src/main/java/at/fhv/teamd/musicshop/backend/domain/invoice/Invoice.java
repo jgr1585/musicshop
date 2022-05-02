@@ -33,18 +33,15 @@ public class Invoice {
     protected Invoice() {
     }
 
-    private Invoice(Set<LineItem> lineItems, int customerNo) {
-        this.uuid = UUID.randomUUID();
+    private Invoice(Set<LineItem> lineItems, Integer customerNo) {
         this.lineItems = Objects.requireNonNull(lineItems);
         this.totalPrice = calculateTotalPrice(lineItems);
         this.customerNo = customerNo;
+        this.uuid = UUID.nameUUIDFromBytes(Integer.toString(Objects.hash(lineItems, customerNo)).getBytes());
     }
 
     private Invoice(Set<LineItem> lineItems) {
-        this.uuid = UUID.randomUUID();
-        this.lineItems = Objects.requireNonNull(lineItems);
-        this.totalPrice = calculateTotalPrice(lineItems);
-        this.customerNo = null;
+        this(lineItems, null);
     }
 
     public static Invoice of(Set<LineItem> lineItems, int customerNo) {
@@ -74,5 +71,16 @@ public class Invoice {
     @Override
     public int hashCode() {
         return Objects.hash(uuid);
+    }
+
+    @Override
+    public String toString() {
+        return "Invoice{" +
+                "id=" + id +
+                ", uuid=" + uuid +
+                ", lineItems=" + lineItems +
+                ", totalPrice=" + totalPrice +
+                ", customerNo=" + customerNo +
+                '}';
     }
 }
