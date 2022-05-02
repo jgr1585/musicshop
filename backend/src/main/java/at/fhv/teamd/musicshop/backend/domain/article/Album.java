@@ -19,7 +19,7 @@ public class Album extends Article {
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Song> songs;
 
-    @OneToMany(mappedBy="album")
+    @OneToMany(mappedBy = "album")
     private Set<Medium> mediums;
 
     protected Album() {
@@ -36,29 +36,4 @@ public class Album extends Article {
         songs.forEach(song -> artists.addAll(song.getArtists()));
         return artists;
     }
-
-    //TODO: FIX
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (!(o instanceof Album)) return false;
-//        if (!super.equals(o)) return false;
-//        Album album = (Album) o;
-//        return this.equalsWithoutSongs(album) && (this.songs == null || album.songs == null) ? this.songs == album.songs :this.songs.stream().allMatch(song -> album.songs.stream().anyMatch(song::equalsWithoutAlbums));
-//    }
-//
-//    boolean equalsWithoutSongs(Album album) {
-//        if (!super.equals(album)) return false;
-//        return this.mediums.containsAll(album.mediums) && album.mediums.containsAll(this.mediums);
-//    }
-
-    //TODO: Fix
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(this.hashCodeWithoutSongs(), this.songs == null ? "" : this.songs.stream().map(Song::hashCodeWithoutAlbums).collect(Collectors.toSet()));
-//    }
-//
-//    int hashCodeWithoutSongs() {
-//        return Objects.hash(super.hashCode(), mediums);
-//    }
 }

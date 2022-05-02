@@ -7,6 +7,7 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -43,11 +44,11 @@ public class Employee {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return Objects.equals(userName, employee.userName) && Objects.equals(firstname, employee.firstname) && Objects.equals(lastname, employee.lastname) && Objects.equals(userRoles, employee.userRoles) && Objects.equals(subscribedTopics, employee.subscribedTopics);
+        return userName.equals(employee.userName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userName, firstname, lastname, userRoles, subscribedTopics);
+        return Objects.hash(userName);
     }
 }

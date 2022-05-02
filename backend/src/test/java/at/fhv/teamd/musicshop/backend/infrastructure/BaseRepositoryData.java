@@ -37,7 +37,6 @@ public abstract class BaseRepositoryData {
     private static final Set<Supplier> suppliers;
     private static final Set<Employee> employees;
 
-
     static {
         albums = new HashSet<>();
         artists = new HashSet<>();

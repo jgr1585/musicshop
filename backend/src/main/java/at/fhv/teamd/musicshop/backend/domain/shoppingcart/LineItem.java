@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 // TODO: Think about using dedicated non-persistent ShoppingCart class
 @Entity
@@ -16,6 +17,9 @@ public class LineItem {
     @Id
     @GeneratedValue
     @Getter private long id;
+
+    @Column(unique = true)
+    private UUID uuid;
 
     @ElementCollection
     private final Map<String, Quantity> quantities = new HashMap<>();
@@ -30,6 +34,7 @@ public class LineItem {
     }
 
     public LineItem(Quantity quantity, Medium medium) {
+        this.uuid = UUID.randomUUID();
         this.quantities.put("quantity", quantity);
         this.quantities.put("quantityReturn", Quantity.of(0));
         this.medium = Objects.requireNonNull(medium);
@@ -64,5 +69,18 @@ public class LineItem {
 
     public Quantity getQuantityReturn() {
         return this.quantities.get("quantityReturn");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LineItem lineItem = (LineItem) o;
+        return uuid.equals(lineItem.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
     }
 }

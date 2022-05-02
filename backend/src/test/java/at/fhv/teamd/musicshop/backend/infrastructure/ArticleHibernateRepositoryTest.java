@@ -37,8 +37,10 @@ class ArticleHibernateRepositoryTest {
         Set<Article> actualArticles2 = this.articleHibernateRepository.searchArticlesByAttributes("", artist);
 
         //then
-        Assertions.assertTrue(expectedArticles1.containsAll(actualArticles1) && actualArticles1.containsAll(expectedArticles1));
-        Assertions.assertTrue(expectedArticles2.containsAll(actualArticles2) && actualArticles2.containsAll(expectedArticles2));
+        Assertions.assertTrue(expectedArticles1.containsAll(actualArticles1));
+        Assertions.assertTrue(actualArticles1.containsAll(expectedArticles1));
+        Assertions.assertTrue(expectedArticles2.containsAll(actualArticles2));
+        Assertions.assertTrue(actualArticles2.containsAll(expectedArticles2));
     }
 
     @Test
