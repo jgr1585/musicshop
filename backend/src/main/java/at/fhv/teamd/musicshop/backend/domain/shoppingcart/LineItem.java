@@ -27,7 +27,7 @@ public class LineItem {
     @Column(nullable = false)
     @Getter private BigDecimal price;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @Getter private Medium medium;
 
     protected LineItem() {
