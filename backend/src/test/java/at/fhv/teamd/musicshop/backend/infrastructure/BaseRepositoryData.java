@@ -6,10 +6,12 @@ import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.article.Artist;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
+import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
+import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 import at.fhv.teamd.musicshop.backend.domain.user.Employee;
 import at.fhv.teamd.musicshop.library.permission.UserRole;
@@ -37,6 +39,8 @@ public abstract class BaseRepositoryData {
     private static final Set<Employee> employees;
     private static final Set<Topic> topics;
 
+    private static final Set<Invoice> invoices;
+
     static {
         albums = new HashSet<>();
         artists = new HashSet<>();
@@ -45,6 +49,7 @@ public abstract class BaseRepositoryData {
         suppliers = new HashSet<>();
         employees = new HashSet<>();
         topics = new HashSet<>();
+        invoices = new HashSet<>();
 
         init();
     }
@@ -315,14 +320,16 @@ public abstract class BaseRepositoryData {
                 .forEach(song -> setObjField(song, "albums", Set.of(albumTouchBlue)));
 
         // create mediums
-        media.add(new Medium(BigDecimal.valueOf(12), MediumType.CD, Stock.of(Quantity.of(25)), supplier1, albumLongLive));
-        media.add(new Medium(BigDecimal.valueOf(22), MediumType.VINYL, Stock.of(Quantity.of(5)), supplier1, albumLongLive));
-        media.add(new Medium(BigDecimal.valueOf(10), MediumType.CD, Stock.of(Quantity.of(15)), supplier2, albumUntamedDesire));
-        media.add(new Medium(BigDecimal.valueOf(29), MediumType.CD, Stock.of(Quantity.of(5)), supplier3, albumUnion));
-        media.add(new Medium(BigDecimal.valueOf(13), MediumType.CD, Stock.of(Quantity.of(7)), supplier4, albumAnti));
-        media.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier5, albumLetItBe));
-        media.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier6, albumEverything));
-        media.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier7, albumTouchBlue));
+        Medium mediumLongLive1 = new Medium(BigDecimal.valueOf(12), MediumType.CD, Stock.of(Quantity.of(25)), supplier1, albumLongLive);
+        Medium mediumLongLive2 = new Medium(BigDecimal.valueOf(22), MediumType.VINYL, Stock.of(Quantity.of(5)), supplier1, albumLongLive);
+        Medium mediumUntamedDesire = new Medium(BigDecimal.valueOf(10), MediumType.CD, Stock.of(Quantity.of(15)), supplier2, albumUntamedDesire);
+        Medium mediumUnion = new Medium(BigDecimal.valueOf(29), MediumType.CD, Stock.of(Quantity.of(5)), supplier3, albumUnion);
+        Medium mediumAnti = new Medium(BigDecimal.valueOf(13), MediumType.CD, Stock.of(Quantity.of(7)), supplier4, albumAnti);
+        Medium mediumLetItBe = new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier5, albumLetItBe);
+        Medium mediumEverything = new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier6, albumEverything);
+        Medium mediumTouchBlue = new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier7, albumTouchBlue);
+
+        media.addAll(Set.of(mediumLongLive1, mediumLongLive2, mediumUntamedDesire, mediumUnion, mediumAnti, mediumLetItBe, mediumEverything, mediumTouchBlue));
 
         media.forEach(medium -> setObjField(medium.getAlbum(), "mediums", media.stream()
                 .filter(medium1 -> medium1.getAlbum().equals(medium.getAlbum()))
@@ -352,12 +359,19 @@ public abstract class BaseRepositoryData {
                 .map(Medium::getSupplier)
                 .collect(Collectors.toSet()));
 
+        // create invoices
+        invoices.add(Invoice.of(Set.of(new LineItem(Quantity.of(2), mediumLongLive2)), 2));
+        invoices.add(Invoice.of(Set.of(new LineItem(Quantity.of(1), mediumLongLive1)), 1));
+        invoices.add(Invoice.of(Set.of(new LineItem(Quantity.of(3), mediumUntamedDesire)), 1));
+        invoices.add(Invoice.of(Set.of(new LineItem(Quantity.of(1), mediumUnion), new LineItem(Quantity.of(3), mediumEverything)), 10));
+
         // persists everything
         EntityManager em = PersistenceManager.getEntityManagerInstance();
         em.getTransaction().begin();
 
         media.forEach(em::persist);
         employees.forEach(em::persist);
+        invoices.forEach(em::persist);
 
         em.flush();
         em.getTransaction().commit();
@@ -378,6 +392,10 @@ public abstract class BaseRepositoryData {
 
     public static Set<Supplier> getSuppliers() {
         return Collections.unmodifiableSet(suppliers);
+    }
+
+    public static Set<Invoice> getInvoices() {
+        return Collections.unmodifiableSet(invoices);
     }
 
     public static Set<Article> getArticles() {
