@@ -69,7 +69,7 @@ class InvoiceHibernateRepositoryTest {
         // when
         expectedInvoice.getLineItems().iterator().next().increaseQuantityReturned(Quantity.of(1));
         // TODO: fix: test passes if test itself is commented out
-//        this.invoiceHibernateRepository.update(expectedInvoice);
+        this.invoiceHibernateRepository.update(expectedInvoice);
 
         // then
         Invoice actualInvoice = this.invoiceHibernateRepository.findInvoiceById(expectedInvoice.getId()).get();
