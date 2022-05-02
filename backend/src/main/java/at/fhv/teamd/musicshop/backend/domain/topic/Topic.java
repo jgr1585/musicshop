@@ -1,5 +1,7 @@
 package at.fhv.teamd.musicshop.backend.domain.topic;
 
+import lombok.Getter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,7 +14,7 @@ public class Topic implements javax.jms.Topic, Comparable<Topic> {
     private String name;
 
     @Column(unique = true)
-    private UUID uuid;
+    @Getter private UUID uuid;
 
     protected Topic() {
     }
