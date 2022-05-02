@@ -4,13 +4,14 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class LineItemDTO implements Serializable {
+public final class LineItemDTO implements Serializable {
     private static final long serialVersionUID = 7231320470816137658L;
 
     private Long id;
 
     private ArticleDTO article;
     private Integer quantity;
+    private Integer quantityReturn;
     private BigDecimal price;
     private BigDecimal totalPrice;
     private MediumDTO medium;
@@ -29,6 +30,10 @@ public class LineItemDTO implements Serializable {
 
     public Integer quantity() {
         return this.quantity;
+    }
+
+    public Integer quantityReturn() {
+        return this.quantityReturn;
     }
 
     public BigDecimal price() {
@@ -70,6 +75,7 @@ public class LineItemDTO implements Serializable {
                 Long id,
                 ArticleDTO articleDTO,
                 Integer quantity,
+                Integer quantityReturn,
                 BigDecimal price,
                 BigDecimal totalPrice,
                 MediumDTO mediumDTO
@@ -77,6 +83,7 @@ public class LineItemDTO implements Serializable {
             this.instance.id = id;
             this.instance.article = articleDTO;
             this.instance.quantity = quantity;
+            this.instance.quantityReturn = quantityReturn;
             this.instance.price = price;
             this.instance.totalPrice = totalPrice;
             this.instance.medium = mediumDTO;
@@ -87,6 +94,7 @@ public class LineItemDTO implements Serializable {
             Objects.requireNonNull(this.instance.id, "id must be set in LineItemDTO");
             Objects.requireNonNull(this.instance.article, "article must be set in LineItemDTO");
             Objects.requireNonNull(this.instance.quantity, "quantity must be set in LineItemDTO");
+            Objects.requireNonNull(this.instance.quantity, "quantityReturn must be set in LineItemDTO");
             Objects.requireNonNull(this.instance.price, "price must be set in LineItemDTO");
             Objects.requireNonNull(this.instance.totalPrice, "totalPrice must be set in LineItemDTO");
             Objects.requireNonNull(this.instance.medium, "mediumDTO must be set in LineItemDTO");

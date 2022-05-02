@@ -41,16 +41,6 @@ public class Medium {
         this.album = album;
     }
 
-    @Deprecated(since = "Only for Test")
-    public Medium(long id, MediumType type, BigDecimal price, Stock stock, Supplier supplier, Album album) {
-        this.id = id;
-        this.type = type;
-        this.price = price;
-        this.stock = stock;
-        this.supplier = supplier;
-        this.album = album;
-    }
-
     public void setStock(Stock stock) {
         this.stock = stock;
     }

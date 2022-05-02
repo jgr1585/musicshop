@@ -1,10 +1,7 @@
 package at.fhv.teamd.musicshop.library;
 
 import at.fhv.teamd.musicshop.library.DTO.*;
-import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
-import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
-import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
-import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.exceptions.*;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 
 import java.rmi.Remote;
@@ -17,17 +14,23 @@ public interface ApplicationClient extends Remote {
     // Search Articles
     Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException, NotAuthorizedException;
 
-    // Search Customer for Invoice
+    // Search Customers
     Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException, NotAuthorizedException;
 
-    // Shopping Cart
-    boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException;
+    // Invoice
+    InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException, InvoiceException;
 
-    boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException;
+    // Return
+    void returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException, InvoiceException;
+
+    // Shopping Cart
+    void addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException;
+
+    void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException;
 
     void emptyShoppingCart() throws RemoteException, NotAuthorizedException;
 
-    boolean buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException;
+    void buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException;
 
     ShoppingCartDTO getShoppingCart() throws RemoteException, NotAuthorizedException;
 
@@ -42,6 +45,7 @@ public interface ApplicationClient extends Remote {
 
     Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException;
 
+    // Authorization
     boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) throws RemoteException;
 
     // Application Client

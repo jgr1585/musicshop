@@ -3,9 +3,13 @@ package at.fhv.teamd.musicshop.userclient.view.article;
 import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,11 +37,12 @@ public class ArticleController {
     @FXML
     private Label releaseDate;
 
+    private SearchController searchController;
+
     // select cover art for album
     private final Consumer<ArticleDTO> loadCoverArtConsumer = articleDTO -> {
         try {
             this.loadCoverArt(articleDTO);
-
         } catch (IOException ignored) {}
     };
 
@@ -71,6 +76,8 @@ public class ArticleController {
                 controller.setMediumType(articleDTO, mediumDTO);
                 this.mediumTypeList.getChildren().add(root);
             }
+        } else if (articleDTO instanceof SongDTO && this.searchController != null) {
+            this.mediumTypeList.getChildren().add(this.createFindAlbumButton((SongDTO) articleDTO));
         }
     }
 
@@ -103,6 +110,10 @@ public class ArticleController {
         GenericArticleController controller = fxmlLoader.getController();
         controller.setMediumType(lineItemDTO);
         this.mediumTypeList.getChildren().add(root);
+    }
+
+    public void setSearchController(SearchController searchController) {
+        this.searchController = searchController;
     }
 
     private void loadCoverArt(ArticleDTO articleDTO) throws IOException {
@@ -144,5 +155,21 @@ public class ArticleController {
             default:
                 return this.getImageURL(location, depth + 1);
         }
+    }
+
+    private Button createFindAlbumButton(SongDTO songDTO) {
+        FontAwesomeIconView findIcon = new FontAwesomeIconView(FontAwesomeIcon.SEARCH, "18");
+        Button findButton = new Button("", findIcon);
+
+        VBox.setMargin(findButton, new Insets(0, 75, 0, 0));
+        findButton.setMinWidth(36);
+        findButton.setMaxWidth(36);
+        findButton.setMinHeight(26);
+        findButton.setMaxHeight(26);
+        findButton.setStyle("-fx-background-color: #547af9;");
+
+        findButton.setOnAction(event -> this.searchController.searchAlbum(songDTO));
+
+        return findButton;
     }
 }

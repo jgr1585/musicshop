@@ -3,7 +3,7 @@ package at.fhv.teamd.musicshop.library.DTO;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class TopicDTO implements Serializable {
+public final class TopicDTO implements Serializable {
     private static final long serialVersionUID = -4281216794249781470L;
 
     private String name;
@@ -33,7 +33,7 @@ public class TopicDTO implements Serializable {
     }
 
     public static class Builder {
-        private TopicDTO instance;
+        private final TopicDTO instance;
 
         private Builder() {
             this.instance = new TopicDTO();

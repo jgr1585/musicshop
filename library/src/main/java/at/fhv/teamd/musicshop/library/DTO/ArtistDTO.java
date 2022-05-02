@@ -39,7 +39,7 @@ public final class ArtistDTO implements Serializable {
     }
 
     public static class Builder {
-        private ArtistDTO instance;
+        private final ArtistDTO instance;
 
         private Builder() {
             this.instance = new ArtistDTO();

@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.Set;
 
-public class AlbumTest extends Article {
+public class AlbumTest {
 
     @Test
-    void given_setsongs_when_findartistsfromsongs_then_returnartists() throws NoSuchFieldException, IllegalAccessException {
+    void given_setsongs_when_findartistsfromsongs_then_returnartists() {
 
         //given
         Song song = DomainFactory.createSong();

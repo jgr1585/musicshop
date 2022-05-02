@@ -10,6 +10,8 @@ public enum RemoteFunctionPermission {
     emptyShoppingCart(searchArticlesByAttributes.getRoles()),
     buyFromShoppingCart(searchArticlesByAttributes.getRoles()),
     getShoppingCart(searchArticlesByAttributes.getRoles()),
+    findInvoiceById(searchArticlesByAttributes.getRoles()),
+    returnItem(searchArticlesByAttributes.getRoles()),
 
     publishOrderMessage(Set.of(UserRole.SELLER)),
     publishMessage(Set.of(UserRole.OPERATOR)),
