@@ -21,7 +21,7 @@ class InvoiceHibernateRepositoryTest {
     @Test
     void given_invoiceRepository_when_createInvoice_then_contains_Invoice() {
         // given
-        Invoice invoice = DomainFactory.createInvoice();
+        Invoice invoice = BaseRepositoryData.getInvoices().stream().iterator().next();
 
         // when
         this.invoiceHibernateRepository.addInvoice(invoice);
@@ -33,7 +33,7 @@ class InvoiceHibernateRepositoryTest {
     @Test
     void given_invoiceRepository_when_findInvoiceById_returnInvoiceOrEmpty() {
         // given
-        Invoice invoice = DomainFactory.createInvoice();
+        Invoice invoice = BaseRepositoryData.getInvoices().stream().iterator().next();
         this.invoiceHibernateRepository.addInvoice(invoice);
 
         // when .. then
@@ -44,7 +44,7 @@ class InvoiceHibernateRepositoryTest {
     @Test
     void given_invoiceRepository_when_findInvoiceByLineItemId_returnInvoiceOrEmpty() {
         // given
-        Invoice invoice = DomainFactory.createInvoice();
+        Invoice invoice = BaseRepositoryData.getInvoices().stream().iterator().next();
         this.invoiceHibernateRepository.addInvoice(invoice);
 
         // when .. then
@@ -56,7 +56,7 @@ class InvoiceHibernateRepositoryTest {
     @Test
     void given_invoiceRepository_when_update_then_updateInvoice() {
         // given
-        Invoice expectedInvoice = DomainFactory.createInvoice();
+        Invoice expectedInvoice = BaseRepositoryData.getInvoices().stream().iterator().next();
         this.invoiceHibernateRepository.addInvoice(expectedInvoice);
 
         // when
