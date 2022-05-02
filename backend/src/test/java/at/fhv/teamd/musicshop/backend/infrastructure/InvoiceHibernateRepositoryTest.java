@@ -62,7 +62,11 @@ class InvoiceHibernateRepositoryTest {
     @Test
     void given_invoiceRepository_when_update_then_updateInvoice() {
         // given
-        Invoice expectedInvoice = BaseRepositoryData.getInvoices().stream().iterator().next();
+        Supplier supplier = new Supplier("Test", Duration.ofDays(6));
+        Medium medium = new Medium(BigDecimal.ONE, MediumType.CD, Stock.of(Quantity.of(1)), supplier, null);
+        Invoice expectedInvoice = Invoice.of(Set.of(new LineItem(Quantity.of(2), medium)));
+
+        this.invoiceHibernateRepository.addInvoice(expectedInvoice);
 
         // when
         expectedInvoice.getLineItems().iterator().next().increaseQuantityReturned(Quantity.of(1));
