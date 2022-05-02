@@ -13,7 +13,6 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 import at.fhv.teamd.musicshop.backend.domain.user.Employee;
 import at.fhv.teamd.musicshop.library.permission.UserRole;
-import org.hibernate.mapping.Collection;
 
 import javax.persistence.EntityManager;
 import java.lang.reflect.Field;
