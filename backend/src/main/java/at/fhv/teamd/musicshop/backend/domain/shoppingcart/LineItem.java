@@ -19,7 +19,7 @@ public class LineItem {
     @Getter private long id;
 
     @Column(unique = true)
-    private UUID uuid;
+    @Getter private UUID uuid;
 
     @ElementCollection
     private final Map<String, Quantity> quantities = new HashMap<>();
