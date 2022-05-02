@@ -19,7 +19,7 @@ public class Album extends Article {
     @ManyToMany(cascade = CascadeType.ALL)
     private Set<Song> songs;
 
-    @OneToMany(mappedBy = "album")
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
     private Set<Medium> mediums;
 
     protected Album() {

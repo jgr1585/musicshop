@@ -1,0 +1,70 @@
+package at.fhv.teamd.musicshop.backend.infrastructure;
+
+import at.fhv.teamd.musicshop.backend.domain.DomainFactory;
+import at.fhv.teamd.musicshop.backend.domain.Quantity;
+import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
+import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
+
+class InvoiceHibernateRepositoryTest {
+    private InvoiceHibernateRepository invoiceHibernateRepository;
+
+    @BeforeEach
+    void init() {
+        invoiceHibernateRepository = new InvoiceHibernateRepository();
+    }
+
+    @Test
+    void given_invoiceRepository_when_createInvoice_then_contains_Invoice() {
+        // given
+        Invoice invoice = DomainFactory.createInvoice();
+
+        // when
+        this.invoiceHibernateRepository.addInvoice(invoice);
+
+        // then
+        Assertions.assertDoesNotThrow(() -> this.invoiceHibernateRepository.findInvoiceById(invoice.getId()));
+    }
+
+    @Test
+    void given_invoiceRepository_when_findInvoiceById_returnInvoiceOrEmpty() {
+        // given
+        Invoice invoice = DomainFactory.createInvoice();
+        this.invoiceHibernateRepository.addInvoice(invoice);
+
+        // when .. then
+        Assertions.assertEquals(invoice, this.invoiceHibernateRepository.findInvoiceById(invoice.getId()).get());
+        Assertions.assertEquals(Optional.empty(), this.invoiceHibernateRepository.findInvoiceById(0L));
+    }
+
+    @Test
+    void given_invoiceRepository_when_findInvoiceByLineItemId_returnInvoiceOrEmpty() {
+        // given
+        Invoice invoice = DomainFactory.createInvoice();
+        this.invoiceHibernateRepository.addInvoice(invoice);
+
+        // when .. then
+        LineItem lineItem = invoice.getLineItems().iterator().next();
+        Assertions.assertEquals(invoice, this.invoiceHibernateRepository.findInvoiceByLineItemId(lineItem.getId()).get());
+        Assertions.assertEquals(Optional.empty(), this.invoiceHibernateRepository.findInvoiceByLineItemId(0L));
+    }
+
+    @Test
+    void given_invoiceRepository_when_update_then_updateInvoice() {
+        // given
+        Invoice expectedInvoice = DomainFactory.createInvoice();
+        this.invoiceHibernateRepository.addInvoice(expectedInvoice);
+
+        // when
+        expectedInvoice.getLineItems().iterator().next().increaseQuantityReturned(Quantity.of(1));
+        this.invoiceHibernateRepository.update(expectedInvoice);
+
+        // then
+        Invoice actualInvoice = this.invoiceHibernateRepository.findInvoiceById(expectedInvoice.getId()).get();
+        Assertions.assertEquals(expectedInvoice, actualInvoice);
+    }
+}

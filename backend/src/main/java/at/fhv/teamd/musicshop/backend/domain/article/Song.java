@@ -2,10 +2,7 @@ package at.fhv.teamd.musicshop.backend.domain.article;
 
 import lombok.Getter;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -20,7 +17,7 @@ public class Song extends Article {
     @Column
     private Duration length;
 
-    @ManyToMany(mappedBy = "songs")
+    @ManyToMany(mappedBy = "songs", cascade = CascadeType.ALL)
     private Set<Album> albums;
 
     protected Song() {

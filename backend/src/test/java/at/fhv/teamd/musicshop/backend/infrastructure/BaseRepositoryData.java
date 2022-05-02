@@ -35,6 +35,7 @@ public abstract class BaseRepositoryData {
     private static final Set<Medium> media;
     private static final Set<Supplier> suppliers;
     private static final Set<Employee> employees;
+    private static final Set<Topic> topics;
 
     static {
         albums = new HashSet<>();
@@ -43,6 +44,7 @@ public abstract class BaseRepositoryData {
         media = new HashSet<>();
         suppliers = new HashSet<>();
         employees = new HashSet<>();
+        topics = new HashSet<>();
 
         init();
     }
@@ -334,6 +336,7 @@ public abstract class BaseRepositoryData {
         Topic topicRockNRoll = new Topic("Rock 'n' Roll");
         Topic topicSoul = new Topic("Soul");
         Topic topicJazz = new Topic("Jazz");
+        topics.addAll(Set.of(topicAdministrative, topicOrder, topicHipHop, topicPop, topicRockNRoll, topicSoul, topicJazz));
 
         // create employees
         employees.add(new Employee("lka3333", "Lukas", "Kaufmann", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicPop)));
@@ -380,6 +383,10 @@ public abstract class BaseRepositoryData {
     public static Set<Article> getArticles() {
         return Stream.concat(albums.stream(), songs.stream())
                 .collect(Collectors.toUnmodifiableSet());
+    }
+
+    public static Set<Topic> getTopics() {
+        return Collections.unmodifiableSet(topics);
     }
 
     // set (private) object field by reflection
