@@ -28,10 +28,6 @@ public class Stock {
         return quantity;
     }
 
-    public void setQuantity(Quantity quantity) {
-        this.quantity = quantity;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
