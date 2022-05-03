@@ -8,14 +8,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class LineItemTest {
     @Test
-    void given_quantity_when_increasequantity_then_returnincreasedqunatity() {
+    void given_quantity_when_increaseQuantity_then_returnIncreasedQuantity() {
         //given
         LineItem lineItem = new LineItem(Quantity.of(30), DomainFactory.createMedium(MediumType.CD));
         Quantity quantity = Quantity.of(20);
-        Quantity quantityExpected = Quantity.of(50);
+        Quantity quantityExpected = Quantity.of(lineItem.getQuantity().getValue() + quantity.getValue());
 
         //when
         lineItem.increaseQuantity(quantity);
@@ -26,11 +27,11 @@ public class LineItemTest {
     }
 
     @Test
-    void given_quantity_when_decreasequantity_then_returndecreasedqunatity() {
+    void given_quantity_when_decreaseQuantity_then_returnDecreasedQuantity() {
         //given
         LineItem lineItem = new LineItem(Quantity.of(30), DomainFactory.createMedium(MediumType.CD));
         Quantity quantity = Quantity.of(20);
-        Quantity quantityExpected = Quantity.of(10);
+        Quantity quantityExpected = Quantity.of(lineItem.getQuantity().getValue() - quantity.getValue());
 
         //when
         lineItem.decreaseQuantity(quantity);
@@ -41,7 +42,7 @@ public class LineItemTest {
     }
 
     @Test
-    void given_lineItemdetails_whengetdetails_then_detailsequal() {
+    void given_lineItemDetails_when_getDetails_then_detailsEqual() {
         //given
         Quantity quantity = Quantity.of(60);
         Medium medium = DomainFactory.createMedium(MediumType.VINYL);
@@ -61,7 +62,37 @@ public class LineItemTest {
     }
 
     @Test
-    void given_priceandquantity_when_gettotalprice_then_returntotalprice() {
+    void given_negativeQuantity_when_increaseQuantityReturned_then_throwsIllegalArgumentException() {
+        //given
+        LineItem lineItem = new LineItem(Quantity.of(30), DomainFactory.createMedium(MediumType.CD));
+        int value = 0;
+        String messageExpected = "Quantity to return must be greater than zero";
+
+        //when
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,() -> lineItem.increaseQuantityReturned(Quantity.of(value)));
+        String messageActual = thrown.getMessage();
+
+        //then
+        Assertions.assertEquals(messageExpected, messageActual);
+    }
+
+    @Test
+    void given_toBigQuantity_when_increaseQuantityReturned_then_throwsIllegalArgumentException() {
+        //given
+        LineItem lineItem = new LineItem(Quantity.of(30), DomainFactory.createMedium(MediumType.CD));
+        int value = 31;
+        String messageExpected = "Quantity to return is to big";
+
+        //when
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,() -> lineItem.increaseQuantityReturned(Quantity.of(value)));
+        String messageActual = thrown.getMessage();
+
+        //then
+        Assertions.assertEquals(messageExpected, messageActual);
+    }
+
+    @Test
+    void given_priceAndQuantity_when_getTotalPrice_then_returnTotalPrice() {
         //given
         Medium medium = DomainFactory.createMedium(MediumType.DIGITAL);
         Quantity quantity = Quantity.of(20);
