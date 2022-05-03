@@ -72,15 +72,4 @@ public class Invoice {
     public int hashCode() {
         return Objects.hash(uuid);
     }
-
-    @Override
-    public String toString() {
-        return "Invoice{" +
-                "id=" + id +
-                ", uuid=" + uuid +
-                ", lineItems=" + lineItems +
-                ", totalPrice=" + totalPrice +
-                ", customerNo=" + customerNo +
-                '}';
-    }
 }
