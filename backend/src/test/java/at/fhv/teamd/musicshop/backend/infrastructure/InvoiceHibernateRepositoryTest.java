@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.sound.sampled.Line;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Optional;
@@ -43,7 +44,7 @@ class InvoiceHibernateRepositoryTest {
         Invoice invoice = BaseRepositoryData.getInvoices().stream().iterator().next();
 
         // when .. then
-        Assertions.assertEquals(invoice, this.invoiceHibernateRepository.findInvoiceById(invoice.getId()).get());
+        Assertions.assertEquals(invoice, this.invoiceHibernateRepository.findInvoiceById(invoice.getId()).orElse(null));
         Assertions.assertEquals(Optional.empty(), this.invoiceHibernateRepository.findInvoiceById(0L));
     }
 
@@ -54,25 +55,55 @@ class InvoiceHibernateRepositoryTest {
 
         // when .. then
         LineItem lineItem = invoice.getLineItems().iterator().next();
-        Assertions.assertEquals(invoice, this.invoiceHibernateRepository.findInvoiceByLineItemId(lineItem.getId()).get());
+        Assertions.assertEquals(invoice, this.invoiceHibernateRepository.findInvoiceByLineItemId(lineItem.getId()).orElse(null));
         Assertions.assertEquals(Optional.empty(), this.invoiceHibernateRepository.findInvoiceByLineItemId(0L));
     }
 
     @Test
     void given_invoiceRepository_when_update_then_updateInvoice() {
         // given
-        Medium medium = BaseRepositoryData.getMedia().iterator().next();
-        Invoice expectedInvoice = Invoice.of(Set.of(new LineItem(Quantity.of(2), medium)));
-
-        this.invoiceHibernateRepository.addInvoice(expectedInvoice);
+        Invoice expectedInvoice = BaseRepositoryData.getInvoices().iterator().next();
+        LineItem selectedLineItem = expectedInvoice.getLineItems().iterator().next();
+        Quantity originalQuantity = selectedLineItem.getQuantity();
+        Quantity expectedReturnQuantity = Quantity.of(1);
 
         // when
-        expectedInvoice.getLineItems().iterator().next().increaseQuantityReturned(Quantity.of(1));
-        // TODO: fix: test passes if test itself is commented out
+        selectedLineItem.increaseQuantityReturned(expectedReturnQuantity);
         this.invoiceHibernateRepository.update(expectedInvoice);
 
         // then
-        Invoice actualInvoice = this.invoiceHibernateRepository.findInvoiceById(expectedInvoice.getId()).get();
-        Assertions.assertEquals(expectedInvoice, actualInvoice);
+        Invoice actualInvoice = this.invoiceHibernateRepository.findInvoiceById(expectedInvoice.getId()).orElse(null);
+        assert actualInvoice != null;
+        LineItem actualLineItem = actualInvoice.getLineItems().stream().filter(selectedLineItem::equals).findFirst().orElse(null);
+        assert actualLineItem != null;
+        Quantity actualQuantity = actualLineItem.getQuantity();
+        Quantity actualReturnQuantity = actualLineItem.getQuantityReturn();
+
+        Assertions.assertEquals(originalQuantity, actualQuantity);
+        Assertions.assertEquals(expectedReturnQuantity, actualReturnQuantity);
+    }
+
+    @Test
+    void given_invoiceRepository_when_forget_update_then_notUpdateInvoice() {
+        // given
+        Invoice expectedInvoice = BaseRepositoryData.getInvoices().iterator().next();
+        LineItem selectedLineItem = expectedInvoice.getLineItems().iterator().next();
+        Quantity originalQuantity = selectedLineItem.getQuantity();
+        Quantity expectedReturnQuantity = Quantity.of(1);
+
+        // when
+        selectedLineItem.increaseQuantityReturned(expectedReturnQuantity);
+        //Not included this.invoiceHibernateRepository.update(expectedInvoice);
+
+        // then
+        Invoice actualInvoice = this.invoiceHibernateRepository.findInvoiceById(expectedInvoice.getId()).orElse(null);
+        assert actualInvoice != null;
+        LineItem actualLineItem = actualInvoice.getLineItems().stream().filter(selectedLineItem::equals).findFirst().orElse(null);
+        assert actualLineItem != null;
+        Quantity actualQuantity = actualLineItem.getQuantity();
+        Quantity actualReturnQuantity = actualLineItem.getQuantityReturn();
+
+        Assertions.assertEquals(originalQuantity, actualQuantity);
+        Assertions.assertNotEquals(expectedReturnQuantity, actualReturnQuantity);
     }
 }
