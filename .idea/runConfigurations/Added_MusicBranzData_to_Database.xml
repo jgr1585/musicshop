@@ -35,14 +35,14 @@ ALTER TABLE public.article ALTER COLUMN TITLE TYPE VARCHAR;
 ALTER TABLE public.artist ALTER COLUMN NAME TYPE VARCHAR;
 
 -- INSERT DATA
-INSERT INTO public.artist (id, name)
-SELECT id, name FROM musicbrainzFDW.artist;
-INSERT INTO public.article (type_of_publication, id, genre, label, musicbrainzid, releasedate, title, length)
-SELECT type_of_publication, id, genre, label, musicbrainzid, releasedate, title, length FROM musicbrainzFDW.article;
-INSERT INTO public.supplier (id, name, supplyduration)
-SELECT id, name, supplyduration FROM musicbrainzFDW.supplier;
-INSERT INTO public.medium (id, price, value, type, album_id, supplier_id)
-SELECT id, price, value, type, album_id, supplier_id FROM musicbrainzFDW.medium;
+INSERT INTO public.artist (id, name, uuid)
+SELECT id, name, uuid FROM musicbrainzFDW.artist;
+INSERT INTO public.article (type_of_publication, id, genre, label, musicbrainzid, releasedate, title, length, uuid)
+SELECT type_of_publication, id, genre, label, musicbrainzid, releasedate, title, length, uuid FROM musicbrainzFDW.article;
+INSERT INTO public.supplier (id, name, supplyduration, uuid)
+SELECT id, name, supplyduration, uuid FROM musicbrainzFDW.supplier;
+INSERT INTO public.medium (id, price, value, type, album_id, supplier_id, uuid)
+SELECT id, price, value, type, album_id, supplier_id, uuid FROM musicbrainzFDW.medium;
 INSERT INTO public.article_artist (article_id, artists_id)
 SELECT article_id, artists_id FROM musicbrainzFDW.article_artist;
 INSERT INTO public.article_article (albums_id, songs_id)
