@@ -16,6 +16,8 @@ class ArticleHibernateRepositoryTest {
     @BeforeEach
     public void init() {
         this.articleHibernateRepository = new ArticleHibernateRepository();
+
+        BaseRepositoryData.init();
     }
 
     @Test

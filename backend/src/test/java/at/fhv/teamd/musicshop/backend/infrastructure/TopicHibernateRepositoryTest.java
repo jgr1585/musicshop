@@ -13,6 +13,8 @@ class TopicHibernateRepositoryTest {
     @BeforeEach
     void init() {
         topicHibernateRepository = new TopicHibernateRepository();
+
+        BaseRepositoryData.init();
     }
 
     @Test

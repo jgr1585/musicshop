@@ -16,6 +16,8 @@ class EmployeeHibernateRepositoryTest {
     @BeforeEach
     void init() {
         employeeHibernateRepository = new EmployeeHibernateRepository();
+
+        BaseRepositoryData.init();
     }
 
     @Test

@@ -18,6 +18,8 @@ class MediumHibernateRepositoryTest {
     @BeforeEach
     public void init() {
         this.mediumHibernateRepository = new MediumHibernateRepository();
+
+        BaseRepositoryData.init();
     }
 
     @Test

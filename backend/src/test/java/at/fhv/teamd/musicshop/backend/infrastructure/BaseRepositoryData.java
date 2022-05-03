@@ -1,5 +1,6 @@
 package at.fhv.teamd.musicshop.backend.infrastructure;
 
+import at.fhv.teamd.musicshop.backend.TestGenerator;
 import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.article.Album;
@@ -17,14 +18,16 @@ import at.fhv.teamd.musicshop.backend.domain.user.Employee;
 import at.fhv.teamd.musicshop.library.permission.UserRole;
 
 import javax.persistence.EntityManager;
+import javax.persistence.FlushModeType;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -54,7 +57,53 @@ public abstract class BaseRepositoryData {
         init();
     }
 
-    private static void init() {
+    public static Set<Album> getAlbums() {
+        return Collections.unmodifiableSet(albums);
+    }
+
+    public static Set<Song> getSongs() {
+        return Collections.unmodifiableSet(songs);
+    }
+
+    public static Set<Medium> getMedia() {
+        return Collections.unmodifiableSet(media);
+    }
+
+    public static Set<Supplier> getSuppliers() {
+        return Collections.unmodifiableSet(suppliers);
+    }
+
+    public static Set<Invoice> getInvoices() {
+        return Collections.unmodifiableSet(invoices);
+    }
+
+    public static Set<Article> getArticles() {
+        return Stream.concat(albums.stream(), songs.stream())
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    public static Set<Topic> getTopics() {
+        return Collections.unmodifiableSet(topics);
+    }
+
+    public static Set<Employee> getEmployees() {
+        return Collections.unmodifiableSet(employees);
+    }
+
+    public static void init() {
+        // Reset the database
+        deleteDatabase();
+
+        albums.clear();
+        artists.clear();
+        songs.clear();
+        media.clear();
+        suppliers.clear();
+        employees.clear();
+        topics.clear();
+        invoices.clear();
+
+
         // ALBUM 1
         Artist artistLongLive1 = new Artist("A$AP Rocky");
         Artist artistLongLive2 = new Artist("ScHoolboy Q");
@@ -378,33 +427,24 @@ public abstract class BaseRepositoryData {
         em.close();
     }
 
-    public static Set<Album> getAlbums() {
-        return Collections.unmodifiableSet(albums);
-    }
+    private static void deleteDatabase() {
+        //Read SQL File
+        try {
+            EntityManager em = PersistenceManager.getEntityManagerInstance();
+            BufferedReader sqlFile = new BufferedReader(new InputStreamReader(Objects.requireNonNull(TestGenerator.class.getClassLoader().getResourceAsStream("deleteDatabase.sql"))));
+            String line;
+            em.getTransaction().begin();
 
-    public static Set<Song> getSongs() {
-        return Collections.unmodifiableSet(songs);
-    }
+            while ((line = sqlFile.readLine()) != null) {
+                em.createNativeQuery(line).executeUpdate();
+            }
 
-    public static Set<Medium> getMedia() {
-        return Collections.unmodifiableSet(media);
-    }
-
-    public static Set<Supplier> getSuppliers() {
-        return Collections.unmodifiableSet(suppliers);
-    }
-
-    public static Set<Invoice> getInvoices() {
-        return Collections.unmodifiableSet(invoices);
-    }
-
-    public static Set<Article> getArticles() {
-        return Stream.concat(albums.stream(), songs.stream())
-                .collect(Collectors.toUnmodifiableSet());
-    }
-
-    public static Set<Topic> getTopics() {
-        return Collections.unmodifiableSet(topics);
+            em.flush();
+            em.getTransaction().commit();
+            em.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // set (private) object field by reflection
@@ -421,7 +461,5 @@ public abstract class BaseRepositoryData {
         }
     }
 
-    public static Set<Employee> getEmployees() {
-        return Collections.unmodifiableSet(employees);
-    }
+
 }

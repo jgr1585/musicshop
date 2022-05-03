@@ -23,6 +23,8 @@ class InvoiceHibernateRepositoryTest {
     @BeforeEach
     void init() {
         invoiceHibernateRepository = new InvoiceHibernateRepository();
+
+        BaseRepositoryData.init();
     }
 
     @Test
@@ -65,10 +67,10 @@ class InvoiceHibernateRepositoryTest {
         Invoice expectedInvoice = BaseRepositoryData.getInvoices().iterator().next();
         LineItem selectedLineItem = expectedInvoice.getLineItems().iterator().next();
         Quantity originalQuantity = selectedLineItem.getQuantity();
-        Quantity expectedReturnQuantity = Quantity.of(1);
+        int expectedReturnQuantity = 1;
 
         // when
-        selectedLineItem.increaseQuantityReturned(expectedReturnQuantity);
+        selectedLineItem.increaseQuantityReturned(Quantity.of(expectedReturnQuantity));
         this.invoiceHibernateRepository.update(expectedInvoice);
 
         // then
@@ -80,7 +82,7 @@ class InvoiceHibernateRepositoryTest {
         Quantity actualReturnQuantity = actualLineItem.getQuantityReturn();
 
         Assertions.assertEquals(originalQuantity, actualQuantity);
-        Assertions.assertEquals(expectedReturnQuantity, actualReturnQuantity);
+        Assertions.assertEquals(Quantity.of(expectedReturnQuantity), actualReturnQuantity);
     }
 
     @Test
@@ -89,10 +91,10 @@ class InvoiceHibernateRepositoryTest {
         Invoice expectedInvoice = BaseRepositoryData.getInvoices().iterator().next();
         LineItem selectedLineItem = expectedInvoice.getLineItems().iterator().next();
         Quantity originalQuantity = selectedLineItem.getQuantity();
-        Quantity expectedReturnQuantity = Quantity.of(1);
+        int expectedReturnQuantity = 1;
 
         // when
-        selectedLineItem.increaseQuantityReturned(expectedReturnQuantity);
+        selectedLineItem.increaseQuantityReturned(Quantity.of(expectedReturnQuantity));
         //Not included this.invoiceHibernateRepository.update(expectedInvoice);
 
         // then
@@ -104,6 +106,6 @@ class InvoiceHibernateRepositoryTest {
         Quantity actualReturnQuantity = actualLineItem.getQuantityReturn();
 
         Assertions.assertEquals(originalQuantity, actualQuantity);
-        Assertions.assertNotEquals(expectedReturnQuantity, actualReturnQuantity);
+        Assertions.assertNotEquals(Quantity.of(expectedReturnQuantity), actualReturnQuantity);
     }
 }
