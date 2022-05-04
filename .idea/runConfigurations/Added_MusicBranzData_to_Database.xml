@@ -1,9 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Added MusicBranzData to Database" type="DatabaseScript">
     <data-source id="7eb01dad-b83a-48e7-bd17-918682b0632f" namespace="database/&quot;postgres&quot;/schema/&quot;public&quot;" />
-    <script-text>-- noinspection SqlWithoutWhereForFile
-
-CREATE EXTENSION IF NOT EXISTS postgres_fdw;
+    <script-text>CREATE EXTENSION IF NOT EXISTS postgres_fdw;
 
 CREATE SERVER IF NOT EXISTS server_name FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host '10.0.40.166',
     dbname 'postgres', port '5432');
@@ -20,12 +18,12 @@ IMPORT FOREIGN SCHEMA &quot;musicbrainzData&quot;
 
 
 -- DELETE DATA
-DELETE FROM public.article_article;
-DELETE FROM public.article_artist;
-DELETE FROM public.artist;
-DELETE FROM public.medium;
-DELETE FROM public.article;
-DELETE FROM public.supplier;
+DELETE FROM public.article_article WHERE true;
+DELETE FROM public.article_artist WHERE true;
+DELETE FROM public.artist WHERE true;
+DELETE FROM public.medium WHERE true;
+DELETE FROM public.article WHERE true;
+DELETE FROM public.supplier WHERE true;
 
 -- FORMATE DATA
 ALTER TABLE public.article ALTER COLUMN GENRE TYPE VARCHAR;
