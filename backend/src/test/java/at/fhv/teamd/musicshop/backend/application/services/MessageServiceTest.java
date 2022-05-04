@@ -33,21 +33,6 @@ class MessageServiceTest {
     }
 
     @Test
-    void publish() {
-        fail("Not tested yet");
-    }
-
-    @Test
-    void testPublish() {
-        fail("Not tested yet");
-    }
-
-    @Test
-    void receiveMessages() {
-        fail("Not tested yet");
-    }
-
-    @Test
     void getAllTopics() {
         // given
         Set<Topic> topics = Set.of(DomainFactory.createTopic(), DomainFactory.createTopic(), DomainFactory.createTopic());
@@ -63,7 +48,5 @@ class MessageServiceTest {
 
         // then
         Assertions.assertEquals(expectedTopics, actualTopics);
-
-
     }
 }
