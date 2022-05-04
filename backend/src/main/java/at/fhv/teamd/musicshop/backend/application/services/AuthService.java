@@ -68,4 +68,8 @@ public class AuthService {
         env.put(Context.SECURITY_CREDENTIALS, userPassword);
         return new InitialDirContext(env);
     }
+
+    public static String getUserName() {
+        return userName;
+    }
 }

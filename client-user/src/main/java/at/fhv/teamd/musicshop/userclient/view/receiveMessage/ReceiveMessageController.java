@@ -82,7 +82,7 @@ public class ReceiveMessageController {
             } catch (MessagingException | NotAuthorizedException | RemoteException e) {
                 e.printStackTrace();
             }
-        }, 3, 10, TimeUnit.SECONDS);
+        }, 1, 10, TimeUnit.SECONDS);
     }
 
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
