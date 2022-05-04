@@ -1,5 +1,6 @@
 package at.fhv.teamd.musicshop.backend.domain.invoice;
 
+import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import lombok.Getter;
 
@@ -7,6 +8,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -15,6 +17,9 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "invoiceID_generator")
     @SequenceGenerator(name = "invoiceID_generator", sequenceName = "invoice_sequence", initialValue = 100, allocationSize = 1)
     private Long id;
+
+    @Column(unique = true)
+    private UUID uuid;
 
     @OneToMany(cascade = CascadeType.ALL)
     private Set<LineItem> lineItems;
@@ -28,16 +33,15 @@ public class Invoice {
     protected Invoice() {
     }
 
-    private Invoice(Set<LineItem> lineItems, int customerNo) {
+    private Invoice(Set<LineItem> lineItems, Integer customerNo) {
         this.lineItems = Objects.requireNonNull(lineItems);
         this.totalPrice = calculateTotalPrice(lineItems);
         this.customerNo = customerNo;
+        this.uuid = UUID.nameUUIDFromBytes(Integer.toString(Objects.hash(lineItems, customerNo)).getBytes());
     }
 
     private Invoice(Set<LineItem> lineItems) {
-        this.lineItems = Objects.requireNonNull(lineItems);
-        this.totalPrice = calculateTotalPrice(lineItems);
-        this.customerNo = null;
+        this(lineItems, null);
     }
 
     public static Invoice of(Set<LineItem> lineItems, int customerNo) {
@@ -61,11 +65,11 @@ public class Invoice {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Invoice invoice = (Invoice) o;
-        return Objects.equals(id, invoice.id) && lineItems.equals(invoice.lineItems);
+        return uuid.equals(invoice.uuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, lineItems);
+        return Objects.hash(uuid);
     }
 }

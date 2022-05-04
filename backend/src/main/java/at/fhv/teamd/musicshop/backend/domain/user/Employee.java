@@ -7,6 +7,7 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -36,5 +37,18 @@ public class Employee {
         this.lastname = Objects.requireNonNull(lastname);
         this.userRoles = Objects.requireNonNull(userRoles);
         this.subscribedTopics = Objects.requireNonNull(subscribedTopics);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return userName.equals(employee.userName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userName);
     }
 }

@@ -3,6 +3,7 @@ package at.fhv.teamd.musicshop.backend.domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
+import java.util.Objects;
 
 @Access(AccessType.FIELD)
 @Embeddable
@@ -41,5 +42,18 @@ public class Quantity {
 
     public Quantity decreaseBy(Quantity quantity) {
         return Quantity.of(this.value - quantity.value);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Quantity quantity = (Quantity) o;
+        return value == quantity.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

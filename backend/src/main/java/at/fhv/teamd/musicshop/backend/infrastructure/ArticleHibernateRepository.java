@@ -52,13 +52,11 @@ public class ArticleHibernateRepository implements ArticleRepository {
         Function<Article, Integer> scoreByArticleMatchType = article -> {
             String articleTitle = article.getTitle().toLowerCase();
 
-            if (articleTitle.equals(searchTitle)
-                    || article.getArtists().stream().anyMatch(art -> art.getName().toLowerCase().equals(searchArtist))) {
+            if (articleTitle.equals(searchTitle) || article.getArtists().stream().anyMatch(art -> art.getName().toLowerCase().equals(searchArtist))) {
                 // direct match (case-insensitive)
                 return 1;
 
-            } else if (articleTitle.contains(searchTitle)
-                    || article.getArtists().stream().anyMatch(art -> art.getName().toLowerCase().contains(searchArtist))) {
+            } else if (articleTitle.contains(searchTitle) || article.getArtists().stream().anyMatch(art -> art.getName().toLowerCase().contains(searchArtist))) {
                 // like-wise match
                 return 2;
 

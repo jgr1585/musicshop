@@ -1,20 +1,36 @@
 package at.fhv.teamd.musicshop.backend.infrastructure;
 
+import at.fhv.teamd.musicshop.backend.TestGenerator;
+import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.article.Album;
+import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.article.Artist;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
+import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
+import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
+import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
+import at.fhv.teamd.musicshop.backend.domain.user.Employee;
+import at.fhv.teamd.musicshop.library.permission.UserRole;
 
+import javax.persistence.EntityManager;
+import javax.persistence.FlushModeType;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class BaseRepositoryData {
 
@@ -22,22 +38,72 @@ public abstract class BaseRepositoryData {
     private static final Set<Artist> artists;
     private static final Set<Song> songs;
     private static final Set<Medium> media;
-    private static final Set<Stock> stocks;
     private static final Set<Supplier> suppliers;
+    private static final Set<Employee> employees;
+    private static final Set<Topic> topics;
 
+    private static final Set<Invoice> invoices;
 
     static {
         albums = new HashSet<>();
         artists = new HashSet<>();
         songs = new HashSet<>();
         media = new HashSet<>();
-        stocks = new HashSet<>();
         suppliers = new HashSet<>();
+        employees = new HashSet<>();
+        topics = new HashSet<>();
+        invoices = new HashSet<>();
 
         init();
     }
 
-    private static void init() {
+    public static Set<Album> getAlbums() {
+        return Collections.unmodifiableSet(albums);
+    }
+
+    public static Set<Song> getSongs() {
+        return Collections.unmodifiableSet(songs);
+    }
+
+    public static Set<Medium> getMedia() {
+        return Collections.unmodifiableSet(media);
+    }
+
+    public static Set<Supplier> getSuppliers() {
+        return Collections.unmodifiableSet(suppliers);
+    }
+
+    public static Set<Invoice> getInvoices() {
+        return Collections.unmodifiableSet(invoices);
+    }
+
+    public static Set<Article> getArticles() {
+        return Stream.concat(albums.stream(), songs.stream())
+                .collect(Collectors.toUnmodifiableSet());
+    }
+
+    public static Set<Topic> getTopics() {
+        return Collections.unmodifiableSet(topics);
+    }
+
+    public static Set<Employee> getEmployees() {
+        return Collections.unmodifiableSet(employees);
+    }
+
+    public static void init() {
+        // Reset the database
+        deleteDatabase();
+
+        albums.clear();
+        artists.clear();
+        songs.clear();
+        media.clear();
+        suppliers.clear();
+        employees.clear();
+        topics.clear();
+        invoices.clear();
+
+
         // ALBUM 1
         Artist artistLongLive1 = new Artist("A$AP Rocky");
         Artist artistLongLive2 = new Artist("ScHoolboy Q");
@@ -93,6 +159,9 @@ public abstract class BaseRepositoryData {
                 mbidLongLive,
                 Set.of(songLongLive1, songLongLive2, songLongLive3, songLongLive4, songLongLive5, songLongLive6, songLongLive7, songLongLive8, songLongLive9, songLongLive10, songLongLive11, songLongLive12, songLongLive13, songLongLive14, songLongLive15, songLongLive16, songLongLive17));
 
+        albumLongLive.getSongs()
+                .forEach(song -> setObjField(song, "albums", Set.of(albumLongLive)));
+
         //ALBUM 2
         Artist artistUntamedDesire1 = new Artist("50 Cent");
         Artist artistUntamedDesire2 = new Artist("Yo Gotti");
@@ -129,6 +198,9 @@ public abstract class BaseRepositoryData {
                 mbidUntamedDesire,
                 Set.of(songUntamedDesire1, songUntamedDesire2, songUntamedDesire3, songUntamedDesire4, songUntamedDesire5, songUntamedDesire6, songUntamedDesire7, songUntamedDesire8, songUntamedDesire9, songUntamedDesire10, songUntamedDesire11));
 
+        albumUntamedDesire.getSongs()
+                .forEach(song -> setObjField(song, "albums", Set.of(albumUntamedDesire)));
+
         //ALBUM 3
         Artist artistUnion1 = new Artist("Rasa");
         String mbidUnion = "da25e5c4-afcb-4f10-af3f-be2251241b35";
@@ -152,9 +224,11 @@ public abstract class BaseRepositoryData {
                 mbidUnion,
                 Set.of(songUnion1, songUnion2, songUnion3, songUnion4, songUnion5, songUnion6, songUnion7));
 
+        albumUnion.getSongs()
+                .forEach(song -> setObjField(song, "albums", Set.of(albumUnion)));
+
         //ALBUM 4
         Artist artistAnti1 = new Artist("Rihanna");
-        Artist artistAnti2 = new Artist("SZA");
 
         String mbidAnti = "a84dea70-f81b-4761-a39c-2dd3a9e985cc";
         String labelAnti = "Westbury Road Entertainment";
@@ -182,6 +256,9 @@ public abstract class BaseRepositoryData {
                 genreAnti,
                 mbidAnti,
                 Set.of(songAnti1, songAnti2, songAnti3, songAnti4, songAnti5, songAnti6, songAnti7, songAnti8, songAnti9, songAnti10, songAnti11, songAnti12, songAnti13));
+
+        albumAnti.getSongs()
+                .forEach(song -> setObjField(song, "albums", Set.of(albumAnti)));
 
         //ALBUM 5
         Artist artistLetItBe1 = new Artist("The Beatles");
@@ -212,6 +289,9 @@ public abstract class BaseRepositoryData {
                 mbidLetItBe,
                 Set.of(songLetItBe1, songLetItBe2, songLetItBe3, songLetItBe4, songLetItBe5, songLetItBe6, songLetItBe7, songLetItBe8, songLetItBe9, songLetItBe10, songLetItBe11, songLetItBe12));
 
+        albumLetItBe.getSongs()
+                .forEach(song -> setObjField(song, "albums", Set.of(albumLetItBe)));
+
         //ALBUM 6
         Artist artistEverything1 = new Artist("Underground");
 
@@ -237,6 +317,9 @@ public abstract class BaseRepositoryData {
                 mbidEverything,
                 Set.of(songEverything1, songEverything2, songEverything3, songEverything4, songEverything5, songEverything6, songEverything7, songEverything8));
 
+        albumEverything.getSongs()
+                .forEach(song -> setObjField(song, "albums", Set.of(albumEverything)));
+
         //ALBUM 7
         Artist artistTouchBlue1 = new Artist("Miles Davis");
         Artist artistTouchBlue2 = new Artist("Bill Evans");
@@ -261,20 +344,122 @@ public abstract class BaseRepositoryData {
                 mbidTouchBlue,
                 Set.of(songTouchBlue1, songTouchBlue2, songTouchBlue3, songTouchBlue4, songTouchBlue5, songTouchBlue6));
 
+        // create album
+        albums.add(albumLongLive);
+        albums.add(albumUntamedDesire);
+        albums.add(albumUnion);
+        albums.add(albumAnti);
+        albums.add(albumLetItBe);
+        albums.add(albumEverything);
+        albums.add(albumTouchBlue);
+
+        // create song
+        songs.addAll(albums.stream()
+                .map(Album::getSongs)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet()));
+
+        // create artist
+        artists.addAll(songs.stream()
+                .map(Song::getArtists)
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet()));
+
+        albumTouchBlue.getSongs()
+                .forEach(song -> setObjField(song, "albums", Set.of(albumTouchBlue)));
+
         // create mediums
-        Set<Medium> mediums = new LinkedHashSet<>();
+        Medium mediumLongLive1 = new Medium(BigDecimal.valueOf(12), MediumType.CD, Stock.of(Quantity.of(25)), supplier1, albumLongLive);
+        Medium mediumLongLive2 = new Medium(BigDecimal.valueOf(22), MediumType.VINYL, Stock.of(Quantity.of(5)), supplier1, albumLongLive);
+        Medium mediumUntamedDesire = new Medium(BigDecimal.valueOf(10), MediumType.CD, Stock.of(Quantity.of(15)), supplier2, albumUntamedDesire);
+        Medium mediumUnion = new Medium(BigDecimal.valueOf(29), MediumType.CD, Stock.of(Quantity.of(5)), supplier3, albumUnion);
+        Medium mediumAnti = new Medium(BigDecimal.valueOf(13), MediumType.CD, Stock.of(Quantity.of(7)), supplier4, albumAnti);
+        Medium mediumLetItBe = new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier5, albumLetItBe);
+        Medium mediumEverything = new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier6, albumEverything);
+        Medium mediumTouchBlue = new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier7, albumTouchBlue);
 
-        mediums.add(new Medium(BigDecimal.valueOf(12), MediumType.CD, Stock.of(Quantity.of(25)), supplier1, albumLongLive));
-        mediums.add(new Medium(BigDecimal.valueOf(22), MediumType.VINYL, Stock.of(Quantity.of(5)), supplier1, albumLongLive));
-        mediums.add(new Medium(BigDecimal.valueOf(10), MediumType.CD, Stock.of(Quantity.of(15)), supplier2, albumUntamedDesire));
-        mediums.add(new Medium(BigDecimal.valueOf(29), MediumType.CD, Stock.of(Quantity.of(5)), supplier3, albumUnion));
-        mediums.add(new Medium(BigDecimal.valueOf(13), MediumType.CD, Stock.of(Quantity.of(7)), supplier4, albumAnti));
-        mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier5, albumLetItBe));
-        mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier6, albumEverything));
-        mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier7, albumTouchBlue));
+        media.addAll(Set.of(mediumLongLive1, mediumLongLive2, mediumUntamedDesire, mediumUnion, mediumAnti, mediumLetItBe, mediumEverything, mediumTouchBlue));
+
+        media.forEach(medium -> setObjField(medium.getAlbum(), "mediums", media.stream()
+                .filter(medium1 -> medium1.getAlbum().equals(medium.getAlbum()))
+                .collect(Collectors.toSet())));
+
+        // create Topics
+        Topic topicAdministrative = new Topic("Administrative");
+        Topic topicOrder = new Topic("Order");
+        Topic topicHipHop = new Topic("Hip Hop");
+        Topic topicPop = new Topic("Pop");
+        Topic topicRockNRoll = new Topic("Rock 'n' Roll");
+        Topic topicSoul = new Topic("Soul");
+        Topic topicJazz = new Topic("Jazz");
+        topics.addAll(Set.of(topicAdministrative, topicOrder, topicHipHop, topicPop, topicRockNRoll, topicSoul, topicJazz));
+
+        // create employees
+        employees.add(new Employee("lka3333", "Lukas", "Kaufmann", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicPop)));
+        employees.add(new Employee("ire4657", "Ivo", "Reich", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicHipHop, topicSoul)));
+        employees.add(new Employee("jgr1585", "Julian", "Grießer", Set.of(UserRole.OPERATOR), Set.of(topicAdministrative, topicOrder, topicRockNRoll)));
+        employees.add(new Employee("ssa7090", "Selcan", "Sahin", Set.of(UserRole.SELLER, UserRole.OPERATOR), Set.of(topicAdministrative, topicOrder)));
+        employees.add(new Employee("ysa1064", "Yagmur", "Sagdic", Set.of(UserRole.SELLER, UserRole.OPERATOR), Set.of(topicAdministrative, topicHipHop)));
+        employees.add(new Employee("bak3400", "Batuhan", "Akkus", Set.of(UserRole.SELLER), Set.of(topicAdministrative, topicHipHop, topicSoul, topicRockNRoll, topicPop, topicJazz)));
+        employees.add(new Employee("tf-test", "Thomas", "Feilhauer", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicSoul, topicJazz)));
+
+        //create suppliers
+        suppliers.addAll(media.stream()
+                .map(Medium::getSupplier)
+                .collect(Collectors.toSet()));
+
+        // create invoices
+        invoices.add(Invoice.of(Set.of(new LineItem(Quantity.of(2), mediumLongLive2)), 2));
+        invoices.add(Invoice.of(Set.of(new LineItem(Quantity.of(1), mediumLongLive1)), 1));
+        invoices.add(Invoice.of(Set.of(new LineItem(Quantity.of(3), mediumUntamedDesire)), 1));
+        invoices.add(Invoice.of(Set.of(new LineItem(Quantity.of(1), mediumUnion), new LineItem(Quantity.of(3), mediumEverything)), 10));
+
+        // persists everything
+        EntityManager em = PersistenceManager.getEntityManagerInstance();
+        em.getTransaction().begin();
+
+        media.forEach(em::persist);
+        employees.forEach(em::persist);
+        invoices.forEach(em::persist);
+
+        em.flush();
+        em.getTransaction().commit();
+        em.close();
     }
 
-    public static Set<Album> getAlbums() {
-        return albums;
+    private static void deleteDatabase() {
+        //Read SQL File
+        try {
+            EntityManager em = PersistenceManager.getEntityManagerInstance();
+            BufferedReader sqlFile = new BufferedReader(new InputStreamReader(Objects.requireNonNull(TestGenerator.class.getClassLoader().getResourceAsStream("deleteDatabase.sql"))));
+            String line;
+            em.getTransaction().begin();
+
+            while ((line = sqlFile.readLine()) != null) {
+                em.createNativeQuery(line).executeUpdate();
+            }
+
+            em.flush();
+            em.getTransaction().commit();
+            em.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    // set (private) object field by reflection
+    private static void setObjField(Object obj, String fieldName, Object fieldValue) {
+        try {
+            // reference field of obj
+            Field field = obj.getClass().getDeclaredField(fieldName);
+            // suppress checks for Java language access control for field (required to access private field)
+            field.setAccessible(true);
+            // set field of object to value
+            field.set(obj, fieldValue);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

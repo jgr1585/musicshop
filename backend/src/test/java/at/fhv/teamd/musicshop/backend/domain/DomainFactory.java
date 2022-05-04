@@ -29,6 +29,7 @@ public class DomainFactory {
         UUID uuid = UUID.randomUUID();
         Song song = createPrivateSong();
         Album album = new Album("Album" + uuid, "Label" + uuid, LocalDate.now(), "Genre", uuid.toString(), Set.of(song));
+        setObjField(album, "mediums", Set.of(createMedium(MediumType.CD, album)));
         setSongAlbums(song, Set.of(album));
 
         return album;
@@ -72,8 +73,12 @@ public class DomainFactory {
     }
 
     public static Medium createMedium(MediumType mediumType) {
-        UUID uuid = UUID.randomUUID();
         Album album = createAlbum();
+        return createMedium(mediumType, album);
+    }
+
+    public static Medium createMedium(MediumType mediumType, Album album) {
+        UUID uuid = UUID.randomUUID();
         Medium medium = new Medium(BigDecimal.TEN, mediumType, Stock.of(Quantity.of(5)), createSupplier(), album);
         setObjField(medium, "id", uuid.getLeastSignificantBits());
         setAlbumMediums(album, Set.of(medium));
@@ -95,6 +100,11 @@ public class DomainFactory {
         Invoice invoice = Invoice.of(Set.of(createLineItem()));
         setObjField(invoice, "id", UUID.randomUUID().getMostSignificantBits());
         return invoice;
+    }
+
+    public static Topic createTopic() {
+        UUID uuid = UUID.randomUUID();
+        return createTopic("Topic" + uuid);
     }
 
     public static Topic createTopic(String name) {

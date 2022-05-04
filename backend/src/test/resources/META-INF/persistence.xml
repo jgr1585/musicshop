@@ -16,7 +16,12 @@
         <class>at.fhv.teamd.musicshop.backend.domain.medium.Stock</class>
         <class>at.fhv.teamd.musicshop.backend.domain.medium.Supplier</class>
 
+        <class>at.fhv.teamd.musicshop.backend.domain.invoice.Invoice</class>
+
         <class>at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem</class>
+
+        <class>at.fhv.teamd.musicshop.backend.domain.user.Employee</class>
+        <class>at.fhv.teamd.musicshop.backend.domain.topic.Topic</class>
 
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
 
@@ -27,6 +32,7 @@
             <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/test"/>
             <property name="javax.persistence.jdbc.user" value="postgres"/>
             <property name="javax.persistence.jdbc.password" value="fyouuNeW!4"/>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
             <property name="hibernate.show_sql" value="false"/>
         </properties>

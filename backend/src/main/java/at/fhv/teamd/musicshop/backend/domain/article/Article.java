@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Entity
@@ -15,6 +16,9 @@ public abstract class Article {
     @Id
     @GeneratedValue
     private long id;
+
+    @Column(unique = true)
+    private UUID uuid;
 
     @Column
     private String title;
@@ -38,11 +42,25 @@ public abstract class Article {
     }
 
     protected Article(String title, String label, LocalDate releaseDate, String genre, String musicbrainzId, Set<Artist> artists) {
+        this.uuid = UUID.randomUUID();
         this.title = Objects.requireNonNull(title);
         this.label = Objects.requireNonNull(label);
         this.releaseDate = Objects.requireNonNull(releaseDate);
         this.genre = Objects.requireNonNull(genre);
         this.musicbrainzId = Objects.requireNonNull(musicbrainzId);
         this.artists = Objects.requireNonNull(artists);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return uuid.equals(article.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
     }
 }
