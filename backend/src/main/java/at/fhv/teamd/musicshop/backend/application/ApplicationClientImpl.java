@@ -6,12 +6,16 @@ import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.library.exceptions.*;
 
+import javax.ejb.Remote;
+import javax.ejb.Stateful;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Set;
 
 // TODO: still to-do: remove services constructor dependency injection of applicationClientSession and use field-based approach (may use a SessionService to register ApplicationClientSessions -> but think this well-through as this might be hacky)
+@Remote(ApplicationClient.class)
+@Stateful
 public class ApplicationClientImpl extends UnicastRemoteObject implements ApplicationClient {
 
     private final AuthService authService = ServiceFactory.getAuthServiceInstance();
@@ -22,6 +26,10 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     private final ShoppingCartService shoppingCartService = ServiceFactory.getShoppingCartServiceInstance();
 
     private final ApplicationClientSession applicationClientSession;
+
+    public ApplicationClientImpl() throws RemoteException {
+        this("lka3333");
+    }
 
     private ApplicationClientImpl(String userId) throws RemoteException {
         super(ApplicationServer.RMI_BIND_PORT);
