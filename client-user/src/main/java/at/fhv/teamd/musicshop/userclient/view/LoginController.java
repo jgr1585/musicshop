@@ -39,6 +39,7 @@ public class LoginController {
 
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("templates/login.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), stage.getScene().getWidth(), stage.getScene().getHeight());
+        stage.setTitle("MusicShop - Login");
         stage.setScene(scene);
 
         LoginController controller = fxmlLoader.getController();
@@ -55,6 +56,7 @@ public class LoginController {
             AppController appController = fxmlLoader.getController();
             appController.setLoginController(this);
 
+            stage.setTitle("MusicShop - " + RemoteFacade.getInstance().getSessionUserId());
             stage.setScene(scene);
 
         } catch (AuthenticationFailedException e) {
@@ -65,7 +67,7 @@ public class LoginController {
 
     @FXML
     private void onResetAction(ActionEvent actionEvent) {
-        serverhost.setText("");
+        serverhost.setText("localhost");
         username.setText("");
         password.setText("");
     }

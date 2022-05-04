@@ -3,7 +3,6 @@ package at.fhv.teamd.musicshop.backend.application.services;
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
-import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
@@ -19,11 +18,9 @@ public class ShoppingCartService {
     private static final Map<String, Set<LineItem>> sessionLineItems = new HashMap<>();
 
     private static MediumRepository mediumRepository;
-    private static ArticleRepository articleRepository;
 
     ShoppingCartService() {
         mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
-        articleRepository = RepositoryFactory.getArticleRepositoryInstance();
     }
 
     private void initializeShoppingcart(String userId) {
@@ -34,14 +31,12 @@ public class ShoppingCartService {
         }
     }
 
-    public boolean addToShoppingCart(String userId, MediumDTO mediumDTO, int amount) {
+    public void addToShoppingCart(String userId, MediumDTO mediumDTO, int amount) {
         if (!shoppingCartExists(userId)) {
             initializeShoppingcart(userId);
         }
 
-        if (amount < 1) return false;
-
-        AtomicBoolean success = new AtomicBoolean(true);
+        if (amount < 1) throw new IllegalArgumentException("Quantity not acceptable");
 
         Set<LineItem> lineItems = sessionLineItems.get(userId);
 
@@ -54,42 +49,39 @@ public class ShoppingCartService {
                     if (li.getQuantity().getValue() + amount <= medium.getStock().getQuantity().getValue()) {
                         li.increaseQuantity(Quantity.of(amount));
                     } else {
-                        success.set(false);
+                        throw new IllegalArgumentException("Quantity not acceptable");
                     }
                 }, () -> {
                     if (amount <= medium.getStock().getQuantity().getValue()) {
                         lineItems.add(new LineItem(Quantity.of(amount), medium));
                         sessionLineItems.put(userId, lineItems);
                     } else {
-                        success.set(false);
+                        throw new IllegalArgumentException("Quantity not acceptable");
                     }
                 });
-        return success.get();
     }
 
-    public boolean removeFromShoppingCart(String userId, MediumDTO mediumDTO, int amount) {
+    public void removeFromShoppingCart(String userId, MediumDTO mediumDTO, int amount) {
         if (!shoppingCartExists(userId)) {
             emptyShoppingCart(userId);
         }
 
-        if (amount < 1) return false;
-
-        AtomicBoolean success = new AtomicBoolean(true);
+        if (amount < 1) throw new IllegalArgumentException("Quantity not acceptable");
 
         Set<LineItem> lineItems = sessionLineItems.get(userId);
 
-        Optional<LineItem> lineItem = lineItems.stream()
+        lineItems.stream()
                 .filter(li -> li.getMedium().getId() == mediumDTO.id())
-                .findFirst();
-
-        lineItem.ifPresentOrElse(li -> {
-            if (li.getQuantity().getValue() > amount) {
-                li.decreaseQuantity(Quantity.of(amount));
-            } else {
-                lineItems.remove(li);
-            }
-        }, () -> success.set(false));
-        return success.get();
+                .findFirst()
+                .ifPresentOrElse(li -> {
+                    if (li.getQuantity().getValue() > amount) {
+                        li.decreaseQuantity(Quantity.of(amount));
+                    } else {
+                        lineItems.remove(li);
+                    }
+                }, () -> {
+                    throw new IllegalArgumentException("Quantity not acceptable");
+                });
     }
 
     public void emptyShoppingCart(String userId) {
@@ -100,31 +92,26 @@ public class ShoppingCartService {
         if (!shoppingCartExists(userId)) {
             initializeShoppingcart(userId);
         }
-        return buildShoppingCartDTO(articleRepository, sessionLineItems.get(userId));
+        return buildShoppingCartDTO(sessionLineItems.get(userId));
     }
 
-    // TODO: specific exception
-    public boolean buyFromShoppingCart(String userId, int id) {
+    public void buyFromShoppingCart(String userId, int id) {
         if (!shoppingCartExists(userId)) {
             emptyShoppingCart(userId);
         }
 
         Set<LineItem> lineItems = sessionLineItems.get(userId);
 
-        if (lineItems.isEmpty()) return false;
+        if (lineItems.isEmpty()) throw new IllegalArgumentException("No LineItems in ShoppingCart");
 
         lineItems.forEach(lineItem -> {
             Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
             if (medium.getStock().getQuantity().getValue() < lineItem.getQuantity().getValue()) {
-                throw new RuntimeException("not enough in Stock: " + medium.getId());
+                throw new RuntimeException("Not enough Items in Stock: " + medium.getId());
             }
         });
 
-        try {
-            ServiceFactory.getInvoiceServiceInstance().createInvoice(lineItems, id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ServiceFactory.getInvoiceServiceInstance().createInvoice(lineItems, id);
 
         emptyShoppingCart(userId);
 
@@ -134,7 +121,6 @@ public class ShoppingCartService {
             medium.setStock(Stock.of(medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity())));
             mediumRepository.update(medium);
         });
-        return true;
     }
 
     private boolean shoppingCartExists(String userId) {

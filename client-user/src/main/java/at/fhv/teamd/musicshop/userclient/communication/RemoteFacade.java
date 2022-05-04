@@ -3,10 +3,9 @@ package at.fhv.teamd.musicshop.userclient.communication;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.ApplicationClientFactory;
 import at.fhv.teamd.musicshop.library.DTO.*;
-import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
-import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
-import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
-import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.exceptions.*;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
+import at.fhv.teamd.musicshop.userclient.observer.ReturnSubject;
 import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartSubject;
 
 import java.net.MalformedURLException;
@@ -55,6 +54,11 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
+    public String getSessionUserId() throws RemoteException {
+        return getApplicationClientOrThrow().getSessionUserId();
+    }
+
+    @Override
     public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException, NotAuthorizedException {
         return getApplicationClientOrThrow().searchArticlesByAttributes(title, artist);
     }
@@ -65,21 +69,26 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public boolean addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
-        boolean returnValue = getApplicationClientOrThrow().addToShoppingCart(mediumDTO, amount);
-        if (returnValue) {
-            ShoppingCartSubject.notifyShoppingCartUpdate();
-        }
-        return returnValue;
+    public InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException, InvoiceException {
+        return getApplicationClientOrThrow().findInvoiceById(id);
     }
 
     @Override
-    public boolean removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
-        boolean returnValue = getApplicationClientOrThrow().removeFromShoppingCart(mediumDTO, amount);
-        if (returnValue) {
-            ShoppingCartSubject.notifyShoppingCartUpdate();
-        }
-        return returnValue;
+    public void returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException, InvoiceException {
+        getApplicationClientOrThrow().returnItem(lineItem, quantity);
+        ReturnSubject.notifyReturnUpdate();
+    }
+
+    @Override
+    public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
+        getApplicationClientOrThrow().addToShoppingCart(mediumDTO, amount);
+        ShoppingCartSubject.notifyShoppingCartUpdate();
+    }
+
+    @Override
+    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
+        getApplicationClientOrThrow().removeFromShoppingCart(mediumDTO, amount);
+        ShoppingCartSubject.notifyShoppingCartUpdate();
     }
 
     @Override
@@ -89,12 +98,9 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public boolean buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException {
-        boolean returnValue = getApplicationClientOrThrow().buyFromShoppingCart(customerId);
-        if (returnValue) {
-            ShoppingCartSubject.notifyShoppingCartUpdate();
-        }
-        return returnValue;
+    public void buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException {
+        getApplicationClientOrThrow().buyFromShoppingCart(customerId);
+        ShoppingCartSubject.notifyShoppingCartUpdate();
     }
 
     @Override
@@ -103,13 +109,33 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public boolean publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException {
-        return getApplicationClientOrThrow().publishMessage(message);
+    public void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException, MessagingException {
+        getApplicationClientOrThrow().publishOrderMessage(mediumDTO, quantity);
     }
 
     @Override
-    public boolean publishOrder(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException {
-        return getApplicationClientOrThrow().publishOrder(mediumDTO, quantity);
+    public void publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+        getApplicationClientOrThrow().publishMessage(message);
+    }
+
+    @Override
+    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException {
+        return getApplicationClientOrThrow().receiveMessages();
+    }
+
+    @Override
+    public void acknowledgeMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+        getApplicationClientOrThrow().acknowledgeMessage(message);
+    }
+
+    @Override
+    public Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException {
+        return getApplicationClientOrThrow().getAllTopics();
+    }
+
+    @Override
+    public boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) throws RemoteException {
+        return getApplicationClientOrThrow().isAuthorizedFor(functionPermission);
     }
 
     @Override

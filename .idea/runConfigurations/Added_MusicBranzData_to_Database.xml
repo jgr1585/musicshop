@@ -1,0 +1,55 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Added MusicBranzData to Database" type="DatabaseScript">
+    <data-source id="7eb01dad-b83a-48e7-bd17-918682b0632f" namespace="database/&quot;postgres&quot;/schema/&quot;public&quot;" />
+    <script-text>CREATE EXTENSION IF NOT EXISTS postgres_fdw;
+
+CREATE SERVER IF NOT EXISTS server_name FOREIGN DATA WRAPPER postgres_fdw OPTIONS (host '10.0.40.166',
+    dbname 'postgres', port '5432');
+
+CREATE USER MAPPING IF NOT EXISTS FOR CURRENT_USER
+    SERVER server_name
+    OPTIONS (user 'postgres', password 'fyouuNeW!4');
+
+CREATE SCHEMA IF NOT EXISTS musicbrainzFDW;
+
+IMPORT FOREIGN SCHEMA &quot;musicbrainzData&quot;
+    FROM SERVER server_name
+    INTO musicbrainzFDW;
+
+
+-- DELETE DATA
+DELETE FROM public.article_article WHERE true;
+DELETE FROM public.article_artist WHERE true;
+DELETE FROM public.artist WHERE true;
+DELETE FROM public.medium WHERE true;
+DELETE FROM public.article WHERE true;
+DELETE FROM public.supplier WHERE true;
+
+-- FORMATE DATA
+ALTER TABLE public.article ALTER COLUMN GENRE TYPE VARCHAR;
+ALTER TABLE public.article ALTER COLUMN LABEL TYPE VARCHAR;
+ALTER TABLE public.article ALTER COLUMN MUSICBRAINZID TYPE VARCHAR;
+ALTER TABLE public.article ALTER COLUMN TITLE TYPE VARCHAR;
+ALTER TABLE public.artist ALTER COLUMN NAME TYPE VARCHAR;
+
+-- INSERT DATA
+INSERT INTO public.article (type_of_publication, id, genre, label, musicbrainzid, releasedate, title, length, uuid)
+SELECT type_of_publication, id, genre, label, musicbrainzid, releasedate, title, length, uuid FROM musicbrainzFDW.article;
+INSERT INTO public.artist (id, name, uuid)
+SELECT id, name, uuid FROM musicbrainzFDW.artist;
+INSERT INTO public.supplier (id, name, supplyduration, uuid)
+SELECT id, name, supplyduration, uuid FROM musicbrainzFDW.supplier;
+INSERT INTO public.medium (id, price, value, type, album_id, supplier_id, uuid)
+SELECT id, price, value, type, album_id, supplier_id, uuid FROM musicbrainzFDW.medium;
+INSERT INTO public.article_artist (article_id, artists_id)
+SELECT article_id, artists_id FROM musicbrainzFDW.article_artist;
+INSERT INTO public.article_article (albums_id, songs_id)
+SELECT albums_id, songs_id FROM musicbrainzFDW.article_article;
+
+-- Close Connection
+DROP SCHEMA IF EXISTS musicbrainzFDW CASCADE;</script-text>
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="backend (test generator)" run_configuration_type="Application" />
+    </method>
+  </configuration>
+</component>

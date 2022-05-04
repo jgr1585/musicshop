@@ -4,14 +4,12 @@ import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.rmi.RemoteException;
 
@@ -20,7 +18,9 @@ import static at.fhv.teamd.musicshop.userclient.view.FieldValidationHelper.numbe
 public class ShoppingCartArticleController implements GenericArticleController {
 
     @FXML
-    public TextField mediumAmountSelected;
+    private TextField mediumAmountSelected;
+    @FXML
+    private Button removeButton;
     @FXML
     private Label mediumType;
     @FXML
@@ -35,6 +35,14 @@ public class ShoppingCartArticleController implements GenericArticleController {
     public void initialize() {
         // force the field to be numeric only
         numberOnly(this.mediumAmountStock);
+
+        new Thread(() -> {
+            try {
+                this.removeButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.removeFromShoppingCart));
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
     @Override
@@ -57,9 +65,7 @@ public class ShoppingCartArticleController implements GenericArticleController {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         if (val > 0) {
             this.mediumAmountSelected.setText(Integer.valueOf(val - 1).toString());
-            if (!RemoteFacade.getInstance().removeFromShoppingCart(mediumDTO, 1)) {
-                new Alert(Alert.AlertType.ERROR, "Error on remove from shoppingcart", ButtonType.CLOSE).show();
-            }
+            RemoteFacade.getInstance().removeFromShoppingCart(mediumDTO, 1);
         }
     }
     @FXML
@@ -67,9 +73,7 @@ public class ShoppingCartArticleController implements GenericArticleController {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         if (val < this.lineItemDTO.medium().stockQuantity()) {
             this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
-            if (!RemoteFacade.getInstance().addToShoppingCart(mediumDTO, 1)) {
-                new Alert(Alert.AlertType.ERROR, "Error on add from shoppingcart", ButtonType.CLOSE).show();
-            }
+            RemoteFacade.getInstance().addToShoppingCart(mediumDTO, 1);
         }
     }
     @FXML

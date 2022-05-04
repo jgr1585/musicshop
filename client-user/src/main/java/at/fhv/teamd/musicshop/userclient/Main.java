@@ -1,5 +1,7 @@
 package at.fhv.teamd.musicshop.userclient;
 
+import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
+import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.view.LoginController;
 import javafx.application.Application;
@@ -15,10 +17,6 @@ import java.util.Objects;
 
 public class Main extends Application {
 
-    // TODO: hide features if not authorized
-    // TODO: hide features if not authorized
-    // TODO: hide features if not authorized
-
     @Override
     public void start(Stage stage) {
         try {
@@ -26,7 +24,7 @@ public class Main extends Application {
             Scene scene = new Scene(fxmlLoader.load(), 1000, 800);
             LoginController controller = fxmlLoader.getController();
             controller.setStage(stage);
-            stage.setTitle("MusicShop24");
+            stage.setTitle("MusicShop24 - Login");
             stage.setScene(scene);
             stage.show();
         } catch (Throwable e) {
@@ -52,6 +50,12 @@ public class Main extends Application {
         if (getThrowableTypeInCauseStack(e, RemoteException.class) != null) {
             new Alert(Alert.AlertType.ERROR, "Connection to server failed (may be offline).", ButtonType.CLOSE).showAndWait();
         } else if ((cause = getThrowableTypeInCauseStack(e, NotAuthorizedException.class)) != null) {
+            new Alert(Alert.AlertType.ERROR, cause.getMessage(), ButtonType.CLOSE).showAndWait();
+        } else if ((cause = getThrowableTypeInCauseStack(e, MessagingException.class)) != null) {
+            new Alert(Alert.AlertType.ERROR, cause.getMessage(), ButtonType.CLOSE).showAndWait();
+        } else if ((cause = getThrowableTypeInCauseStack(e, InvoiceException.class)) != null) {
+            new Alert(Alert.AlertType.ERROR, cause.getMessage(), ButtonType.CLOSE).showAndWait();
+        } else if ((cause = getThrowableTypeInCauseStack(e, IllegalArgumentException.class)) != null) {
             new Alert(Alert.AlertType.ERROR, cause.getMessage(), ButtonType.CLOSE).showAndWait();
         } else {
             e.printStackTrace();

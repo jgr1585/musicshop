@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<GridPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartArticleController">
+<GridPane style="-fx-background-color: #000000; -fx-font-size: 13; -fx-font-weight: bold;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartArticleController">
    <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
@@ -17,19 +17,19 @@
    <rowConstraints>
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
-   <Label fx:id="mediumType" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="16.0" prefWidth="75.0" text="Label" />
-   <Label fx:id="mediumPrice" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" text="€€€" textFill="#26c303" GridPane.columnIndex="4">
+   <Label fx:id="mediumType" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="16.0" prefWidth="75.0" text="Label" textFill="WHITE" />
+   <Label fx:id="mediumPrice" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="75.0" text="€€€" textFill="#05b789" GridPane.columnIndex="4">
       <font>
          <Font name="System Bold" size="12.0" />
       </font>
    </Label>
    <TextField fx:id="mediumAmountStock" alignment="CENTER" editable="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" style="-fx-background-color: lightgrey;" text="0" GridPane.columnIndex="2" />
    <Pane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3">
-      <Button layoutX="8.0" layoutY="1.0" mnemonicParsing="false" onAction="#reduceByOne" prefWidth="25.0" style="-fx-background-color: #FF0000; -fx-text-fill: #FFFFFF;" text="-" textFill="#101110" />
+      <Button layoutX="7.0" layoutY="2.0" maxHeight="26.0" maxWidth="28.0" minHeight="26.0" minWidth="28.0" mnemonicParsing="false" onAction="#reduceByOne" style="-fx-background-color: #FF0000; -fx-text-fill: #FFFFFF;" text="-" textFill="#101110" />
       <TextField fx:id="mediumAmountSelected" alignment="CENTER" layoutX="37.0" layoutY="2.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="35.0" style="-fx-background-color: white;" text="0" />
-      <Button layoutX="76.0" layoutY="1.0" mnemonicParsing="false" onAction="#increaseByOne" prefWidth="25.0" style="-fx-background-color: #05b789; -fx-text-fill: #FFFFFF;" text="+" />
+      <Button layoutX="74.0" layoutY="2.0" maxHeight="26.0" maxWidth="28.0" minHeight="26.0" minWidth="28.0" mnemonicParsing="false" onAction="#increaseByOne" style="-fx-background-color: #05b789; -fx-text-fill: #FFFFFF;" text="+" />
    </Pane>
-   <Button mnemonicParsing="false" onAction="#remove" prefWidth="25.0" style="-fx-background-color: #00000000;" GridPane.columnIndex="5">
+   <Button fx:id="removeButton" disable="true" mnemonicParsing="false" onAction="#remove" prefWidth="25.0" style="-fx-background-color: #00000000;" GridPane.columnIndex="5">
       <graphic>
          <FontAwesomeIconView fill="WHITE" glyphName="TRASH" size="22" text="" wrappingWidth="17.285715103149414" />
       </graphic></Button>

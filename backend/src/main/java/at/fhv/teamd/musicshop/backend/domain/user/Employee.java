@@ -1,8 +1,13 @@
 package at.fhv.teamd.musicshop.backend.domain.user;
 
+import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
+import at.fhv.teamd.musicshop.library.permission.UserRole;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -16,16 +21,34 @@ public class Employee {
     @Column
     private String lastname;
 
+    @ElementCollection
     @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    private Set<UserRole> userRoles;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    private Set<Topic> subscribedTopics;
 
     protected Employee() {
     }
 
-    public Employee(String userName, String firstname, String lastname, UserRole userRole) {
-        this.userName = userName;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.userRole = userRole;
+    public Employee(String userName, String firstname, String lastname, Set<UserRole> userRoles, Set<Topic> subscribedTopics) {
+        this.userName = Objects.requireNonNull(userName);
+        this.firstname = Objects.requireNonNull(firstname);
+        this.lastname = Objects.requireNonNull(lastname);
+        this.userRoles = Objects.requireNonNull(userRoles);
+        this.subscribedTopics = Objects.requireNonNull(subscribedTopics);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return userName.equals(employee.userName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userName);
     }
 }

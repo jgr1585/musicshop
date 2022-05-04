@@ -1,66 +1,92 @@
 package at.fhv.teamd.musicshop.userclient.view.article;
 
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
+import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
+import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
-import at.fhv.teamd.musicshop.userclient.Tabs;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
 
-import java.io.IOException;
-import java.util.Set;
+import java.rmi.RemoteException;
 
-public class SearchArticleController {
+import static at.fhv.teamd.musicshop.userclient.view.FieldValidationHelper.numberOnly;
+
+public class SearchArticleController implements GenericArticleController {
 
     @FXML
-    private TextField searchByTitle;
+    private Button addToCartButton;
     @FXML
-    private TextField searchByArtist;
+    private Button orderButton;
     @FXML
-    private MenuButton searchByMedium;
+    private Label mediumPrice;
+    @FXML
+    private TextField mediumAmount;
+    @FXML
+    private TextField mediumAmountSelected;
+    @FXML
+    private Label mediumType;
+
+    private MediumDTO mediumDTO;
 
     @FXML
-    private VBox searchPane;
+    public void initialize() {
+        // force the field to be numeric only
+        numberOnly(this.mediumAmount);
+        numberOnly(this.mediumAmountSelected);
 
-    public void insertResults(Set<ArticleDTO> results) throws IOException {
-        for (var article : results) {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/article.fxml"));
-            Parent medium = fxmlLoader.load();
-            ArticleController controller = fxmlLoader.getController();
-            controller.addMediumTypes(article, Tabs.SEARCH);
-            this.searchPane.getChildren().add(medium);
-        }
-    }
-
-    @FXML
-    private void searchArticles(ActionEvent actionEvent) throws ApplicationClientException, IOException, NotAuthorizedException {
-        this.searchPane.getChildren().clear();
-        if (!(this.searchByTitle.getText().isEmpty() && this.searchByArtist.getText().isEmpty())) {
-            Set<ArticleDTO> result = RemoteFacade.getInstance().searchArticlesByAttributes(this.searchByTitle.getText(), this.searchByArtist.getText());
-            if (!(result.isEmpty())) {
-                this.insertResults(result);
-            } else {
-                new Alert(Alert.AlertType.NONE, "No articles found", ButtonType.CLOSE).show();
+        new Thread(() -> {
+            try {
+                this.addToCartButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.addToShoppingCart));
+                this.orderButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.publishOrderMessage));
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
-        } else {
-            new Alert(Alert.AlertType.NONE, "No parameter for search provided", ButtonType.CLOSE).show();
-        }
+        }).start();
+    }
+
+    public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO) {
+        this.mediumDTO = mediumDTO;
+        this.mediumType.setText(mediumDTO.type());
+        this.mediumPrice.setText(mediumDTO.price().toString());
+        this.mediumAmount.setText(mediumDTO.stockQuantity().toString());
+        this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
+    }
+
+    public void setMediumType(LineItemDTO lineItemDTO) {
+        this.mediumDTO = lineItemDTO.medium();
+        this.mediumType.setText(mediumDTO.type());
+        this.mediumPrice.setText(mediumDTO.price().toString());
+        this.mediumAmount.setText(mediumDTO.stockQuantity().toString());
+        this.mediumAmountSelected.setText(lineItemDTO.quantity().toString());
     }
 
     @FXML
-    private void resetSearch(ActionEvent actionEvent) {
-        this.searchPane.getChildren().clear();
-        this.searchByTitle.setText("");
-        this.searchByArtist.setText("");
-        this.searchByMedium.setText("");
+    private void addToCart(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
+        RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()));
+        new Alert(Alert.AlertType.INFORMATION, "Successfully added items", ButtonType.OK).show();
+        this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
     }
 
+    public void reduceByOne(ActionEvent actionEvent) {
+        int val = Integer.parseInt(this.mediumAmountSelected.getText());
+        if (val > 0) {
+            this.mediumAmountSelected.setText(Integer.valueOf(val - 1).toString());
+        }
+    }
+
+    public void increaseByOne(ActionEvent actionEvent) {
+        int val = Integer.parseInt(this.mediumAmountSelected.getText());
+        this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
+    }
+
+    public void order(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException, MessagingException {
+        RemoteFacade.getInstance().publishOrderMessage(mediumDTO, mediumAmountSelected.getText());
+        new Alert(Alert.AlertType.INFORMATION, "Message successfully sent", ButtonType.CLOSE).show();
+        this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
+    }
 }

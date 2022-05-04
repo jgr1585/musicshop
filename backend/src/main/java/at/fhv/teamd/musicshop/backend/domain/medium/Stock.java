@@ -6,6 +6,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
+import java.util.Objects;
 
 @Access(AccessType.FIELD)
 @Embeddable
@@ -27,7 +28,16 @@ public class Stock {
         return quantity;
     }
 
-    public void setQuantity(Quantity quantity) {
-        this.quantity = quantity;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Stock stock = (Stock) o;
+        return Objects.equals(quantity, stock.quantity);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(quantity);
     }
 }

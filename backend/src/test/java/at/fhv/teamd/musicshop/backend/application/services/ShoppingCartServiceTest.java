@@ -4,8 +4,6 @@ import at.fhv.teamd.musicshop.backend.domain.DomainFactory;
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
-import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
-import at.fhv.teamd.musicshop.backend.domain.repositories.EmployeeRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
@@ -32,13 +30,6 @@ class ShoppingCartServiceTest {
 
     @Mock
     private MediumRepository mediumRepository;
-
-    @Mock
-    private ArticleRepository articleRepository;
-
-    @Mock
-    private EmployeeRepository employeeRepository;
-
     @Mock
     private InvoiceRepository invoiceRepository;
 
@@ -46,9 +37,7 @@ class ShoppingCartServiceTest {
 
     @BeforeEach
     public void init() {
-        RepositoryFactory.setArticleRepository(this.articleRepository);
         RepositoryFactory.setMediumRepository(this.mediumRepository);
-        RepositoryFactory.setEmployeeRepository(this.employeeRepository);
         RepositoryFactory.setInvoiceRepository(this.invoiceRepository);
         this.shoppingCartService = new ShoppingCartService();
     }
@@ -56,20 +45,19 @@ class ShoppingCartServiceTest {
     @Test
     public void given_shoppingCartService_when_addToShoppingCart_then_returnRefreshedShoppingCart() {
         //given
-        String userId = "user1234";
+        String userId = "user123456";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 2;
 
-        Mockito.when(this.articleRepository.findArticleById(medium.getAlbum().getId())).thenReturn(Optional.of(medium.getAlbum()));
         Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
 
         LineItem lineItem = new LineItem(Quantity.of(amount), medium);
-        Set<LineItemDTO> expectedLineItems = Set.of(DTOProvider.buildLineItemDTO(this.articleRepository, lineItem));
+        Set<LineItemDTO> expectedLineItems = Set.of(DTOProvider.buildLineItemDTO(lineItem));
 
         LineItem lineItemIncreasedAmount = new LineItem(Quantity.of(amount * 2), medium);
-        Set<LineItemDTO> expectedLineItemsIncreasedAmount = Set.of(DTOProvider.buildLineItemDTO(this.articleRepository, lineItemIncreasedAmount));
+        Set<LineItemDTO> expectedLineItemsIncreasedAmount = Set.of(DTOProvider.buildLineItemDTO(lineItemIncreasedAmount));
 
         //when
         this.shoppingCartService.addToShoppingCart(userId, mediumDTO, amount);
@@ -103,11 +91,10 @@ class ShoppingCartServiceTest {
     @Test
     public void given_shoppingCartService_when_removeFromShoppingCart_then_returnRefreshedShoppingCart() {
         //given
-        String userId = "user1234";
+        String userId = "user12345";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 3;
 
-        Mockito.when(this.articleRepository.findArticleById(medium.getAlbum().getId())).thenReturn(Optional.of(medium.getAlbum()));
         Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
@@ -124,16 +111,15 @@ class ShoppingCartServiceTest {
         //when remove 2 of 2
         this.shoppingCartService.removeFromShoppingCart(userId, mediumDTO, 2);
 
-        //then quantity should equal 2
+        //then quantity should equal 0
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
-        Assertions.assertFalse(this.shoppingCartService.removeFromShoppingCart("user0000", mediumDTO, 10));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.shoppingCartService.removeFromShoppingCart("user0000", mediumDTO, 10));
     }
 
-    // TODO: fix update of quantity
     @Test
     public void given_articlesInShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() {
         //given
-        String userId = "user1234";
+        String userId = "user1234567";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 1;
         int expectedAmount = medium.getStock().getQuantity().getValue() - amount;
@@ -149,22 +135,21 @@ class ShoppingCartServiceTest {
 
         //then
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
-//        Assertions.assertEquals(expectedAmount, medium.getStock().getQuantity().getValue());
+        Assertions.assertEquals(expectedAmount, medium.getStock().getQuantity().getValue());
     }
 
     @Test
     public void given_emptyShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() {
         //given
-        String userId = "user1234";
+        String userId = "user1239";
 
         //when
-        this.shoppingCartService.buyFromShoppingCart(userId, 0);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.shoppingCartService.buyFromShoppingCart(userId, 0));
 
         //then
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
     }
 
-    // TODO: not in stock exception
     @Test
     public void given_articlesInShoppingCart_when_buyFromShoppingCart_item_not_in_stock_then_Throw_Exeption() {
         //given
@@ -173,7 +158,6 @@ class ShoppingCartServiceTest {
         Medium medium = DomainFactory.createMedium(MediumType.CD);
         int amount = 3;
 
-        Mockito.when(this.articleRepository.findArticleById(medium.getAlbum().getId())).thenReturn(Optional.of(medium.getAlbum()));
         Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
@@ -182,7 +166,7 @@ class ShoppingCartServiceTest {
 
         //when
         Assertions.assertDoesNotThrow(() -> this.shoppingCartService.buyFromShoppingCart(userId1, 0));
-//        Assertions.assertThrows(RuntimeException.class,() -> this.shoppingCartService.buyFromShoppingCart(userId2, 0));
+        Assertions.assertThrows(RuntimeException.class,() -> this.shoppingCartService.buyFromShoppingCart(userId2, 0));
 
         //then
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId1).lineItems().isEmpty());
@@ -190,24 +174,19 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    public void given_shoppingCart_when_initializeShoppingCart_then_returnEqual(){
+    public void given_shoppingCart_when_initializeShoppingCart_then_returnEqual() {
         //given
-        String userId1 = "user1234";
-        String userId2 = "user5678";
-        Medium medium1 = DomainFactory.createMedium(MediumType.CD);
-        Medium medium2 = DomainFactory.createMedium(MediumType.CASSETTE);
+        String userId1 = "user1236";
+        String userId2 = "user5679";
+        Medium medium = DomainFactory.createMedium(MediumType.CD);
 
-        Mockito.when(this.articleRepository.findArticleById(medium1.getAlbum().getId())).thenReturn(Optional.of(medium1.getAlbum()));
-        Mockito.when(this.articleRepository.findArticleById(medium2.getAlbum().getId())).thenReturn(Optional.of(medium2.getAlbum()));
-        Mockito.when(this.mediumRepository.findMediumById(medium1.getId())).thenReturn(Optional.of(medium1));
-        Mockito.when(this.mediumRepository.findMediumById(medium2.getId())).thenReturn(Optional.of(medium2));
+        Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
-        MediumDTO mediumDTO1 = DTOProvider.buildMediumDTO(medium1);
-        MediumDTO mediumDTO2 = DTOProvider.buildMediumDTO(medium2);
+        MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
+        this.shoppingCartService.addToShoppingCart(userId1, mediumDTO, 2);
+        this.shoppingCartService.addToShoppingCart(userId2, mediumDTO, 4);
 
         //when
-        this.shoppingCartService.addToShoppingCart(userId1, mediumDTO1, 2);
-        this.shoppingCartService.addToShoppingCart(userId2, mediumDTO2, 2);
         ShoppingCartDTO shoppingCartDTO1 = this.shoppingCartService.getShoppingCart(userId1);
         ShoppingCartDTO shoppingCartDTO2 = this.shoppingCartService.getShoppingCart(userId1);
         ShoppingCartDTO shoppingCartDTO3 = this.shoppingCartService.getShoppingCart(userId2);

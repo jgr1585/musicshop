@@ -3,7 +3,6 @@ package at.fhv.teamd.musicshop.backend.application.services;
 import at.fhv.teamd.musicshop.backend.domain.DomainFactory;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
-import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
@@ -26,15 +25,12 @@ public class ArticleServiceTest {
     @Mock
     private ArticleRepository articleRepository;
 
-    @Mock
-    private MediumRepository mediumRepository;
 
     private ArticleService articleService;
 
     @BeforeEach
     public void init() {
         RepositoryFactory.setArticleRepository(this.articleRepository);
-        RepositoryFactory.setMediumRepository(this.mediumRepository);
         this.articleService = new ArticleService();
     }
 
@@ -48,8 +44,6 @@ public class ArticleServiceTest {
         articles.add(article);
 
         Mockito.when(this.articleRepository.searchArticlesByAttributes(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString())).thenReturn(articles);
-
-        System.out.println(this.articleRepository.searchArticlesByAttributes(title, artistName));
 
         Set<ArticleDTO> expectedArticleDTOS = articles.stream()
                 .map(DTOProvider::buildArticleDTO)

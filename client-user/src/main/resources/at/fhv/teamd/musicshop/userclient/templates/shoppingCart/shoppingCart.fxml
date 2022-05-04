@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #000000FF;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartController">
+<VBox prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #000000FF;" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartController">
    <children>
       <GridPane prefHeight="800.0" prefWidth="1000.0" style="-fx-base: #000000FF; -fx-font-size: 13; -fx-font-weight: bold;">
         <columnConstraints>
@@ -31,12 +28,12 @@
                <children>
                   <Pane style="-fx-background-color: #000000FF;">
                      <children>
-                        <Button layoutX="355.0" layoutY="23.0" mnemonicParsing="false" onAction="#removeCustomer" prefWidth="120.0" style="-fx-background-color: #547af9;" text="Remove">
+                        <Button fx:id="removeButton" disable="true" layoutX="355.0" layoutY="23.0" mnemonicParsing="false" onAction="#removeCustomer" prefWidth="120.0" style="-fx-background-color: #547af9;" text="Remove">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </Button>
-                        <Button layoutX="223.0" layoutY="23.0" mnemonicParsing="false" onAction="#addCustomer" prefWidth="120.0" style="-fx-background-color: #547af9;" text="Select">
+                        <Button fx:id="selectButton" disable="true" layoutX="223.0" layoutY="23.0" mnemonicParsing="false" onAction="#addCustomer" prefWidth="120.0" style="-fx-background-color: #547af9;" text="Select">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -47,12 +44,12 @@
                   </Pane>
                   <Pane prefWidth="500.0" style="-fx-background-color: #000000FF;" GridPane.columnIndex="1">
                      <children>
-                        <Button layoutX="366.0" layoutY="24.0" mnemonicParsing="false" onAction="#removeAll" prefWidth="120.0" style="-fx-background-color: #547af9;" text="Empty">
+                        <Button fx:id="emptyButton" disable="true" layoutX="366.0" layoutY="24.0" mnemonicParsing="false" onAction="#removeAll" prefWidth="120.0" style="-fx-background-color: #547af9;" text="Empty">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </Button>
-                        <Button layoutX="232.0" layoutY="24.0" mnemonicParsing="false" onAction="#buyAll" prefWidth="120.0" style="-fx-background-color: #547af9;" text="Buy">
+                        <Button fx:id="buyButton" disable="true" layoutX="232.0" layoutY="24.0" mnemonicParsing="false" onAction="#buyAll" prefWidth="120.0" style="-fx-background-color: #547af9;" text="Buy">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -63,7 +60,7 @@
                   </Pane>
                </children>
             </GridPane>
-            <ScrollPane GridPane.rowIndex="1">
+            <ScrollPane style="-fx-background-color: #000000;" GridPane.rowIndex="1">
                <content>
                   <VBox fx:id="shoppingCartElements">
                      <children>
