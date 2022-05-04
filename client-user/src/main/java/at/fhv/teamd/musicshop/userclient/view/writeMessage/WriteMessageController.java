@@ -4,6 +4,7 @@ import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
 import at.fhv.teamd.musicshop.library.DTO.TopicDTO;
 import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -33,19 +34,21 @@ public class WriteMessageController {
     }
 
     private void initMessageTopic() throws RemoteException, NotAuthorizedException {
-        this.messageTopic.setItems(FXCollections.observableArrayList(RemoteFacade.getInstance().getAllTopics()));
-        this.messageTopic.setConverter(new StringConverter<>() {
-            @Override
-            public String toString(TopicDTO object) {
-                return object.name();
-            }
+        if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.getAllTopics)) {
+            this.messageTopic.setItems(FXCollections.observableArrayList(RemoteFacade.getInstance().getAllTopics()));
+            this.messageTopic.setConverter(new StringConverter<>() {
+                @Override
+                public String toString(TopicDTO object) {
+                    return object.name();
+                }
 
-            @Override
-            public TopicDTO fromString(String string) {
-                return null;
-            }
-        });
-        this.messageTopic.valueProperty().addListener((observable, oldValue, newValue) -> this.selectedTopic = newValue);
+                @Override
+                public TopicDTO fromString(String string) {
+                    return null;
+                }
+            });
+            this.messageTopic.valueProperty().addListener((observable, oldValue, newValue) -> this.selectedTopic = newValue);
+        }
     }
 
     @FXML
