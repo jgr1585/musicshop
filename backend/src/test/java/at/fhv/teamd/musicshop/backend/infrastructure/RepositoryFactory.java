@@ -1,9 +1,6 @@
 package at.fhv.teamd.musicshop.backend.infrastructure;
 
-import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
-import at.fhv.teamd.musicshop.backend.domain.repositories.EmployeeRepository;
-import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
-import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
+import at.fhv.teamd.musicshop.backend.domain.repositories.*;
 
 public class RepositoryFactory {
     private static ArticleRepository articleRepository;
@@ -13,6 +10,8 @@ public class RepositoryFactory {
     private static EmployeeRepository employeeRepository;
 
     private static InvoiceRepository invoiceRepository;
+
+    private static TopicRepository topicRepository;
 
     public static ArticleRepository getArticleRepositoryInstance() {
         return articleRepository;
@@ -30,6 +29,10 @@ public class RepositoryFactory {
         return invoiceRepository;
     }
 
+    public static TopicRepository getTopicRepositoryInstance() {
+        return topicRepository;
+    }
+
     public static void setArticleRepository(ArticleRepository articleRepository) {
         RepositoryFactory.articleRepository = articleRepository;
     }
@@ -44,5 +47,9 @@ public class RepositoryFactory {
 
     public static void setInvoiceRepository(InvoiceRepository invoiceRepository) {
         RepositoryFactory.invoiceRepository = invoiceRepository;
+    }
+
+    public static void setTopicRepository(TopicRepository topicRepository) {
+        RepositoryFactory.topicRepository = topicRepository;
     }
 }
