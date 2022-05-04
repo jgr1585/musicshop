@@ -12,12 +12,12 @@
             <Insets />
          </opaqueInsets>
          <tabs>
-            <Tab fx:id="inboxTab" closable="false" style="-fx-background-color: #6c359b; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="Inbox">
+            <Tab closable="false" style="-fx-background-color: #6c359b; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="Inbox">
                <content>
-                  <fx:include source="receiveMessage/receive-message.fxml" />
+                  <fx:include source="receiveMessage/receive-message.fxml" fx:id="receiveMessage" />
                </content>
                <graphic>
-                  <FontAwesomeIconView fill="#FFFFFF" glyphName="ENVELOPE" size="20" />
+                  <FontAwesomeIconView fill="#FFFFFF" glyphName="ENVELOPE" size="20" fx:id="receiveMessageIcon" />
                </graphic>
             </Tab>
             <Tab fx:id="newMessageTab" closable="false" disable="true" style="-fx-background-color: #0261bf; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="New Message">
@@ -46,7 +46,7 @@
             </Tab>
             <Tab fx:id="shoppingCartTab" closable="false" disable="true" onSelectionChanged="#loadOnSelection" style="-fx-background-color: #488af3; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="Shopping Cart">
                <content>
-                  <fx:include fx:id="shoppingCart" source="shoppingCart/shoppingCart.fxml" />
+                  <fx:include source="shoppingCart/shoppingCart.fxml" fx:id="shoppingCart" />
                </content>
                <graphic>
                   <FontAwesomeIconView fill="#FFFFFF" glyphName="SHOPPING_CART" size="20" />
