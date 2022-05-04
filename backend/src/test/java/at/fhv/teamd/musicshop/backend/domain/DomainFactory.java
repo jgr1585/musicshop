@@ -102,6 +102,11 @@ public class DomainFactory {
         return invoice;
     }
 
+    public static Topic createTopic() {
+        UUID uuid = UUID.randomUUID();
+        return createTopic("Topic" + uuid);
+    }
+
     public static Topic createTopic(String name) {
         return new Topic(name);
     }
