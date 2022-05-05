@@ -4,6 +4,7 @@ import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
 import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
+import at.fhv.teamd.musicshop.userclient.Main;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.AppController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -80,10 +81,7 @@ public class ReceiveMessageController {
         final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
         //Stop the executor service when the stage is closed
-        executorService.schedule(() -> {
-            final Stage stage = (Stage) this.inbox.getScene().getWindow();
-            stage.setOnCloseRequest(event -> executorService.shutdown());
-        }, 1, TimeUnit.SECONDS);
+        Main.onClose(executorService::shutdown);
 
         //Create a scheduled executor service to update the table 10 seconds
         executorService.scheduleAtFixedRate(() -> {
@@ -116,8 +114,9 @@ public class ReceiveMessageController {
         if (!isFirstPoll) {
             this.newMessages.addAll(messages);
             this.updateMessagesTabIcon();
+        } else {
+            this.isFirstPoll = false;
         }
-        isFirstPoll = false;
     }
 
     private void deleteMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
@@ -160,7 +159,7 @@ public class ReceiveMessageController {
 
         this.inbox.setRowFactory(tv -> {
             TableRow<MessageDTO> row = new TableRow<>();
-            if (!isFirstPoll) {
+            if (this.newMessages.contains(row.getItem())) {
                 row.setStyle(style + "-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #FFFFFF");
             } else {
                 row.setStyle(style);
