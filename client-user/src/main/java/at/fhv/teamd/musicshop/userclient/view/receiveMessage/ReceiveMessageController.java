@@ -18,7 +18,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
@@ -30,11 +29,13 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class ReceiveMessageController {
 
@@ -57,6 +58,7 @@ public class ReceiveMessageController {
     private boolean canAcknowledgeMessage;
     private Set<MessageDTO> newMessages;
     private AppController appController;
+    private boolean isFirstPoll = true;
 
     @FXML
     public void initialize() {
@@ -99,15 +101,23 @@ public class ReceiveMessageController {
 
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
         System.out.println("poll");
-        Set<MessageDTO> newMsg = RemoteFacade.getInstance().receiveMessages();
+        List<MessageDTO> messages = RemoteFacade.getInstance()
+                .receiveMessages().stream()
+                .sorted(MessageDTO::compareTo)
+                .collect(Collectors.toUnmodifiableList());
 
-        this.inbox.getItems().forEach(newMsg::remove);
-        newMsg.forEach(System.out::println);
-        this.newMessages.addAll(newMsg);
+        this.inbox.getItems().forEach(messages::remove);
+        messages.forEach(System.out::println);
 
-        //Add Data to the TableView
-        newMsg.forEach(message -> this.inbox.getItems().add(0, message));
-        this.updateMessagesTabIcon();
+        // Add Data to the TableView
+        messages.forEach(message -> this.inbox.getItems().add(0, message));
+
+        // updateIcon
+        if (!isFirstPoll) {
+            this.newMessages.addAll(messages);
+            this.updateMessagesTabIcon();
+        }
+        isFirstPoll = false;
     }
 
     private void deleteMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
@@ -150,7 +160,11 @@ public class ReceiveMessageController {
 
         this.inbox.setRowFactory(tv -> {
             TableRow<MessageDTO> row = new TableRow<>();
-            row.setStyle(style + "-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #FFFFFF");
+            if (!isFirstPoll) {
+                row.setStyle(style + "-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #FFFFFF");
+            } else {
+                row.setStyle(style);
+            }
             row.setPrefHeight(25);
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2) {
@@ -164,6 +178,7 @@ public class ReceiveMessageController {
                         this.stage.show();
 
                     } catch (IOException e) {
+                        e.printStackTrace();
                         throw new RuntimeException(e);
                     }
                 }

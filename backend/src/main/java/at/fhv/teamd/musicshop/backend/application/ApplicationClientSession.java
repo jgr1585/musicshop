@@ -50,10 +50,6 @@ public class ApplicationClientSession {
 
     public enum attributes {
         userID,
-        userRoles,
-        activeMQConnection,
-        activeMQSession,
-        messageConsumers,
-        messages
+        userRoles
     }
 }

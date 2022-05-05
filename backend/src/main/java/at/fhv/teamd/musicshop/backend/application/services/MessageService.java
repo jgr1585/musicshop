@@ -31,43 +31,13 @@ public class MessageService {
 
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
     private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7);
-    private static final long TIMEOUT = 500;
+    private static final long TIMEOUT = 100;
 
     private Connection createConnection(String userId) throws JMSException {
         Connection connection = new ActiveMQConnectionFactory(BROKER_URL).createConnection();
         connection.setClientID(userId);
         connection.start();
         return connection;
-    }
-
-    private Session createSession(Connection connection) throws JMSException {
-        return connection.createSession(false, javax.jms.Session.CLIENT_ACKNOWLEDGE);
-    }
-
-    private Session initJMS(ApplicationClientSession applicationClientSession) throws MessagingException {
-        Connection connection = applicationClientSession.getSessionObjectOrCallInitializer(ApplicationClientSession.attributes.activeMQConnection, () -> createConnection(applicationClientSession.getUserId()), Connection.class);
-        Session session = applicationClientSession.getSessionObjectOrCallInitializer(ApplicationClientSession.attributes.activeMQSession, () -> createSession(connection), Session.class);
-
-        if (!applicationClientSession.containsSessionObject(ApplicationClientSession.attributes.messageConsumers)) {
-            Set<MessageConsumer> messageConsumers = (Set<MessageConsumer>) applicationClientSession.getSessionObjectOrCallInitializer(ApplicationClientSession.attributes.messageConsumers, HashSet::new, Set.class);
-
-            Set<Topic> subscribedTopics = new LinkedHashSet<>();
-            if (!applicationClientSession.getUserId().equals("BACKDOOR-AUTH")) {
-                subscribedTopics.addAll(employeeRepository.findEmployeeByUserName(applicationClientSession.getUserId()).orElseThrow().getSubscribedTopics());
-            } else {
-                subscribedTopics.addAll(topicRepository.findAllTopics());
-            }
-
-            for (Topic topic : subscribedTopics) {
-                try {
-                    messageConsumers.add(session.createDurableSubscriber(topic, applicationClientSession.getUserId() + "_" + topic.getTopicName()));
-                } catch (JMSException e) {
-                    throw new MessagingException("An error occurred: " + e.getMessage());
-                }
-            }
-        }
-
-        return session;
     }
 
     public void publishOrder(ApplicationClientSession applicationClientSession, MediumDTO mediumDTO, String quantity) throws MessagingException {
@@ -83,7 +53,8 @@ public class MessageService {
 
     private void publish(ApplicationClientSession applicationClientSession, Message message) throws MessagingException {
         try {
-            Session session = initJMS(applicationClientSession);
+            Connection connection = createConnection((String) applicationClientSession.getSessionObject(ApplicationClientSession.attributes.userID));
+            Session session = connection.createSession(false, javax.jms.Session.CLIENT_ACKNOWLEDGE);
 
             MessageProducer messageProducer = session.createProducer(session.createTopic(message.getTopicName()));
             messageProducer.setDeliveryMode(DeliveryMode.PERSISTENT);
@@ -95,36 +66,39 @@ public class MessageService {
             messageProducer.send(textMessage);
 
             messageProducer.close();
-
+            session.close();
+            connection.close();
         } catch (JMSException e) {
-            throw new MessagingException("An error occurred: " + e.getMessage());
+            throw new MessagingException("An error occurred while publishing a message: " + e.getMessage());
         }
     }
 
     public Set<MessageDTO> receive(ApplicationClientSession applicationClientSession) throws MessagingException {
+        try {
+            Connection connection = createConnection((String) applicationClientSession.getSessionObject(ApplicationClientSession.attributes.userID));
+            Session session = connection.createSession(false, javax.jms.Session.CLIENT_ACKNOWLEDGE);
 
-        initJMS(applicationClientSession);
+            Set<MessageConsumer> messageConsumers = new HashSet<>();
 
-        Set<javax.jms.Message> messages = new LinkedHashSet<>();
+            Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(applicationClientSession.getUserId()).orElseThrow().getSubscribedTopics();
 
-        for (MessageConsumer messageConsumer : (Set<MessageConsumer>) applicationClientSession.getSessionObject(ApplicationClientSession.attributes.messageConsumers, Set.class)) {
-            try {
+            for (Topic topic : subscribedTopics) {
+                messageConsumers.add(session.createDurableSubscriber(topic, applicationClientSession.getUserId() + "_" + topic.getTopicName()));
+            }
+
+            Set<javax.jms.Message> messages = new LinkedHashSet<>();
+
+            for (MessageConsumer messageConsumer : messageConsumers) {
                 javax.jms.Message message;
                 while ((message = messageConsumer.receive(TIMEOUT)) != null) {
                     messages.add(message);
                     System.out.println("received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
                 }
-            } catch (JMSException e) {
-                throw new MessagingException("An error occurred: " + e.getMessage());
             }
-        }
 
-        applicationClientSession.setSessionObject(ApplicationClientSession.attributes.messages, messages);
+            Set<MessageDTO> messageDTOs = new LinkedHashSet<>();
 
-        Set<MessageDTO> messageDTOs = new LinkedHashSet<>();
-
-        messages.forEach(message -> {
-            try {
+            for (javax.jms.Message message : messages) {
                 messageDTOs.add(
                         DTOProvider.buildMessageDTO(
                                 Message.of(
@@ -135,24 +109,44 @@ public class MessageService {
                                         Instant.ofEpochMilli(message.getJMSTimestamp()))
                         )
                 );
-            } catch (JMSException e) {
-                throw new RuntimeException(e);
             }
-        });
-        return messageDTOs;
+
+            session.close();
+            connection.close();
+            return messageDTOs;
+
+        } catch (JMSException e) {
+            throw new MessagingException("An error occurred while receiving a message: " + e.getMessage());
+        }
     }
 
     public void acknowledge(ApplicationClientSession applicationClientSession, MessageDTO messageToAcknowledge) throws MessagingException {
-        Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject(ApplicationClientSession.attributes.messages, Set.class);
+        try {
+            Connection connection = createConnection((String) applicationClientSession.getSessionObject(ApplicationClientSession.attributes.userID));
+            Session session = connection.createSession(false, javax.jms.Session.CLIENT_ACKNOWLEDGE);
 
-        for (javax.jms.Message message : messages) {
-            try {
-                if (message.getStringProperty("id").equals(messageToAcknowledge.uuid())) {
-                    message.acknowledge();
-                }
-            } catch (JMSException e) {
-                throw new MessagingException("An error occurred: " + e.getMessage());
+            Set<MessageConsumer> messageConsumers = new HashSet<>();
+
+            Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(applicationClientSession.getUserId()).orElseThrow().getSubscribedTopics();
+
+            for (Topic topic : subscribedTopics) {
+                messageConsumers.add(session.createDurableSubscriber(topic, applicationClientSession.getUserId() + "_" + topic.getTopicName()));
             }
+
+            for (MessageConsumer messageConsumer : messageConsumers) {
+                javax.jms.Message message;
+                while ((message = messageConsumer.receive(TIMEOUT)) != null) {
+                    if (message.getStringProperty("id").equals(messageToAcknowledge.uuid())) {
+                        message.acknowledge();
+                        break;
+                    }
+                }
+            }
+
+            session.close();
+            connection.close();
+        } catch (JMSException e) {
+            throw new MessagingException("An error occurred during acknowledging a message: " + e.getMessage());
         }
     }
 

@@ -151,7 +151,5 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     @Override
     public void destroy() throws NoSuchObjectException {
         UnicastRemoteObject.unexportObject(this, true);
-
-        applicationClientSession.purge();
     }
 }
