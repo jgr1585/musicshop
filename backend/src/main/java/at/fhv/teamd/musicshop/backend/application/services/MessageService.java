@@ -24,15 +24,13 @@ public class MessageService {
     private static EmployeeRepository employeeRepository;
     private static TopicRepository topicRepository;
 
-    // TODO: JNDI ConnectionFactory instead of ActiveMQConnectionFactory?
-
     MessageService() {
         employeeRepository = RepositoryFactory.getEmployeeRepositoryInstance();
         topicRepository = RepositoryFactory.getTopicRepositoryInstance();
     }
 
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
-    private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7); // Time To Live (set to 0 for no expiry)
+    private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7);
     private static final long TIMEOUT = 500;
 
     private Connection createConnection(String userId) throws JMSException {
@@ -47,11 +45,11 @@ public class MessageService {
     }
 
     private Session initJMS(ApplicationClientSession applicationClientSession) throws MessagingException {
-        Connection connection = applicationClientSession.getSessionObjectOrCallInitializer("activeMQConnection", () -> createConnection(applicationClientSession.getUserId()), Connection.class);
-        Session session = applicationClientSession.getSessionObjectOrCallInitializer("activeMQSession", () -> createSession(connection), Session.class);
+        Connection connection = applicationClientSession.getSessionObjectOrCallInitializer(ApplicationClientSession.attributes.activeMQConnection, () -> createConnection(applicationClientSession.getUserId()), Connection.class);
+        Session session = applicationClientSession.getSessionObjectOrCallInitializer(ApplicationClientSession.attributes.activeMQSession, () -> createSession(connection), Session.class);
 
-        if (!applicationClientSession.containsSessionObject("messageConsumers")) {
-            Set<MessageConsumer> messageConsumers = (Set<MessageConsumer>) applicationClientSession.getSessionObjectOrCallInitializer("messageConsumers", HashSet::new, Set.class);
+        if (!applicationClientSession.containsSessionObject(ApplicationClientSession.attributes.messageConsumers)) {
+            Set<MessageConsumer> messageConsumers = (Set<MessageConsumer>) applicationClientSession.getSessionObjectOrCallInitializer(ApplicationClientSession.attributes.messageConsumers, HashSet::new, Set.class);
 
             Set<Topic> subscribedTopics = new LinkedHashSet<>();
             if (!applicationClientSession.getUserId().equals("BACKDOOR-AUTH")) {
@@ -109,7 +107,7 @@ public class MessageService {
 
         Set<javax.jms.Message> messages = new LinkedHashSet<>();
 
-        for (MessageConsumer messageConsumer : (Set<MessageConsumer>) applicationClientSession.getSessionObject("messageConsumers", Set.class)) {
+        for (MessageConsumer messageConsumer : (Set<MessageConsumer>) applicationClientSession.getSessionObject(ApplicationClientSession.attributes.messageConsumers, Set.class)) {
             try {
                 javax.jms.Message message;
                 while ((message = messageConsumer.receive(TIMEOUT)) != null) {
@@ -121,7 +119,7 @@ public class MessageService {
             }
         }
 
-        applicationClientSession.setSessionObject("messages", messages);
+        applicationClientSession.setSessionObject(ApplicationClientSession.attributes.messages, messages);
 
         Set<MessageDTO> messageDTOs = new LinkedHashSet<>();
 
@@ -145,7 +143,7 @@ public class MessageService {
     }
 
     public void acknowledge(ApplicationClientSession applicationClientSession, MessageDTO messageToAcknowledge) throws MessagingException {
-        Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject("messages", Set.class);
+        Set<javax.jms.Message> messages = (Set<javax.jms.Message>) applicationClientSession.getSessionObject(ApplicationClientSession.attributes.messages, Set.class);
 
         for (javax.jms.Message message : messages) {
             try {
