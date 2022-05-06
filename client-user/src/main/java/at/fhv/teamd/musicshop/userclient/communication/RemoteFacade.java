@@ -31,7 +31,7 @@ public class RemoteFacade implements ApplicationClient {
         try {
             Properties props = new Properties();
             props.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
-            props.put(Context.PROVIDER_URL, "http-remoting://localhost:8080");
+            props.put(Context.PROVIDER_URL, "http-remoting://" + host + ":8080");
             Context ctx = new InitialContext(props);
 
             // ejb:/[DeployedName]/Implementierungsname![packages + Interface of Bean]
