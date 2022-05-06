@@ -218,6 +218,7 @@ public class ReceiveMessageController implements LoginObserver {
 
     @Override
     public void onLogout() {
+        this.executorService.shutdown();
         this.executorService.shutdownNow();
     }
 }
