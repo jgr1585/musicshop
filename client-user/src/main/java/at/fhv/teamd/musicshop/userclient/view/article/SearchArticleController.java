@@ -40,12 +40,8 @@ public class SearchArticleController implements GenericArticleController {
         numberOnly(this.mediumAmountSelected);
 
         new Thread(() -> {
-            try {
-                this.addToCartButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.addToShoppingCart));
-                this.orderButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.publishOrderMessage));
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            this.addToCartButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.addToShoppingCart));
+            this.orderButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.publishOrderMessage));
         }).start();
     }
 

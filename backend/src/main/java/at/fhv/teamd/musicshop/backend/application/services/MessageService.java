@@ -42,7 +42,11 @@ public class MessageService {
 
     public void publishOrder(ApplicationClientSession applicationClientSession, MediumDTO mediumDTO, String quantity) throws MessagingException {
         if (Integer.parseInt(quantity) < 1) throw new IllegalArgumentException("Quantity to order to small");
-        Message sendMsg = Message.of("Order", "Order Inquiry", "Order medium ID: " + mediumDTO.id() + "\n" + "Order medium amount: " + quantity);
+        Message sendMsg = Message.of(
+                "Order",
+                "Order medium ID: " + mediumDTO.id() + "; " + "Order medium amount: " + quantity,
+                "Order medium ID: " + mediumDTO.id() + "\n" + "Order medium amount: " + quantity
+        );
 
         publish(applicationClientSession, sendMsg);
     }

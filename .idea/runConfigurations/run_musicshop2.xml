@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="run musicshop" type="JBossConfiguration" factoryName="Remote" APPLICATION_SERVER_NAME="JBoss/WildFly 26.1.0.Final" ALTERNATIVE_JRE_ENABLED="false">
     <option name="LOCAL" value="false" />
+    <option name="OPEN_IN_BROWSER" value="false" />
     <option name="UPDATING_POLICY" value="hot-swap-classes" />
     <deployment>
       <artifact name="Gradle : at.fhv.teamd : backend-1.0-SNAPSHOT.war">

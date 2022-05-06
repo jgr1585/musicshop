@@ -70,11 +70,7 @@ public class ReceiveMessageController {
         formatTable();
 
         new Thread(() -> {
-            try {
-                this.canAcknowledgeMessage = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.acknowledgeMessage);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
+            this.canAcknowledgeMessage = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.acknowledgeMessage);
         }).start();
 
 
