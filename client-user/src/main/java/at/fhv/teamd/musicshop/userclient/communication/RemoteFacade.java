@@ -20,7 +20,6 @@ import java.util.Properties;
 import java.util.Set;
 
 public class RemoteFacade implements ApplicationClient {
-    private static final int REMOTE_PORT = Registry.REGISTRY_PORT;
 
     private static RemoteFacade instance;
     private static ApplicationClient applicationClient;

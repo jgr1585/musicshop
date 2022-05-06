@@ -79,9 +79,7 @@ public class ReceiveMessageController implements LoginObserver {
 
         formatTable();
 
-        new Thread(() -> {
-            this.canAcknowledgeMessage = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.acknowledgeMessage);
-        }).start();
+        new Thread(() -> this.canAcknowledgeMessage = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.acknowledgeMessage)).start();
     }
 
     public void setAppController(AppController appController) {
@@ -194,21 +192,17 @@ public class ReceiveMessageController implements LoginObserver {
 
     @Override
     public void onLogin() {
-        try {
-            if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages)) {
-                this.executorService = Executors.newSingleThreadScheduledExecutor();
+        if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages)) {
+            this.executorService = Executors.newSingleThreadScheduledExecutor();
 
-                //Create a scheduled executor service to update the table 10 seconds
-                executorService.scheduleAtFixedRate(() -> {
-                    try {
-                        this.loadMessage();
-                    } catch (MessagingException | NotAuthorizedException | RemoteException e) {
-                        e.printStackTrace();
-                    }
-                }, 1, 10, TimeUnit.SECONDS);
-            }
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            //Create a scheduled executor service to update the table 10 seconds
+            executorService.scheduleAtFixedRate(() -> {
+                try {
+                    this.loadMessage();
+                } catch (MessagingException | NotAuthorizedException | RemoteException e) {
+                    e.printStackTrace();
+                }
+            }, 1, 10, TimeUnit.SECONDS);
         }
     }
 
