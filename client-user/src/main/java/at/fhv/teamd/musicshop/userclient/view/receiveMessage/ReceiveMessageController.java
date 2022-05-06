@@ -6,6 +6,8 @@ import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.Main;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.observer.LoginObserver;
+import at.fhv.teamd.musicshop.userclient.observer.LoginSubject;
 import at.fhv.teamd.musicshop.userclient.view.AppController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -38,7 +40,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class ReceiveMessageController {
+public class ReceiveMessageController implements LoginObserver {
 
     @FXML
     private TableColumn<MessageDTO, String> colDate;
@@ -60,12 +62,20 @@ public class ReceiveMessageController {
     private Set<MessageDTO> newMessages;
     private AppController appController;
     private boolean isFirstPoll = true;
+    private ScheduledExecutorService executorService;
+
+    public ReceiveMessageController() {
+        //Stop the executor service when the stage is closed
+        Main.onClose(this::onLogout);
+    }
 
     @FXML
     public void initialize() {
         this.stage = new Stage();
         this.stage.setTitle("Inbox");
         this.newMessages = new HashSet<>();
+
+        LoginSubject.addObserver(this);
 
         formatTable();
 
@@ -76,21 +86,6 @@ public class ReceiveMessageController {
                 throw new RuntimeException(e);
             }
         }).start();
-
-
-        final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-
-        //Stop the executor service when the stage is closed
-        Main.onClose(executorService::shutdown);
-
-        //Create a scheduled executor service to update the table 10 seconds
-        executorService.scheduleAtFixedRate(() -> {
-            try {
-                this.loadMessage();
-            } catch (MessagingException | NotAuthorizedException | RemoteException e) {
-                e.printStackTrace();
-            }
-        }, 1, 10, TimeUnit.SECONDS);
     }
 
     public void setAppController(AppController appController) {
@@ -102,7 +97,7 @@ public class ReceiveMessageController {
         List<MessageDTO> messages = RemoteFacade.getInstance()
                 .receiveMessages().stream()
                 .sorted(MessageDTO::compareTo)
-                .collect(Collectors.toUnmodifiableList());
+                .collect(Collectors.toList());
 
         this.inbox.getItems().forEach(messages::remove);
         messages.forEach(System.out::println);
@@ -121,8 +116,8 @@ public class ReceiveMessageController {
 
     private void deleteMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
         if (message != null) {
-            RemoteFacade.getInstance().acknowledgeMessage(message);
             this.inbox.getItems().remove(message);
+            RemoteFacade.getInstance().acknowledgeMessage(message);
         }
     }
 
@@ -199,5 +194,30 @@ public class ReceiveMessageController {
             this.appController.getReceiveMessageIcon().setIcon(FontAwesomeIcon.ENVELOPE);
             this.appController.getReceiveMessageIcon().setFill(Color.WHITE);
         }
+    }
+
+    @Override
+    public void onLogin() {
+        try {
+            if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages)) {
+                this.executorService = Executors.newSingleThreadScheduledExecutor();
+
+                //Create a scheduled executor service to update the table 10 seconds
+                executorService.scheduleAtFixedRate(() -> {
+                    try {
+                        this.loadMessage();
+                    } catch (MessagingException | NotAuthorizedException | RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }, 1, 10, TimeUnit.SECONDS);
+            }
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void onLogout() {
+        this.executorService.shutdownNow();
     }
 }
