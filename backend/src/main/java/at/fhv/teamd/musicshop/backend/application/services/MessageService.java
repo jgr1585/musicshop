@@ -31,7 +31,7 @@ public class MessageService {
 
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
     private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7);
-    private static final long TIMEOUT = 100;
+    private static final long TIMEOUT = 30;
 
     private Connection createConnection(String userId) throws JMSException {
         Connection connection = new ActiveMQConnectionFactory(BROKER_URL).createConnection();
