@@ -5,7 +5,6 @@
              version="2.1">
     <persistence-unit name="Main">
         <description>Hibernate EntityManager</description>
-<!--        <jta-data-source>java:jboss/datasources/PostgresDS</jta-data-source>-->
 
         <class>at.fhv.teamd.musicshop.backend.domain.article.Album</class>
         <class>at.fhv.teamd.musicshop.backend.domain.article.Article</class>
@@ -29,7 +28,7 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/postgres"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://host.docker.internal:5432/postgres"/>
             <property name="javax.persistence.jdbc.user" value="postgres"/>
             <property name="javax.persistence.jdbc.password" value="fyouuNeW!4"/>
             <property name="hibernate.enable_lazy_load_no_trans" value="true"/>
@@ -39,6 +38,3 @@
         </properties>
     </persistence-unit>
 </persistence>
-
-<!-- TODO: jta datasource -->
-<!-- TODO: uncomment jta datasource for deployment on VM -->

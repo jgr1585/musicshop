@@ -1,0 +1,4 @@
+embed-server --std-out=echo
+/subsystem=datasources/jdbc-driver=postgres:add(driver-name="postgres",driver-module-name="org.postgresql",driver-class-name=org.postgresql.Driver)
+data-source add --jndi-name=java:jboss/datasources/PostgresDS --name=PostgresDS --connection-url=jdbc:postgresql://host.docker.internal:5432/postgres --driver-name=postgres --user-name=postgres --password=fyouuNeW!4
+stop-embedded-server

@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="docker-compose: musicshop" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+    <deployment type="docker-compose.yml">
+      <settings>
+        <option name="envFilePath" value="" />
+        <option name="sourceFilePath" value="docker-compose.yml" />
+      </settings>
+    </deployment>
+    <method v="2">
+      <option name="BuildArtifacts" enabled="true">
+        <artifact name="Gradle : at.fhv.teamd : backend-1.0-SNAPSHOT.war" />
+      </option>
+    </method>
+  </configuration>
+</component>
