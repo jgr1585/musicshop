@@ -5,6 +5,7 @@
              version="2.1">
     <persistence-unit name="Main">
         <description>Hibernate EntityManager</description>
+        <jta-data-source>java:jboss/datasources/PostgresDS</jta-data-source>
 
         <class>at.fhv.teamd.musicshop.backend.domain.article.Album</class>
         <class>at.fhv.teamd.musicshop.backend.domain.article.Article</class>
@@ -38,3 +39,5 @@
         </properties>
     </persistence-unit>
 </persistence>
+
+<!-- TODO: fix jta datasource on testgeneraor -->
