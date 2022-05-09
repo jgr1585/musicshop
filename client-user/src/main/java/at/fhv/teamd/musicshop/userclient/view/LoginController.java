@@ -3,6 +3,7 @@ package at.fhv.teamd.musicshop.userclient.view;
 import at.fhv.teamd.musicshop.library.exceptions.AuthenticationFailedException;
 import at.fhv.teamd.musicshop.userclient.Main;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.observer.LoginSubject;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,6 +36,7 @@ public class LoginController {
     }
 
     public void logout() throws IOException {
+        LoginSubject.notifyLogout();
         RemoteFacade.getInstance().destroy();
 
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("templates/login.fxml"));
@@ -58,6 +60,7 @@ public class LoginController {
 
             stage.setTitle("MusicShop - " + RemoteFacade.getInstance().getSessionUserId());
             stage.setScene(scene);
+            LoginSubject.notifyLogin();
 
         } catch (AuthenticationFailedException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.CLOSE).show();

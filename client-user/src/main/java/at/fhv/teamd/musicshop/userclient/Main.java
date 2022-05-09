@@ -11,14 +11,24 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.rmi.RemoteException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 public class Main extends Application {
 
+    private static final List<Runnable> closeListeners;
+
+    static {
+        closeListeners = new LinkedList<>();
+    }
+
     @Override
     public void start(Stage stage) {
+        stage.setOnCloseRequest(event -> this.close());
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("templates/login.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1000, 800);
@@ -88,4 +98,14 @@ public class Main extends Application {
 
         return null;
     }
+
+    public static void onClose(Runnable runnable) {
+        closeListeners.add(runnable);
+    }
+
+    public void close() {
+        closeListeners.forEach(Runnable::run);
+    }
+
+
 }

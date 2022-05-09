@@ -6,13 +6,16 @@ import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.library.exceptions.*;
 
+import javax.ejb.*;
+import javax.inject.Inject;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Set;
 
 // TODO: still to-do: remove services constructor dependency injection of applicationClientSession and use field-based approach (may use a SessionService to register ApplicationClientSessions -> but think this well-through as this might be hacky)
-public class ApplicationClientImpl extends UnicastRemoteObject implements ApplicationClient {
+@Stateless
+public class ApplicationClientImpl implements ApplicationClient {
 
     private final AuthService authService = ServiceFactory.getAuthServiceInstance();
     private final ArticleService articleService = ServiceFactory.getArticleServiceInstance();
@@ -21,22 +24,21 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     private final MessageService messageService = ServiceFactory.getMessageServiceInstance();
     private final ShoppingCartService shoppingCartService = ServiceFactory.getShoppingCartServiceInstance();
 
-    private final ApplicationClientSession applicationClientSession;
+    private ApplicationClientSession applicationClientSession;
 
-    private ApplicationClientImpl(String userId) throws RemoteException {
-        super(ApplicationServer.RMI_BIND_PORT);
-
-        this.applicationClientSession = new ApplicationClientSession(userId);
+    public ApplicationClientImpl() {
     }
 
-    public static ApplicationClientImpl newInstance(String authUser, String authPassword) throws RemoteException, AuthenticationFailedException {
+    @Override
+    public void authenticate(String authUser, String authPassword) throws AuthenticationFailedException {
         AuthService.authenticate(authUser, authPassword);
 
-        return new ApplicationClientImpl(AuthService.getUserName());
+        applicationClientSession = new ApplicationClientSession(authUser);
     }
 
     @Override
     public String getSessionUserId() {
+
         return applicationClientSession.getUserId();
     }
 
@@ -48,21 +50,25 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public Set<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException, RemoteException, NotAuthorizedException {
+    public Set<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException, NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.searchCustomersByName);
 
-        return customerService.searchCustomersByName(name);
+        try {
+            return customerService.searchCustomersByName(name);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException, InvoiceException {
+    public InvoiceDTO findInvoiceById(Long id) throws NotAuthorizedException, InvoiceException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.findInvoiceById);
 
         return invoiceService.searchInvoiceById(id);
     }
 
     @Override
-    public void returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException, InvoiceException {
+    public void returnItem(LineItemDTO lineItem, int quantity) throws NotAuthorizedException, InvoiceException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.returnItem);
 
         invoiceService.returnItem(lineItem, quantity);
@@ -104,42 +110,42 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException, MessagingException {
+    public void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.publishOrderMessage);
 
         messageService.publishOrder(applicationClientSession, mediumDTO, quantity);
     }
 
     @Override
-    public void publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+    public void publishMessage(MessageDTO message) throws NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.publishMessage);
 
         messageService.publish(applicationClientSession, message);
     }
 
     @Override
-    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException {
+    public Set<MessageDTO> receiveMessages() throws NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.receiveMessages);
 
         return messageService.receive(applicationClientSession);
     }
 
     @Override
-    public void acknowledgeMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+    public void acknowledgeMessage(MessageDTO message) throws NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.acknowledgeMessage);
 
         messageService.acknowledge(applicationClientSession, message);
     }
 
     @Override
-    public Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException {
+    public Set<TopicDTO> getAllTopics() throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.getAllTopics);
 
         return messageService.getAllTopics();
     }
 
     @Override
-    public boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) throws RemoteException {
+    public boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) {
         try {
             authService.authorizeAccessLevels(functionPermission);
             return true;
@@ -149,9 +155,7 @@ public class ApplicationClientImpl extends UnicastRemoteObject implements Applic
     }
 
     @Override
-    public void destroy() throws NoSuchObjectException {
-        UnicastRemoteObject.unexportObject(this, true);
+    public void destroy() {
 
-        applicationClientSession.purge();
     }
 }
