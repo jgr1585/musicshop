@@ -37,11 +37,7 @@ public class ShoppingCartArticleController implements GenericArticleController {
         numberOnly(this.mediumAmountStock);
 
         new Thread(() -> {
-            try {
-                this.removeButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.removeFromShoppingCart));
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
+            this.removeButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.removeFromShoppingCart));
         }).start();
     }
 
@@ -68,6 +64,7 @@ public class ShoppingCartArticleController implements GenericArticleController {
             RemoteFacade.getInstance().removeFromShoppingCart(mediumDTO, 1);
         }
     }
+
     @FXML
     private void increaseByOne(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
@@ -76,6 +73,7 @@ public class ShoppingCartArticleController implements GenericArticleController {
             RemoteFacade.getInstance().addToShoppingCart(mediumDTO, 1);
         }
     }
+
     @FXML
     private void remove(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
         RemoteFacade.getInstance().removeFromShoppingCart(mediumDTO, lineItemDTO.quantity());

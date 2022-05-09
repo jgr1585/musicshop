@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
-public final class MessageDTO implements Serializable {
+public final class MessageDTO implements Serializable, Comparable<MessageDTO> {
     private static final long serialVersionUID = -135325125784608818L;
 
     private TopicDTO topic;
@@ -53,6 +53,11 @@ public final class MessageDTO implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(topic, uuid, title, body, sentOnTimestamp);
+    }
+
+    @Override
+    public int compareTo(MessageDTO o) {
+        return sentOnTimestamp.compareTo(o.sentOnTimestamp);
     }
 
     public static class Builder {

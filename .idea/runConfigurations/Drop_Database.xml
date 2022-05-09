@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Drop Database" type="DatabaseScript">
-    <data-source id="7eb01dad-b83a-48e7-bd17-918682b0632f" namespace="database/&quot;postgres&quot;/schema/&quot;public&quot;" />
+    <data-source id="7c9f98aa-c047-40b0-a8f1-f1e3076cbea7" namespace="database/&quot;postgres&quot;" />
     <script-text>drop table if exists article_article cascade;
 drop table if exists article_artist cascade;
 drop table if exists artist cascade;

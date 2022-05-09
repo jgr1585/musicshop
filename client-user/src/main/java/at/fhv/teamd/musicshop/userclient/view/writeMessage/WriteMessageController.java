@@ -6,6 +6,7 @@ import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,30 +30,34 @@ public class WriteMessageController {
     private TopicDTO selectedTopic;
 
     @FXML
-    public void initialize() throws NotAuthorizedException, RemoteException {
-        this.initMessageTopic();
+    public void initialize() {
+        Platform.runLater(this::initMessageTopic);
     }
 
-    private void initMessageTopic() throws RemoteException, NotAuthorizedException {
-        if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.getAllTopics)) {
-            this.messageTopic.setItems(FXCollections.observableArrayList(RemoteFacade.getInstance().getAllTopics()));
-            this.messageTopic.setConverter(new StringConverter<>() {
-                @Override
-                public String toString(TopicDTO object) {
-                    return object.name();
-                }
+    private void initMessageTopic(){
+        try {
+            if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.getAllTopics)) {
+                this.messageTopic.setItems(FXCollections.observableArrayList(RemoteFacade.getInstance().getAllTopics()));
+                this.messageTopic.setConverter(new StringConverter<>() {
+                    @Override
+                    public String toString(TopicDTO object) {
+                        return object.name();
+                    }
 
-                @Override
-                public TopicDTO fromString(String string) {
-                    return null;
-                }
-            });
-            this.messageTopic.valueProperty().addListener((observable, oldValue, newValue) -> this.selectedTopic = newValue);
+                    @Override
+                    public TopicDTO fromString(String string) {
+                        return null;
+                    }
+                });
+                this.messageTopic.valueProperty().addListener((observable, oldValue, newValue) -> this.selectedTopic = newValue);
+            }
+        } catch (NotAuthorizedException e) {
+            e.printStackTrace();
         }
     }
 
     @FXML
-    private void sendMessage(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException, MessagingException {
+    private void sendMessage(ActionEvent actionEvent) throws NotAuthorizedException, MessagingException {
         if (this.selectedTopic == null) {
             new Alert(Alert.AlertType.ERROR, "No Topic is selected", ButtonType.CLOSE).show();
         } else if (this.messageTitle.getText().equals("")) {

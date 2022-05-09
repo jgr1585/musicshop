@@ -38,11 +38,7 @@ public class ReturnArticleController implements GenericArticleController {
         numberOnly(this.mediumAmountSelected);
 
         new Thread(() -> {
-            try {
-                this.returnButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.returnItem));
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+            this.returnButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.returnItem));
         }).start();
     }
 
