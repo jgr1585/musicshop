@@ -16,6 +16,13 @@ dependencies {
     compileOnly('javax.ws.rs:javax.ws.rs-api:2.1.1')
     compileOnly('javax.servlet:javax.servlet-api:4.0.1')
 
+    implementation 'io.swagger.core.v3:swagger-jaxrs2:2.2.0'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-servlet-initializer:2.2.0'
+    implementation 'org.webjars:swagger-ui:4.10.3'
+
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+
     implementation project(':library')
     implementation 'org.postgresql:postgresql:42.3.3'
     implementation 'org.hibernate:hibernate-core:5.6.7.Final'
