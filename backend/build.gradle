@@ -1,6 +1,17 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url "https://repo1.maven.org/maven2" }
+    }
+    dependencies {
+        classpath "org.openapitools:openapi-generator-gradle-plugin:6.0.0-beta"
+    }
+}
+
 plugins {
     id 'java'
     id 'war'
+    id 'org.hidetake.swagger.generator' version '2.19.2'
 }
 
 group 'at.fhv.teamd'
@@ -16,8 +27,7 @@ dependencies {
     compileOnly('javax.ws.rs:javax.ws.rs-api:2.1.1')
     compileOnly('javax.servlet:javax.servlet-api:4.0.1')
 
-    implementation 'io.swagger.core.v3:swagger-jaxrs2:2.2.0'
-    implementation 'io.swagger.core.v3:swagger-jaxrs2-servlet-initializer:2.2.0'
+    implementation 'io.swagger.core.v3:swagger-core:2.2.0'
     implementation 'org.webjars:swagger-ui:4.10.3'
 
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
@@ -44,3 +54,13 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+swaggerSources {
+    musicshop {
+        inputFile = file('openapi.yaml')
+    }
+}
+
+apply plugin: 'org.openapi.generator'
+
+compileJava.dependsOn tasks.openApiGenerate
