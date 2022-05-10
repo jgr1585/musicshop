@@ -21,13 +21,15 @@ public class InvoiceService {
         invoiceRepository = RepositoryFactory.getInvoiceRepositoryInstance();
     }
 
-    public void createInvoice(Set<LineItem> lineItems, int assignedCustomer) {
+    public Long createInvoice(Set<LineItem> lineItems, int assignedCustomer) {
+        Long id;
         if (assignedCustomer != 0) {
-            invoiceRepository.addInvoice(Invoice.of(lineItems, assignedCustomer));
+            id = invoiceRepository.addInvoice(Invoice.of(lineItems, assignedCustomer));
         } else {
-            invoiceRepository.addInvoice(Invoice.of(lineItems));
+            id = invoiceRepository.addInvoice(Invoice.of(lineItems));
         }
         System.out.println("created new invoice");
+        return id;
     }
 
     public InvoiceDTO searchInvoiceById(Long id) throws InvoiceException {

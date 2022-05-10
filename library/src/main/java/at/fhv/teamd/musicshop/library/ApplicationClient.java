@@ -30,7 +30,7 @@ public interface ApplicationClient extends Remote {
 
     void emptyShoppingCart() throws RemoteException, NotAuthorizedException;
 
-    void buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException;
+    String buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException;
 
     ShoppingCartDTO getShoppingCart() throws RemoteException, NotAuthorizedException;
 

@@ -98,9 +98,11 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public void buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException {
-        getApplicationClientOrThrow().buyFromShoppingCart(customerId);
+    public String buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException {
+        String invoiceNo;
+        invoiceNo = getApplicationClientOrThrow().buyFromShoppingCart(customerId);
         ShoppingCartSubject.notifyShoppingCartUpdate();
+        return invoiceNo;
     }
 
     @Override

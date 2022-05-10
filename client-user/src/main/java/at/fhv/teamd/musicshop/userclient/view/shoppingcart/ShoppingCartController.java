@@ -111,8 +111,8 @@ public class ShoppingCartController implements ShoppingCartObserver {
 
         Optional<ButtonType> returnValue = confDialog.showAndWait();
         if (returnValue.isPresent() && returnValue.get() == confirmButton) {
-            RemoteFacade.getInstance().buyFromShoppingCart(customer);
-            new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
+            String invoiceNo = RemoteFacade.getInstance().buyFromShoppingCart(customer);
+            new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items\nInvoice number: " + invoiceNo, ButtonType.CLOSE).show();
             reloadShoppingCart();
             removeCustomer();
             appController.selectSearchTab();
