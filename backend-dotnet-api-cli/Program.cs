@@ -25,7 +25,7 @@ namespace FHVTeamD.MusicshopAPI.CLI
             Console.WriteLine();
             Console.WriteLine("Welcome to Musicshop Dotnet API Command Line Interface!");
 
-            // input of musicshop API URL
+            // input of musicshop API URI
             Uri? apiBaseUri = null;
             while (apiBaseUri == null) {
                 Console.WriteLine();
