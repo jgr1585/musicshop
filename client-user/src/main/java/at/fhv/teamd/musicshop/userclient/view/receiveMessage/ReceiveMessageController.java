@@ -4,7 +4,10 @@ import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
 import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
+import at.fhv.teamd.musicshop.userclient.Main;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.observer.LoginObserver;
+import at.fhv.teamd.musicshop.userclient.observer.LoginSubject;
 import at.fhv.teamd.musicshop.userclient.view.AppController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -18,7 +21,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
@@ -30,13 +32,15 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-public class ReceiveMessageController {
+public class ReceiveMessageController implements LoginObserver {
 
     @FXML
     private TableColumn<MessageDTO, String> colDate;
@@ -57,6 +61,13 @@ public class ReceiveMessageController {
     private boolean canAcknowledgeMessage;
     private Set<MessageDTO> newMessages;
     private AppController appController;
+    private boolean isFirstPoll = true;
+    private ScheduledExecutorService executorService;
+
+    public ReceiveMessageController() {
+        //Stop the executor service when the stage is closed
+        Main.onClose(this::onLogout);
+    }
 
     @FXML
     public void initialize() {
@@ -64,33 +75,11 @@ public class ReceiveMessageController {
         this.stage.setTitle("Inbox");
         this.newMessages = new HashSet<>();
 
+        LoginSubject.addObserver(this);
+
         formatTable();
 
-        new Thread(() -> {
-            try {
-                this.canAcknowledgeMessage = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.acknowledgeMessage);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
-
-
-        final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-
-        //Stop the executor service when the stage is closed
-        executorService.schedule(() -> {
-            final Stage stage = (Stage) this.inbox.getScene().getWindow();
-            stage.setOnCloseRequest(event -> executorService.shutdown());
-        }, 1, TimeUnit.SECONDS);
-
-        //Create a scheduled executor service to update the table 10 seconds
-        executorService.scheduleAtFixedRate(() -> {
-            try {
-                this.loadMessage();
-            } catch (MessagingException | NotAuthorizedException | RemoteException e) {
-                e.printStackTrace();
-            }
-        }, 1, 10, TimeUnit.SECONDS);
+        new Thread(() -> this.canAcknowledgeMessage = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.acknowledgeMessage)).start();
     }
 
     public void setAppController(AppController appController) {
@@ -99,21 +88,30 @@ public class ReceiveMessageController {
 
     private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
         System.out.println("poll");
-        Set<MessageDTO> newMsg = RemoteFacade.getInstance().receiveMessages();
+        List<MessageDTO> messages = RemoteFacade.getInstance()
+                .receiveMessages().stream()
+                .sorted(MessageDTO::compareTo)
+                .collect(Collectors.toList());
 
-        this.inbox.getItems().forEach(newMsg::remove);
-        newMsg.forEach(System.out::println);
-        this.newMessages.addAll(newMsg);
+        this.inbox.getItems().forEach(messages::remove);
+        messages.forEach(System.out::println);
 
-        //Add Data to the TableView
-        newMsg.forEach(message -> this.inbox.getItems().add(0, message));
-        this.updateMessagesTabIcon();
+        // Add Data to the TableView
+        messages.forEach(message -> this.inbox.getItems().add(0, message));
+
+        // updateIcon
+        if (!isFirstPoll) {
+            this.newMessages.addAll(messages);
+            this.updateMessagesTabIcon();
+        } else {
+            this.isFirstPoll = false;
+        }
     }
 
     private void deleteMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
         if (message != null) {
-            RemoteFacade.getInstance().acknowledgeMessage(message);
             this.inbox.getItems().remove(message);
+            RemoteFacade.getInstance().acknowledgeMessage(message);
         }
     }
 
@@ -141,7 +139,7 @@ public class ReceiveMessageController {
 
         //Set up the columns Formatting
         this.colDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(formatter.format(LocalDateTime.ofInstant(cellData.getValue().sentOnTimestamp(), ZoneId.systemDefault()))));
-        this.colTopic.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().topic().name()));
+        this.colTopic.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().topic().name().replaceAll("topic://", "")));
         this.colSubject.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().title()));
         this.colTrash.setCellValueFactory(cellData -> new SimpleObjectProperty<>(createTrashButton(cellData.getValue())));
 
@@ -150,7 +148,11 @@ public class ReceiveMessageController {
 
         this.inbox.setRowFactory(tv -> {
             TableRow<MessageDTO> row = new TableRow<>();
-            row.setStyle(style + "-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #FFFFFF");
+            if (this.newMessages.contains(row.getItem())) {
+                row.setStyle(style + "-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #FFFFFF");
+            } else {
+                row.setStyle(style);
+            }
             row.setPrefHeight(25);
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2) {
@@ -164,6 +166,7 @@ public class ReceiveMessageController {
                         this.stage.show();
 
                     } catch (IOException e) {
+                        e.printStackTrace();
                         throw new RuntimeException(e);
                     }
                 }
@@ -185,5 +188,27 @@ public class ReceiveMessageController {
             this.appController.getReceiveMessageIcon().setIcon(FontAwesomeIcon.ENVELOPE);
             this.appController.getReceiveMessageIcon().setFill(Color.WHITE);
         }
+    }
+
+    @Override
+    public void onLogin() {
+        if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages)) {
+            this.executorService = Executors.newSingleThreadScheduledExecutor();
+
+            //Create a scheduled executor service to update the table 10 seconds
+            executorService.scheduleAtFixedRate(() -> {
+                try {
+                    this.loadMessage();
+                } catch (MessagingException | NotAuthorizedException | RemoteException e) {
+                    e.printStackTrace();
+                }
+            }, 1, 10, TimeUnit.SECONDS);
+        }
+    }
+
+    @Override
+    public void onLogout() {
+        this.executorService.shutdown();
+        this.executorService.shutdownNow();
     }
 }

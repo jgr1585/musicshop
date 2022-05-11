@@ -57,16 +57,12 @@ public class ShoppingCartController implements ShoppingCartObserver {
         ShoppingCartSubject.addObserver(this);
 
         new Thread(() -> {
-            try {
-                this.emptyButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.emptyShoppingCart));
-                this.buyButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.buyFromShoppingCart));
+            this.emptyButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.emptyShoppingCart));
+            this.buyButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.buyFromShoppingCart));
 
-                final boolean canAddCustomer = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.searchCustomersByName);
-                this.removeButton.setDisable(!canAddCustomer);
-                this.selectButton.setDisable(!canAddCustomer);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
+            final boolean canAddCustomer = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.searchCustomersByName);
+            this.removeButton.setDisable(!canAddCustomer);
+            this.selectButton.setDisable(!canAddCustomer);
         }).start();
     }
 
@@ -111,8 +107,8 @@ public class ShoppingCartController implements ShoppingCartObserver {
 
         Optional<ButtonType> returnValue = confDialog.showAndWait();
         if (returnValue.isPresent() && returnValue.get() == confirmButton) {
-            RemoteFacade.getInstance().buyFromShoppingCart(customer);
-            new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items", ButtonType.CLOSE).show();
+            String invoiceNo = RemoteFacade.getInstance().buyFromShoppingCart(customer);
+            new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items\nInvoice number: " + invoiceNo, ButtonType.CLOSE).show();
             reloadShoppingCart();
             removeCustomer();
             appController.selectSearchTab();

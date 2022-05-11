@@ -4,50 +4,53 @@ import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.library.exceptions.*;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import javax.ejb.Remote;
+import javax.ejb.Remove;
 import java.util.Set;
 
-public interface ApplicationClient extends Remote {
-    String getSessionUserId() throws RemoteException;
+@Remote
+public interface ApplicationClient {
+    void authenticate(String authUser, String authPassword) throws AuthenticationFailedException;
+
+    String getSessionUserId();
 
     // Search Articles
-    Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException, NotAuthorizedException;
+    Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException, NotAuthorizedException;
 
     // Search Customers
-    Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException, NotAuthorizedException;
+    Set<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException, NotAuthorizedException;
 
     // Invoice
-    InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException, InvoiceException;
+    InvoiceDTO findInvoiceById(Long id) throws NotAuthorizedException, InvoiceException;
 
     // Return
-    void returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException, InvoiceException;
+    void returnItem(LineItemDTO lineItem, int quantity) throws NotAuthorizedException, InvoiceException;
 
     // Shopping Cart
-    void addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException;
+    void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException;
 
-    void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException;
+    void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException;
 
-    void emptyShoppingCart() throws RemoteException, NotAuthorizedException;
+    void emptyShoppingCart() throws NotAuthorizedException;
 
-    void buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException;
+    String buyFromShoppingCart(int customerId) throws NotAuthorizedException;
 
-    ShoppingCartDTO getShoppingCart() throws RemoteException, NotAuthorizedException;
+    ShoppingCartDTO getShoppingCart() throws NotAuthorizedException;
 
     // Messaging
-    void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException, MessagingException;
+    void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws NotAuthorizedException, MessagingException;
 
-    void publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException;
+    void publishMessage(MessageDTO message) throws NotAuthorizedException, MessagingException;
 
-    Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException;
+    Set<MessageDTO> receiveMessages() throws NotAuthorizedException, MessagingException;
 
-    void acknowledgeMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException;
+    void acknowledgeMessage(MessageDTO message) throws NotAuthorizedException, MessagingException;
 
-    Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException;
+    Set<TopicDTO> getAllTopics() throws NotAuthorizedException;
 
     // Authorization
-    boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) throws RemoteException;
+    boolean isAuthorizedFor(RemoteFunctionPermission functionPermission);
 
     // Application Client
-    void destroy() throws RemoteException;
+    @Remove void destroy();
 }

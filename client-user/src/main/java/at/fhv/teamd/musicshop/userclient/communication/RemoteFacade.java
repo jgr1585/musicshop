@@ -1,23 +1,19 @@
 package at.fhv.teamd.musicshop.userclient.communication;
 
 import at.fhv.teamd.musicshop.library.ApplicationClient;
-import at.fhv.teamd.musicshop.library.ApplicationClientFactory;
 import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.library.exceptions.*;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.observer.ReturnSubject;
 import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartSubject;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import java.util.Properties;
 import java.util.Set;
 
 public class RemoteFacade implements ApplicationClient {
-    private static final int REMOTE_PORT = Registry.REGISTRY_PORT;
 
     private static RemoteFacade instance;
     private static ApplicationClient applicationClient;
@@ -25,27 +21,31 @@ public class RemoteFacade implements ApplicationClient {
     private RemoteFacade() {
     }
 
-    public static void authenticateSession(String host, String authUser, String authPassword) throws RemoteException, AuthenticationFailedException {
+    public static void authenticateSession(String host, String authUser, String authPassword) throws AuthenticationFailedException {
         try {
-            LocateRegistry.getRegistry(host, REMOTE_PORT);
-            ApplicationClientFactory applicationClientFactory
-                    = (ApplicationClientFactory) Naming.lookup("rmi://" + host + ":" + REMOTE_PORT + "/ApplicationClientFactoryImpl");
+            Properties props = new Properties();
+            props.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
+            props.put(Context.PROVIDER_URL, "http-remoting://" + host + ":8080");
+            Context ctx = new InitialContext(props);
 
-            applicationClient = applicationClientFactory.createApplicationClient(authUser, authPassword);
+            // ejb:/[DeployedName]/Implementierungsname![packages + Interface of Bean]
+            applicationClient = (ApplicationClient) ctx.lookup("ejb:/backend-1.0-SNAPSHOT/ApplicationClientImpl!at.fhv.teamd.musicshop.library.ApplicationClient");
 
-        } catch (MalformedURLException | NotBoundException e) {
+            applicationClient.authenticate(authUser, authPassword);
+
+        } catch (NamingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static RemoteFacade getInstance() throws RemoteException {
+    public static RemoteFacade getInstance() {
         if (instance == null) {
             instance = new RemoteFacade();
         }
         return instance;
     }
 
-    private ApplicationClient getApplicationClientOrThrow() throws RemoteException {
+    private ApplicationClient getApplicationClientOrThrow() {
         if (applicationClient != null) {
             return applicationClient;
         }
@@ -54,92 +54,99 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public String getSessionUserId() throws RemoteException {
+    public void authenticate(String authUser, String authPassword) throws AuthenticationFailedException {
+
+    }
+
+    @Override
+    public String getSessionUserId() {
         return getApplicationClientOrThrow().getSessionUserId();
     }
 
     @Override
-    public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws RemoteException, ApplicationClientException, NotAuthorizedException {
+    public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException, NotAuthorizedException {
         return getApplicationClientOrThrow().searchArticlesByAttributes(title, artist);
     }
 
     @Override
-    public Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException, NotAuthorizedException {
+    public Set<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException, NotAuthorizedException {
         return getApplicationClientOrThrow().searchCustomersByName(name);
     }
 
     @Override
-    public InvoiceDTO findInvoiceById(Long id) throws RemoteException, NotAuthorizedException, InvoiceException {
+    public InvoiceDTO findInvoiceById(Long id) throws NotAuthorizedException, InvoiceException {
         return getApplicationClientOrThrow().findInvoiceById(id);
     }
 
     @Override
-    public void returnItem(LineItemDTO lineItem, int quantity) throws RemoteException, NotAuthorizedException, InvoiceException {
+    public void returnItem(LineItemDTO lineItem, int quantity) throws NotAuthorizedException, InvoiceException {
         getApplicationClientOrThrow().returnItem(lineItem, quantity);
         ReturnSubject.notifyReturnUpdate();
     }
 
     @Override
-    public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
+    public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
         getApplicationClientOrThrow().addToShoppingCart(mediumDTO, amount);
         ShoppingCartSubject.notifyShoppingCartUpdate();
     }
 
     @Override
-    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws RemoteException, NotAuthorizedException {
+    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
         getApplicationClientOrThrow().removeFromShoppingCart(mediumDTO, amount);
         ShoppingCartSubject.notifyShoppingCartUpdate();
     }
 
     @Override
-    public void emptyShoppingCart() throws RemoteException, NotAuthorizedException {
+    public void emptyShoppingCart() throws NotAuthorizedException {
         getApplicationClientOrThrow().emptyShoppingCart();
         ShoppingCartSubject.notifyShoppingCartUpdate();
     }
 
     @Override
-    public void buyFromShoppingCart(int customerId) throws RemoteException, NotAuthorizedException {
-        getApplicationClientOrThrow().buyFromShoppingCart(customerId);
+    public String buyFromShoppingCart(int customerId) throws NotAuthorizedException {
+        String invoiceNo;
+        invoiceNo = getApplicationClientOrThrow().buyFromShoppingCart(customerId);
         ShoppingCartSubject.notifyShoppingCartUpdate();
+        return invoiceNo;
     }
 
     @Override
-    public ShoppingCartDTO getShoppingCart() throws RemoteException, NotAuthorizedException {
+    public ShoppingCartDTO getShoppingCart() throws NotAuthorizedException {
         return getApplicationClientOrThrow().getShoppingCart();
     }
 
     @Override
-    public void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws RemoteException, NotAuthorizedException, MessagingException {
+    public void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws NotAuthorizedException, MessagingException {
         getApplicationClientOrThrow().publishOrderMessage(mediumDTO, quantity);
     }
 
     @Override
-    public void publishMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+    public void publishMessage(MessageDTO message) throws NotAuthorizedException, MessagingException {
         getApplicationClientOrThrow().publishMessage(message);
     }
 
     @Override
-    public Set<MessageDTO> receiveMessages() throws RemoteException, NotAuthorizedException, MessagingException {
+    public Set<MessageDTO> receiveMessages() throws NotAuthorizedException, MessagingException {
         return getApplicationClientOrThrow().receiveMessages();
     }
 
     @Override
-    public void acknowledgeMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+    public void acknowledgeMessage(MessageDTO message) throws NotAuthorizedException, MessagingException {
         getApplicationClientOrThrow().acknowledgeMessage(message);
     }
 
     @Override
-    public Set<TopicDTO> getAllTopics() throws RemoteException, NotAuthorizedException {
+    public Set<TopicDTO> getAllTopics() throws NotAuthorizedException {
         return getApplicationClientOrThrow().getAllTopics();
     }
 
     @Override
-    public boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) throws RemoteException {
+    public boolean isAuthorizedFor(RemoteFunctionPermission functionPermission) {
         return getApplicationClientOrThrow().isAuthorizedFor(functionPermission);
     }
 
     @Override
-    public void destroy() throws RemoteException {
+    public void destroy() {
         getApplicationClientOrThrow().destroy();
         applicationClient = null;
     }

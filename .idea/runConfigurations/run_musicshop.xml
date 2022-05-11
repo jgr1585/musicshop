@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="run musicshop" type="Multirun" separateTabs="false" reuseTabsWithFailures="true" startOneByOne="true" markFailedProcess="true" hideSuccessProcess="true" delayTime="0.0">
-    <runConfiguration name="backend (main)" type="Application" />
-    <runConfiguration name="client-user (main)" type="Application" />
-    <method v="2" />
-  </configuration>
-</component>
