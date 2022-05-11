@@ -10,12 +10,6 @@ import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartSubject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.Properties;
 import java.util.Set;
 
@@ -109,9 +103,11 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public void buyFromShoppingCart(int customerId) throws NotAuthorizedException {
-        getApplicationClientOrThrow().buyFromShoppingCart(customerId);
+    public String buyFromShoppingCart(int customerId) throws NotAuthorizedException {
+        String invoiceNo;
+        invoiceNo = getApplicationClientOrThrow().buyFromShoppingCart(customerId);
         ShoppingCartSubject.notifyShoppingCartUpdate();
+        return invoiceNo;
     }
 
     @Override

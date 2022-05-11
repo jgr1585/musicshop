@@ -95,7 +95,7 @@ public class ShoppingCartService {
         return buildShoppingCartDTO(sessionLineItems.get(userId));
     }
 
-    public void buyFromShoppingCart(String userId, int id) {
+    public String buyFromShoppingCart(String userId, int id) {
         if (!shoppingCartExists(userId)) {
             emptyShoppingCart(userId);
         }
@@ -111,7 +111,7 @@ public class ShoppingCartService {
             }
         });
 
-        ServiceFactory.getInvoiceServiceInstance().createInvoice(lineItems, id);
+        Long invoiceNo = ServiceFactory.getInvoiceServiceInstance().createInvoice(lineItems, id);
 
         emptyShoppingCart(userId);
 
@@ -121,6 +121,7 @@ public class ShoppingCartService {
             medium.setStock(Stock.of(medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity())));
             mediumRepository.update(medium);
         });
+        return String.valueOf(invoiceNo);
     }
 
     private boolean shoppingCartExists(String userId) {

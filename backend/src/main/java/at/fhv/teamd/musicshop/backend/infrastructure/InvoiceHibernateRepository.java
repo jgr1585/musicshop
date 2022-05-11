@@ -18,7 +18,7 @@ public class InvoiceHibernateRepository implements InvoiceRepository {
     }
 
     @Override
-    public void addInvoice(Invoice invoice) {
+    public Long addInvoice(Invoice invoice) {
         Objects.requireNonNull(invoice);
 
         EntityManager em = PersistenceManager.getEntityManagerInstance();
@@ -28,7 +28,7 @@ public class InvoiceHibernateRepository implements InvoiceRepository {
         em.getTransaction().commit();
         em.close();
 
-        System.out.println("invoice persisted");
+        return invoice.getId();
     }
 
     @Override

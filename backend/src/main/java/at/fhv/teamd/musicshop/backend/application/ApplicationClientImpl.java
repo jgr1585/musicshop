@@ -96,10 +96,10 @@ public class ApplicationClientImpl implements ApplicationClient {
     }
 
     @Override
-    public void buyFromShoppingCart(int customerId) throws NotAuthorizedException {
+    public String buyFromShoppingCart(int customerId) throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.buyFromShoppingCart);
 
-        shoppingCartService.buyFromShoppingCart(applicationClientSession.getUserId(), customerId);
+        return shoppingCartService.buyFromShoppingCart(applicationClientSession.getUserId(), customerId);
     }
 
     @Override
