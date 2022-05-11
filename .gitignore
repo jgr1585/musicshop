@@ -1,5 +1,15 @@
-# Created by https://www.toptal.com/developers/gitignore/api/java,intellij,gradle,linux,macos,windows,intellij+iml
-# Edit at https://www.toptal.com/developers/gitignore?templates=java,intellij,gradle,linux,macos,windows,intellij+iml
+
+# Created by https://www.toptal.com/developers/gitignore/api/java,macos,linux,gradle,windows,intellij,intellij+iml,visualstudiocode,dotnetcore
+# Edit at https://www.toptal.com/developers/gitignore?templates=java,macos,linux,gradle,windows,intellij,intellij+iml,visualstudiocode,dotnetcore
+
+### DotnetCore ###
+# .NET Core build folders
+bin/
+obj/
+
+# Common node modules locations
+/node_modules
+/wwwroot/node_modules
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -30,8 +40,6 @@
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
-
-/build/
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
@@ -239,6 +247,35 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+### macOS Patch ###
+# iCloud generated files
+*.icloud
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+# Support for Project snippet scope
+.vscode/*.code-snippets
+
+# Ignore code-workspaces
+*.code-workspace
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -288,5 +325,4 @@ gradle-app.setting
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
-# End of https://www.toptal.com/developers/gitignore/api/java,intellij,gradle,linux,macos,windows,intellij+iml
-/.gradle/
+# End of https://www.toptal.com/developers/gitignore/api/java,macos,linux,gradle,windows,intellij,intellij+iml,visualstudiocode,dotnetcore

@@ -28,6 +28,8 @@ dependencies {
     compileOnly('javax.servlet:javax.servlet-api:4.0.1')
 
     implementation 'io.swagger.core.v3:swagger-core:2.2.0'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2:2.2.0'
+    implementation 'io.swagger.core.v3:swagger-jaxrs2-servlet-initializer:2.2.0'
     implementation 'org.webjars:swagger-ui:4.10.3'
 
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
@@ -63,4 +65,4 @@ swaggerSources {
 
 apply plugin: 'org.openapi.generator'
 
-compileJava.dependsOn tasks.openApiGenerate
+//compileJava.dependsOn tasks.openApiGenerate
