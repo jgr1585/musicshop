@@ -33,7 +33,7 @@ public interface ApplicationClient {
 
     void emptyShoppingCart() throws NotAuthorizedException;
 
-    void buyFromShoppingCart(int customerId) throws NotAuthorizedException;
+    String buyFromShoppingCart(int customerId) throws NotAuthorizedException;
 
     ShoppingCartDTO getShoppingCart() throws NotAuthorizedException;
 

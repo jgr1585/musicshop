@@ -139,7 +139,7 @@ public class ReceiveMessageController implements LoginObserver {
 
         //Set up the columns Formatting
         this.colDate.setCellValueFactory(cellData -> new SimpleObjectProperty<>(formatter.format(LocalDateTime.ofInstant(cellData.getValue().sentOnTimestamp(), ZoneId.systemDefault()))));
-        this.colTopic.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().topic().name()));
+        this.colTopic.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().topic().name().replaceAll("topic://", "")));
         this.colSubject.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().title()));
         this.colTrash.setCellValueFactory(cellData -> new SimpleObjectProperty<>(createTrashButton(cellData.getValue())));
 
