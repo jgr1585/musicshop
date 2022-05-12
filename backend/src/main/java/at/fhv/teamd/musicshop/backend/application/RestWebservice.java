@@ -10,9 +10,9 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 @OpenAPIDefinition(
-        tags = {
-                @Tag(name = "rest", description = "rest operations."),
-        },
+//        tags = {
+//                @Tag(name = "rest", description = "rest operations."),
+//        },
         info = @Info(
                 title = "Musicshop API",
                 version = "3.0.1",
