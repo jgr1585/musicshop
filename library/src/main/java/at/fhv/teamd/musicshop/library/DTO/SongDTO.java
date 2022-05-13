@@ -1,5 +1,13 @@
 package at.fhv.teamd.musicshop.library.DTO;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer;
+
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -51,10 +59,17 @@ public final class SongDTO implements ArticleDTO, Serializable {
         return Collections.unmodifiableSet(artists);
     }
 
+    @JsonProperty(required = true)
+    @JsonDeserialize(using = DurationDeserializer.class)
+    @JsonSerialize(using = DurationSerializer.class)
     public Duration length() {
         return length;
     }
 
+    @JsonProperty(required = true)
+    @JsonIdentityInfo(
+            generator = ObjectIdGenerators.PropertyGenerator.class,
+            property = "id")
     public Set<AlbumDTO> albums() {
         return Collections.unmodifiableSet(albums);
     }

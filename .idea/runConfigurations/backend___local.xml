@@ -66,6 +66,7 @@
     </ConfigurationWrapper>
     <method v="2">
       <option name="Make" enabled="true" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="resolve" externalProjectPath="$PROJECT_DIR$/backend" vmOptions="" scriptParameters="" />
       <option name="BuildArtifacts" enabled="true" />
     </method>
   </configuration>
