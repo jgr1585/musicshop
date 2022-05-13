@@ -1,0 +1,16 @@
+{
+  "name": "Musicshop24",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite --port 8081",
+    "build": "vite build",
+    "preview": "vite preview --port 9090"
+  },
+  "dependencies": {
+    "vue": "^3.2.33"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.1",
+    "vite": "^2.9.5"
+  }
+}
