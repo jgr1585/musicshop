@@ -55,20 +55,19 @@ resolve {
     prettyPrint = 'TRUE'
     classpath = sourceSets.main.runtimeClasspath
     resourcePackages = ['at.fhv.teamd.musicshop.backend.application']
-    outputDir = file('src/main/resources/WEB-INF')
+    outputDir = file('src/main/webapp')
+    alwaysResolveAppPath = 'TRUE'
 }
 
 swaggerSources {
     musicshop {
-        inputFile = file('src/main/resources/WEB-INF/openapi.yaml')
-        code {
-            language = 'html'
-        }
-    }
-    musicshop {
-        inputFile = file('src/main/resources/WEB-INF/openapi.yaml')
+        inputFile = file('src/main/webapp/openapi.yaml')
         code {
             language = 'csharp'
+            outputDir = file('src/main/webapp/swagger-code')
+        }
+        ui {
+            outputDir = file('src/main/webapp/swagger-ui')
         }
     }
 }
