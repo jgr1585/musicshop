@@ -21,7 +21,7 @@ public class ArticleRestService {
                 description = "Search Articles by Attributes (Title, Artist)")
     @ApiResponse(responseCode = "200", description = "Articles found")
     @ApiResponse(responseCode = "404", description = "No Articles found")
-    public Set<ArticleDTO> searchArticlesByAttributes(@QueryParam("title") String title, @QueryParam("artist") String artist) throws ApplicationClientException {
+    public Set<ArticleDTO> searchArticlesByAttributes(@QueryParam("title") @DefaultValue("") String title, @QueryParam("artist") @DefaultValue("") String artist) throws ApplicationClientException {
         return ServiceFactory.getArticleServiceInstance().searchArticlesByAttributes(title, artist);
     }
 }
