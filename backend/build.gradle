@@ -63,11 +63,24 @@ swaggerSources {
     musicshop {
         inputFile = file('src/main/webapp/openapi.yaml')
         code {
-            language = 'csharp'
-            outputDir = file('src/main/webapp/swagger-code')
+            language = 'javascript'
+            outputDir = file('src/main/webapp/swagger-code-js')
+            doLast {
+                copy {
+                    from 'src/main/webapp/swagger-code-js/src'
+                    into '../spa/src/api'
+                }
+            }
         }
         ui {
             outputDir = file('src/main/webapp/swagger-ui')
         }
     }
+//    musicshopCS {
+//        inputFile = file('src/main/webapp/openapi.yaml')
+//        code {
+//            language = 'csharp'
+//            outputDir = file('src/main/webapp/swagger-code-cs')
+//        }
+//    }
 }

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.annotations.servers.Servers;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -20,9 +21,10 @@ import javax.ws.rs.core.Application;
                 license = @License(
                         name = "Apache 2.0",
                         url = "https://www.apache.org/licenses/LICENSE-2.0.html")),
-        servers = @Server(
-                url = "/backend-1.0-SNAPSHOT"
-        )
+        servers = {
+                @Server(url = "/backend-1.0-SNAPSHOT"),
+                @Server(url = "/")
+        }
 )
 
 @ApplicationPath("/rest")
