@@ -4,15 +4,12 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.servers.Server;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 @OpenAPIDefinition(
-//        tags = {
-//                @Tag(name = "rest", description = "rest operations."),
-//        },
         info = @Info(
                 title = "Musicshop API",
                 version = "3.0.1",
@@ -22,7 +19,10 @@ import javax.ws.rs.core.Application;
                         email = "techsupport@musicshop.com"),
                 license = @License(
                         name = "Apache 2.0",
-                        url = "https://www.apache.org/licenses/LICENSE-2.0.html"))
+                        url = "https://www.apache.org/licenses/LICENSE-2.0.html")),
+        servers = @Server(
+                url = "/backend-1.0-SNAPSHOT"
+        )
 )
 
 @ApplicationPath("/rest")
