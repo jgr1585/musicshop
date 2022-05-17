@@ -2,7 +2,7 @@ package at.fhv.teamd.musicshop.backend.infrastructure;
 
 import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
 import at.fhv.teamd.musicshop.backend.domain.repositories.EmployeeRepository;
-import at.fhv.teamd.musicshop.backend.domain.user.Employee;
+import at.fhv.teamd.musicshop.backend.domain.employee.Employee;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
