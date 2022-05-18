@@ -1,20 +1,27 @@
 <script setup>
 import Search from "./components/Search.vue";
 import ShoppingCart from "./components/ShoppingCart.vue";
+import Login from "./components/Login.vue";
 </script>
 
 <script>
 export default {
   components: {
     Search,
-    ShoppingCart
+    ShoppingCart,
+    Login
   },
   data() {
     return {
-      currentTab: "Search",
-      tabs: ["Search", "ShoppingCart"],
+      currentTab: Search,
+      tabs: [Search, ShoppingCart, Login],
     };
   },
+  methods: {
+    extractName(tab) {
+      return tab.__file.split("/").pop().split(".")[0];
+    },
+  }
 };
 </script>
 
@@ -27,8 +34,9 @@ export default {
         v-for="tab in tabs"
         :key="tab"
         :class="['tab-button', { active: currentTab === tab }]"
-        @click="currentTab = tab">
-        {{ tab }}
+        @click="currentTab = tab"
+      >
+        {{ extractName(tab) }}
       </button>
       <component :is="currentTab"></component>
     </div>
