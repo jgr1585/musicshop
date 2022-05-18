@@ -6,11 +6,6 @@ import Login from "./components/Login.vue";
 
 <script>
 export default {
-  components: {
-    Search,
-    ShoppingCart,
-    Login
-  },
   data() {
     return {
       currentTab: Search,
