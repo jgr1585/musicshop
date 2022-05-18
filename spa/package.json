@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --port 8081",
-    "build": "vite build",
+    "build": "vite build --base=./ --emptyOutDir",
     "preview": "vite preview --port 9090"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "vue": "^3.2.33"
   },
   "devDependencies": {

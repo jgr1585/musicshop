@@ -1,81 +1,72 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import Search from "./components/Search.vue";
+import ShoppingCart from "./components/ShoppingCart.vue";
+</script>
+
+<script>
+export default {
+  components: {
+    Search,
+    ShoppingCart
+  },
+  data() {
+    return {
+      currentTab: "Search",
+      tabs: ["Search", "ShoppingCart"],
+    };
+  },
+};
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+    <img alt="Musicshop24 logo" src="./assets/logo.png" width="320" height="230" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+    <div class="demo">
+      <button
+        v-for="tab in tabs"
+        :key="tab"
+        :class="['tab-button', { active: currentTab === tab }]"
+        @click="currentTab = tab">
+        {{ tab }}
+      </button>
+      <component :is="currentTab"></component>
     </div>
   </header>
 
-  <main>
-    <TheWelcome />
-  </main>
+  <main></main>
 </template>
 
 <style>
-@import './assets/base.css';
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-
-  font-weight: normal;
+.demo {
+  font-family: sans-serif;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  padding: 20px 30px;
+  margin-top: 1em;
+  margin-bottom: 40px;
+  user-select: none;
+  overflow-x: auto;
 }
 
-header {
-  line-height: 1.5;
+.tab-button {
+  padding: 6px 10px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background: #f0f0f0;
+  margin-bottom: -1px;
+  margin-right: -1px;
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.tab-button:hover {
+  background: #e0e0e0;
 }
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
+.tab-button.active {
+  background: #e0e0e0;
 }
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
+.tab {
+  border: 1px solid #ccc;
+  padding: 10px;
 }
 </style>
