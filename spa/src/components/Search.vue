@@ -51,29 +51,43 @@ export default {
 </script>
 
 <template>
-  <header>
-    <h1>Search articles</h1>
-  </header>
+  <div id="header">
+    <h1 class="text-white mb-4 animated slideInDown">MP3-Music-Downloader</h1>
+  </div>
+  <div class="position-relative w-100" id="search">
+    <input class="col-form-label border-1 rounded-pill w-50 ps-4 pe-5" type="text" v-model="title" placeholder="Title"/>
+    <input class="col-form-label border-1 rounded-pill w-50 ps-4 pe-5" type="text" v-model="artist" placeholder="Artist"/>
+    <button class="btn btn-primary rounded-pill" id="button" @click="searchArticles">Search</button>
+  </div>
 
-  <main>
-    <div>
-      <input type="text" v-model="title" placeholder="Title" />
-      <input type="text" v-model="artist" placeholder="Artist" />
-      <button @click="searchArticles">Search</button>
-    </div>
-
-    <div>
-      <section v-if="errored">
-        <p>
-          We're sorry, we're not able to retrieve this information at the moment, please
-          try back later
-        </p>
-      </section>
+  <div>
+    <section v-if="errored">
+      <p>
+        We're sorry, we're not able to retrieve this information at the moment, please
+        try back later
+      </p>
+    </section>
 
       <section v-else>
         <div v-if="loading">Loading...</div>
         <Article v-else v-for="article in articles" :article="article" />
       </section>
     </div>
-  </main>
 </template>
+
+<style>
+
+#header{
+  margin-bottom: 30px;
+}
+h1 {
+  color: gold;
+  text-align: center;
+}
+
+#search {
+  display: flex;
+  justify-content: space-between;
+}
+
+</style>

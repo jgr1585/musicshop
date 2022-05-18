@@ -10,8 +10,7 @@ export default {
 </script>
 
 <template>
-  <header>
-    <h1>ShoppingCart</h1>
-  </header>
-  <main></main>
+
+    <h1 class="text-white mb-4 animated slideInDown">Shopping Cart</h1>
+
 </template>

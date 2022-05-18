@@ -18,58 +18,48 @@ export default {
     },
   }
 };
+
 </script>
 
 <template>
-  <header>
-    <img alt="Musicshop24 logo" src="./assets/logo.png" width="320" height="230" />
-
-    <div class="demo">
-      <button
-        v-for="tab in tabs"
-        :key="tab"
-        :class="['tab-button', { active: currentTab === tab }]"
-        @click="currentTab = tab"
-      >
-        {{ extractName(tab) }}
-      </button>
-      <component :is="currentTab"></component>
+  <div class="container-xxl bg-white p-0">
+    <nav class="navbar navbar-expand navbar-light px-4 px-lg-5 py-3 py-lg-0" id="home">
+      <img alt="logo" src="./assets/logo.png" width="250" height="180"/>
+      <div>
+        <button class="btn btn-primary rounded-pill" id="button"
+                v-for="tab in tabs"
+                :key="tab"
+                :class="['tab-button', { active: currentTab === tab }]"
+                @click="currentTab = tab">
+          {{ extractName(tab) }}
+        </button>
+      </div>
+    </nav>
+    <div class="container-xxl bg-primary hero-header">
+      <div class="container">
+        <div class="row g-5 align-items-center">
+          <component :is="currentTab"></component>
+        </div>
+      </div>
     </div>
-  </header>
-
-  <main></main>
+  </div>
 </template>
 
 <style>
-.demo {
-  font-family: sans-serif;
-  border: 1px solid #eee;
-  border-radius: 2px;
-  padding: 20px 30px;
-  margin-top: 1em;
-  margin-bottom: 40px;
-  user-select: none;
-  overflow-x: auto;
+@import "assets/css/bootstrap.min.css";
+@import "assets/css/style.css";
+
+#home {
+  position: sticky;
+  background-color: #181818;
+  display: flex;
+  justify-content: space-between;
 }
 
-.tab-button {
-  padding: 6px 10px;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  background: #f0f0f0;
-  margin-bottom: -1px;
-  margin-right: -1px;
-}
-.tab-button:hover {
-  background: #e0e0e0;
-}
-.tab-button.active {
-  background: #e0e0e0;
-}
-.tab {
-  border: 1px solid #ccc;
-  padding: 10px;
+#button {
+  color: #000000;
+  margin-right: 10px;
+  padding-right: 30px;
+  padding-left: 30px;
 }
 </style>

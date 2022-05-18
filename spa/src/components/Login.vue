@@ -10,8 +10,5 @@ export default {
 </script>
 
 <template>
-  <header>
-    <h1>Login</h1>
-  </header>
-  <main></main>
+  <h1 class="text-white mb-4 animated slideInDown">Login</h1>
 </template>
