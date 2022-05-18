@@ -1,5 +1,5 @@
 <script setup>
-import article from "./Article.vue";
+import Article from "./Article.vue";
 import axios from "axios";
 </script>
 
@@ -10,20 +10,17 @@ export default {
       loading: false,
       errored: false,
       articles: [],
-      title: "",
-      artist: "",
     };
   },
   filters: {},
   methods: {
     searchArticles() {
       this.loading = true;
+      let p1 = this.title ? this.title : "";
+      let p2 = this.artist ? this.artist : "";
       axios
         .get(
-          "http://localhost:8080/backend-1.0-SNAPSHOT/rest/article/search?title=" +
-            this.title +
-            "&artist=" +
-            this.artist
+          "http://localhost:8080/backend-1.0-SNAPSHOT/rest/article/search?title=" + p1 + "&artist=" + p2
         )
         .then((response) => {
           console.log(response);
@@ -61,14 +58,7 @@ export default {
 
       <section v-else>
         <div v-if="loading">Loading...</div>
-        <div v-else v-for="article in articles">
-          <h2>Title: {{ article.title }}</h2>
-          <p>Type: {{ article.type }}</p>
-          <p>Label: {{ article.label }}</p>
-          <p>Artists: <i v-for="artist in article.artists">{{ artist.name }}; </i></p>
-          <button @click="addToCart">Add to cart</button>
-          <!-- <article :article="article"></article> -->
-        </div>
+        <Article v-else v-for="article in articles" :article="article" />
       </section>
     </div>
   </main>
