@@ -6,6 +6,7 @@ public class RepositoryFactory {
     private static ArticleRepository articleRepository;
     private static MediumRepository mediumRepository;
     private static EmployeeRepository employeeRepository;
+    private static CustomerRepository customerRepository;
     private static InvoiceRepository invoiceRepository;
     private static TopicRepository topicRepository;
 
@@ -28,6 +29,13 @@ public class RepositoryFactory {
             employeeRepository = new EmployeeHibernateRepository();
         }
         return employeeRepository;
+    }
+
+    public static CustomerRepository getCustomerRepositoryInstance() {
+        if (customerRepository == null) {
+            customerRepository = new CustomerHibernateRepository();
+        }
+        return customerRepository;
     }
 
     public static InvoiceRepository getInvoiceRepositoryInstance() {

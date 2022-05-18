@@ -46,4 +46,5 @@ public class ShoppingCartRestService {
     public void buyFromShoppingCart(@QueryParam("userId") String userId, @QueryParam("id") int id) {
         ServiceFactory.getShoppingCartServiceInstance().buyFromShoppingCart(userId, id);
     }
+
 }
