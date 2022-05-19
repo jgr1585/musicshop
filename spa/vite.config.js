@@ -12,6 +12,7 @@ export default defineConfig({
     }
   },
   build: {
+    emptyOutDir: true,
     outDir: '../backend/src/main/webapp/spa'
   }
 })

@@ -68,7 +68,7 @@ swaggerSources {
             doLast {
                 copy {
                     from 'src/main/webapp/swagger-code-js/src'
-                    into '../spa/src/api'
+                    into '../spa/src/rest'
                 }
             }
         }

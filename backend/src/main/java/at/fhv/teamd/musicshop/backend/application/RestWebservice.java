@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.servers.Server;
-import io.swagger.v3.oas.annotations.servers.Servers;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -22,10 +21,12 @@ import javax.ws.rs.core.Application;
                         name = "Apache 2.0",
                         url = "https://www.apache.org/licenses/LICENSE-2.0.html")),
         servers = {
-                @Server(url = "/backend-1.0-SNAPSHOT"),
-                @Server(url = "/")
+                @Server(url = "http://localhost:8080/backend-1.0-SNAPSHOT"),
+                @Server(url = "http://10.0.40.166:8080/")
         }
 )
+
+// TODO: switch servers before push to master!
 
 @ApplicationPath("/rest")
 public class RestWebservice extends Application {
