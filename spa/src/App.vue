@@ -23,15 +23,15 @@ export default {
 <template>
   <div class="container-xxl bg-white p-0">
     <nav class="navbar navbar-expand navbar-light px-4 px-lg-5 py-3 py-lg-0" id="home">
-      <img alt="logo" src="./assets/logo.png" width="250" height="180" />
+      <img alt="logo" src="./assets/logo.png" width="250" height="180"/>
       <div>
         <button
-          class="btn btn-primary rounded-pill"
-          id="button"
-          v-for="tab in tabs"
-          :key="tab"
-          :class="['tab-button', { active: currentTab === tab }]"
-          @click="currentTab = tab"
+            class="btn btn-primary rounded-pill"
+            id="button"
+            v-for="tab in tabs"
+            :key="tab"
+            :class="['tab-button', { active: currentTab === tab }]"
+            @click="currentTab = tab"
         >
           {{ tab }}
         </button>
@@ -42,6 +42,17 @@ export default {
         <div class="row g-5 align-items-center">
           <component :is="currentTab"></component>
         </div>
+      </div>
+    </div>
+    <div class="container-xxl bg-white p-0">
+      <div class="container text-center">
+        <h4 >Contact us:</h4>
+        <p>Team D</p>
+        <p>Hochschulstraße 1</p>
+        <p>6850 Dornbirn</p>
+        <p>E-Mail: teamD@fhv.at</p>
+        <p>Tel: +43 (0) 5572 / 623541</p>
+
       </div>
     </div>
   </div>
@@ -64,4 +75,5 @@ export default {
   padding-right: 30px;
   padding-left: 30px;
 }
+
 </style>
