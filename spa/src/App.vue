@@ -1,37 +1,39 @@
 <script setup>
+import Login from "./components/Login.vue";
 import Search from "./components/Search.vue";
 import ShoppingCart from "./components/ShoppingCart.vue";
-import Login from "./components/Login.vue";
 </script>
 
 <script>
 export default {
+  components: {
+    Search,
+    ShoppingCart,
+    Login
+  },
   data() {
     return {
-      currentTab: Search,
-      tabs: [Search, ShoppingCart, Login],
+      currentTab: "Search",
+      tabs: ["Search", "ShoppingCart", "Login"]
     };
-  },
-  methods: {
-    extractName(tab) {
-      return tab.__file.split("/").pop().split(".")[0];
-    },
   }
 };
-
 </script>
 
 <template>
   <div class="container-xxl bg-white p-0">
     <nav class="navbar navbar-expand navbar-light px-4 px-lg-5 py-3 py-lg-0" id="home">
-      <img alt="logo" src="./assets/logo.png" width="250" height="180"/>
+      <img alt="logo" src="./assets/logo.png" width="250" height="180" />
       <div>
-        <button class="btn btn-primary rounded-pill" id="button"
-                v-for="tab in tabs"
-                :key="tab"
-                :class="['tab-button', { active: currentTab === tab }]"
-                @click="currentTab = tab">
-          {{ extractName(tab) }}
+        <button
+          class="btn btn-primary rounded-pill"
+          id="button"
+          v-for="tab in tabs"
+          :key="tab"
+          :class="['tab-button', { active: currentTab === tab }]"
+          @click="currentTab = tab"
+        >
+          {{ tab }}
         </button>
       </div>
     </nav>

@@ -7,31 +7,28 @@ import axios from "axios";
 export default {
   data() {
     return {
-      loading: false,
-      errored: false,
-      articles: [],
       title: "",
       artist: "",
+      loading: false,
+      errored: false,
+      articles: []
     };
   },
-  filters: {},
-  methods: {
-    validate() {
-      let p1 = this.title ? this.title : "";
-      let p2 = this.artist ? this.artist : "";
+  filters: {
+    validater(p1, p2) {
       return p1.length > 0 || p2.length > 0 ? true : false;
-    },
+    }
+  },
+  methods: {
     searchArticles() {
-      if (this.validate()) {
+      if (this.$options.filters.validater(this.title, this.artist)) {
         this.loading = true;
-        let p1 = this.title ? this.title : "";
-        let p2 = this.artist ? this.artist : "";
         axios
           .get(
             "http://localhost:8080/backend-1.0-SNAPSHOT/rest/article/search?title=" +
-              p1 +
+              this.title +
               "&artist=" +
-              p2
+              this.artist
           )
           .then((response) => {
             console.log(response);
@@ -43,10 +40,10 @@ export default {
           })
           .finally((this.loading = false));
       } else {
-        alert("Error: PLease fill in at least one field");
+        alert("Please fill in at least one field");
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -55,29 +52,40 @@ export default {
     <h1 class="text-white mb-4 animated slideInDown">MP3-Music-Downloader</h1>
   </div>
   <div class="position-relative w-100" id="search">
-    <input class="col-form-label border-1 rounded-pill w-50 ps-4 pe-5" type="text" v-model="title" placeholder="Title"/>
-    <input class="col-form-label border-1 rounded-pill w-50 ps-4 pe-5" type="text" v-model="artist" placeholder="Artist"/>
+    <input
+      class="col-form-label border-1 rounded-pill w-50 ps-4 pe-5"
+      type="text"
+      :value="title"
+      @input="title = $event.target.value"
+      placeholder="Title"
+    />
+    <input
+      class="col-form-label border-1 rounded-pill w-50 ps-4 pe-5"
+      type="text"
+      :value="artist"
+      @input="artist = $event.target.value"
+      placeholder="Artist"
+    />
     <button class="btn btn-primary rounded-pill" id="button" @click="searchArticles">Search</button>
   </div>
 
   <div>
     <section v-if="errored">
       <p>
-        We're sorry, we're not able to retrieve this information at the moment, please
-        try back later
+        We're sorry, we're not able to retrieve this information at the moment, please try back
+        later
       </p>
     </section>
 
-      <section v-else>
-        <div v-if="loading">Loading...</div>
-        <Article v-else v-for="article in articles" :article="article" />
-      </section>
-    </div>
+    <section v-else>
+      <div v-if="loading">Loading...</div>
+      <Article v-else v-for="article in articles" :article="article" />
+    </section>
+  </div>
 </template>
 
 <style>
-
-#header{
+#header {
   margin-bottom: 30px;
 }
 h1 {
@@ -89,5 +97,4 @@ h1 {
   display: flex;
   justify-content: space-between;
 }
-
 </style>

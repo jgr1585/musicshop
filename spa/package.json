@@ -1,9 +1,9 @@
 {
-  "name": "Musicshop24",
+  "name": "musicshop24",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --port 8081",
-    "build": "vite build --base=./ --emptyOutDir",
+    "build": "vite build --base=./",
     "preview": "vite preview --port 9090"
   },
   "dependencies": {
