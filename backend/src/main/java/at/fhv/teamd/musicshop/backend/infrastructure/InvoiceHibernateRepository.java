@@ -77,7 +77,7 @@ public class InvoiceHibernateRepository implements InvoiceRepository {
     }
 
     @Override
-    public List<Invoice> findInvoicesByCustomerNo(String customerNo) {
+    public List<Invoice> findInvoicesByCustomerNo(int customerNo) {
         Objects.requireNonNull(customerNo);
 
         EntityManager em = PersistenceManager.getEntityManagerInstance();

@@ -1,5 +1,7 @@
 package at.fhv.teamd.musicshop.library.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -9,8 +11,10 @@ import java.util.Set;
 public final class ShoppingCartDTO implements Serializable {
     private static final long serialVersionUID = -4652034296336248491L;
 
+    @JsonProperty(required = true)
     private Set<LineItemDTO> lineItems;
 
+    @JsonProperty(required = true)
     private BigDecimal totalAmount;
 
     public static ShoppingCartDTO.Builder builder() {

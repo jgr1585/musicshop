@@ -8,10 +8,7 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.DTO.InvoiceDTO;
-import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 
 import javax.ws.rs.Consumes;
@@ -71,30 +68,31 @@ public class InvoiceService {
         }
     }
 
-    public List<InvoiceDTO> getInvoices(String customerNo) {
+    public List<InvoiceDTO> getInvoices(int customerNo) {
         return invoiceRepository.findInvoicesByCustomerNo(customerNo).stream()
                 .map(DTOProvider::buildInvoiceDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<MediumDTO> getInvoiceMediums(long invoiceId) {
+    public List<AlbumDTO> getInvoiceAlbums(long invoiceId) {
         return invoiceRepository.findInvoiceById(invoiceId).get().getLineItems().stream()
-                .map(LineItem::getMedium)
-                .map(DTOProvider::buildMediumDTO)
+                .map(li -> li.getMedium().getAlbum())
+                .map(DTOProvider::buildArticleDTO)
+                .map(ar -> (AlbumDTO) ar)
                 .collect(Collectors.toList());
     }
 
-    public String[] getInvoiceMediumDownloadUrls(String baseUri, long invoiceId, long mediumId) {
+    public String[] getInvoiceAlbumDownloadUrls(String baseUri, long invoiceId, long albumId) {
         Invoice invoice = invoiceRepository.findInvoiceById(invoiceId).get();
-        Medium medium = invoice.getLineItems().stream()
-                .flatMap(li -> Stream.of(li.getMedium()))
-                .filter(m -> m.getId() == mediumId)
+        Album album = invoice.getLineItems().stream()
+                .flatMap(li -> Stream.of(li.getMedium().getAlbum()))
+                .filter(a -> a.getId() == albumId)
                 .findFirst()
                 .get();
 
-        return medium.getAlbum().getSongs().stream()
+        return album.getSongs().stream()
                 .map(Article::getId)
-                .map(id -> baseUri + "/media/songs?id=" + id)
+                .map(id -> baseUri + "media/songs?id=" + id)
                 .toArray(String[]::new);
     }
 }

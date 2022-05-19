@@ -78,14 +78,14 @@ public class ApplicationClientImpl implements ApplicationClient {
     public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.addToShoppingCart);
 
-        shoppingCartService.addToShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
+        shoppingCartService.addToShoppingCart(applicationClientSession.getUserId(), mediumDTO.id(), amount);
     }
 
     @Override
     public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.removeFromShoppingCart);
 
-        shoppingCartService.removeFromShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
+        shoppingCartService.removeFromShoppingCart(applicationClientSession.getUserId(), mediumDTO.id(), amount);
     }
 
     @Override

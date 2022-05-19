@@ -412,16 +412,16 @@ public abstract class BaseRepositoryData {
         employees.add(new Employee("tf-test", "Thomas", "Feilhauer", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicSoul, topicJazz)));
 
         //create customers
-        customers.add(new Customer("JosieS", "Josie", "Stöber", Gender.FEMALE, "17.03.1997", "JosieStober@email.test", "Öhderstraße 31a", "6844", "Altach", "Österreich", CreditCardType.MASTERCARD, "5497056331911690", "107"));
-        customers.add(new Customer("JonasN", "Jonas", "Niebuhr", Gender.MALE, "10.03.1982", "JonasNiebuhr@email.test", "Moorstraße 45", "6700", "Bludenz", "Österreich", CreditCardType.VISA, "4412614992618410", "981"));
-        customers.add(new Customer("MiroH", "Miro", "Hendricks", Gender.MALE, "20.04.1970", "MiroHendricks@email.test", "Kleinenbroicherstraße 71", "6840", "Götzis", "Österreich", CreditCardType.MASTERCARD, "5425110212013160", "806"));
-        customers.add(new Customer("EnnoK", "Enno", "Klien", Gender.MALE, "22.05.1970", "EnnoKlien@email.test", "Römerweg 58", "6900", "Bregenz", "Österreich", CreditCardType.VISA, "4149159917878530", "215"));
-        customers.add(new Customer("TammeK", "Tamme", "Kube", Gender.MALE, "23.10.2005", "TammeKube@email.test", "Mittelstraße 8", "6971", "Hard", "Österreich", CreditCardType.MASTERCARD, "5256110980293610", "852"));
-        customers.add(new Customer("EvelinaR", "Evelina", "Rohleder", Gender.FEMALE, "08.09.1971", "EvelinaRohleder@email.test", "Robert-Schulz-Ring 13", "6850", "Dornbirn", "Österreich", CreditCardType.VISA, "4541979993294440", "972"));
-        customers.add(new Customer("AzadG", "Azad", "Groß", Gender.MALE, "01.06.1998", "AzadGross@email.test", "Rheinstraße 12", "6800", "Feldkirch", "Österreich", CreditCardType.MASTERCARD, "5232969453861870", "921"));
-        customers.add(new Customer("SammyB", "Sammy", "Böckmann", Gender.MALE, "15.08.1938", "SammyBockmann@email.test", "Norbahnstraße 12", "6945", "Hohenems", "Österreich", CreditCardType.VISA, "4344721596616160", "528"));
-        customers.add(new Customer("KatrinK", "Katrin", "Köller", Gender.FEMALE, "04.06.1937", "KatrinKoller@email.test", "Apfelallee 39", "6890", "Lustenau", "Österreich", CreditCardType.MASTERCARD, "5486293928490720", "697"));
-        customers.add(new Customer("DanaH", "Dana", "Heinrich", Gender.FEMALE, "17.05.1982", "DanaHeinrich@email.test", "Rauschener Ring 16b", "6973", "Höchst", "Österreich", CreditCardType.MASTERCARD, "5310021062469900", "669"));
+        customers.add(new Customer(1, "JosieS", "5497056331911690"));
+        customers.add(new Customer(2, "JonasN", "4412614992618410"));
+        customers.add(new Customer(3, "MiroH",  "5425110212013160"));
+        customers.add(new Customer(4, "EnnoK", "4149159917878530"));
+        customers.add(new Customer(5, "TammeK", "5256110980293610"));
+        customers.add(new Customer(6, "EvelinaR", "4541979993294440"));
+        customers.add(new Customer(7, "AzadG", "5232969453861870"));
+        customers.add(new Customer(8, "SammyB", "4344721596616160"));
+        customers.add(new Customer(9, "KatrinK", "5486293928490720"));
+        customers.add(new Customer(10, "DanaH",  "5310021062469900"));
 
         //create suppliers
         suppliers.addAll(media.stream()

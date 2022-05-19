@@ -10,6 +10,6 @@ public interface InvoiceRepository {
     Long addInvoice(Invoice invoice);
     Optional<Invoice> findInvoiceById(Long id);
     Optional<Invoice> findInvoiceByLineItemId(Long lineItemId);
-    List<Invoice> findInvoicesByCustomerNo(String customerNo);
+    List<Invoice> findInvoicesByCustomerNo(int customerNo);
     void update(Invoice invoice);
 }

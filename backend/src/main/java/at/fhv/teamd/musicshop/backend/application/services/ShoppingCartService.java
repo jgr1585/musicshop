@@ -31,7 +31,7 @@ public class ShoppingCartService {
         }
     }
 
-    public void addToShoppingCart(String userId, MediumDTO mediumDTO, int amount) {
+    public void addToShoppingCart(String userId, long mediumId, int amount) {
         if (!shoppingCartExists(userId)) {
             initializeShoppingcart(userId);
         }
@@ -40,10 +40,10 @@ public class ShoppingCartService {
 
         Set<LineItem> lineItems = sessionLineItems.get(userId);
 
-        Medium medium = mediumRepository.findMediumById(mediumDTO.id()).orElseThrow();
+        Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow();
 
         lineItems.stream()
-                .filter(li -> li.getMedium().getId() == mediumDTO.id())
+                .filter(li -> li.getMedium().getId() == mediumId)
                 .findFirst()
                 .ifPresentOrElse(li -> {
                     if (li.getQuantity().getValue() + amount <= medium.getStock().getQuantity().getValue()) {
@@ -61,7 +61,7 @@ public class ShoppingCartService {
                 });
     }
 
-    public void removeFromShoppingCart(String userId, MediumDTO mediumDTO, int amount) {
+    public void removeFromShoppingCart(String userId, long mediumId, int amount) {
         if (!shoppingCartExists(userId)) {
             emptyShoppingCart(userId);
         }
@@ -71,7 +71,7 @@ public class ShoppingCartService {
         Set<LineItem> lineItems = sessionLineItems.get(userId);
 
         lineItems.stream()
-                .filter(li -> li.getMedium().getId() == mediumDTO.id())
+                .filter(li -> li.getMedium().getId() == mediumId)
                 .findFirst()
                 .ifPresentOrElse(li -> {
                     if (li.getQuantity().getValue() > amount) {
