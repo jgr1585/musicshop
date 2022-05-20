@@ -2,6 +2,7 @@
 import Login from "./components/Login.vue";
 import Search from "./components/Search.vue";
 import ShoppingCart from "./components/ShoppingCart.vue";
+import Login from "./components/Login.vue";
 </script>
 
 <script>
@@ -18,6 +19,7 @@ export default {
     };
   }
 };
+
 </script>
 
 <template>
@@ -42,6 +44,17 @@ export default {
         <div class="row g-5 align-items-center">
           <component :is="currentTab"></component>
         </div>
+      </div>
+    </div>
+    <div class="container-xxl bg-white p-0">
+      <div class="container text-center">
+        <h4 >Contact us:</h4>
+        <p>Team D</p>
+        <p>Hochschulstraße 1</p>
+        <p>6850 Dornbirn</p>
+        <p>E-Mail: teamD@fhv.at</p>
+        <p>Tel: +43 (0) 5572 / 623541</p>
+
       </div>
     </div>
   </div>
