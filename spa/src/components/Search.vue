@@ -1,6 +1,6 @@
 <script setup>
+import RestService from "../services/restservice.js";
 import Article from "./Article.vue";
-import axios from "axios";
 </script>
 
 <script>
@@ -23,22 +23,19 @@ export default {
     searchArticles() {
       if (this.$options.filters.validater(this.title, this.artist)) {
         this.loading = true;
-        axios
-          .get(
-            "http://localhost:8080/backend-1.0-SNAPSHOT/rest/article/search?title=" +
-              this.title +
-              "&artist=" +
-              this.artist
-          )
-          .then((response) => {
-            console.log(response);
-            this.articles = response.data;
-          })
-          .catch((error) => {
+
+        RestService.searchArticlesByAttributes(this.title, this.artist, (error, data, response) => {
+          this.loading = false;
+          if (error) {
             alert(error);
             this.errored = true;
-          })
-          .finally((this.loading = false));
+          } else {
+            console.log(response);
+            this.articles = response.body;
+            console.log("API called successfully. Returned data: " + data);
+            console.log("API called successfully. Returned response: " + response);
+          }
+        });
       } else {
         alert("Please fill in at least one field");
       }

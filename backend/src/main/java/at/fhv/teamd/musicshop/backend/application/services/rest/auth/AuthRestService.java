@@ -6,9 +6,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.security.Key;
 import java.time.LocalDateTime;
@@ -23,15 +25,13 @@ public class AuthRestService {
     public AuthRestService() {
     }
 
-
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Authentication successed"),
+            @ApiResponse(responseCode = "200", description = "Authentication succeeded"),
             @ApiResponse(responseCode = "403", description = "Wrong credentials")
     })
-
     public Response authenticateUser(Credentials credentials) {
 
         String username = credentials.getUsername();
@@ -45,7 +45,6 @@ public class AuthRestService {
             }
 
             String token = issueToken(username);
-
             return Response.ok(token).build();
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
@@ -53,11 +52,10 @@ public class AuthRestService {
     }
 
     private String issueToken(String username) {
-
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuer("MusicShop24")
-                .setExpiration(Date.from(LocalDateTime.now().plusHours(5).toInstant(ZoneOffset.UTC)))
+                .setExpiration(Date.from(LocalDateTime.now().plusHours(24).toInstant(ZoneOffset.UTC)))
                 .signWith(KEY)
                 .compact();
     }

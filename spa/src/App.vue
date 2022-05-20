@@ -9,14 +9,14 @@ export default {
   components: {
     Search,
     ShoppingCart,
-    Login,
+    Login
   },
   data() {
     return {
       currentTab: "Search",
-      tabs: ["Search", "ShoppingCart", "Login"],
+      tabs: ["Search", "ShoppingCart", "Login"]
     };
-  },
+  }
 };
 </script>
 
@@ -40,7 +40,7 @@ export default {
 
     <component :is="currentTab"></component>
 
-    <div class="container-xxl bg-white p-0" >
+    <div class="container-xxl bg-white p-0">
       <div class="container text-center modal-body">
         <h4>Contact us:</h4>
         <p>Team D</p>

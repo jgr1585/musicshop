@@ -7,13 +7,12 @@ export default {
 </script>
 
 <template>
-  <v-card style="padding: 10px">
+  <v-card class="v-card">
     <div class="row">
       <div class="col-md-2">
         <img
           :src="'http://coverartarchive.org/release/' + article.musicbrainzId + '/front/'"
-          class="vertical-center"
-          style="height: 150px; width: 150px"
+          class="vertical-center img"
         />
       </div>
       <div class="col">
@@ -34,6 +33,10 @@ export default {
 </template>
 
 <style>
+.v-card {
+  margin-bottom: 10px;
+}
+
 h2 {
   color: gold;
 }
@@ -41,8 +44,16 @@ h2 {
 #button {
   color: #000000;
   margin-right: 10px;
+  margin-left: 10px;
   padding-right: 30px;
   padding-left: 30px;
+}
+
+.img {
+  height: 175px;
+  width: 175px;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
 }
 
 .vertical-center {

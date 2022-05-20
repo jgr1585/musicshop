@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.backend.application.services.rest.auth;
 
 import io.jsonwebtoken.Jwts;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -18,6 +19,7 @@ import java.io.IOException;
 @Secured
 @Provider
 @Priority(Priorities.AUTHENTICATION)
+@SecurityRequirement(name = "Authentication")
 public class AuthenticationFilter implements ContainerResponseFilter {
 
     @Inject
@@ -66,7 +68,7 @@ public class AuthenticationFilter implements ContainerResponseFilter {
                         .build());
     }
 
-    private void validateToken(String token) throws Exception {
+    private void validateToken(String token) {
         Jwts.parserBuilder()
                 .setSigningKey(AuthRestService.KEY)
                 .build()
