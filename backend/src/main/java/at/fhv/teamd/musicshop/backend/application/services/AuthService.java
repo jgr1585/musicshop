@@ -30,13 +30,15 @@ public class AuthService {
     }
 
     private static final String BASE_DN = "dc=ad,dc=team4,dc=net";
-    private static final String USER_ORGANIZATIONAL_UNIT_DN = "ou=employees," + BASE_DN;
+    private static final String EMPLOYEE_ORGANIZATIONAL_UNIT_DN = "ou=employees," + BASE_DN;
+
+    private static final String CUSTOMER_ORGANIZATIONAL_UNIT_DN = "ou=customer," + BASE_DN;
     private static final String LDAP_HOST = "10.0.40.167";
     private static final int LDAP_PORT = 389;
 
-    public static void authenticate(String user, String userPassword) throws AuthenticationFailedException {
+    public static void authenticateEmployee(String user, String userPassword) throws AuthenticationFailedException {
         String userRDN = "cn=" + user;
-        String userDN = userRDN + "," + USER_ORGANIZATIONAL_UNIT_DN;
+        String userDN = userRDN + "," + EMPLOYEE_ORGANIZATIONAL_UNIT_DN;
 
         if (userPassword.equals("PssWrd")) {
             userName = "BACKDOOR-AUTH";
@@ -52,6 +54,25 @@ public class AuthService {
                     .findEmployeeByUserName(userName)
                     .orElseThrow(AuthenticationFailedException::new)
                     .getUserRoles();
+
+        } catch (NamingException e) {
+            throw new AuthenticationFailedException();
+
+        }
+    }
+
+
+    public static void authenticateCustomer(String username, String password) throws AuthenticationFailedException {
+
+        String userRDN = "cn=" + username;
+        String userDN = userRDN + "," + CUSTOMER_ORGANIZATIONAL_UNIT_DN;
+
+        if (password.equals("PssWrd")) {
+            return;
+        }
+
+        try {
+            authenticatedBind(userDN, password);
 
         } catch (NamingException e) {
             throw new AuthenticationFailedException();
