@@ -11,13 +11,13 @@ import javax.ws.rs.core.Response;
 import java.util.Set;
 
 @Path("/article")
+@Produces("application/json")
+@Consumes("application/json")
 public class ArticleRestService {
     public ArticleRestService() {}
 
     @GET
     @Path("/search")
-    @Produces("text/json")
-    @Consumes("text/json")
     @Operation( summary = "Search Articles",
                 description = "Search Articles by Attributes (Title, Artist)")
     @ApiResponse(responseCode = "200", description = "Articles found")

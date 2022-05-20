@@ -5,12 +5,17 @@ import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Artist;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
+import at.fhv.teamd.musicshop.backend.domain.customer.CreditCardType;
+import at.fhv.teamd.musicshop.backend.domain.customer.Customer;
+import at.fhv.teamd.musicshop.backend.domain.customer.Gender;
+import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
+import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
-import at.fhv.teamd.musicshop.backend.domain.user.Employee;
+import at.fhv.teamd.musicshop.backend.domain.employee.Employee;
 import at.fhv.teamd.musicshop.library.permission.UserRole;
 
 import javax.persistence.EntityManager;
@@ -25,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -291,12 +297,32 @@ public class TestGenerator {
         employees.add(new Employee("tf-test", "Thomas", "Feilhauer", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicSoul, topicJazz)));
         employees.add(new Employee("BACKDOOR-AUTH", "", "", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicHipHop, topicPop, topicRockNRoll, topicSoul, topicJazz)));
 
+        Set<Customer> customers = new HashSet<>();
+        customers.add(new Customer(1, "JosieS", "5497056331911690"));
+        customers.add(new Customer(2, "JonasN", "4412614992618410"));
+        customers.add(new Customer(3, "MiroH",  "5425110212013160"));
+        customers.add(new Customer(4, "EnnoK", "4149159917878530"));
+        customers.add(new Customer(5, "TammeK", "5256110980293610"));
+        customers.add(new Customer(6, "EvelinaR", "4541979993294440"));
+        customers.add(new Customer(7, "AzadG", "5232969453861870"));
+        customers.add(new Customer(8, "SammyB", "4344721596616160"));
+        customers.add(new Customer(9, "KatrinK", "5486293928490720"));
+        customers.add(new Customer(10, "DanaH",  "5310021062469900"));
+
+        Set<LineItem> lineItems = new HashSet<>();
+        lineItems.add(new LineItem(Quantity.of(2), mediums.iterator().next()));
+        Invoice invoice = Invoice.of(
+                lineItems,
+                customers.stream().filter(c -> c.getUserName().equals("JosieS")).findFirst().get().getCustomerNo());
+
         // persists everything
         EntityManager em = PersistenceManager.getEntityManagerInstance();
         em.getTransaction().begin();
 
         mediums.forEach(em::persist);
         employees.forEach(em::persist);
+        customers.forEach(em::persist);
+        em.persist(invoice);
 
         em.flush();
         em.getTransaction().commit();

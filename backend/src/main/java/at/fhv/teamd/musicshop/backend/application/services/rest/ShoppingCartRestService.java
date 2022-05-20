@@ -1,49 +1,48 @@
 package at.fhv.teamd.musicshop.backend.application.services.rest;
 
+import at.fhv.teamd.musicshop.backend.application.forms.AddToShoppingCartForm;
+import at.fhv.teamd.musicshop.backend.application.forms.BuyFromShoppingCartForm;
+import at.fhv.teamd.musicshop.backend.application.forms.EmptyShoppingCartForm;
+import at.fhv.teamd.musicshop.backend.application.forms.RemoveFromShoppingCartForm;
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 
 import javax.ws.rs.*;
 
+// TODO: Use JWT to identify user identity and remove userId params from request attributes
 @Path("/shoppingcart")
+@Consumes("application/json")
+@Produces("application/json")
 public class ShoppingCartRestService {
     public ShoppingCartRestService() {}
 
     @POST
     @Path("/add")
-    @Consumes("text/json")
-    public void addToShoppingCart(@QueryParam("userId") String userId, MediumDTO mediumDTO, @QueryParam("amount") int amount) {
-        ServiceFactory.getShoppingCartServiceInstance().addToShoppingCart(userId, mediumDTO, amount);
+    public void addToShoppingCart(AddToShoppingCartForm form) {
+        ServiceFactory.getShoppingCartServiceInstance().addToShoppingCart(form.userId, form.mediumId, form.amount);
     }
 
     @POST
     @Path("/remove")
-    @Consumes("text/json")
-    public void removeFromShoppingCart(@QueryParam("userId") String userId, MediumDTO mediumDTO, @QueryParam("amount") int amount) {
-        ServiceFactory.getShoppingCartServiceInstance().removeFromShoppingCart(userId, mediumDTO, amount);
+    public void removeFromShoppingCart(RemoveFromShoppingCartForm form) {
+        ServiceFactory.getShoppingCartServiceInstance().removeFromShoppingCart(form.userId, form.mediumId, form.amount);
     }
 
-    @GET
+    @POST
     @Path("/empty")
-    @Consumes("text/json")
-    public void emptyShoppingCart(@QueryParam("userId") String userId) {
-        ServiceFactory.getShoppingCartServiceInstance().emptyShoppingCart(userId);
+    public void emptyShoppingCart(EmptyShoppingCartForm form) {
+        ServiceFactory.getShoppingCartServiceInstance().emptyShoppingCart(form.userId);
     }
 
     @GET
     @Path("/get")
-    @Produces("text/json")
-    @Consumes("text/json")
     public ShoppingCartDTO getShoppingCart(@QueryParam("userId") String userId) {
         return ServiceFactory.getShoppingCartServiceInstance().getShoppingCart(userId);
     }
 
-    @GET
+    @POST
     @Path("/buy")
-    @Produces("text/json")
-    @Consumes("text/json")
-    public void buyFromShoppingCart(@QueryParam("userId") String userId, @QueryParam("id") int id) {
-        ServiceFactory.getShoppingCartServiceInstance().buyFromShoppingCart(userId, id);
+    public void buyFromShoppingCart(BuyFromShoppingCartForm form) {
+        ServiceFactory.getShoppingCartServiceInstance().buyFromShoppingCart(form.userId, form.customerId);
     }
 }
