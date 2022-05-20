@@ -9,7 +9,7 @@ export default {
   components: {
     Search,
     ShoppingCart,
-    Login
+    Login,
   },
   data() {
     return {
@@ -23,15 +23,15 @@ export default {
 <template>
   <div class="container-xxl bg-white p-0">
     <nav class="navbar navbar-expand navbar-light px-4 px-lg-5 py-3 py-lg-0" id="home">
-      <img alt="logo" src="./assets/logo.png" width="250" height="180"/>
+      <img alt="logo" src="./assets/logo.png" width="250" height="180" />
       <div>
         <button
-            class="btn btn-primary rounded-pill"
-            id="button"
-            v-for="tab in tabs"
-            :key="tab"
-            :class="['tab-button', { active: currentTab === tab }]"
-            @click="currentTab = tab"
+          class="btn btn-primary rounded-pill"
+          id="button"
+          v-for="tab in tabs"
+          :key="tab"
+          :class="['tab-button', { active: currentTab === tab }]"
+          @click="currentTab = tab"
         >
           {{ tab }}
         </button>
@@ -48,7 +48,6 @@ export default {
         <p>6850 Dornbirn</p>
         <p>E-Mail: teamD@fhv.at</p>
         <p>Tel: +43 (0) 5572 / 623541</p>
-
       </div>
     </div>
   </div>
@@ -71,5 +70,4 @@ export default {
   padding-right: 30px;
   padding-left: 30px;
 }
-
 </style>

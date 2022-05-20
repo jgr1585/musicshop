@@ -11,39 +11,39 @@ export default {
       artist: "",
       loading: false,
       errored: false,
-      articles: [],
+      articles: []
     };
   },
   filters: {
     validater(p1, p2) {
       return p1.length > 0 || p2.length > 0 ? true : false;
-    },
+    }
   },
   methods: {
     searchArticles() {
       if (this.$options.filters.validater(this.title, this.artist)) {
         this.loading = true;
         axios
-            .get(
-                "http://localhost:8080/backend-1.0-SNAPSHOT/rest/article/search?title=" +
-                this.title +
-                "&artist=" +
-                this.artist
-            )
-            .then((response) => {
-              console.log(response);
-              this.articles = response.data;
-            })
-            .catch((error) => {
-              alert(error);
-              this.errored = true;
-            })
-            .finally((this.loading = false));
+          .get(
+            "http://localhost:8080/backend-1.0-SNAPSHOT/rest/article/search?title=" +
+              this.title +
+              "&artist=" +
+              this.artist
+          )
+          .then((response) => {
+            console.log(response);
+            this.articles = response.data;
+          })
+          .catch((error) => {
+            alert(error);
+            this.errored = true;
+          })
+          .finally((this.loading = false));
       } else {
         alert("Please fill in at least one field");
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -91,12 +91,12 @@ export default {
     </div>
   </div>
   <div class="card-img">
-    <img id="img" alt="adele" src="src/assets/adele.jpg" width="150" height="180"/>
-    <img id="img" alt="weeknd" src="src/assets/weeknd.jpg" width="185" height="180"/>
-    <img id="img" alt="billie" src="src/assets/billie.jfif" width="220" height="180"/>
-    <img id="img" alt="madonna" src="src/assets/Madonna.jpg" width="200" height="180"/>
-    <img id="img" alt="manson" src="src/assets/manson.jfif" width="190" height="180"/>
-    <img id="img" alt="postmalone" src="src/assets/postmalone.jfif" width="200" height="180"/>
+    <img id="img" alt="adele" src="src/assets/adele.jpg" width="150" height="180" />
+    <img id="img" alt="weeknd" src="src/assets/weeknd.jpg" width="185" height="180" />
+    <img id="img" alt="billie" src="src/assets/billie.jfif" width="220" height="180" />
+    <img id="img" alt="madonna" src="src/assets/Madonna.jpg" width="200" height="180" />
+    <img id="img" alt="manson" src="src/assets/manson.jfif" width="190" height="180" />
+    <img id="img" alt="postmalone" src="src/assets/postmalone.jfif" width="200" height="180" />
   </div>
 </template>
 
