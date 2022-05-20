@@ -37,16 +37,12 @@ export default {
         </button>
       </div>
     </nav>
-    <div class="container-xxl bg-primary hero-header">
-      <div class="container">
-        <div class="row g-5 align-items-center">
-          <component :is="currentTab"></component>
-        </div>
-      </div>
-    </div>
-    <div class="container-xxl bg-white p-0">
-      <div class="container text-center">
-        <h4 >Contact us:</h4>
+
+    <component :is="currentTab"></component>
+
+    <div class="container-xxl bg-white p-0" >
+      <div class="container text-center modal-body">
+        <h4>Contact us:</h4>
         <p>Team D</p>
         <p>Hochschulstraße 1</p>
         <p>6850 Dornbirn</p>
