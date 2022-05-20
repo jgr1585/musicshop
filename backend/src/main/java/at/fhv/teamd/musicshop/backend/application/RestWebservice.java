@@ -1,9 +1,12 @@
 package at.fhv.teamd.musicshop.backend.application;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 
 import javax.ws.rs.ApplicationPath;
@@ -27,6 +30,13 @@ import javax.ws.rs.core.Application;
 )
 
 // TODO: switch servers before push to master!
+
+@SecurityScheme(name = "Authentication",
+        description = "JWT token",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer",
+        bearerFormat = "JWT",
+        in = SecuritySchemeIn.HEADER)
 
 @ApplicationPath("/rest")
 public class RestWebservice extends Application {
