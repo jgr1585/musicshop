@@ -56,18 +56,18 @@ export default {
         </div>
         <div class="position-relative w-100" id="search">
           <input
-              class="col-form-label border-1 rounded-pill w-50 ps-4 pe-5"
-              type="text"
-              :value="title"
-              @input="title = $event.target.value"
-              placeholder="Title"
+            class="col-form-label border-1 rounded-pill w-50 ps-4 pe-5"
+            type="text"
+            :value="title"
+            @input="title = $event.target.value"
+            placeholder="Title"
           />
           <input
-              class="col-form-label border-1 rounded-pill w-50 ps-4 pe-5"
-              type="text"
-              :value="artist"
-              @input="artist = $event.target.value"
-              placeholder="Artist"
+            class="col-form-label border-1 rounded-pill w-50 ps-4 pe-5"
+            type="text"
+            :value="artist"
+            @input="artist = $event.target.value"
+            placeholder="Artist"
           />
           <button class="btn btn-primary rounded-pill" id="button" @click="searchArticles">
             Search
@@ -84,19 +84,25 @@ export default {
 
           <section v-else>
             <div v-if="loading">Loading...</div>
-            <Article v-else v-for="article in articles" :article="article"/>
+            <v-container v-else>
+              <v-row v-for="(article, index) in articles">
+                <v-col>
+                  <Article :article="article" />
+                </v-col>
+              </v-row>
+            </v-container>
           </section>
         </div>
       </div>
     </div>
   </div>
   <div class="card-img">
-    <img id="img" alt="adele" src="src/assets/adele.jpg" width="150" height="180" />
-    <img id="img" alt="weeknd" src="src/assets/weeknd.jpg" width="185" height="180" />
-    <img id="img" alt="billie" src="src/assets/billie.jfif" width="220" height="180" />
-    <img id="img" alt="madonna" src="src/assets/Madonna.jpg" width="200" height="180" />
-    <img id="img" alt="manson" src="src/assets/manson.jfif" width="190" height="180" />
-    <img id="img" alt="postmalone" src="src/assets/postmalone.jfif" width="200" height="180" />
+    <img id="img" alt="adele" src="/src/assets/adele.jpg" width="150" height="180" />
+    <img id="img" alt="weeknd" src="/src/assets/weeknd.jpg" width="185" height="180" />
+    <!-- <img id="img" alt="billie" src="/src/assets/billie.jfif" width="220" height="180" /> -->
+    <img id="img" alt="madonna" src="/src/assets/Madonna.jpg" width="200" height="180" />
+    <!-- <img id="img" alt="manson" src="/src/assets/manson.jfif" width="190" height="180" /> -->
+    <!-- <img id="img" alt="postmalone" src="/src/assets/postmalone.jfif" width="200" height="180" /> -->
   </div>
 </template>
 

@@ -1,33 +1,39 @@
 <script>
 export default {
   props: {
-    article: Object,
-  },
+    article: Object
+  }
 };
 </script>
 
 <template>
-  <div class="container-xxl bg-primary hero-header">
-    <div class="container">
-      <div class="row g-5 align-items-center">
-        <div class="container-xxl py-5">
-          <div class="container">
-            <div style="max-width: 500px;">
-              <h3 class="text-light mt-0">Title: {{ article.title }}</h3>
-              <p class="mb-2">Type: {{ article.type }}</p>
-              <p class="mb-2">Label: {{ article.label }}</p>
-              <p class="mb-2">Artists: <i v-for="artist in article.artists">{{ artist.name }};</i></p>
-              <button class="btn btn-primary rounded-pill" id="button" @click="addToCart">Add to cart</button>
-            </div>
-          </div>
-        </div>
+  <v-card style="padding: 10px">
+    <div class="row">
+      <div class="col-md-2">
+        <img
+          :src="'http://coverartarchive.org/release/' + article.musicbrainzId + '/front/'"
+          class="vertical-center"
+          style="height: 150px; width: 150px"
+        />
+      </div>
+      <div class="col">
+        <h3 class="text-light">Title: {{ article.title }}</h3>
+        <p>Type: {{ article.type }}</p>
+        <p>Label: {{ article.label }}</p>
+        <p>
+          Artists: <i v-for="artist in article.artists">{{ artist.name }};</i>
+        </p>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-primary rounded-pill vertical-center" id="button" @click="addToCart">
+          Add to cart
+        </button>
       </div>
     </div>
-  </div>
+  </v-card>
 </template>
 
 <style>
-
 h2 {
   color: gold;
 }
@@ -37,5 +43,13 @@ h2 {
   margin-right: 10px;
   padding-right: 30px;
   padding-left: 30px;
+}
+
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 </style>
