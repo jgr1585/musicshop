@@ -84,12 +84,12 @@ export default {
   </div>
 
   <div class="card-img">
-    <img id="img" alt="adele" src="src/assets/adele.jpg" width="150" height="180"/>
-    <img id="img" alt="weeknd" src="src/assets/weeknd.jpg" width="185" height="180"/>
-    <img id="img" alt="billie" src="src/assets/billie.jfif" width="220" height="180"/>
-    <img id="img" alt="madonna" src="src/assets/Madonna.jpg" width="200" height="180"/>
-    <img id="img" alt="manson" src="src/assets/manson.jfif" width="190" height="180"/>
-    <img id="img" alt="postmalone" src="src/assets/postmalone.jfif" width="200" height="180"/>
+    <img id="img" alt="adele" src="src/assets/adele.jpg" width="150" height="180" />
+    <img id="img" alt="weeknd" src="src/assets/weeknd.jpg" width="185" height="180" />
+    <img id="img" alt="billie" src="src/assets/billie.jfif" width="220" height="180" />
+    <img id="img" alt="madonna" src="src/assets/Madonna.jpg" width="200" height="180" />
+    <img id="img" alt="manson" src="src/assets/manson.jfif" width="190" height="180" />
+    <img id="img" alt="postmalone" src="src/assets/postmalone.jfif" width="200" height="180" />
   </div>
 </template>
 
