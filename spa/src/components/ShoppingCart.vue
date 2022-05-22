@@ -1,9 +1,27 @@
-<script setup></script>
+<script setup>
+import RestService from "../services/restservice.js";
+</script>
 
 <script>
 export default {
   data() {
     return {};
+  },
+  methods: {
+    getShoppingCart() {
+      RestService.getShoppingCart((error, data, response) => {
+        if (error) {
+          alert(error);
+        } else {
+          console.log(response);
+          console.log("API called successfully. Returned data: " + data);
+          console.log("API called successfully. Returned response: " + response);
+        }
+      });
+    }
+  },
+  created() {
+    this.getShoppingCart();
   }
 };
 </script>

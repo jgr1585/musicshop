@@ -1,5 +1,5 @@
 <script setup>
-import axios from "axios";
+import RestService from "../services/restservice.js";
 </script>
 
 <script>
@@ -8,7 +8,6 @@ export default {
     return {
       username: "",
       password: "",
-      token: null,
       loading: false,
       errored: false,
       requested: false
@@ -16,30 +15,31 @@ export default {
   },
   filters: {
     validater(p1, p2) {
-      return p1.length > 0 || p2.length > 0 ? true : false;
+      return p1.length > 0 && p2.length > 0 ? true : false;
     }
   },
   methods: {
     login() {
       if (this.$options.filters.validater(this.username, this.password)) {
+        this.requested = true;
         this.loading = true;
-        axios
-            .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/authentication", {
-              username: this.username,
-              password: this.password
-            })
-            .then((response) => {
-              console.log(response);
-              this.token = response.data;
-            })
-            .catch((error) => {
-              alert(error);
-              this.errored = true;
-            })
-            .finally((this.loading = false), (this.requestd = true));
+
+        RestService.login(this.username, this.password, (error, data, response) => {
+          this.loading = false;
+          if (error) {
+            this.errored = true;
+            alert(error);
+          } else {
+            console.log("Token: " + response.text);
+          }
+        });
       } else {
         alert("Please fill in all the fields");
       }
+    },
+    reset() {
+      this.errored = false;
+      this.requested = false;
     }
   }
 };
@@ -51,7 +51,7 @@ export default {
       <div class="row g-5 align-items-center">
         <h1 class="text-white mb-4 animated slideInDown">Login</h1>
       </div>
-      <div class="position-relative w-auto" id="search">
+      <div v-if="!requested"  class="position-relative w-auto" id="search">
         <input
             class="v-col-lg-auto border-e rounded-2 w-33" id="input"
             type="text"
@@ -66,16 +66,17 @@ export default {
             @input="password = $event.target.value"
             placeholder="Password"
         />
-        <button class="btn btn-primary rounded-pill" id="button" @click="login">Search</button>
+        <button class="btn btn-primary rounded-pill" id="button" @click="login">Login</button>
       </div>
 
-      <div v-if="requested">
-        <section v-if="errored">
-          <p>
-            We're sorry, we're not able to retrieve this information at the moment, please try
-            back later
-          </p>
-        </section>
+        <div v-else>
+          <section v-if="errored">
+            <p>
+              We're sorry, we're not able to retrieve this information at the moment, please try
+              back later
+            </p>
+            <button class="btn btn-primary rounded-pill" id="button" @click="reset">Reset</button>
+          </section>
 
         <section v-else>
           <div v-if="loading">Loading...</div>

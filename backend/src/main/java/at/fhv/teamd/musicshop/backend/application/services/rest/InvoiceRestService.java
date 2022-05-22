@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.backend.application.services.rest;
 
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
+import at.fhv.teamd.musicshop.backend.application.services.rest.auth.Secured;
 import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.InvoiceDTO;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 
 // TODO: Use JWT to identify user identity and remove userId params from request attributes
+@Secured
 @Path("/invoice")
 @Consumes("application/json")
 @Produces("application/json")

@@ -2,7 +2,6 @@ package at.fhv.teamd.musicshop.backend.application.services.rest;
 
 import at.fhv.teamd.musicshop.backend.application.forms.AddToShoppingCartForm;
 import at.fhv.teamd.musicshop.backend.application.forms.BuyFromShoppingCartForm;
-import at.fhv.teamd.musicshop.backend.application.forms.EmptyShoppingCartForm;
 import at.fhv.teamd.musicshop.backend.application.forms.RemoveFromShoppingCartForm;
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.backend.application.services.rest.auth.AuthenticatedUser;
@@ -12,7 +11,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import javax.ws.rs.*;
 
-// TODO: remove userId params from request attributes
 @Secured
 @Path("/shoppingcart")
 @Consumes("application/json")
@@ -40,7 +38,7 @@ public class ShoppingCartRestService {
 
     @POST
     @Path("/empty")
-    public void emptyShoppingCart(EmptyShoppingCartForm form) {
+    public void emptyShoppingCart() {
         System.out.println("authenticatedUser: " + authenticatedUser);
         ServiceFactory.getShoppingCartServiceInstance().emptyShoppingCart(authenticatedUser);
     }
