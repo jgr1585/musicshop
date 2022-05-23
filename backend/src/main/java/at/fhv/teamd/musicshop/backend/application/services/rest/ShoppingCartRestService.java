@@ -43,7 +43,7 @@ public class ShoppingCartRestService {
         ServiceFactory.getShoppingCartServiceInstance().emptyShoppingCart(authenticatedUser);
     }
 
-    @GET
+    @POST
     @Path("/get")
     public ShoppingCartDTO getShoppingCart() {
         System.out.println("authenticatedUser: " + authenticatedUser);

@@ -1,16 +1,19 @@
 <script setup>
-import RestService from "../services/restservice.js";
+import axios from "axios";
+import { DefaultApi } from "../rest/index.js";
 </script>
 
 <script>
 export default {
+  props: {
+    token: String
+  },
   data() {
     return {
       username: "",
       password: "",
       loading: false,
-      errored: false,
-      requested: false
+      errored: false
     };
   },
   filters: {
@@ -21,25 +24,61 @@ export default {
   methods: {
     login() {
       if (this.$options.filters.validater(this.username, this.password)) {
-        this.requested = true;
         this.loading = true;
 
-        RestService.login(this.username, this.password, (error, data, response) => {
-          this.loading = false;
-          if (error) {
+        axios
+          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/authentication", {
+            username: this.username,
+            password: this.password
+          })
+          .then((response) => {
+            this.loading = false;
+            this.errored = false;
+            localStorage.setItem("token", response.data);
+            console.log(localStorage.getItem("token"));
+            this.$forceUpdate();
+          })
+          .catch((error) => {
+            this.loading = false;
             this.errored = true;
             alert(error);
-          } else {
-            console.log("Token: " + response.text);
-          }
-        });
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+
+        // TODO: solve problem about of setting JWT in header
+        // const opts = {
+        //   body: {
+        //     username: this.username,
+        //     password: this.password
+        //   }
+        // };
+        // new DefaultApi().authenticateUser(opts, (error, data, response) => {
+        //   this.loading = false;
+        //   if (error) {
+        //     this.errored = true;
+        //     alert(error);
+        //   } else {
+        //     this.token = response.text;
+        //     console.log("Token: " + response.text);
+        //   }
+        // });
       } else {
         alert("Please fill in all the fields");
       }
     },
+    logout() {
+      localStorage.removeItem("token");
+      location.reload();
+    },
     reset() {
+      this.username = "";
+      this.password = "";
       this.errored = false;
-      this.requested = false;
+    },
+    tokenIsNull() {
+      return localStorage.getItem("token") === null;
     }
   }
 };
@@ -51,38 +90,39 @@ export default {
       <div class="row g-5 align-items-center">
         <h1 class="text-white mb-4 animated slideInDown">Login</h1>
       </div>
-      <div v-if="!requested"  class="position-relative w-auto" id="search">
+      <div v-if="tokenIsNull()" class="position-relative w-auto" id="search">
         <input
-            class="v-col-lg-auto border-e rounded-2 w-33" id="input"
-            type="text"
-            :value="username"
-            @input="username = $event.target.value"
-            placeholder="Username"
+          class="v-col-lg-auto border-e rounded-2 w-33 input"
+          type="text"
+          :value="username"
+          @input="username = $event.target.value"
+          placeholder="Username"
         />
         <input
-            class="v-col-lg-auto border-e rounded-2 w-33" id="input"
-            type="password"
-            :value="password"
-            @input="password = $event.target.value"
-            placeholder="Password"
+          class="v-col-lg-auto border-e rounded-2 w-33 input"
+          type="password"
+          :value="password"
+          @input="password = $event.target.value"
+          placeholder="Password"
         />
         <button class="btn btn-primary rounded-pill" id="button" @click="login">Login</button>
+        <button class="btn btn-primary rounded-pill" id="button" @click="reset">Reset</button>
       </div>
 
-        <div v-else>
-          <section v-if="errored">
-            <p>
-              We're sorry, we're not able to retrieve this information at the moment, please try
-              back later
-            </p>
-            <button class="btn btn-primary rounded-pill" id="button" @click="reset">Reset</button>
-          </section>
-
-        <section v-else>
-          <div v-if="loading">Loading...</div>
-          <h1 v-else>Welcome {{ username }}</h1>
-        </section>
+      <div v-else>
+        <div v-if="loading">Loading...</div>
+        <h1 v-else>Welcome {{ username }}</h1>
+        <button class="btn btn-primary rounded-pill" id="button" @click="logout">Logout</button>
       </div>
+
+      <div v-if="errored">
+        <p style="color: white">
+          We're sorry, we're not able to retrieve this information at the moment, please try back
+          later
+        </p>
+        <button class="btn btn-primary rounded-pill" @click="reset">Reset</button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -93,7 +133,7 @@ export default {
   padding-bottom: 250px;
 }
 
-#input {
-  background-color: #FFFFFF;
+.input {
+  background-color: #ffffff;
 }
 </style>

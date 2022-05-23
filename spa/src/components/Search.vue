@@ -1,10 +1,14 @@
 <script setup>
-import RestService from "../services/restservice.js";
 import Article from "./Article.vue";
+import axios from "axios";
+import SwaggerClient from "swagger-client";
 </script>
 
 <script>
 export default {
+  props: {
+    token: String
+  },
   data() {
     return {
       title: "",
@@ -20,84 +24,121 @@ export default {
     }
   },
   methods: {
-    searchArticles() {
+    search() {
       if (this.$options.filters.validater(this.title, this.artist)) {
         this.loading = true;
 
-        RestService.searchArticlesByAttributes(this.title, this.artist, (error, data, response) => {
-          this.loading = false;
-          if (error) {
-            alert(error);
+        axios
+          .get(
+            "http://localhost:8080/backend-1.0-SNAPSHOT/rest/article/search?title=" +
+              this.title +
+              "&artist=" +
+              this.artist
+          )
+          .then((response) => {
+            this.loading = false;
+            this.articles = response.data;
+          })
+          .catch((error) => {
+            this.loading = false;
             this.errored = true;
-          } else {
-            console.log(response);
-            this.articles = response.body;
-            console.log("API called successfully. Returned data: " + data);
-            console.log("API called successfully. Returned response: " + response);
-          }
-        });
+            alert(error);
+          })
+          .finally(() => {
+            this.loading = false;
+          });
+
+        // const opts = {
+        //   title: this.title,
+        //   artist: this.artist
+        // };
+        // new DefaultApi().searchArticlesByAttributes(opts, (error, data, response) => {
+        //   this.loading = false;
+        //   if (error) {
+        //     alert(error);
+        //     this.errored = true;
+        //   } else {
+        //     console.log(response);
+        //     this.articles = response.body;
+        //     console.log("API called successfully. Returned data: " + data);
+        //     console.log("API called successfully. Returned response: " + response);
+        //   }
+        // });
       } else {
         alert("Please fill in at least one field");
       }
+    },
+    addToCart() {},
+    reset() {
+      this.title = "";
+      this.artist = "";
+      this.errored = false;
     }
   }
 };
 </script>
 
 <template>
-  <div class="container-xxl hero-header" id="header" >
-    <div class="container" >
+  <div class="container-xxl container hero-header" id="header">
+    <div class="container">
       <div class="row g-5 align-items-center">
         <h1 class="text-white mb-4 animated slideInDown">MP3-Music-Downloader</h1>
       </div>
-      <div class="position-relative w-auto" id="search" >
+      <div class="position-relative w-auto" id="search">
         <input
-            class="v-col-lg-auto border-e rounded-2 w-33" id="input"
-            type="text"
-            :value="title"
-            @input="title = $event.target.value"
-            placeholder="Title"
+          class="v-col-lg-auto border-e rounded-2 w-33 input"
+          type="text"
+          :value="title"
+          @input="title = $event.target.value"
+          placeholder="Title"
         />
         <input
-            class="v-col-lg-auto border-e rounded-2 w-33" id="input"
-            type="text"
-            :value="artist"
-            @input="artist = $event.target.value"
-            placeholder="Artist"
+          class="v-col-lg-auto border-e rounded-2 w-33 input"
+          type="text"
+          :value="artist"
+          @input="artist = $event.target.value"
+          placeholder="Artist"
         />
-        <button class="btn btn-primary rounded-pill" id="button" @click="searchArticles">
-          Search
-        </button>
+        <button class="btn btn-primary rounded-pill" id="button" @click="search">Search</button>
+        <button class="btn btn-primary rounded-pill" id="button" @click="reset">Reset</button>
       </div>
 
-      <div>
-        <section v-if="errored">
-          <p>
-            We're sorry, we're not able to retrieve this information at the moment, please try
-            back later
-          </p>
-        </section>
+      <div v-if="errored">
+        <p>
+          We're sorry, we're not able to retrieve this information at the moment, please try back
+          later
+        </p>
+      </div>
 
-        <section v-else>
-          <div v-if="loading">Loading...</div>
-          <v-container v-else>
-            <v-row v-for="(article, index) in articles">
-              <v-col>
-                <Article :article="article"/>
-              </v-col>
-            </v-row>
-          </v-container>
-        </section>
+      <div v-else>
+        <div v-if="loading">Loading...</div>
+        <v-container v-else>
+          <v-row v-for="article in articles">
+            <v-col>
+              <Article :article="article" />
+              <div class="col-md-2">
+                <button
+                  class="btn btn-primary rounded-pill vertical-center"
+                  id="button"
+                  @click="addToCart"
+                >
+                  Add to cart
+                </button>
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
       </div>
     </div>
   </div>
+
   <div class="card-img">
-    <img id="img" alt="adele" src="src/assets/adele.jpg" width="150" height="180"/>
-    <img id="img" alt="weeknd" src="src/assets/weeknd.jpg" width="185" height="180"/>
-    <img id="img" alt="billie" src="src/assets/billie.jfif" width="220" height="180"/>
-    <img id="img" alt="madonna" src="src/assets/Madonna.jpg" width="200" height="180"/>
-    <img id="img" alt="manson" src="src/assets/manson.jfif" width="190" height="180"/>
-    <img id="img" alt="postmalone" src="src/assets/postmalone.jfif" width="200" height="180"/>
+    <img id="img" alt="adele" src="/src/assets/adele.jpg" width="150" height="180" />
+    <img id="img" alt="weeknd" src="/src/assets/weeknd.jpg" width="185" height="180" />
+    <!-- <img id="img" alt="billie" src="src/assets/billie.jfif" width="220" height="180"/> -->
+    <img id="img" alt="madonna" src="/src/assets/Madonna.jpg" width="200" height="180" />
+    <!-- <img id="img" alt="manson" src="src/assets/manson.jfif" width="190" height="180"/> -->
+    <!-- <img id="img" alt="postmalone" src="src/assets/postmalone.jfif" width="200" height="180"/> -->
   </div>
 </template>
 
@@ -115,11 +156,11 @@ h1 {
 #search {
   display: flex;
   justify-content: space-between;
-  margin-top: 30px
+  margin-top: 30px;
 }
 
-#input {
-  background-color: #FFFFFF;
+.input {
+  background-color: #ffffff;
 }
 
 #img {

@@ -1,7 +1,7 @@
 <script setup>
-import Login from "./components/Login.vue";
 import Search from "./components/Search.vue";
 import ShoppingCart from "./components/ShoppingCart.vue";
+import Login from "./components/Login.vue";
 </script>
 
 <script>
@@ -13,9 +13,14 @@ export default {
   },
   data() {
     return {
-      currentTab: "Search",
-      tabs: ["Search", "ShoppingCart", "Login"]
+      currentTab: "Search"
     };
+  },
+  methods: {
+    setTab(tab) {
+      this.currentTab = tab;
+      this.$forceUpdate();
+    }
   }
 };
 </script>
@@ -26,14 +31,25 @@ export default {
       <img alt="logo" src="./assets/logo.png" width="250" height="180" />
       <div>
         <button
-          class="btn btn-primary rounded-pill"
+          class="btn btn-primary rounded-pill default-button"
           id="button"
-          v-for="tab in tabs"
-          :key="tab"
-          :class="['tab-button', { active: currentTab === tab }]"
-          @click="currentTab = tab"
+          @click="setTab('Search')"
         >
-          {{ tab }}
+          Search
+        </button>
+        <button
+          class="btn btn-primary rounded-pill default-button"
+          id="button"
+          @click="setTab('ShoppingCart')"
+        >
+          Shopping Cart
+        </button>
+        <button
+          class="btn btn-primary rounded-pill default-button"
+          id="button"
+          @click="setTab('Login')"
+        >
+          Login
         </button>
       </div>
     </nav>
@@ -54,8 +70,8 @@ export default {
 </template>
 
 <style>
-@import "assets/css/bootstrap.min.css";
-@import "assets/css/style.css";
+@import "./assets/css/bootstrap.min.css";
+@import "./assets/css/style.css";
 
 #home {
   position: sticky;
@@ -64,7 +80,7 @@ export default {
   justify-content: space-between;
 }
 
-#button {
+.default-button {
   color: #000000;
   margin-right: 10px;
   padding-right: 30px;

@@ -23,11 +23,6 @@ export default {
           Artists: <i v-for="artist in article.artists">{{ artist.name }};</i>
         </p>
       </div>
-      <div class="col-md-2">
-        <button class="btn btn-primary rounded-pill vertical-center" id="button" @click="addToCart">
-          Add to cart
-        </button>
-      </div>
     </div>
   </v-card>
 </template>
