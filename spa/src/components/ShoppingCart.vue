@@ -76,9 +76,7 @@ export default {
         <div v-if="loading">Loading...</div>
         <v-container v-else>
           <v-row v-for="lineItem in lineItems">
-            <v-col>
-              <LineItem :lineItem="lineItem" />
-            </v-col>
+            <LineItem :lineItem="lineItem" />
             <v-col cols="2">
               <v-chip
                 class="ma-2"
