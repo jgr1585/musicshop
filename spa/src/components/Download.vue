@@ -31,6 +31,8 @@ export default {
         .then((response) => {
           console.log(response.data);
 
+          // TODO: fix shoppingcart reference error; only a proxy is assigned to this.shoppingcart
+
           this.lineItems = response.data.lineItems;
           this.totalAmount = response.data.totalAmount;
         })
@@ -47,32 +49,6 @@ export default {
       //     console.log("API called successfully. Returned response: " + response);
       //   }
       // });
-    },
-    removeFromCart(id) {
-      if (localStorage.getItem("token") == null) {
-        alert("You are not logged in!");
-        this.errored = true;
-        return;
-      }
-
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      };
-
-      const body = {
-        mediumId: id
-      };
-
-      axios
-        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/remove", body, config)
-        .then((response) => {
-          console.log(response);
-          alert("Successfully removed from cart");
-          this.getShoppingCart();
-        })
-        .catch((error) => {
-          alert(error);
-        });
     }
   },
   created() {
@@ -94,6 +70,8 @@ export default {
         </p>
       </div>
 
+      <!-- TODO: uncomment after fix of shoppingcart assignment error -->
+
       <div v-else>
         <div v-if="loading">Loading...</div>
         <v-container v-else>
@@ -105,7 +83,7 @@ export default {
                 color="#ffd700"
                 text-color="white"
                 id="button"
-                @click="removeFromCart(lineItem.medium.id)"
+                @click="addToCart"
               >
                 <v-avatar left>
                   <v-icon color="#ffd700"> mdi-basket </v-icon>

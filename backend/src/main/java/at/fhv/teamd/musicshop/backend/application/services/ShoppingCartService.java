@@ -2,6 +2,7 @@ package at.fhv.teamd.musicshop.backend.application.services;
 
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
+import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
@@ -121,6 +122,63 @@ public class ShoppingCartService {
             medium.setStock(Stock.of(medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity())));
             mediumRepository.update(medium);
         });
+        return String.valueOf(invoiceNo);
+    }
+
+    public void addDigitalsToShoppingCart(String userId, long mediumId) {
+        if (!shoppingCartExists(userId)) {
+            initializeShoppingcart(userId);
+        }
+
+        Set<LineItem> lineItems = sessionLineItems.get(userId);
+
+        Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow();
+
+        if (medium.getType() != MediumType.DIGITAL)
+            throw new IllegalArgumentException("Only digital mediums are allowed here");
+
+        if (lineItems.stream().noneMatch(li -> li.getMedium().getId() == mediumId)) {
+            lineItems.add(new LineItem(Quantity.of(1), medium));
+            sessionLineItems.put(userId, lineItems);
+        } else {
+            throw new IllegalArgumentException("Already in ShoppingCart");
+        }
+    }
+
+    public void removeDigitalsFromShoppingCart(String userId, long mediumId) {
+        if (!shoppingCartExists(userId)) {
+            emptyShoppingCart(userId);
+        }
+
+        Set<LineItem> lineItems = sessionLineItems.get(userId);
+
+        lineItems.stream()
+                .filter(li -> li.getMedium().getId() == mediumId)
+                .findFirst()
+                .ifPresentOrElse(lineItems::remove, () -> {
+                    throw new IllegalArgumentException("Not in ShoppingCart");
+                });
+    }
+
+    public String buyDigitalsFromShoppingCart(String userId, int id) {
+        if (!shoppingCartExists(userId)) {
+            emptyShoppingCart(userId);
+        }
+
+        Set<LineItem> lineItems = sessionLineItems.get(userId);
+
+        if (lineItems.isEmpty()) throw new IllegalArgumentException("No LineItems in ShoppingCart");
+
+        lineItems.forEach(lineItem -> {
+            Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
+            if (medium.getType() != MediumType.DIGITAL)
+                throw new IllegalArgumentException("Only digital mediums are allowed");
+        });
+
+        Long invoiceNo = ServiceFactory.getInvoiceServiceInstance().createInvoice(lineItems, id);
+
+        emptyShoppingCart(userId);
+
         return String.valueOf(invoiceNo);
     }
 
