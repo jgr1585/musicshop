@@ -124,8 +124,8 @@ export default {
                   id="button"
                   @click="addToCart"
                 >
-                  Add to cart
-                </button>
+                  Add to cart</button
+                >x
               </div>
             </v-col>
           </v-row>
