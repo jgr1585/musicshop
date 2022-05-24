@@ -13,14 +13,23 @@ export default {
   },
   data() {
     return {
+      loggedIn: localStorage.getItem("token") != null,
       currentTab: "Search"
     };
   },
   methods: {
     setTab(tab) {
       this.currentTab = tab;
+      localStorage.getItem("token") == null ? (this.loggedIn = false) : (this.loggedIn = true);
       this.$forceUpdate();
+    },
+    logout() {
+      localStorage.removeItem("token");
+      location.reload();
     }
+  },
+  created() {
+    console.log(localStorage.getItem("token"));
   }
 };
 </script>
@@ -31,25 +40,34 @@ export default {
       <img alt="logo" src="./assets/logo.png" width="250" height="180" />
       <div>
         <button
-          class="btn btn-primary rounded-pill default-button"
+          class="btn btn-primary rounded-pill"
           id="button"
           @click="setTab('Search')"
         >
           Search
         </button>
         <button
-          class="btn btn-primary rounded-pill default-button"
+          class="btn btn-primary rounded-pill"
           id="button"
           @click="setTab('ShoppingCart')"
         >
           Shopping Cart
         </button>
         <button
-          class="btn btn-primary rounded-pill default-button"
+          v-if="!loggedIn"
+          class="btn btn-primary rounded-pill"
           id="button"
           @click="setTab('Login')"
         >
           Login
+        </button>
+        <button
+          v-else
+          class="btn btn-primary rounded-pill default-button"
+          id="button"
+          @click="logout"
+        >
+          Logout
         </button>
       </div>
     </nav>
@@ -78,12 +96,5 @@ export default {
   background-color: #181818;
   display: flex;
   justify-content: space-between;
-}
-
-.default-button {
-  color: #000000;
-  margin-right: 10px;
-  padding-right: 30px;
-  padding-left: 30px;
 }
 </style>

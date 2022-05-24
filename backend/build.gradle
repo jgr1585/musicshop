@@ -64,14 +64,14 @@ resolve {
 
 swaggerSources {
     musicshop {
-        code {
-            inputFile = file('src/main/webapp/openapi.yaml')
-            language = 'javascript'
-            copy {
-                from 'build/swagger-code-musicshop/src'
-                into '../spa/src/rest'
-            }
-        }
+//        code {
+//            inputFile = file('src/main/webapp/openapi.yaml')
+//            language = 'javascript'
+//            copy {
+//                from 'build/swagger-code-musicshop/src'
+//                into '../spa/src/rest'
+//            }
+//        }
         ui {
             inputFile = file('src/main/webapp/openapi.yaml')
             outputDir = file('src/main/webapp/swagger-ui')

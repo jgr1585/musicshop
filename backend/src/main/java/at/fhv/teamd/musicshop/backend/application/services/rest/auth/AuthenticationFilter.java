@@ -7,6 +7,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.Response;
@@ -20,7 +21,7 @@ import java.io.IOException;
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 @SecurityRequirement(name = "Authentication")
-public class AuthenticationFilter implements ContainerResponseFilter {
+public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Inject
     @AuthenticatedUser
@@ -30,7 +31,7 @@ public class AuthenticationFilter implements ContainerResponseFilter {
     private static final String AUTHENTICATION_SCHEME = "Bearer";
 
     @Override
-    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
+    public void filter(ContainerRequestContext requestContext) throws IOException {
         String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
         if (!isTokenBased(authorizationHeader)) {

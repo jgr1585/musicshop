@@ -10,10 +10,10 @@ public class AuthenticatedUserProducer {
     @Produces
     @RequestScoped
     @AuthenticatedUser
-    private String authenticatedUser;
+    private User authenticatedUser;
 
     public void handleAuthenticationEvent(@Observes @AuthenticatedUser String username) {
-        this.authenticatedUser = username;
+        this.authenticatedUser = new User(username);
     }
 
 }

@@ -36,15 +36,12 @@ export default {
             this.errored = false;
             localStorage.setItem("token", response.data);
             console.log(localStorage.getItem("token"));
-            this.$forceUpdate();
+            location.reload();
           })
           .catch((error) => {
             this.loading = false;
             this.errored = true;
             alert(error);
-          })
-          .finally(() => {
-            this.loading = false;
           });
 
         // TODO: solve problem about of setting JWT in header
@@ -68,24 +65,20 @@ export default {
         alert("Please fill in all the fields");
       }
     },
-    logout() {
-      localStorage.removeItem("token");
-      location.reload();
-    },
     reset() {
       this.username = "";
       this.password = "";
       this.errored = false;
     },
     tokenIsNull() {
-      return localStorage.getItem("token") === null;
+      return localStorage.getItem("token") == null;
     }
   }
 };
 </script>
 
 <template>
-  <div class="container-xxl hero-header" id="header">
+  <div class="container-xxl hero-header header">
     <div class="container">
       <div class="row g-5 align-items-center">
         <h1 class="text-white mb-4 animated slideInDown">Login</h1>
@@ -112,17 +105,15 @@ export default {
       <div v-else>
         <div v-if="loading">Loading...</div>
         <h1 v-else>Welcome {{ username }}</h1>
-        <button class="btn btn-primary rounded-pill" id="button" @click="logout">Logout</button>
       </div>
 
       <div v-if="errored">
-        <p style="color: white">
+        <p class="text">
           We're sorry, we're not able to retrieve this information at the moment, please try back
           later
         </p>
-        <button class="btn btn-primary rounded-pill" @click="reset">Reset</button>
+        <button class="btn btn-primary rounded-pill" id="button" @click="reset">Reset</button>
       </div>
-
     </div>
   </div>
 </template>

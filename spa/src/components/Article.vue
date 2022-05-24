@@ -7,7 +7,7 @@ export default {
 </script>
 
 <template>
-  <v-card class="v-card">
+  <v-card class="card">
     <div class="row">
       <div class="col-md-2">
         <img
@@ -28,9 +28,11 @@ export default {
 </template>
 
 <style>
-.v-card {
-  margin-bottom: 10px;
-}
+/* .card {
+  margin-bottom: 20px 20px 20px 20px;
+  background-color: blue;
+  border-color: blue;
+} */
 
 h2 {
   color: gold;
