@@ -117,7 +117,7 @@ public class DTOProvider {
         }
     }
 
-    private static AlbumDTO buildArticleDTO(Album album) {
+    static AlbumDTO buildArticleDTO(Album album) {
         final AlbumDTO.Builder builder = getAlbumDTOBuilder(album);
 
         builder.withSongs(
@@ -128,7 +128,7 @@ public class DTOProvider {
         return builder.build();
     }
 
-    private static SongDTO buildArticleDTO(Song song) {
+    static SongDTO buildArticleDTO(Song song) {
         final SongDTO.Builder builder = getSongDTOBuilder(song);
 
         builder.withAlbums(

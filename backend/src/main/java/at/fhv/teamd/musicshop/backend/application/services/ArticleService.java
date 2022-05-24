@@ -1,11 +1,15 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
+import at.fhv.teamd.musicshop.backend.domain.article.Album;
+import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
+import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,6 +28,21 @@ public class ArticleService {
         return articleRepository.searchArticlesByAttributes(title, artist).stream()
                 .map(DTOProvider::buildArticleDTO)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    public Optional<AlbumDTO> getAlbumById(long id) throws ApplicationClientException {
+        if (id < 1) {
+            throw new ApplicationClientException("Validation error: Id must be greater than 0.");
+        }
+
+        Article article = articleRepository.findArticleById(id).filter(a -> a instanceof Album).orElse(null);
+        Album album = (Album) article;
+
+        if (album != null) {
+            return Optional.of(DTOProvider.buildArticleDTO(album));
+        } else {
+            return Optional.empty();
+        }
     }
 
     /*
