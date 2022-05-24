@@ -2,6 +2,7 @@
 import Search from "./components/Search.vue";
 import ShoppingCart from "./components/ShoppingCart.vue";
 import Login from "./components/Login.vue";
+import Download from "./components/Download.vue";
 </script>
 
 <script>
@@ -9,11 +10,11 @@ export default {
   components: {
     Search,
     ShoppingCart,
-    Login
+    Login,
+    Download
   },
   data() {
     return {
-      loggedIn: localStorage.getItem("token") != null,
       currentTab: "Search"
     };
   },
@@ -26,6 +27,9 @@ export default {
     logout() {
       localStorage.removeItem("token");
       location.reload();
+    },
+    tokenIsNull() {
+      return localStorage.getItem("token") == null;
     }
   },
   created() {
@@ -38,36 +42,41 @@ export default {
   <div class="container-xxl bg-white p-0">
     <nav class="navbar navbar-expand navbar-light px-4 px-lg-5 py-3 py-lg-0" id="home">
       <a href="index.html">
-        <img alt="logo" src="./assets/logo.png" width="250" height="180"/>
+        <img alt="logo" src="./assets/logo.png" width="250" height="180" />
       </a>
       <div>
-        <button
-            class="btn btn-primary rounded-pill"
-            id="button"
-            @click="setTab('Search')"
-        >
+        <button class="btn btn-primary rounded-pill" id="button" @click="setTab('Search')">
           Search
         </button>
         <button
-            class="btn btn-primary rounded-pill"
-            id="button"
-            @click="setTab('ShoppingCart')"
+          class="btn btn-primary rounded-pill"
+          id="button"
+          @click="setTab('ShoppingCart')"
+          :disabled="tokenIsNull()"
         >
           Shopping Cart
         </button>
         <button
-            v-if="!loggedIn"
-            class="btn btn-primary rounded-pill"
-            id="button"
-            @click="setTab('Login')"
+          class="btn btn-primary rounded-pill"
+          id="button"
+          @click="setTab('Download')"
+          :disabled="tokenIsNull()"
+        >
+          Download
+        </button>
+        <button
+          v-if="tokenIsNull()"
+          class="btn btn-primary rounded-pill"
+          id="button"
+          @click="setTab('Login')"
         >
           Login
         </button>
         <button
-            v-else
-            class="btn btn-primary rounded-pill default-button"
-            id="button"
-            @click="logout"
+          v-else
+          class="btn btn-primary rounded-pill default-button"
+          id="button"
+          @click="logout"
         >
           Logout
         </button>

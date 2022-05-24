@@ -1,6 +1,5 @@
 <script setup>
 import axios from "axios";
-import { DefaultApi } from "../rest/index.js";
 </script>
 
 <script>

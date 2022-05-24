@@ -7,47 +7,14 @@ import axios from "axios";
 export default {
   data() {
     return {
+      invoiceID: "",
       loading: false,
       errored: false,
-      totalAmount: 0,
       lineItems: []
     };
   },
   methods: {
-    getShoppingCart() {
-      if (localStorage.getItem("token") == null) {
-        alert("You are not logged in!");
-        this.errored = true;
-        return;
-      }
-
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      };
-
-      axios
-        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/get", {}, config)
-        .then((response) => {
-          console.log(response.data);
-
-          this.lineItems = response.data.lineItems;
-          this.totalAmount = response.data.totalAmount;
-        })
-        .catch((error) => {
-          alert(error);
-        });
-
-      // new DefaultApi().getShoppingCart((error, data, response) => {
-      //   if (error) {
-      //     alert(error);
-      //   } else {
-      //     console.log(response);
-      //     console.log("API called successfully. Returned data: " + data);
-      //     console.log("API called successfully. Returned response: " + response);
-      //   }
-      // });
-    },
-    removeFromCart(id) {
+    search() {
       if (localStorage.getItem("token") == null) {
         alert("You are not logged in!");
         this.errored = true;
@@ -67,15 +34,11 @@ export default {
         .then((response) => {
           console.log(response);
           alert("Successfully removed from cart");
-          this.getShoppingCart();
         })
         .catch((error) => {
           alert(error);
         });
     }
-  },
-  created() {
-    this.getShoppingCart();
   }
 };
 </script>
@@ -84,8 +47,23 @@ export default {
   <div class="container-xxl hero-header header">
     <div class="container">
       <div class="row g-5 align-items-center">
-        <h1 class="text-white mb-4 animated slideInDown">Shopping Cart</h1>
+        <h1 class="text-white mb-4 animated slideInDown">Download</h1>
       </div>
+
+      <div class="position-relative w-auto" id="search">
+        <input
+          class="v-col-lg-auto border-e rounded-pill w-33 input"
+          type="text"
+          :value="invoiceID"
+          @input="invoiceID = $event.target.value"
+          placeholder="Invoice Number"
+        />
+        <button class="btn btn-primary rounded-pill w-25" id="button" @click="search">
+          Search
+        </button>
+        <button class="btn btn-primary rounded-pill w-25" id="button" @click="reset">Reset</button>
+      </div>
+
       <div v-if="errored">
         <p class="text">
           We're sorry, we're not able to retrieve this information at the moment, please try back
@@ -104,7 +82,7 @@ export default {
                 color="#ffd700"
                 text-color="white"
                 id="button"
-                @click="removeFromCart(lineItem.medium.id)"
+                @click="addToCart"
               >
                 <v-avatar left>
                   <v-icon color="#ffd700"> mdi-basket </v-icon>

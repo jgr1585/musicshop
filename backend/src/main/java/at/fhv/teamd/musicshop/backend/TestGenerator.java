@@ -266,6 +266,7 @@ public class TestGenerator {
         // create mediums
         Set<Medium> mediums = new LinkedHashSet<>();
 
+        // analog mediums
         mediums.add(new Medium(BigDecimal.valueOf(12), MediumType.CD, Stock.of(Quantity.of(25)), supplier1, albumLongLive));
         mediums.add(new Medium(BigDecimal.valueOf(22), MediumType.VINYL, Stock.of(Quantity.of(5)), supplier1, albumLongLive));
         mediums.add(new Medium(BigDecimal.valueOf(10), MediumType.CD, Stock.of(Quantity.of(15)), supplier2, albumUntamedDesire));
@@ -275,8 +276,16 @@ public class TestGenerator {
         mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier6, albumEverything));
         mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.CD, Stock.of(Quantity.of(17)), supplier7, albumTouchBlue));
 
-        // create Topics
+        // digital mediums
+        mediums.add(new Medium(BigDecimal.valueOf(22), MediumType.DIGITAL, Stock.of(Quantity.of(1)), supplier1, albumLongLive));
+        mediums.add(new Medium(BigDecimal.valueOf(10), MediumType.DIGITAL, Stock.of(Quantity.of(1)), supplier2, albumUntamedDesire));
+        mediums.add(new Medium(BigDecimal.valueOf(29), MediumType.DIGITAL, Stock.of(Quantity.of(1)), supplier3, albumUnion));
+        mediums.add(new Medium(BigDecimal.valueOf(13), MediumType.DIGITAL, Stock.of(Quantity.of(1)), supplier4, albumAnti));
+        mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.DIGITAL, Stock.of(Quantity.of(1)), supplier5, albumLetItBe));
+        mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.DIGITAL, Stock.of(Quantity.of(1)), supplier6, albumEverything));
+        mediums.add(new Medium(BigDecimal.valueOf(19), MediumType.DIGITAL, Stock.of(Quantity.of(1)), supplier7, albumTouchBlue));
 
+        // create Topics
         Topic topicAdministrative = new Topic("Administrative");
         Topic topicOrder = new Topic("Order");
         Topic topicHipHop = new Topic("Hip Hop");
@@ -297,7 +306,9 @@ public class TestGenerator {
         employees.add(new Employee("tf-test", "Thomas", "Feilhauer", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicSoul, topicJazz)));
         employees.add(new Employee("BACKDOOR-AUTH", "", "", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicHipHop, topicPop, topicRockNRoll, topicSoul, topicJazz)));
 
+        // create customers
         Set<Customer> customers = new HashSet<>();
+
         customers.add(new Customer(1, "JosieS", "5497056331911690"));
         customers.add(new Customer(2, "JonasN", "4412614992618410"));
         customers.add(new Customer(3, "MiroH",  "5425110212013160"));
@@ -308,6 +319,8 @@ public class TestGenerator {
         customers.add(new Customer(8, "SammyB", "4344721596616160"));
         customers.add(new Customer(9, "KatrinK", "5486293928490720"));
         customers.add(new Customer(10, "DanaH",  "5310021062469900"));
+        customers.add(new Customer(11, "test",  "5310021062469900"));
+        customers.add(new Customer(12, "test1",  "5310021062469900"));
 
         Set<LineItem> lineItems = new HashSet<>();
         lineItems.add(new LineItem(Quantity.of(2), mediums.iterator().next()));
