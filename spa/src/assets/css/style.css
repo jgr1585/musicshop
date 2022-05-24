@@ -1,21 +1,38 @@
-/********** Template CSS **********/
-:root {
-    --primary: #4AC4F3;
-    --light: #EDF5FF;
-    --dark: #202942;
+/* custom */
+.header {
+    background-color: #181818 !important;
+    padding-bottom: 250px;
+  }
+
+.text {
+    color: white;
+    text-align: center;
 }
 
+.default-button {
+    color: #000000;
+    margin-right: 10px;
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+
+/********** Template CSS **********/
+:root {
+    --primary: #4ac4f3;
+    --light: #edf5ff;
+    --dark: #202942;
+}
 
 /*** Spinner ***/
 #spinner {
     opacity: 0;
     visibility: hidden;
-    transition: opacity .5s ease-out, visibility 0s linear .5s;
+    transition: opacity 0.5s ease-out, visibility 0s linear 0.5s;
     z-index: 99999;
 }
 
 #spinner.show {
-    transition: opacity .5s ease-out, visibility 0s linear 0s;
+    transition: opacity 0.5s ease-out, visibility 0s linear 0s;
     visibility: visible;
     opacity: 1;
 }
@@ -38,7 +55,6 @@
     padding-bottom: 6rem;
 }
 
-
 /*** Heading ***/
 h1,
 h2,
@@ -58,14 +74,13 @@ h6,
     font-weight: 500 !important;
 }
 
-
 /*** Button ***/
 .btn {
-    transition: .5s;
+    transition: 0.5s;
 }
 
 .btn:hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .btn.btn-primary {
@@ -102,7 +117,6 @@ h6,
     border-radius: 50px;
 }
 
-
 /*** Navbar ***/
 .navbar .dropdown-toggle::after {
     border: none;
@@ -121,7 +135,7 @@ h6,
     font-weight: 500;
     color: var(--light);
     outline: none;
-    transition: .5s;
+    transition: 0.5s;
 }
 
 .navbar .navbar-nav .nav-link:hover,
@@ -140,12 +154,12 @@ h6,
 }
 
 .navbar .navbar-brand h1 {
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 .navbar .navbar-brand img {
     max-height: 60px;
-    transition: .5s;
+    transition: 0.5s;
 }
 
 .sticky-top.navbar .navbar-brand img {
@@ -155,12 +169,12 @@ h6,
 @media (max-width: 991.98px) {
     .sticky-top.navbar {
         position: relative;
-        background: #FFFFFF;
+        background: #ffffff;
     }
 
     .navbar .navbar-collapse {
         margin-top: 15px;
-        border-top: 1px solid #DDDDDD;
+        border-top: 1px solid #dddddd;
     }
 
     .navbar .navbar-nav .nav-link,
@@ -192,10 +206,10 @@ h6,
         left: 0;
         z-index: 999;
     }
-    
+
     .sticky-top.navbar {
         position: fixed;
-        background: #FFFFFF;
+        background: #ffffff;
     }
 
     .sticky-top.navbar .navbar-brand h1 {
@@ -209,13 +223,13 @@ h6,
         top: 150%;
         opacity: 0;
         visibility: hidden;
-        transition: .5s;
+        transition: 0.5s;
     }
 
     .navbar .navbar-nav .nav-item:hover .dropdown-menu {
         top: 100%;
         visibility: visible;
-        transition: .5s;
+        transition: 0.5s;
         opacity: 1;
     }
 
@@ -225,7 +239,6 @@ h6,
         border-color: var(--primary);
     }
 }
-
 
 /*** Hero Header ***/
 .hero-header {
@@ -240,12 +253,11 @@ h6,
     }
 }
 
-
 /*** Feature ***/
 .feature-item,
 .advanced-feature-item {
     height: 100%;
-    transition: .5s;
+    transition: 0.5s;
 }
 
 .feature-item:hover {
@@ -253,11 +265,11 @@ h6,
 }
 
 .advanced-feature-item {
-    box-shadow: 0 0 45px rgba(0, 0, 0, .08);
+    box-shadow: 0 0 45px rgba(0, 0, 0, 0.08);
 }
 
 .advanced-feature-item * {
-    transition: .5s;
+    transition: 0.5s;
 }
 
 .advanced-feature-item:hover {
@@ -265,9 +277,8 @@ h6,
 }
 
 .advanced-feature-item:hover * {
-    color: #FFFFFF !important;
+    color: #ffffff !important;
 }
-
 
 /*** Process ***/
 .process {
@@ -308,7 +319,7 @@ h6,
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    color: #FFFFFF;
+    color: #ffffff;
     background: var(--primary);
     border-radius: 40px;
     z-index: 1;
@@ -318,17 +329,15 @@ h6,
     margin: 0;
 }
 
-
 /*** Price ***/
 .price-item {
-    box-shadow: 0 0 45px rgba(0, 0, 0, .08);
-    transition: .5s;
+    box-shadow: 0 0 45px rgba(0, 0, 0, 0.08);
+    transition: 0.5s;
 }
 
 .price-item:hover {
     margin-top: -10px;
 }
-
 
 /*** Testimonial ***/
 .testimonial-carousel .testimonial-item {
@@ -352,16 +361,15 @@ h6,
     background: var(--light);
     border-radius: 60px;
     font-size: 22px;
-    transition: .5s;
+    transition: 0.5s;
 }
 
 .testimonial-carousel .owl-nav .owl-prev:hover,
 .testimonial-carousel .owl-nav .owl-next:hover {
-    color: #FFFFFF;
+    color: #ffffff;
     background: var(--primary);
-    box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
-
 
 /*** Footer ***/
 .footer {
@@ -379,7 +387,7 @@ h6,
     color: var(--light);
     border: 1px solid #858585;
     border-radius: 40px;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .footer .btn.btn-social:hover {
@@ -394,7 +402,7 @@ h6,
     text-align: left;
     color: #858585;
     font-weight: normal;
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .footer .btn.btn-link::before {
@@ -413,7 +421,7 @@ h6,
 
 .footer .copyright {
     padding: 25px 0;
-    border-top: 1px solid rgba(256, 256, 256, .1);
+    border-top: 1px solid rgba(256, 256, 256, 0.1);
 }
 
 .footer .copyright a {
@@ -423,7 +431,7 @@ h6,
 .footer .footer-menu a {
     margin-right: 15px;
     padding-right: 15px;
-    border-right: 1px solid rgba(255, 255, 255, .1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer .footer-menu a:last-child {

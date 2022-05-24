@@ -79,7 +79,7 @@ export default {
 </script>
 
 <template>
-  <div class="container-xxl container hero-header" id="header">
+  <div class="container-xxl container hero-header header">
     <div class="container">
       <div class="row g-5 align-items-center">
         <h1 class="text-white mb-4 animated slideInDown">MP3-Music-Downloader</h1>
@@ -104,7 +104,7 @@ export default {
       </div>
 
       <div v-if="errored">
-        <p>
+        <p class="text">
           We're sorry, we're not able to retrieve this information at the moment, please try back
           later
         </p>
@@ -116,14 +116,16 @@ export default {
           <v-row v-for="article in articles">
             <v-col>
               <Article :article="article" />
+            </v-col>
+            <v-col>
               <div class="col-md-2">
                 <button
                   class="btn btn-primary rounded-pill vertical-center"
                   id="button"
                   @click="addToCart"
                 >
-                  Add to cart
-                </button>
+                  Add to cart</button
+                >x
               </div>
             </v-col>
           </v-row>

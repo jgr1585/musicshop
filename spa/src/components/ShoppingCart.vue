@@ -17,6 +17,7 @@ export default {
     getShoppingCart() {
       if (localStorage.getItem("token") == null) {
         alert("You are not logged in!");
+        this.errored = true;
         return;
       }
 
@@ -31,8 +32,8 @@ export default {
 
           // TODO: fix shoppingcart reference error; only a proxy is assigned to this.shoppingcart
 
-          this.shoppingcart = response.data;
-          console.log(this.shoppingcart);
+          // this.shoppingcart = response.data;
+          // console.log(this.shoppingcart);
         })
         .catch((error) => {
           alert(error);
@@ -56,13 +57,13 @@ export default {
 </script>
 
 <template>
-  <div class="container-xxl hero-header" id="header">
+  <div class="container-xxl hero-header header">
     <div class="container">
       <div class="row g-5 align-items-center">
         <h1 class="text-white mb-4 animated slideInDown">Shopping Cart</h1>
       </div>
       <div v-if="errored">
-        <p>
+        <p class="text">
           We're sorry, we're not able to retrieve this information at the moment, please try back
           later
         </p>
@@ -93,9 +94,4 @@ export default {
   </div>
 </template>
 
-<style>
-#header {
-  background-color: #181818 !important;
-  padding-bottom: 250px;
-}
-</style>
+<style></style>
