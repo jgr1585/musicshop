@@ -20,7 +20,7 @@ export default {
   },
   filters: {
     validater(p1, p2) {
-      return p1.length > 0 || p2.length > 0 ? true : false;
+      return p1.length > 0 || p2.length > 0;
     }
   },
   methods: {
@@ -86,21 +86,21 @@ export default {
       </div>
       <div class="position-relative w-auto" id="search">
         <input
-          class="v-col-lg-auto border-e rounded-2 w-33 input"
+          class="v-col-lg-auto border-e rounded-pill w-33 input"
           type="text"
           :value="title"
           @input="title = $event.target.value"
           placeholder="Title"
         />
         <input
-          class="v-col-lg-auto border-e rounded-2 w-33 input"
+          class="v-col-lg-auto border-e rounded-pill w-33 input"
           type="text"
           :value="artist"
           @input="artist = $event.target.value"
           placeholder="Artist"
         />
-        <button class="btn btn-primary rounded-pill" id="button" @click="search">Search</button>
-        <button class="btn btn-primary rounded-pill" id="button" @click="reset">Reset</button>
+        <button class="btn btn-primary rounded-pill w-25" id="button" @click="search">Search</button>
+        <button class="btn btn-primary rounded-pill w-25" id="button" @click="reset">Reset</button>
       </div>
 
       <div v-if="errored">
@@ -113,20 +113,29 @@ export default {
       <div v-else>
         <div v-if="loading">Loading...</div>
         <v-container v-else>
-          <v-row v-for="article in articles">
+          <v-row v-for="article in articles" style="margin-top: 30px">
             <v-col>
-              <Article :article="article" />
-            </v-col>
-            <v-col>
-              <div class="col-md-2">
-                <button
-                  class="btn btn-primary rounded-pill vertical-center"
-                  id="button"
-                  @click="addToCart"
+              <Article :article="article"/>
+              <v-col class="col-md-2" >
+                <v-chip
+                    class="ma-2"
+                    color="#ffd700"
+                    text-color="white"
+                    id="button"
+                    @click="addToCart"
                 >
-                  Add to cart</button
-                >x
-              </div>
+                  <v-avatar
+                      left
+                  >
+                    <v-icon
+                        color="#ffd700"
+                    >
+                      mdi-basket
+                    </v-icon>
+                  </v-avatar>
+                  Add to cart
+                </v-chip>
+              </v-col>
             </v-col>
           </v-row>
         </v-container>
@@ -135,17 +144,17 @@ export default {
   </div>
 
   <div class="card-img">
-    <img id="img" alt="adele" src="/src/assets/adele.jpg" width="150" height="180" />
-    <img id="img" alt="weeknd" src="/src/assets/weeknd.jpg" width="185" height="180" />
-    <!-- <img id="img" alt="billie" src="src/assets/billie.jfif" width="220" height="180"/> -->
-    <img id="img" alt="madonna" src="/src/assets/Madonna.jpg" width="200" height="180" />
-    <!-- <img id="img" alt="manson" src="src/assets/manson.jfif" width="190" height="180"/> -->
-    <!-- <img id="img" alt="postmalone" src="src/assets/postmalone.jfif" width="200" height="180"/> -->
+    <img id="img" alt="adele" src="src/assets/adele.jpg" width="150" height="180" />
+    <img id="img" alt="weeknd" src="src/assets/weeknd.jpg" width="185" height="180" />
+    <img id="img" alt="billie" src="src/assets/billie.jfif" width="220" height="180"/>
+    <img id="img" alt="madonna" src="src/assets/Madonna.jpg" width="200" height="180" />
+    <img id="img" alt="manson" src="src/assets/manson.jfif" width="190" height="180"/>
+    <img id="img" alt="postmalone" src="src/assets/postmalone.jfif" width="200" height="180"/>
   </div>
 </template>
 
 <style>
-#header {
+.header {
   background-color: #181818 !important;
   padding-bottom: 250px;
 }
@@ -163,6 +172,7 @@ h1 {
 
 .input {
   background-color: #ffffff;
+  margin-right: 20px;
 }
 
 #img {

@@ -8,22 +8,23 @@ export default {
 
 <template>
   <v-card class="card">
-    <div class="row">
-      <div class="col-md-2">
+    <v-row>
+      <v-col class="col-md-2">
         <img
           :src="'http://coverartarchive.org/release/' + article.musicbrainzId + '/front/'"
+          alt="Album Cover"
           class="vertical-center img"
         />
-      </div>
-      <div class="col">
-        <h3 class="text-light">Title: {{ article.title }}</h3>
+      </v-col>
+      <v-col>
+        <h3 class="text-black">Title: {{ article.title }}</h3>
         <p>Type: {{ article.type }}</p>
         <p>Label: {{ article.label }}</p>
         <p>
           Artists: <i v-for="artist in article.artists">{{ artist.name }};</i>
         </p>
-      </div>
-    </div>
+      </v-col>
+      </v-row>
   </v-card>
 </template>
 
@@ -36,14 +37,6 @@ export default {
 
 h2 {
   color: gold;
-}
-
-#button {
-  color: #000000;
-  margin-right: 10px;
-  margin-left: 10px;
-  padding-right: 30px;
-  padding-left: 30px;
 }
 
 .img {
