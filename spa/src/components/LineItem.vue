@@ -14,11 +14,8 @@ export default {
   <Article :article="lineItem.article" />
   <v-col cols="2">
     <p>{{ lineItem.id }}</p>
-    <p>{{ lineItem.quantity }}</p>
-    <p>{{ lineItem.quantityReturn }}</p>
     <p>{{ lineItem.price }}</p>
-    <p>{{ lineItem.totalPrice }}</p>
-  </v-col>
+   </v-col>
 </template>
 
 <style>
