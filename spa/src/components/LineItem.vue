@@ -11,22 +11,14 @@ export default {
 </script>
 
 <template>
-  <div class="col-md-1">
-    <p>{{ lineItem.id }}</p>
-  </div>
   <Article :article="lineItem.article" />
-  <div class="col-md-1">
+  <v-col cols="2">
+    <p>{{ lineItem.id }}</p>
     <p>{{ lineItem.quantity }}</p>
-  </div>
-  <div class="col-md-1">
     <p>{{ lineItem.quantityReturn }}</p>
-  </div>
-  <div class="col-md-1">
     <p>{{ lineItem.price }}</p>
-  </div>
-  <div class="col-md-1">
     <p>{{ lineItem.totalPrice }}</p>
-  </div>
+  </v-col>
 </template>
 
 <style>

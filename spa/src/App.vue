@@ -37,35 +37,37 @@ export default {
 <template>
   <div class="container-xxl bg-white p-0">
     <nav class="navbar navbar-expand navbar-light px-4 px-lg-5 py-3 py-lg-0" id="home">
-      <img alt="logo" src="./assets/logo.png" width="250" height="180" />
+      <a href="index.html">
+        <img alt="logo" src="./assets/logo.png" width="250" height="180"/>
+      </a>
       <div>
         <button
-          class="btn btn-primary rounded-pill"
-          id="button"
-          @click="setTab('Search')"
+            class="btn btn-primary rounded-pill"
+            id="button"
+            @click="setTab('Search')"
         >
           Search
         </button>
         <button
-          class="btn btn-primary rounded-pill"
-          id="button"
-          @click="setTab('ShoppingCart')"
+            class="btn btn-primary rounded-pill"
+            id="button"
+            @click="setTab('ShoppingCart')"
         >
           Shopping Cart
         </button>
         <button
-          v-if="!loggedIn"
-          class="btn btn-primary rounded-pill"
-          id="button"
-          @click="setTab('Login')"
+            v-if="!loggedIn"
+            class="btn btn-primary rounded-pill"
+            id="button"
+            @click="setTab('Login')"
         >
           Login
         </button>
         <button
-          v-else
-          class="btn btn-primary rounded-pill default-button"
-          id="button"
-          @click="logout"
+            v-else
+            class="btn btn-primary rounded-pill default-button"
+            id="button"
+            @click="logout"
         >
           Logout
         </button>

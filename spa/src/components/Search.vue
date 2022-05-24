@@ -105,8 +105,7 @@ export default {
 
       <div v-if="errored">
         <p class="text">
-          We're sorry, we're not able to retrieve this information at the moment, please try back
-          later
+          We're sorry, we're not able to retrieve this information at the moment, please try back later
         </p>
       </div>
 
@@ -115,27 +114,21 @@ export default {
         <v-container v-else>
           <v-row v-for="article in articles" style="margin-top: 30px">
             <v-col>
-              <Article :article="article"/>
-              <v-col class="col-md-2" >
-                <v-chip
-                    class="ma-2"
-                    color="#ffd700"
-                    text-color="white"
-                    id="button"
-                    @click="addToCart"
-                >
-                  <v-avatar
-                      left
-                  >
-                    <v-icon
-                        color="#ffd700"
-                    >
-                      mdi-basket
-                    </v-icon>
-                  </v-avatar>
-                  Add to cart
-                </v-chip>
-              </v-col>
+              <Article :article="article" />
+            </v-col>
+            <v-col cols="2">
+              <v-chip
+                class="ma-2"
+                color="#ffd700"
+                text-color="white"
+                id="button"
+                @click="addToCart"
+              >
+                <v-avatar left>
+                  <v-icon color="#ffd700"> mdi-basket </v-icon>
+                </v-avatar>
+                Add to cart
+              </v-chip>
             </v-col>
           </v-row>
         </v-container>
@@ -144,12 +137,12 @@ export default {
   </div>
 
   <div class="card-img">
-    <img id="img" alt="adele" src="src/assets/adele.jpg" width="150" height="180" />
-    <img id="img" alt="weeknd" src="src/assets/weeknd.jpg" width="185" height="180" />
-    <img id="img" alt="billie" src="src/assets/billie.jfif" width="220" height="180"/>
-    <img id="img" alt="madonna" src="src/assets/Madonna.jpg" width="200" height="180" />
-    <img id="img" alt="manson" src="src/assets/manson.jfif" width="190" height="180"/>
-    <img id="img" alt="postmalone" src="src/assets/postmalone.jfif" width="200" height="180"/>
+    <img id="img" alt="adele" src="/src/assets/adele.jpg" width="150" height="180" />
+    <img id="img" alt="weeknd" src="/src/assets/weeknd.jpg" width="185" height="180" />
+    <img id="img" alt="billie" src="/src/assets/billie.jpg" width="220" height="180"/>
+    <img id="img" alt="madonna" src="/src/assets/Madonna.jpg" width="200" height="180" />
+    <img id="img" alt="manson" src="/src/assets/manson.jpg" width="190" height="180"/>
+    <img id="img" alt="postmalone" src="/src/assets/postmalone.jpg" width="200" height="180"/>
   </div>
 </template>
 
