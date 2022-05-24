@@ -1,74 +1,111 @@
 package at.fhv.teamd.musicshop.backend.rest;
 
+import at.fhv.teamd.musicshop.backend.application.services.ArticleService;
+import at.fhv.teamd.musicshop.backend.application.services.InvoiceService;
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
+import at.fhv.teamd.musicshop.backend.rest.auth.AuthenticatedUser;
+import at.fhv.teamd.musicshop.backend.rest.auth.Secured;
+import at.fhv.teamd.musicshop.backend.rest.auth.User;
 import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
 import at.fhv.teamd.musicshop.library.DTO.SongDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
+import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
+import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedInvoiceException;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import java.io.*;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @WebServlet("/media/*")
+@Secured
+@SecurityRequirement(name = "Authentication")
 public class MediaController extends HttpServlet {
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        //TODO: Check if user is logged in and has permission to access this resource
-        if (req.getPathInfo().equals("/songs")) {
-            int songId = Integer.parseInt(req.getParameter("id"));
+    @Inject
+    @AuthenticatedUser
+    private User authenticatedUser;
 
-            ServletOutputStream out = resp.getOutputStream();
-            InputStream in = getClass().getResourceAsStream("/WEB-INF/songs/" + songId + ".mp3");
-            assert in != null;
-            in.transferTo(out);
+    private InvoiceService invoiceService = ServiceFactory.getInvoiceServiceInstance();
+    private ArticleService articleService = ServiceFactory.getArticleServiceInstance();
+
+    private void serveSong(int invoiceId, int songId, HttpServletResponse resp) throws IOException, InvoiceException, UnauthorizedInvoiceException {
+        // check if is allowed to access
+        invoiceService.getSongDTO(authenticatedUser.name(), invoiceId, songId);
+
+        ServletOutputStream out = resp.getOutputStream();
+        FileInputStream in = new FileInputStream("/WEB-INF/songs/" + songId + ".mp3");
+        assert in != null;
+        in.transferTo(out);
+
+        in.close();
+        out.close();
+    }
+
+    private void serveAlbum(int invoiceId, int albumId, HttpServletResponse resp) throws ApplicationClientException, IOException, InvoiceException, UnauthorizedInvoiceException {
+        // check if is allowed to access
+        AlbumDTO album = invoiceService.getAlbumDTO(authenticatedUser.name(), invoiceId, albumId);
+
+        Set<Long> songIds = album.songs().stream()
+                .map(SongDTO::id).collect(Collectors.toSet());
+
+        ServletOutputStream out = resp.getOutputStream();
+        ZipOutputStream zip = new ZipOutputStream(out);
+
+        for (var songId : songIds) {
+            FileInputStream in = new FileInputStream("/WEB-INF/songs/" + songId + ".mp3");
+            zip.putNextEntry(new ZipEntry(songId + ".mp3"));
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = in.read(buffer)) > 0) {
+                zip.write(buffer, 0, length);
+            }
 
             in.close();
-            out.close();
-        } else if (req.getPathInfo().equals("/albums")) {
-            long albumId = Integer.parseInt(req.getParameter("id"));
-            AlbumDTO album = null;
-            try {
-                album = ServiceFactory.getArticleServiceInstance().getAlbumById(albumId).orElse(null);
-            } catch (ApplicationClientException e) {
-                e.printStackTrace();
+        }
+
+        zip.close();
+        out.close();
+    }
+
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            int invoiceId = Integer.parseInt(req.getParameter("invoiceId"));
+
+            if (req.getPathInfo().equals("/song")) {
+                int songId = Integer.parseInt(req.getParameter("id"));
+
+                serveSong(invoiceId, songId, resp);
+            } else if (req.getPathInfo().equals("/album")) {
+                int albumId = Integer.parseInt(req.getParameter("id"));
+
+                serveAlbum(invoiceId, albumId, resp);
             }
-
-            if (album != null) {
-                Set<Long> songIds = album.songs().stream().map(SongDTO::id).collect(Collectors.toSet());
-
-                ServletOutputStream out = resp.getOutputStream();
-                ZipOutputStream zip = new ZipOutputStream(out);
-
-                songIds.forEach(songId -> {
-                    try {
-                        FileInputStream in = new FileInputStream("/WEB-INF/songs/" + songId + ".mp3");
-                        zip.putNextEntry(new ZipEntry(songId + ".mp3"));
-
-                        byte[] buffer = new byte[1024];
-                        int length;
-                        while ((length = in.read(buffer)) > 0) {
-                            zip.write(buffer, 0, length);
-                        }
-                        in.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-
-                zip.close();
-                out.close();
-            } else {
-                resp.sendError(404);
-            }
+        } catch (NumberFormatException | ApplicationClientException e) {
+            resp.sendError(400, "Invalid id.");
+        } catch (FileNotFoundException e) {
+            resp.sendError(404, "Requested file not found.");
+        } catch (IOException e) {
+            resp.sendError(500);
+        } catch (InvoiceException e) {
+            resp.sendError(404, "Invoice not found.");
+        } catch (UnauthorizedInvoiceException e) {
+            resp.sendError(401, "Unauthorized.");
         }
     }
 }
