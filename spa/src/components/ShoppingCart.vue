@@ -79,15 +79,20 @@ export default {
             <v-col>
               <LineItem :lineItem="lineItem" />
             </v-col>
-            <!-- <div class="col-md-2">
-              <button
-                class="btn btn-primary rounded-pill vertical-center"
+            <v-col cols="2">
+              <v-chip
+                class="ma-2"
+                color="#ffd700"
+                text-color="white"
                 id="button"
-                @click="removeFromCart"
+                @click="addToCart"
               >
+                <v-avatar left>
+                  <v-icon color="#ffd700"> mdi-basket </v-icon>
+                </v-avatar>
                 Remove
-              </button>
-            </div> -->
+              </v-chip>
+            </v-col>
           </v-row>
         </v-container>
       </div>
