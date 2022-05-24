@@ -11,7 +11,9 @@ export default {
 </script>
 
 <template>
-  <Article :article="lineItem.article" />
+  <v-col>
+    <Article :article="lineItem.article" />
+  </v-col>
   <v-col cols="2">
     <p>{{ lineItem.id }}</p>
     <p>{{ lineItem.price }}</p>
