@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.backend.application.services.rest;
+package at.fhv.teamd.musicshop.backend.rest;
 
 import java.io.IOException;
 import javax.ws.rs.container.ContainerRequestContext;

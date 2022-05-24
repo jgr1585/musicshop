@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.backend.application.services.rest.auth;
+package at.fhv.teamd.musicshop.backend.rest.auth;
 
 import javax.ws.rs.NameBinding;
 import java.lang.annotation.Retention;

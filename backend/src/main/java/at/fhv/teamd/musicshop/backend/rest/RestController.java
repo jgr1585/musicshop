@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.backend.application;
+package at.fhv.teamd.musicshop.backend.rest;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -39,5 +39,5 @@ import javax.ws.rs.core.Application;
         in = SecuritySchemeIn.HEADER)
 
 @ApplicationPath("/rest")
-public class RestWebservice extends Application {
+public class RestController extends Application {
 }

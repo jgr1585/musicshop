@@ -1,11 +1,9 @@
-package at.fhv.teamd.musicshop.backend.application.services.rest;
+package at.fhv.teamd.musicshop.backend.rest;
 
+import at.fhv.teamd.musicshop.backend.rest.auth.Secured;
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
-import at.fhv.teamd.musicshop.backend.application.services.rest.auth.Secured;
 import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.InvoiceDTO;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -17,9 +15,9 @@ import java.util.List;
 @Path("/invoice")
 @Consumes("application/json")
 @Produces("application/json")
-public class InvoiceRestService {
+public class InvoiceRestController {
 
-    public InvoiceRestService() {}
+    public InvoiceRestController() {}
 
     @GET
     public List<InvoiceDTO> getInvoices(@QueryParam("customerNo") int customerNo) {

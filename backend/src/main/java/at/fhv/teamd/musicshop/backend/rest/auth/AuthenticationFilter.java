@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.backend.application.services.rest.auth;
+package at.fhv.teamd.musicshop.backend.rest.auth;
 
 import io.jsonwebtoken.Jwts;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -8,8 +8,6 @@ import javax.inject.Inject;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.ContainerResponseContext;
-import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 

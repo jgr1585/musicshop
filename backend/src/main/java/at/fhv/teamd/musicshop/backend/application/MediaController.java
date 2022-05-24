@@ -11,9 +11,9 @@ import java.io.InputStream;
 
 @WebServlet("/media/*")
 public class MediaController extends HttpServlet {
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (req.getPathInfo().equals("/songs")) {
-            int songId = Integer.valueOf(req.getParameter("id"));
+            int songId = Integer.parseInt(req.getParameter("id"));
 
             ServletOutputStream out = resp.getOutputStream();
             InputStream in = getClass().getResourceAsStream("/WEB-INF/songs/" + songId + ".mp3");
@@ -22,10 +22,6 @@ public class MediaController extends HttpServlet {
 
             in.close();
             out.close();
-
-        } else {
-            // not supported
-
         }
     }
 }

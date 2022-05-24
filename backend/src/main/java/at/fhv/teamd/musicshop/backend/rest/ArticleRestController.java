@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.backend.application.services.rest;
+package at.fhv.teamd.musicshop.backend.rest;
 
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
@@ -13,8 +13,8 @@ import java.util.Set;
 @Path("/article")
 @Produces("application/json")
 @Consumes("application/json")
-public class ArticleRestService {
-    public ArticleRestService() {}
+public class ArticleRestController {
+    public ArticleRestController() {}
 
     @GET
     @Path("/search")

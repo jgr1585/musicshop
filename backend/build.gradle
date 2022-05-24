@@ -57,7 +57,7 @@ resolve {
     outputFormat = 'YAML'
     prettyPrint = 'TRUE'
     classpath = sourceSets.main.runtimeClasspath
-    resourcePackages = ['at.fhv.teamd.musicshop.backend.application']
+    resourcePackages = ['at.fhv.teamd.musicshop.backend']
     outputDir = file('src/main/webapp')
     alwaysResolveAppPath = 'TRUE'
 }

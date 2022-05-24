@@ -10,7 +10,8 @@ export default {
     return {
       loading: false,
       errored: false,
-      shoppingcart: null
+      totalAmount: 0,
+      lineItems: []
     };
   },
   methods: {
@@ -32,8 +33,8 @@ export default {
 
           // TODO: fix shoppingcart reference error; only a proxy is assigned to this.shoppingcart
 
-          // this.shoppingcart = response.data;
-          // console.log(this.shoppingcart);
+          this.lineItems = response.data.lineItems;
+          this.totalAmount = response.data.totalAmount;
         })
         .catch((error) => {
           alert(error);
@@ -71,14 +72,14 @@ export default {
 
       <!-- TODO: uncomment after fix of shoppingcart assignment error -->
 
-      <!-- <div v-else>
+      <div v-else>
         <div v-if="loading">Loading...</div>
         <v-container v-else>
-          <v-row v-for="lineItem in this.shoppingcart.lineItems">
+          <v-row v-for="lineItem in lineItems">
             <v-col>
               <LineItem :lineItem="lineItem" />
             </v-col>
-            <div class="col-md-2">
+            <!-- <div class="col-md-2">
               <button
                 class="btn btn-primary rounded-pill vertical-center"
                 id="button"
@@ -86,10 +87,10 @@ export default {
               >
                 Remove
               </button>
-            </div>
+            </div> -->
           </v-row>
         </v-container>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>

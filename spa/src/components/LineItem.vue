@@ -14,7 +14,7 @@ export default {
   <div class="col-md-1">
     <p>{{ lineItem.id }}</p>
   </div>
-  <!-- <Article :article="lineItem.article" /> -->
+  <Article :article="lineItem.article" />
   <div class="col-md-1">
     <p>{{ lineItem.quantity }}</p>
   </div>

@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.backend.application.services.rest.auth;
+package at.fhv.teamd.musicshop.backend.rest.auth;
 
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.event.Observes;

@@ -1,12 +1,12 @@
-package at.fhv.teamd.musicshop.backend.application.services.rest;
+package at.fhv.teamd.musicshop.backend.rest;
 
-import at.fhv.teamd.musicshop.backend.application.forms.AddToShoppingCartForm;
-import at.fhv.teamd.musicshop.backend.application.forms.BuyFromShoppingCartForm;
-import at.fhv.teamd.musicshop.backend.application.forms.RemoveFromShoppingCartForm;
+import at.fhv.teamd.musicshop.backend.rest.forms.AddToShoppingCartForm;
+import at.fhv.teamd.musicshop.backend.rest.forms.BuyFromShoppingCartForm;
+import at.fhv.teamd.musicshop.backend.rest.forms.RemoveFromShoppingCartForm;
+import at.fhv.teamd.musicshop.backend.rest.auth.AuthenticatedUser;
+import at.fhv.teamd.musicshop.backend.rest.auth.Secured;
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
-import at.fhv.teamd.musicshop.backend.application.services.rest.auth.AuthenticatedUser;
-import at.fhv.teamd.musicshop.backend.application.services.rest.auth.Secured;
-import at.fhv.teamd.musicshop.backend.application.services.rest.auth.User;
+import at.fhv.teamd.musicshop.backend.rest.auth.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -21,13 +21,13 @@ import java.util.NoSuchElementException;
 @Consumes("application/json")
 @Produces("application/json")
 @SecurityRequirement(name = "Authentication")
-public class ShoppingCartRestService {
+public class ShoppingCartRestController {
 
     @Inject
     @AuthenticatedUser
     private User authenticatedUser;
 
-    public ShoppingCartRestService() {
+    public ShoppingCartRestController() {
     }
 
     @POST
