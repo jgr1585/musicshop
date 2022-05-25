@@ -40,46 +40,75 @@ export default {
 
 <template>
   <div class="container-xxl bg-white p-0">
-    <nav class="navbar navbar-expand navbar-light px-4 px-lg-5 py-3 py-lg-0" id="home">
+    <nav class="navbar navbar-expand navbar-light px-4 px-lg-5 py-4" id="home">
       <a href="index.html">
         <img alt="logo" src="./assets/logo.png" width="250" height="180" />
       </a>
       <div>
-        <button class="btn btn-primary rounded-pill" id="button" @click="setTab('Search')">
+        <v-btn
+            class="btn btn-primary rounded-pill"
+            id="button"
+            @click="setTab('Search')"
+        >
+          <v-icon
+              size="25px"
+          >
+            mdi-magnify
+          </v-icon>
           Search
-        </button>
-        <button
-          class="btn btn-primary rounded-pill"
-          id="button"
-          @click="setTab('ShoppingCart')"
-          :disabled="tokenIsNull()"
+        </v-btn>
+        <v-btn
+            class="btn btn-primary rounded-pill"
+            id="button"
+            @click="setTab('ShoppingCart')"
+            :disabled="tokenIsNull()"
         >
+          <v-icon
+              size="25px"
+          >
+            mdi-shopping-music
+          </v-icon>
           Shopping Cart
-        </button>
-        <button
-          class="btn btn-primary rounded-pill"
-          id="button"
-          @click="setTab('Download')"
-          :disabled="tokenIsNull()"
+        </v-btn>
+        <v-btn
+            class="btn btn-primary rounded-pill default-button"
+            id="button"
+            @click="setTab('Download')"
+            :disabled="tokenIsNull()"
         >
-          Download
-        </button>
-        <button
-          v-if="tokenIsNull()"
-          class="btn btn-primary rounded-pill"
-          id="button"
-          @click="setTab('Login')"
+          <v-icon
+              size="25px"
+          >
+            mdi-music
+          </v-icon>
+          Playlist
+        </v-btn>
+        <v-btn
+            v-if="!loggedIn"
+            class="btn btn-primary rounded-pill"
+            id="button"
+            @click="setTab('Login')"
         >
+          <v-icon
+              size="25px"
+          >
+            mdi-login
+          </v-icon>
           Login
-        </button>
-        <button
-          v-else
-          class="btn btn-primary rounded-pill default-button"
-          id="button"
-          @click="logout"
+        </v-btn>
+        <v-btn
+            v-else
+            class="btn btn-primary rounded-pill default-button"
+            id="button"
+            @click="logout"
         >
+          <v-icon
+              size="25px"
+          >
+            mdi-logout
+          </v-icon>
           Logout
-        </button>
+        </v-btn>
       </div>
     </nav>
 

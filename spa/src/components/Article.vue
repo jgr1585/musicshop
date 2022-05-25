@@ -7,18 +7,19 @@ export default {
 </script>
 
 <template>
-  <v-card class="card">
-    <v-row>
-      <v-col class="col-md-2">
+  <v-card class="flex-card" height="100%">
+    <v-row class="pa-2">
+      <v-col class="col-md-2 ma-2">
         <img
           :src="'http://coverartarchive.org/release/' + article.musicbrainzId + '/front/'"
           alt="Album Cover"
-          class="vertical-center img"
+          class="vertical-center"
+          id="img"
         />
       </v-col>
       <v-col>
-        <h3 class="text-black">Title: {{ article.title }}</h3>
-        <p>Type: {{ article.type }}</p>
+        <h4 class="text-amber-accent-3">{{ article.title }}</h4>
+        <p>Genre: {{ article.genre }}</p>
         <p>Label: {{ article.label }}</p>
         <p>
           Artists: <i v-for="artist in article.artists">{{ artist.name }};</i>
@@ -39,11 +40,9 @@ h2 {
   color: gold;
 }
 
-.img {
-  height: 175px;
-  width: 175px;
-  margin: 10px 10px 10px 10px;
-  padding: 10px 10px 10px 10px;
+#img {
+  height: 150px;
+  width: 150px;
 }
 
 .vertical-center {

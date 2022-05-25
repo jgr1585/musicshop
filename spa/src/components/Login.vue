@@ -17,7 +17,7 @@ export default {
   },
   filters: {
     validater(p1, p2) {
-      return p1.length > 0 && p2.length > 0 ? true : false;
+      return p1.length > 0 && p2.length > 0;
     }
   },
   methods: {
@@ -26,22 +26,22 @@ export default {
         this.loading = true;
 
         axios
-          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/authentication", {
-            username: this.username,
-            password: this.password
-          })
-          .then((response) => {
-            this.loading = false;
-            this.errored = false;
-            localStorage.setItem("token", response.data);
-            console.log(localStorage.getItem("token"));
-            location.reload();
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.errored = true;
-            alert(error);
-          });
+            .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/authentication", {
+              username: this.username,
+              password: this.password
+            })
+            .then((response) => {
+              this.loading = false;
+              this.errored = false;
+              localStorage.setItem("token", response.data);
+              console.log(localStorage.getItem("token"));
+              location.reload();
+            })
+            .catch((error) => {
+              this.loading = false;
+              this.errored = true;
+              alert(error);
+            });
 
         // TODO: solve problem about of setting JWT in header
         // const opts = {
@@ -77,28 +77,53 @@ export default {
 </script>
 
 <template>
-  <div class="container-xxl hero-header header">
+  <div class="container-xxl container hero-header header">
     <div class="container">
-      <div class="row g-5 align-items-center">
+      <div class="row g-5 align-items-center pa-5">
         <h1 class="text-white mb-4 animated slideInDown">Login</h1>
       </div>
-      <div v-if="tokenIsNull()" class="position-relative w-auto" id="search">
+      <div v-if="tokenIsNull()" class="w-auto" id="search">
         <input
-          class="v-col-lg-auto border-e rounded-2 w-33 input"
-          type="text"
-          :value="username"
-          @input="username = $event.target.value"
-          placeholder="Username"
+            class="v-col-lg-auto border-e rounded-pill w-33 input"
+            type="text"
+            :value="username"
+            @input="username = $event.target.value"
+            placeholder="Username"
         />
         <input
-          class="v-col-lg-auto border-e rounded-2 w-33 input"
-          type="password"
-          :value="password"
-          @input="password = $event.target.value"
-          placeholder="Password"
+            class="v-col-lg-auto border-e rounded-pill w-33 input"
+            type="password"
+            :value="password"
+            @input="password = $event.target.value"
+            placeholder="Password"
         />
-        <button class="btn btn-primary rounded-pill" id="button" @click="login">Login</button>
-        <button class="btn btn-primary rounded-pill" id="button" @click="reset">Reset</button>
+        <div class="w-33">
+          <v-btn
+              class="btn-primary rounded-pill w-33"
+              id="button"
+              @click="login"
+              color="#FFD700"
+          >
+            <v-icon
+                size="25px"
+            >
+              mdi-login
+            </v-icon>
+          </v-btn>
+
+          <v-btn
+              class="btn-primary rounded-pill w-33"
+              id="button"
+              @click="reset"
+              color="#FFD700"
+          >
+            <v-icon
+                size="25px"
+            >
+              mdi-replay
+            </v-icon>
+          </v-btn>
+        </div>
       </div>
 
       <div v-else>
@@ -111,7 +136,6 @@ export default {
           We're sorry, we're not able to retrieve this information at the moment, please try back
           later
         </p>
-        <button class="btn btn-primary rounded-pill" id="button" @click="reset">Reset</button>
       </div>
     </div>
   </div>
