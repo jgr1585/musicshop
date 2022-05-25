@@ -80,6 +80,9 @@ export default {
         return;
       }
 
+      //get Credit card number
+
+
       const config = {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       };
@@ -142,15 +145,13 @@ export default {
         <div v-if="loading">Loading...</div>
         <v-container v-else>
           <v-row v-for="lineItem in lineItems">
-            <LineItem :lineItem="lineItem" />
-            <v-col cols="2">
+            <LineItem :lineItem="lineItem"/>
+            <v-col class="col-1 row align-items-center">
               <v-btn
-                class="btn-primary rounded-pill w-33"
-                id="button"
-                @click="removeFromCart(lineItem.medium.id)"
-                color="#FFD700"
+                  class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                  @click="removeFromCart(lineItem.medium.id)"
               >
-                <v-icon size="25px"> mdi-delete </v-icon>
+                <v-icon color="#ffd700" size="40"> mdi-delete</v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -159,16 +160,16 @@ export default {
 
       <v-col class="row justify-content-center mx-auto w-33">
         <v-btn
-          class="btn-primary rounded-pill w-33"
-          id="button"
-          @click="buyFromCart"
-          color="#FFD700"
+            class="btn-primary rounded-pill w-33"
+            id="button"
+            @click="buyFromCart"
+            color="#FFD700"
         >
-          <v-icon size="25px"> mdi-briefcase-check </v-icon>
+          <v-icon size="25px"> mdi-briefcase-check</v-icon>
         </v-btn>
 
         <v-btn class="btn-primary rounded-pill w-33" id="button" @click="emptyCart" color="#FFD700">
-          <v-icon size="25px"> mdi-basket-unfill </v-icon>
+          <v-icon size="25px"> mdi-basket-unfill</v-icon>
         </v-btn>
       </v-col>
     </div>

@@ -22,7 +22,7 @@ export default {
       }
 
       const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}
       };
 
       const body = {
@@ -30,38 +30,24 @@ export default {
       };
 
       axios
-        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/remove", body, config)
-        .then((response) => {
-          console.log(response);
-          alert("Successfully removed from cart");
-        })
-        .catch((error) => {
-          alert(error);
-        });
+          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/remove", body, config)
+          .then((response) => {
+            console.log(response);
+            alert("Successfully removed from cart");
+          })
+          .catch((error) => {
+            alert(error);
+          });
     }
   }
 };
 </script>
 
 <template>
-  <div class="container-xxl hero-header header">
+  <div class="container-xxl container hero-header header">
     <div class="container">
-      <div class="row g-5 align-items-center">
-        <h1 class="text-white mb-4 animated slideInDown">Download</h1>
-      </div>
-
-      <div class="position-relative w-auto" id="search">
-        <input
-          class="v-col-lg-auto border-e rounded-pill w-33 input"
-          type="text"
-          :value="invoiceID"
-          @input="invoiceID = $event.target.value"
-          placeholder="Invoice Number"
-        />
-        <button class="btn btn-primary rounded-pill w-25" id="button" @click="search">
-          Search
-        </button>
-        <button class="btn btn-primary rounded-pill w-25" id="button" @click="reset">Reset</button>
+      <div class="row g-5 align-items-center pa-5">
+        <h1 class="text-white mb-4 animated slideInDown">Playlist</h1>
       </div>
 
       <div v-if="errored">
@@ -75,17 +61,17 @@ export default {
         <div v-if="loading">Loading...</div>
         <v-container v-else>
           <v-row v-for="lineItem in lineItems">
-            <LineItem :lineItem="lineItem" />
+            <LineItem :lineItem="lineItem"/>
             <v-col cols="2">
               <v-chip
-                class="ma-2"
-                color="#ffd700"
-                text-color="white"
-                id="button"
-                @click="addToCart"
+                  class="ma-2"
+                  color="#ffd700"
+                  text-color="white"
+                  id="button"
+                  @click="addToCart"
               >
                 <v-avatar left>
-                  <v-icon color="#ffd700"> mdi-basket </v-icon>
+                  <v-icon color="#ffd700"> mdi-basket</v-icon>
                 </v-avatar>
                 Remove
               </v-chip>

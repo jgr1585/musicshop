@@ -28,24 +28,24 @@ export default {
         this.loading = true;
 
         axios
-          .get(
-            "http://localhost:8080/backend-1.0-SNAPSHOT/rest/article/search?title=" +
-              this.title +
-              "&artist=" +
-              this.artist
-          )
-          .then((response) => {
-            this.loading = false;
-            this.articles = response.data;
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.errored = true;
-            alert(error);
-          })
-          .finally(() => {
-            this.loading = false;
-          });
+            .get(
+                "http://localhost:8080/backend-1.0-SNAPSHOT/rest/article/search?title=" +
+                this.title +
+                "&artist=" +
+                this.artist
+            )
+            .then((response) => {
+              this.loading = false;
+              this.articles = response.data;
+            })
+            .catch((error) => {
+              this.loading = false;
+              this.errored = true;
+              alert(error);
+            })
+            .finally(() => {
+              this.loading = false;
+            });
 
         // const opts = {
         //   title: this.title,
@@ -80,7 +80,7 @@ export default {
       }
 
       const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}
       };
 
       let id;
@@ -96,19 +96,20 @@ export default {
       };
 
       axios
-        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/add", body, config)
-        .then((response) => {
-          console.log(response);
-          alert("Successfully added to cart");
-        }) // TODO: show message of 409
-        .catch((error) => {
-          alert(error);
-        });
+          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/add", body, config)
+          .then((response) => {
+            console.log(response);
+            alert("Successfully added to cart");
+          }) // TODO: show message of 409
+          .catch((error) => {
+            alert(error);
+          });
     },
     reset() {
       this.title = "";
       this.artist = "";
       this.errored = false;
+      this.articles = [];
     },
     tokenIsNull() {
       return localStorage.getItem("token") == null;
@@ -125,38 +126,38 @@ export default {
       </div>
       <div class="w-auto" id="search">
         <input
-          class="v-col-lg-auto border-e rounded-pill w-33 input"
-          type="text"
-          :value="title"
-          @input="title = $event.target.value"
-          placeholder="Title"
+            class="v-col-lg-auto border-e rounded-pill w-33 input"
+            type="text"
+            :value="title"
+            @input="title = $event.target.value"
+            placeholder="Title"
         />
         <input
-          class="v-col-lg-auto border-e rounded-pill w-33 input"
-          type="text"
-          :value="artist"
-          @input="artist = $event.target.value"
-          placeholder="Artist"
+            class="v-col-lg-auto border-e rounded-pill w-33 input"
+            type="text"
+            :value="artist"
+            @input="artist = $event.target.value"
+            placeholder="Artist"
         />
         <div class="w-33">
           <v-btn
-            class="btn-primary rounded-pill w-33"
-            id="button"
-            @click="search"
-            color="#FFD700"
-            :disabled="tokenIsNull()"
+              class="btn-primary rounded-pill w-33"
+              id="button"
+              @click="search"
+              color="#FFD700"
+              :disabled="tokenIsNull()"
           >
-            <v-icon size="25px"> mdi-magnify </v-icon>
+            <v-icon size="25px"> mdi-magnify</v-icon>
           </v-btn>
 
           <v-btn
-            class="btn-primary rounded-pill w-33"
-            id="button"
-            @click="reset"
-            color="#FFD700"
-            :disabled="tokenIsNull()"
+              class="btn-primary rounded-pill w-33"
+              id="button"
+              @click="reset"
+              color="#FFD700"
+              :disabled="tokenIsNull()"
           >
-            <v-icon size="25px"> mdi-replay </v-icon>
+            <v-icon size="25px"> mdi-replay</v-icon>
           </v-btn>
         </div>
       </div>
@@ -173,14 +174,16 @@ export default {
         <v-container v-else>
           <v-row v-for="article in articles" style="margin-top: 30px" class="align-center">
             <v-col>
-              <Article :article="article" />
+              <Article :article="article"/>
             </v-col>
             <v-col class="col-1">
-              <v-chip class="ma-lg-16" @click="addToCart(article)" :disabled="tokenIsNull()">
-                <v-avatar left>
-                  <v-icon color="#ffd700"> mdi-shopping-music </v-icon>
-                </v-avatar>
-              </v-chip>
+              <v-btn
+                  class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                  @click="addToCart(article)"
+                  :disabled="tokenIsNull()"
+              >
+                <v-icon color="#ffd700" size="40"> mdi-basket-fill</v-icon>
+              </v-btn>
             </v-col>
           </v-row>
         </v-container>
@@ -189,17 +192,12 @@ export default {
   </div>
 
   <div class="card-img">
-    <img class="bottom-img" alt="adele" src="/src/assets/adele.jpg" width="150" height="180" />
-    <img class="bottom-img" alt="weeknd" src="/src/assets/weeknd.jpg" width="185" height="180" />
-    <img class="bottom-img" alt="billie" src="/src/assets/billie.jpg" width="220" height="180" />
-    <img class="bottom-img" alt="madonna" src="/src/assets/Madonna.jpg" width="200" height="180" />
-    <img class="bottom-img" alt="manson" src="/src/assets/manson.jpg" width="190" height="180" />
-    <img
-      class="bottom-img"
-      alt="postmalone"
-      src="/src/assets/postmalone.jpg"
-      width="200"
-      height="180"
+    <img class="bottom-img" alt="adele" src="/src/assets/adele.jpg" width="150" height="180"/>
+    <img class="bottom-img" alt="weeknd" src="/src/assets/weeknd.jpg" width="185" height="180"/>
+    <img class="bottom-img" alt="billie" src="/src/assets/billie.jpg" width="220" height="180"/>
+    <img class="bottom-img" alt="madonna" src="/src/assets/Madonna.jpg" width="200" height="180"/>
+    <img class="bottom-img" alt="manson" src="/src/assets/manson.jpg" width="190" height="180"/>
+    <img class="bottom-img" alt="postmalone" src="/src/assets/postmalone.jpg" width="200" height="180"
     />
   </div>
 </template>

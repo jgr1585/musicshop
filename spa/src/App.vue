@@ -42,7 +42,7 @@ export default {
   <div class="container-xxl bg-white p-0">
     <nav class="navbar navbar-expand navbar-light px-4 px-lg-5 py-4" id="home">
       <a href="index.html">
-        <img alt="logo" src="./assets/logo.png" width="250" height="180" />
+        <img alt="logo" src="./assets/logo.png" width="250" height="180"/>
       </a>
       <div>
         <v-btn
@@ -66,12 +66,12 @@ export default {
           <v-icon
               size="25px"
           >
-            mdi-shopping-music
+            mdi-cart
           </v-icon>
           Shopping Cart
         </v-btn>
         <v-btn
-            class="btn btn-primary rounded-pill default-button"
+            class="btn btn-primary rounded-pill"
             id="button"
             @click="setTab('Download')"
             :disabled="tokenIsNull()"
@@ -98,7 +98,7 @@ export default {
         </v-btn>
         <v-btn
             v-else
-            class="btn btn-primary rounded-pill default-button"
+            class="btn btn-primary rounded-pill"
             id="button"
             @click="logout"
         >

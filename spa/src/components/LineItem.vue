@@ -12,11 +12,7 @@ export default {
 
 <template>
   <v-col>
-    <Article :article="lineItem.article" />
-  </v-col>
-  <v-col cols="2">
-    <p>{{ lineItem.id }}</p>
-    <p>{{ lineItem.price }}</p>
+    <Article :article="lineItem.article"/>
   </v-col>
 </template>
 
