@@ -48,11 +48,13 @@ public class MediaController extends HttpServlet {
 
     private void serveSong(int invoiceId, int songId, HttpServletResponse resp) throws IOException, InvoiceException, UnauthorizedInvoiceException {
         // check if is allowed to access
-        SongDTO song = invoiceService.getSongDTO(authenticatedUser.name(), invoiceId, songId);
+        SongDTO songDTO = invoiceService.getSongDTO(authenticatedUser.name(), invoiceId, songId);
+
+        resp.setContentType("application/mp3");
+        resp.addHeader("Content-Disposition", "attachment; filename="+ songDTO.title() + ".mp3");
 
         ServletOutputStream out = resp.getOutputStream();
-        FileInputStream in = new FileInputStream("/WEB-INF/songs/" + song.uuid() + ".mp3");
-        assert in != null;
+        FileInputStream in = new FileInputStream("/WEB-INF/songs/" + songId + ".mp3");
         in.transferTo(out);
 
         in.close();
@@ -63,22 +65,28 @@ public class MediaController extends HttpServlet {
         // check if is allowed to access
         AlbumDTO album = invoiceService.getAlbumDTO(authenticatedUser.name(), invoiceId, albumId);
 
-        Set<SongDTO> songs = album.songs();
-
         ServletOutputStream out = resp.getOutputStream();
         ZipOutputStream zip = new ZipOutputStream(out);
 
-        for (var song : songs) {
-            FileInputStream in = new FileInputStream("/WEB-INF/songs/" + song.uuid() + ".mp3");
-            zip.putNextEntry(new ZipEntry(song.uuid() + ".mp3"));
+        resp.setContentType("application/zip");
+        resp.addHeader("Content-Disposition", "attachment; filename="+ album.title() + ".zip");
 
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = in.read(buffer)) > 0) {
-                zip.write(buffer, 0, length);
+        for (SongDTO song : album.songs()) {
+            try {
+                InputStream fis = getClass().getResourceAsStream("/WEB-INF/songs/" + song.uuid() + ".mp3");
+                zip.putNextEntry(new ZipEntry(song.title() + ".mp3"));
+
+                byte[] buffer = new byte[1024];
+                int length;
+                assert fis != null;
+                while ((length = fis.read(buffer)) > 0) {
+                    zip.write(buffer, 0, length);
+                }
+
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            in.close();
         }
 
         zip.close();
