@@ -10,6 +10,7 @@ import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.DTO.*;
+import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedInvoiceException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,12 +26,10 @@ import java.util.stream.Stream;
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildInvoiceDTO;
 
 public class InvoiceService {
-    private InvoiceRepository invoiceRepository;
-    private CustomerRepository customerRepository;
+    private static InvoiceRepository invoiceRepository;
 
     InvoiceService() {
         invoiceRepository = RepositoryFactory.getInvoiceRepositoryInstance();
-        customerRepository = RepositoryFactory.getCustomerRepositoryInstance();
     }
 
     public Long createInvoice(Set<LineItem> lineItems, int assignedCustomer) {
@@ -70,20 +69,17 @@ public class InvoiceService {
         }
     }
 
-    private int getCustomerNoByUsername(String username) throws InvoiceException {
-        return customerRepository.findCustomerByUserName(username)
-                .orElseThrow(() -> new InvoiceException("Customer with username not found."))
-                .getCustomerNo();
-    }
-
-    public List<InvoiceDTO> getInvoices(String username) throws InvoiceException {
-        return invoiceRepository.findInvoicesByCustomerNo(getCustomerNoByUsername(username)).stream()
+    public List<InvoiceDTO> getInvoices(String username) throws InvoiceException, CustomerNotFoundException {
+        return invoiceRepository.findInvoicesByCustomerNo(
+                        ServiceFactory
+                                .getCustomerServiceInstance()
+                                .getCustomerNoByUsername(username)).stream()
                 .map(DTOProvider::buildInvoiceDTO)
                 .collect(Collectors.toList());
     }
 
-    private Song getSong(String username, long invoiceId, long songId) throws InvoiceException, UnauthorizedInvoiceException {
-        int customerNo = getCustomerNoByUsername(username);
+    private Song getSong(String username, long invoiceId, long songId) throws InvoiceException, UnauthorizedInvoiceException, CustomerNotFoundException {
+        int customerNo = ServiceFactory.getCustomerServiceInstance().getCustomerNoByUsername(username);
 
         // get invoice
         Invoice invoice = invoiceRepository.findInvoiceById(invoiceId)
@@ -102,8 +98,8 @@ public class InvoiceService {
 
     }
 
-    private Album getAlbum(String username, long invoiceId, long albumId) throws InvoiceException, UnauthorizedInvoiceException {
-        int customerNo = getCustomerNoByUsername(username);
+    private Album getAlbum(String username, long invoiceId, long albumId) throws InvoiceException, UnauthorizedInvoiceException, CustomerNotFoundException {
+        int customerNo = ServiceFactory.getCustomerServiceInstance().getCustomerNoByUsername(username);
 
         // get invoice
         Invoice invoice = invoiceRepository.findInvoiceById(invoiceId)
@@ -122,16 +118,16 @@ public class InvoiceService {
     }
 
 
-    public SongDTO getSongDTO(String username, long invoiceId, long songId) throws InvoiceException, UnauthorizedInvoiceException {
+    public SongDTO getSongDTO(String username, long invoiceId, long songId) throws InvoiceException, UnauthorizedInvoiceException, CustomerNotFoundException {
         return DTOProvider.buildArticleDTO(getSong(username, invoiceId, songId));
     }
 
-    public AlbumDTO getAlbumDTO(String username, long invoiceId, long albumId) throws InvoiceException, UnauthorizedInvoiceException {
+    public AlbumDTO getAlbumDTO(String username, long invoiceId, long albumId) throws InvoiceException, UnauthorizedInvoiceException, CustomerNotFoundException {
         return DTOProvider.buildArticleDTO(getAlbum(username, invoiceId, albumId));
     }
 
-    public List<AlbumDTO> getInvoiceAlbums(String username, long invoiceId) throws InvoiceException, UnauthorizedInvoiceException {
-        int customerNo = getCustomerNoByUsername(username);
+    public List<AlbumDTO> getInvoiceAlbums(String username, long invoiceId) throws InvoiceException, UnauthorizedInvoiceException, CustomerNotFoundException {
+        int customerNo = ServiceFactory.getCustomerServiceInstance().getCustomerNoByUsername(username);
 
         // get invoice
         Invoice invoice = invoiceRepository.findInvoiceById(invoiceId)
@@ -148,13 +144,13 @@ public class InvoiceService {
                 .collect(Collectors.toList());
     }
 
-    public String getInvoiceAlbumDownloadUrl(String username, String baseUri, long invoiceId, long albumId) throws InvoiceException, UnauthorizedInvoiceException {
+    public String getInvoiceAlbumDownloadUrl(String username, String baseUri, long invoiceId, long albumId) throws InvoiceException, UnauthorizedInvoiceException, CustomerNotFoundException {
         Album album = getAlbum(username, invoiceId, albumId);
 
-        return baseUri + "media/album?invoiceId=" +invoiceId+ "&id=" + album.getId();
+        return baseUri + "media/album?invoiceId=" + invoiceId + "&id=" + album.getId();
     }
 
-    public String getInvoiceSongDownloadUrl(String username, String baseUri, long invoiceId, long songId) throws InvoiceException, UnauthorizedInvoiceException {
+    public String getInvoiceSongDownloadUrl(String username, String baseUri, long invoiceId, long songId) throws InvoiceException, UnauthorizedInvoiceException, CustomerNotFoundException {
         Song song = getSong(username, invoiceId, songId);
 
         return baseUri + "media/song?invoiceId=" + invoiceId + "&id=" + song.getId();

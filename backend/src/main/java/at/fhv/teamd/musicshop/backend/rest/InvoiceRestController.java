@@ -5,6 +5,7 @@ import at.fhv.teamd.musicshop.backend.rest.auth.AuthenticatedUser;
 import at.fhv.teamd.musicshop.backend.rest.auth.Secured;
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.backend.rest.auth.User;
+import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedInvoiceException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,7 +32,7 @@ public class InvoiceRestController {
     @AuthenticatedUser
     private User authenticatedUser;
 
-    private InvoiceService invoiceService = ServiceFactory.getInvoiceServiceInstance();
+    private final InvoiceService invoiceService = ServiceFactory.getInvoiceServiceInstance();
 
     public InvoiceRestController() {}
 
@@ -46,8 +47,8 @@ public class InvoiceRestController {
 
         try {
             return Response.ok(invoiceService.getInvoices(authenticatedUser.name())).build();
-        } catch (InvoiceException e) {
-            return Response.status(404, "Customer with username not found").build();
+        } catch (InvoiceException | CustomerNotFoundException e) {
+            return Response.status(404, e.getMessage()).build();
         }
     }
 
@@ -66,7 +67,7 @@ public class InvoiceRestController {
             return Response.ok(invoiceService.getInvoiceAlbums(authenticatedUser.name(), invoiceId)).build();
         } catch (UnauthorizedInvoiceException e) {
             return Response.status(401, e.getMessage()).build();
-        } catch (InvoiceException e) {
+        } catch (InvoiceException | CustomerNotFoundException e) {
             return Response.status(404, e.getMessage()).build();
         }
     }
@@ -92,7 +93,7 @@ public class InvoiceRestController {
             return Response.ok(singlePropertyJson("albumUrl", albumUrl)).build();
         } catch (UnauthorizedInvoiceException e) {
             return Response.status(401, e.getMessage()).build();
-        } catch (InvoiceException e) {
+        } catch (InvoiceException | CustomerNotFoundException e) {
             return Response.status(404, e.getMessage()).build();
         } catch (JsonProcessingException e) {
             return Response.status(500).build();
@@ -133,7 +134,7 @@ public class InvoiceRestController {
             return Response.ok(singlePropertyJson("songUrl", songUrl)).build();
         } catch (UnauthorizedInvoiceException e) {
             return Response.status(401, e.getMessage()).build();
-        } catch (InvoiceException e) {
+        } catch (InvoiceException | CustomerNotFoundException e) {
             return Response.status(404, e.getMessage()).build();
         } catch (JsonProcessingException e) {
             return Response.status(500).build();

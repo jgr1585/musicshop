@@ -9,6 +9,8 @@ import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
+import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
+import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -125,7 +127,7 @@ public class ShoppingCartService {
         return String.valueOf(invoiceNo);
     }
 
-    public void addDigitalsToShoppingCart(String userId, long mediumId) {
+    public void addDigitalsToShoppingCart(String userId, long mediumId) throws ShoppingCartException {
         if (!shoppingCartExists(userId)) {
             initializeShoppingcart(userId);
         }
@@ -135,45 +137,46 @@ public class ShoppingCartService {
         Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow();
 
         if (medium.getType() != MediumType.DIGITAL)
-            throw new IllegalArgumentException("Only digital mediums are allowed here");
+            throw new ShoppingCartException("Only digital mediums are allowed here");
 
         if (lineItems.stream().noneMatch(li -> li.getMedium().getId() == mediumId)) {
             lineItems.add(new LineItem(Quantity.of(1), medium));
             sessionLineItems.put(userId, lineItems);
         } else {
-            throw new IllegalArgumentException("Already in ShoppingCart");
+            throw new ShoppingCartException("Already in ShoppingCart");
         }
     }
 
-    public void removeDigitalsFromShoppingCart(String userId, long mediumId) {
+    public void removeDigitalsFromShoppingCart(String userId, long mediumId) throws ShoppingCartException {
         if (!shoppingCartExists(userId)) {
             emptyShoppingCart(userId);
         }
 
         Set<LineItem> lineItems = sessionLineItems.get(userId);
 
-        lineItems.stream()
-                .filter(li -> li.getMedium().getId() == mediumId)
-                .findFirst()
-                .ifPresentOrElse(lineItems::remove, () -> {
-                    throw new IllegalArgumentException("Not in ShoppingCart");
-                });
+        lineItems.remove(
+                lineItems.stream()
+                        .filter(li -> li.getMedium().getId() == mediumId)
+                        .findFirst()
+                        .orElseThrow(() -> new ShoppingCartException("Not in ShoppingCart")));
     }
 
-    public String buyDigitalsFromShoppingCart(String userId, int id) {
+    public String buyDigitalsFromShoppingCart(String userId) throws CustomerNotFoundException, ShoppingCartException {
         if (!shoppingCartExists(userId)) {
             emptyShoppingCart(userId);
         }
 
+        int id = ServiceFactory.getCustomerServiceInstance().getCustomerNoByUsername(userId);
+
         Set<LineItem> lineItems = sessionLineItems.get(userId);
 
-        if (lineItems.isEmpty()) throw new IllegalArgumentException("No LineItems in ShoppingCart");
+        if (lineItems.isEmpty()) throw new ShoppingCartException("No LineItems in ShoppingCart");
 
-        lineItems.forEach(lineItem -> {
+        for (LineItem lineItem : lineItems) {
             Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
             if (medium.getType() != MediumType.DIGITAL)
-                throw new IllegalArgumentException("Only digital mediums are allowed");
-        });
+                throw new ShoppingCartException("Only digital mediums are allowed");
+        }
 
         Long invoiceNo = ServiceFactory.getInvoiceServiceInstance().createInvoice(lineItems, id);
 
