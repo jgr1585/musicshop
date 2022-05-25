@@ -7,6 +7,8 @@ import at.fhv.teamd.musicshop.backend.rest.auth.AuthenticatedUser;
 import at.fhv.teamd.musicshop.backend.rest.auth.Secured;
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.backend.rest.auth.User;
+import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
+import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -36,7 +38,7 @@ public class ShoppingCartRestController {
     @ApiResponse(responseCode = "204")
     @ApiResponse(responseCode = "401", description = "Not Authorized")
     @ApiResponse(responseCode = "404", description = "Article not found")
-    @ApiResponse(responseCode = "409", description = "Already in Cart")
+    @ApiResponse(responseCode = "406", description = "Already in Cart")
     public Response addToShoppingCart(AddToShoppingCartForm form) {
         System.out.println("authenticatedUser: " + authenticatedUser.name());
         if (authenticatedUser == null) {
@@ -46,8 +48,8 @@ public class ShoppingCartRestController {
             ServiceFactory.getShoppingCartServiceInstance().addDigitalsToShoppingCart(authenticatedUser.name(), form.mediumId);
         } catch (NoSuchElementException e) {
             return Response.status(404, e.getMessage()).build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(409, e.getMessage()).build();
+        } catch (ShoppingCartException e) {
+            return Response.status(406, e.getMessage()).build();
         }
         return Response.status(204).build();
     }
@@ -63,7 +65,11 @@ public class ShoppingCartRestController {
         if (authenticatedUser == null) {
             return Response.status(401).build();
         }
-        ServiceFactory.getShoppingCartServiceInstance().removeDigitalsFromShoppingCart(authenticatedUser.name(), form.mediumId);
+        try {
+            ServiceFactory.getShoppingCartServiceInstance().removeDigitalsFromShoppingCart(authenticatedUser.name(), form.mediumId);
+        } catch (ShoppingCartException e) {
+            return Response.status(406, e.getMessage()).build();
+        }
         return Response.status(204).build();
     }
 
@@ -101,18 +107,19 @@ public class ShoppingCartRestController {
     @ApiResponse(responseCode = "200", description = "Successfully bought Items")
     @ApiResponse(responseCode = "401", description = "Not Authorized")
     @ApiResponse(responseCode = "404", description = "Customer not found")
-    @ApiResponse(responseCode = "409", description = "No lineItems in ShoppingCart")
+    @ApiResponse(responseCode = "406", description = "No lineItems in ShoppingCart")
     public Response buyFromShoppingCart(BuyFromShoppingCartForm form) {
         System.out.println("authenticatedUser: " + authenticatedUser.name());
         if (authenticatedUser == null) {
             return Response.status(401).build();
         }
-        // TODO: implement 404
         String invoiceNo;
         try {
-            invoiceNo = ServiceFactory.getShoppingCartServiceInstance().buyDigitalsFromShoppingCart(authenticatedUser.name(), form.customerId);
-        } catch (IllegalArgumentException e) {
-            return Response.status(409, e.getMessage()).build();
+            invoiceNo = ServiceFactory.getShoppingCartServiceInstance().buyDigitalsFromShoppingCart(authenticatedUser.name());
+        } catch (CustomerNotFoundException e) {
+            return Response.status(404, e.getMessage()).build();
+        } catch (ShoppingCartException e) {
+            return Response.status(406, e.getMessage()).build();
         }
         return Response.ok("Invoice created with No: " + invoiceNo).build();
     }

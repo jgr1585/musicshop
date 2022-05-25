@@ -11,6 +11,7 @@ import at.fhv.teamd.musicshop.backend.rest.auth.User;
 import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
 import at.fhv.teamd.musicshop.library.DTO.SongDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
+import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedInvoiceException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -43,7 +44,7 @@ public class MediaController extends HttpServlet {
     private InvoiceService invoiceService = ServiceFactory.getInvoiceServiceInstance();
     private ArticleService articleService = ServiceFactory.getArticleServiceInstance();
 
-    private void serveSong(int invoiceId, int songId, HttpServletResponse resp) throws IOException, InvoiceException, UnauthorizedInvoiceException {
+    private void serveSong(int invoiceId, int songId, HttpServletResponse resp) throws IOException, InvoiceException, UnauthorizedInvoiceException, CustomerNotFoundException {
         // check if is allowed to access
         SongDTO songDTO = invoiceService.getSongDTO(authenticatedUser.name(), invoiceId, songId);
 
@@ -58,7 +59,7 @@ public class MediaController extends HttpServlet {
         out.close();
     }
 
-    private void serveAlbum(int invoiceId, int albumId, HttpServletResponse resp) throws ApplicationClientException, IOException, InvoiceException, UnauthorizedInvoiceException {
+    private void serveAlbum(int invoiceId, int albumId, HttpServletResponse resp) throws ApplicationClientException, IOException, InvoiceException, UnauthorizedInvoiceException, CustomerNotFoundException {
         // check if is allowed to access
         AlbumDTO album = invoiceService.getAlbumDTO(authenticatedUser.name(), invoiceId, albumId);
 
@@ -109,7 +110,7 @@ public class MediaController extends HttpServlet {
             resp.sendError(404, "Requested file not found.");
         } catch (IOException e) {
             resp.sendError(500);
-        } catch (InvoiceException e) {
+        } catch (InvoiceException | CustomerNotFoundException e) {
             resp.sendError(404, "Invoice not found.");
         } catch (UnauthorizedInvoiceException e) {
             resp.sendError(401, "Unauthorized.");

@@ -73,7 +73,7 @@ export default {
           alert(error);
         });
     },
-    buyFromCart(id) {
+    buyFromCart() {
       if (localStorage.getItem("token") == null) {
         alert("You are not logged in!");
         this.errored = true;
@@ -84,12 +84,8 @@ export default {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       };
 
-      const body = {
-        customerId: id
-      };
-
       axios
-        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/buy", body, config)
+        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/buy", {}, config)
         .then((response) => {
           console.log(response);
           alert("Successfully purchased");
