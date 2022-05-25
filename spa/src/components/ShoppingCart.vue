@@ -1,7 +1,7 @@
 <script setup>
 import LineItem from "./LineItem.vue";
 import axios from "axios";
-import { DefaultApi } from "../rest/index.js";
+import {DefaultApi} from "../rest/index.js";
 </script>
 
 <script>
@@ -23,20 +23,20 @@ export default {
       }
 
       const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}
       };
 
       axios
-        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/get", {}, config)
-        .then((response) => {
-          console.log(response.data);
+          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/get", {}, config)
+          .then((response) => {
+            console.log(response.data);
 
-          this.lineItems = response.data.lineItems;
-          this.totalAmount = response.data.totalAmount;
-        })
-        .catch((error) => {
-          alert(error);
-        });
+            this.lineItems = response.data.lineItems;
+            this.totalAmount = response.data.totalAmount;
+          })
+          .catch((error) => {
+            alert(error);
+          });
 
       // new DefaultApi().getShoppingCart((error, data, response) => {
       //   if (error) {
@@ -56,7 +56,7 @@ export default {
       }
 
       const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}
       };
 
       const body = {
@@ -64,29 +64,78 @@ export default {
       };
 
       axios
-        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/remove", body, config)
-        .then((response) => {
-          console.log(response);
-          alert("Successfully removed from cart");
-          this.getShoppingCart();
-        })
-        .catch((error) => {
-          alert(error);
-        });
-    }
+          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/remove", body, config)
+          .then((response) => {
+            console.log(response);
+            alert("Successfully removed from cart");
+            this.getShoppingCart();
+          })
+          .catch((error) => {
+            alert(error);
+          });
+    },
+    buyFromCart(id) {
+      if (localStorage.getItem("token") == null) {
+        alert("You are not logged in!");
+        this.errored = true;
+        return;
+      }
+
+      const config = {
+        headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}
+      };
+
+      const body = {
+        customerId: id
+      };
+
+      axios
+          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/buy", body, config)
+          .then((response) => {
+            console.log(response);
+            alert("Successfully purchased");
+            this.getShoppingCart()
+          })
+          .catch((error) => {
+            alert(error);
+          });
+    },
+    emptyCart() {
+      if (localStorage.getItem("token") == null) {
+        alert("You are not logged in!");
+        this.errored = true;
+        return;
+      }
+
+      const config = {
+        headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}
+      };
+
+      axios
+          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/empty", config)
+          .then((response) => {
+            console.log(response);
+            alert("Shopping Cart emptied");
+            this.getShoppingCart()
+          })
+          .catch((error) => {
+            alert(error);
+          });
+    },
   },
   created() {
     this.getShoppingCart();
-  }
+  },
 };
 </script>
 
 <template>
-  <div class="container-xxl hero-header header">
+  <div class="container-xxl container hero-header header">
     <div class="container">
-      <div class="row g-5 align-items-center">
+      <div class="row align-items-center pa-5">
         <h1 class="text-white mb-4 animated slideInDown">Shopping Cart</h1>
       </div>
+
       <div v-if="errored">
         <p class="text">
           We're sorry, we're not able to retrieve this information at the moment, please try back
@@ -98,24 +147,52 @@ export default {
         <div v-if="loading">Loading...</div>
         <v-container v-else>
           <v-row v-for="lineItem in lineItems">
-            <LineItem :lineItem="lineItem" />
+            <LineItem :lineItem="lineItem"/>
             <v-col cols="2">
-              <v-chip
-                class="ma-2"
-                color="#ffd700"
-                text-color="white"
-                id="button"
-                @click="removeFromCart(lineItem.medium.id)"
+              <v-btn
+                  class="btn-primary rounded-pill w-33"
+                  id="button"
+                  @click="removeFromCart"
+                  color="#FFD700"
               >
-                <v-avatar left>
-                  <v-icon color="#ffd700"> mdi-basket </v-icon>
-                </v-avatar>
-                Remove
-              </v-chip>
+                <v-icon
+                    size="25px"
+                >
+                  mdi-delete
+                </v-icon>
+              </v-btn>
             </v-col>
           </v-row>
         </v-container>
       </div>
+
+      <v-col class="row justify-content-center mx-auto w-33">
+        <v-btn
+            class="btn-primary rounded-pill w-33"
+            id="button"
+            @click="buyFromCart"
+            color="#FFD700"
+        >
+          <v-icon
+              size="25px"
+          >
+            mdi-briefcase-check
+          </v-icon>
+        </v-btn>
+
+        <v-btn
+            class="btn-primary rounded-pill w-33"
+            id="button"
+            @click="emptyCart"
+            color="#FFD700"
+        >
+          <v-icon
+              size="25px"
+          >
+            mdi-basket-unfill
+          </v-icon>
+        </v-btn>
+      </v-col>
     </div>
   </div>
 </template>

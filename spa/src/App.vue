@@ -1,6 +1,7 @@
 <script setup>
 import Search from "./components/Search.vue";
 import ShoppingCart from "./components/ShoppingCart.vue";
+import Download from "./components/Download.vue";
 import Login from "./components/Login.vue";
 </script>
 
@@ -9,6 +10,7 @@ export default {
   components: {
     Search,
     ShoppingCart,
+    Download,
     Login
   },
   data() {
@@ -36,41 +38,73 @@ export default {
 
 <template>
   <div class="container-xxl bg-white p-0">
-    <nav class="navbar navbar-expand navbar-light px-4 px-lg-5 py-3 py-lg-0" id="home">
+    <nav class="navbar navbar-expand navbar-light px-4 px-lg-5 py-4" id="home">
       <a href="index.html">
         <img alt="logo" src="./assets/logo.png" width="250" height="180"/>
       </a>
       <div>
-        <button
+        <v-btn
             class="btn btn-primary rounded-pill"
             id="button"
             @click="setTab('Search')"
         >
+          <v-icon
+              size="25px"
+          >
+            mdi-magnify
+          </v-icon>
           Search
-        </button>
-        <button
+        </v-btn>
+        <v-btn
             class="btn btn-primary rounded-pill"
             id="button"
             @click="setTab('ShoppingCart')"
         >
+          <v-icon
+              size="25px"
+          >
+            mdi-shopping-music
+          </v-icon>
           Shopping Cart
-        </button>
-        <button
+        </v-btn>
+        <v-btn
+            class="btn btn-primary rounded-pill default-button"
+            id="button"
+            @click="setTab('Download')"
+        >
+          <v-icon
+              size="25px"
+          >
+            mdi-music
+          </v-icon>
+          Playlist
+        </v-btn>
+        <v-btn
             v-if="!loggedIn"
             class="btn btn-primary rounded-pill"
             id="button"
             @click="setTab('Login')"
         >
+          <v-icon
+              size="25px"
+          >
+            mdi-login
+          </v-icon>
           Login
-        </button>
-        <button
+        </v-btn>
+        <v-btn
             v-else
             class="btn btn-primary rounded-pill default-button"
             id="button"
             @click="logout"
         >
+          <v-icon
+              size="25px"
+          >
+            mdi-logout
+          </v-icon>
           Logout
-        </button>
+        </v-btn>
       </div>
     </nav>
 
