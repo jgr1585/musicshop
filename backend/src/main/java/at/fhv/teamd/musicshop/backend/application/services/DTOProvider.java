@@ -143,6 +143,7 @@ public class DTOProvider {
         final SongDTO.Builder builder = SongDTO.builder()
                 .withArticleSpecificData(
                         song.getId(),
+                        song.getUuid(),
                         song.getTitle(),
                         song.getLabel(),
                         song.getReleaseDate(),
@@ -158,6 +159,7 @@ public class DTOProvider {
         final AlbumDTO.Builder builder = AlbumDTO.builder()
                 .withArticleSpecificData(
                         album.getId(),
+                        album.getUuid(),
                         album.getTitle(),
                         album.getLabel(),
                         album.getReleaseDate(),

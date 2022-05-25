@@ -15,6 +15,7 @@ import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedInvoiceException;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 import java.io.*;
 import java.util.Optional;
 import java.util.Set;
@@ -32,9 +34,10 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-@WebServlet("/media/*")
+@RequestScoped
 @Secured
 @SecurityRequirement(name = "Authentication")
+@WebServlet("/media/*")
 public class MediaController extends HttpServlet {
     @Inject
     @AuthenticatedUser
@@ -45,10 +48,10 @@ public class MediaController extends HttpServlet {
 
     private void serveSong(int invoiceId, int songId, HttpServletResponse resp) throws IOException, InvoiceException, UnauthorizedInvoiceException {
         // check if is allowed to access
-        invoiceService.getSongDTO(authenticatedUser.name(), invoiceId, songId);
+        SongDTO song = invoiceService.getSongDTO(authenticatedUser.name(), invoiceId, songId);
 
         ServletOutputStream out = resp.getOutputStream();
-        FileInputStream in = new FileInputStream("/WEB-INF/songs/" + songId + ".mp3");
+        FileInputStream in = new FileInputStream("/WEB-INF/songs/" + song.uuid() + ".mp3");
         assert in != null;
         in.transferTo(out);
 
@@ -60,15 +63,14 @@ public class MediaController extends HttpServlet {
         // check if is allowed to access
         AlbumDTO album = invoiceService.getAlbumDTO(authenticatedUser.name(), invoiceId, albumId);
 
-        Set<Long> songIds = album.songs().stream()
-                .map(SongDTO::id).collect(Collectors.toSet());
+        Set<SongDTO> songs = album.songs();
 
         ServletOutputStream out = resp.getOutputStream();
         ZipOutputStream zip = new ZipOutputStream(out);
 
-        for (var songId : songIds) {
-            FileInputStream in = new FileInputStream("/WEB-INF/songs/" + songId + ".mp3");
-            zip.putNextEntry(new ZipEntry(songId + ".mp3"));
+        for (var song : songs) {
+            FileInputStream in = new FileInputStream("/WEB-INF/songs/" + song.uuid() + ".mp3");
+            zip.putNextEntry(new ZipEntry(song.uuid() + ".mp3"));
 
             byte[] buffer = new byte[1024];
             int length;
@@ -84,6 +86,11 @@ public class MediaController extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if (authenticatedUser == null) {
+            resp.sendError(401, "Not authenticated.");
+            return;
+        }
+
         try {
             int invoiceId = Integer.parseInt(req.getParameter("invoiceId"));
 

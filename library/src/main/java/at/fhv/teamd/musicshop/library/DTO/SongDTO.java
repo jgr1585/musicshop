@@ -14,12 +14,14 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class SongDTO implements ArticleDTO, Serializable {
-    private static final long serialVersionUID = 6177922003024617967L;
+    private static final long serialVersionUID = -8929295739018385391L;
 
     private Long id;
+    private UUID uuid;
     private String title;
     private String label;
     private LocalDate releaseDate;
@@ -36,6 +38,9 @@ public final class SongDTO implements ArticleDTO, Serializable {
     public Long id() {
         return this.id;
     }
+
+    // no json property
+    public UUID uuid() { return this.uuid; }
 
     public String title() {
         return this.title;
@@ -86,7 +91,7 @@ public final class SongDTO implements ArticleDTO, Serializable {
     }
 
     boolean equalsWithoutAlbums(SongDTO songDTO) {
-        return id.equals(songDTO.id) && title.equals(songDTO.title) && label.equals(songDTO.label) && releaseDate.equals(songDTO.releaseDate) && genre.equals(songDTO.genre) && musicbrainzId.equals(songDTO.musicbrainzId) && artists.equals(songDTO.artists) && Objects.equals(length, songDTO.length);
+        return id.equals(songDTO.id) && uuid.equals(songDTO.uuid) && title.equals(songDTO.title) && label.equals(songDTO.label) && releaseDate.equals(songDTO.releaseDate) && genre.equals(songDTO.genre) && musicbrainzId.equals(songDTO.musicbrainzId) && artists.equals(songDTO.artists) && Objects.equals(length, songDTO.length);
     }
 
     @Override
@@ -95,7 +100,7 @@ public final class SongDTO implements ArticleDTO, Serializable {
     }
 
     int hashCodeWithoutAlbums() {
-        return Objects.hash(id, title, label, releaseDate, genre, musicbrainzId, artists, length);
+        return Objects.hash(id, uuid, title, label, releaseDate, genre, musicbrainzId, artists, length);
     }
 
     public static class Builder {
@@ -107,6 +112,7 @@ public final class SongDTO implements ArticleDTO, Serializable {
 
         public SongDTO.Builder withArticleSpecificData(
                 Long id,
+                UUID uuid,
                 String title,
                 String label,
                 LocalDate releaseDate,
@@ -115,6 +121,7 @@ public final class SongDTO implements ArticleDTO, Serializable {
                 Set<ArtistDTO> artists
         ) {
             this.instance.id = id;
+            this.instance.uuid = uuid;
             this.instance.title = title;
             this.instance.label = label;
             this.instance.releaseDate = releaseDate;

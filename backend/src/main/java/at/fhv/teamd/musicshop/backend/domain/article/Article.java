@@ -41,14 +41,18 @@ public abstract class Article {
     protected Article() {
     }
 
-    protected Article(String title, String label, LocalDate releaseDate, String genre, String musicbrainzId, Set<Artist> artists) {
-        this.uuid = UUID.randomUUID();
+    protected Article(UUID uuid, String title, String label, LocalDate releaseDate, String genre, String musicbrainzId, Set<Artist> artists) {
+        this.uuid = uuid;
         this.title = Objects.requireNonNull(title);
         this.label = Objects.requireNonNull(label);
         this.releaseDate = Objects.requireNonNull(releaseDate);
         this.genre = Objects.requireNonNull(genre);
         this.musicbrainzId = Objects.requireNonNull(musicbrainzId);
         this.artists = Objects.requireNonNull(artists);
+    }
+
+    protected Article(String title, String label, LocalDate releaseDate, String genre, String musicbrainzId, Set<Artist> artists) {
+        this(UUID.randomUUID(), title, label, releaseDate, genre, musicbrainzId, artists);
     }
 
     @Override

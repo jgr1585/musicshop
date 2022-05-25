@@ -13,12 +13,14 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class AlbumDTO implements ArticleDTO, Serializable {
-    private static final long serialVersionUID = -3423050844004290443L;
+    private static final long serialVersionUID = -8872168534461023968L;
 
     private Long id;
+    private UUID uuid;
     private String title;
     private String label;
     private LocalDate releaseDate;
@@ -35,6 +37,9 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
     public Long id() {
         return this.id;
     }
+
+    // no json property
+    public UUID uuid() { return this.uuid; }
 
     public String title() {
         return this.title;
@@ -85,7 +90,7 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
     }
 
     boolean equalsWithoutSongs(AlbumDTO albumDTO) {
-        return id.equals(albumDTO.id) && title.equals(albumDTO.title) && label.equals(albumDTO.label) && releaseDate.equals(albumDTO.releaseDate) && genre.equals(albumDTO.genre) && musicbrainzId.equals(albumDTO.musicbrainzId) && artists.equals(albumDTO.artists) && Objects.equals(mediums, albumDTO.mediums);
+        return id.equals(albumDTO.id) && uuid.equals(albumDTO.uuid) && title.equals(albumDTO.title) && label.equals(albumDTO.label) && releaseDate.equals(albumDTO.releaseDate) && genre.equals(albumDTO.genre) && musicbrainzId.equals(albumDTO.musicbrainzId) && artists.equals(albumDTO.artists) && Objects.equals(mediums, albumDTO.mediums);
     }
 
     @Override
@@ -94,7 +99,7 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
     }
 
     int hashCodeWithoutSongs() {
-        return Objects.hash(id, title, label, releaseDate, genre, musicbrainzId, artists, mediums);
+        return Objects.hash(id, uuid, title, label, releaseDate, genre, musicbrainzId, artists, mediums);
     }
 
     public static class Builder {
@@ -106,6 +111,7 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
 
         public AlbumDTO.Builder withArticleSpecificData(
                 Long id,
+                UUID uuid,
                 String title,
                 String label,
                 LocalDate releaseDate,
@@ -114,6 +120,7 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
                 Set<ArtistDTO> artists
         ) {
             this.instance.id = id;
+            this.instance.uuid = uuid;
             this.instance.title = title;
             this.instance.label = label;
             this.instance.releaseDate = releaseDate;
