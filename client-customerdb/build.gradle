@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "org.sonarqube" version "3.3"
 }
 
 group 'at.fhv.teamd'
@@ -27,5 +28,13 @@ jar {
     }
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "kaufi95_musicshop"
+        property "sonar.organization", "kaufi95"
+        property "sonar.host.url", "https://sonarcloud.io"
     }
 }

@@ -3,6 +3,7 @@ plugins {
     id 'war'
     id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.0"
     id 'org.hidetake.swagger.generator' version '2.19.2'
+    id "org.sonarqube" version "3.3"
 }
 
 group 'at.fhv.teamd'
@@ -88,4 +89,12 @@ swaggerSources {
 //            outputDir = file('src/main/webapp/swagger-code-cs')
 //        }
 //    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "kaufi95_musicshop"
+        property "sonar.organization", "kaufi95"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
