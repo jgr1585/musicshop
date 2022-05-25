@@ -178,11 +178,20 @@ export default {
             </v-col>
             <v-col class="col-1">
               <v-btn
+                  v-if="article.mediums"
                   class="ma-lg-10 bg-transparent rounded-pill pa-5"
                   @click="addToCart(article)"
                   :disabled="tokenIsNull()"
               >
                 <v-icon color="#ffd700" size="40"> mdi-basket-fill</v-icon>
+              </v-btn>
+              <v-btn
+                  v-else
+                  class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                  @click="addToCart(article.albums.at(0))"
+              :disabled="tokenIsNull()"
+              >
+              <v-icon color="#ffd700" size="40"> mdi-basket-fill</v-icon>
               </v-btn>
             </v-col>
           </v-row>
