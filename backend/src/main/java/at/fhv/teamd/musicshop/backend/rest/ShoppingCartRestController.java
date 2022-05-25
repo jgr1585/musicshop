@@ -108,6 +108,8 @@ public class ShoppingCartRestController {
     @ApiResponse(responseCode = "401", description = "Not Authorized")
     @ApiResponse(responseCode = "404", description = "Customer not found")
     @ApiResponse(responseCode = "406", description = "No lineItems in ShoppingCart")
+    @ApiResponse(responseCode = "406", description = "CreditCardNo does not match")
+    @ApiResponse(responseCode = "406", description = "Only digital mediums allowed")
     public Response buyFromShoppingCart(BuyFromShoppingCartForm form) {
         System.out.println("authenticatedUser: " + authenticatedUser.name());
         if (authenticatedUser == null) {
@@ -115,7 +117,7 @@ public class ShoppingCartRestController {
         }
         String invoiceNo;
         try {
-            invoiceNo = ServiceFactory.getShoppingCartServiceInstance().buyDigitalsFromShoppingCart(authenticatedUser.name());
+            invoiceNo = ServiceFactory.getShoppingCartServiceInstance().buyDigitalsFromShoppingCart(authenticatedUser.name(), form.creditCardNo);
         } catch (CustomerNotFoundException e) {
             return Response.status(404, e.getMessage()).build();
         } catch (ShoppingCartException e) {

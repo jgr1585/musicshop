@@ -161,9 +161,13 @@ public class ShoppingCartService {
                         .orElseThrow(() -> new ShoppingCartException("Not in ShoppingCart")));
     }
 
-    public String buyDigitalsFromShoppingCart(String userId) throws CustomerNotFoundException, ShoppingCartException {
+    public String buyDigitalsFromShoppingCart(String userId, String creditCardNo) throws CustomerNotFoundException, ShoppingCartException {
         if (!shoppingCartExists(userId)) {
             emptyShoppingCart(userId);
+        }
+
+        if (!ServiceFactory.getCustomerServiceInstance().getCustomerByUsername(userId).getCreditcardNo().equals(creditCardNo)) {
+            throw new ShoppingCartException("CreditCardNo does not match!");
         }
 
         int id = ServiceFactory.getCustomerServiceInstance().getCustomerNoByUsername(userId);
