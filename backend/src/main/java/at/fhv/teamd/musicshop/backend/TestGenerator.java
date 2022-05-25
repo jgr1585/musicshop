@@ -319,8 +319,8 @@ public class TestGenerator {
         customers.add(new Customer(8, "SammyB", "4344721596616160"));
         customers.add(new Customer(9, "KatrinK", "5486293928490720"));
         customers.add(new Customer(10, "DanaH",  "5310021062469900"));
-        customers.add(new Customer(11, "test",  "5310021062469900"));
-        customers.add(new Customer(12, "test1",  "5310021062469900"));
+        customers.add(new Customer(11, "test",  "1"));
+        customers.add(new Customer(12, "test1",  "1"));
 
         Set<LineItem> lineItems = new HashSet<>();
         lineItems.add(new LineItem(Quantity.of(2), mediums.iterator().next()));

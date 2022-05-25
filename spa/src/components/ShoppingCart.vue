@@ -26,16 +26,16 @@ export default {
       };
 
       axios
-          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/get", {}, config)
-          .then((response) => {
-            console.log(response.data);
+        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/get", {}, config)
+        .then((response) => {
+          console.log(response.data);
 
-            this.lineItems = response.data.lineItems;
-            this.totalAmount = response.data.totalAmount;
-          })
-          .catch((error) => {
-            alert(error);
-          });
+          this.lineItems = response.data.lineItems;
+          this.totalAmount = response.data.totalAmount;
+        })
+        .catch((error) => {
+          alert(error);
+        });
 
       // new DefaultApi().getShoppingCart((error, data, response) => {
       //   if (error) {
@@ -55,7 +55,7 @@ export default {
       }
 
       const config = {
-        headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       };
 
       const body = {
@@ -63,15 +63,15 @@ export default {
       };
 
       axios
-          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/remove", body, config)
-          .then((response) => {
-            console.log(response);
-            alert("Successfully removed from cart");
-            this.getShoppingCart();
-          })
-          .catch((error) => {
-            alert(error);
-          });
+        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/remove", body, config)
+        .then((response) => {
+          console.log(response);
+          alert("Successfully removed from cart");
+          this.getShoppingCart();
+        })
+        .catch((error) => {
+          alert(error);
+        });
     },
     buyFromCart(id) {
       if (localStorage.getItem("token") == null) {
@@ -81,7 +81,7 @@ export default {
       }
 
       const config = {
-        headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       };
 
       const body = {
@@ -89,15 +89,15 @@ export default {
       };
 
       axios
-          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/buy", body, config)
-          .then((response) => {
-            console.log(response);
-            alert("Successfully purchased");
-            this.getShoppingCart()
-          })
-          .catch((error) => {
-            alert(error);
-          });
+        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/buy", body, config)
+        .then((response) => {
+          console.log(response);
+          alert("Successfully purchased");
+          this.getShoppingCart();
+        })
+        .catch((error) => {
+          alert(error);
+        });
     },
     emptyCart() {
       if (localStorage.getItem("token") == null) {
@@ -107,20 +107,20 @@ export default {
       }
 
       const config = {
-        headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       };
 
       axios
-          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/empty", config)
-          .then((response) => {
-            console.log(response);
-            alert("Shopping Cart emptied");
-            this.getShoppingCart()
-          })
-          .catch((error) => {
-            alert(error);
-          });
-    },
+        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/empty", {}, config)
+        .then((response) => {
+          console.log(response);
+          alert("Shopping Cart emptied");
+          this.getShoppingCart();
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    }
   },
   created() {
     this.getShoppingCart();
@@ -146,19 +146,15 @@ export default {
         <div v-if="loading">Loading...</div>
         <v-container v-else>
           <v-row v-for="lineItem in lineItems">
-            <LineItem :lineItem="lineItem"/>
+            <LineItem :lineItem="lineItem" />
             <v-col cols="2">
               <v-btn
-                  class="btn-primary rounded-pill w-33"
-                  id="button"
-                  @click="removeFromCart(lineItem.medium.id)"
-                  color="#FFD700"
+                class="btn-primary rounded-pill w-33"
+                id="button"
+                @click="removeFromCart(lineItem.medium.id)"
+                color="#FFD700"
               >
-                <v-icon
-                    size="25px"
-                >
-                  mdi-delete
-                </v-icon>
+                <v-icon size="25px"> mdi-delete </v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -167,29 +163,16 @@ export default {
 
       <v-col class="row justify-content-center mx-auto w-33">
         <v-btn
-            class="btn-primary rounded-pill w-33"
-            id="button"
-            @click="buyFromCart"
-            color="#FFD700"
+          class="btn-primary rounded-pill w-33"
+          id="button"
+          @click="buyFromCart"
+          color="#FFD700"
         >
-          <v-icon
-              size="25px"
-          >
-            mdi-briefcase-check
-          </v-icon>
+          <v-icon size="25px"> mdi-briefcase-check </v-icon>
         </v-btn>
 
-        <v-btn
-            class="btn-primary rounded-pill w-33"
-            id="button"
-            @click="emptyCart"
-            color="#FFD700"
-        >
-          <v-icon
-              size="25px"
-          >
-            mdi-basket-unfill
-          </v-icon>
+        <v-btn class="btn-primary rounded-pill w-33" id="button" @click="emptyCart" color="#FFD700">
+          <v-icon size="25px"> mdi-basket-unfill </v-icon>
         </v-btn>
       </v-col>
     </div>

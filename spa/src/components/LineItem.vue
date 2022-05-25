@@ -17,7 +17,7 @@ export default {
   <v-col cols="2">
     <p>{{ lineItem.id }}</p>
     <p>{{ lineItem.price }}</p>
-   </v-col>
+  </v-col>
 </template>
 
 <style>

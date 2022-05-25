@@ -84,7 +84,7 @@ export default {
           Playlist
         </v-btn>
         <v-btn
-            v-if="!loggedIn"
+            v-if="tokenIsNull()"
             class="btn btn-primary rounded-pill"
             id="button"
             @click="setTab('Login')"
