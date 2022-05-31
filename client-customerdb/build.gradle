@@ -31,10 +31,17 @@ jar {
     }
 }
 
-sonarqube {
-    properties {
-        property "sonar.projectKey", "kaufi95_musicshop"
-        property "sonar.organization", "kaufi95"
-        property "sonar.host.url", "https://sonarcloud.io"
-    }
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
 }
