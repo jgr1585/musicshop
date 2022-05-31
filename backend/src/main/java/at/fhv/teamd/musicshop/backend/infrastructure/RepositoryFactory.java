@@ -10,6 +10,9 @@ public class RepositoryFactory {
     private static InvoiceRepository invoiceRepository;
     private static TopicRepository topicRepository;
 
+    private RepositoryFactory() {
+    }
+
     public static ArticleRepository getArticleRepositoryInstance() {
         if (articleRepository == null) {
             articleRepository = new ArticleHibernateRepository();

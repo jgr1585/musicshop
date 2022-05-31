@@ -7,24 +7,23 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildShoppingCartDTO;
 
 public class ShoppingCartService {
     private static final Map<String, Set<LineItem>> sessionLineItems = new HashMap<>();
 
-    private static MediumRepository mediumRepository;
+    private static final MediumRepository mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
 
-    ShoppingCartService() {
-        mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
-    }
+    private String message = "Quantity not acceptable";
 
     private void initializeShoppingcart(String userId) {
         if (!shoppingCartExists(userId)) {
@@ -39,7 +38,7 @@ public class ShoppingCartService {
             initializeShoppingcart(userId);
         }
 
-        if (amount < 1) throw new IllegalArgumentException("Quantity not acceptable");
+        if (amount < 1) throw new IllegalArgumentException(message);
 
         Set<LineItem> lineItems = sessionLineItems.get(userId);
 
@@ -52,14 +51,14 @@ public class ShoppingCartService {
                     if (li.getQuantity().getValue() + amount <= medium.getStock().getQuantity().getValue()) {
                         li.increaseQuantity(Quantity.of(amount));
                     } else {
-                        throw new IllegalArgumentException("Quantity not acceptable");
+                        throw new IllegalArgumentException(message);
                     }
                 }, () -> {
                     if (amount <= medium.getStock().getQuantity().getValue()) {
                         lineItems.add(new LineItem(Quantity.of(amount), medium));
                         sessionLineItems.put(userId, lineItems);
                     } else {
-                        throw new IllegalArgumentException("Quantity not acceptable");
+                        throw new IllegalArgumentException(message);
                     }
                 });
     }
@@ -69,7 +68,7 @@ public class ShoppingCartService {
             emptyShoppingCart(userId);
         }
 
-        if (amount < 1) throw new IllegalArgumentException("Quantity not acceptable");
+        if (amount < 1) throw new IllegalArgumentException(message);
 
         Set<LineItem> lineItems = sessionLineItems.get(userId);
 
@@ -83,7 +82,7 @@ public class ShoppingCartService {
                         lineItems.remove(li);
                     }
                 }, () -> {
-                    throw new IllegalArgumentException("Quantity not acceptable");
+                    throw new IllegalArgumentException(message);
                 });
     }
 

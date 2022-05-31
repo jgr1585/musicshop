@@ -14,11 +14,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ArticleService {
-    private static ArticleRepository articleRepository;
-
-    ArticleService() {
-        articleRepository = RepositoryFactory.getArticleRepositoryInstance();
-    }
+    private static final ArticleRepository articleRepository = RepositoryFactory.getArticleRepositoryInstance();
 
     public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException {
         if (!searchableParam(title, artist)) {
@@ -35,7 +31,7 @@ public class ArticleService {
             throw new ApplicationClientException("Validation error: Id must be greater than 0.");
         }
 
-        Article article = articleRepository.findArticleById(id).filter(a -> a instanceof Album).orElse(null);
+        Article article = articleRepository.findArticleById(id).filter(Album.class::isInstance).orElse(null);
         Album album = (Album) article;
 
         if (album != null) {

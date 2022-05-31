@@ -23,7 +23,9 @@ public class ApplicationClientImpl implements ApplicationClient {
 
     private ApplicationClientSession applicationClientSession;
 
+
     public ApplicationClientImpl() {
+        //Required for hibernate
     }
 
     @Override
@@ -50,11 +52,13 @@ public class ApplicationClientImpl implements ApplicationClient {
     public Set<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException, NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.searchCustomersByName);
 
+
         try {
             return customerService.searchCustomersByName(name);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     @Override
@@ -153,6 +157,6 @@ public class ApplicationClientImpl implements ApplicationClient {
 
     @Override
     public void destroy() {
-
+        // required for EJB
     }
 }
