@@ -4,8 +4,11 @@ import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.view.article.ReturnController;
+import at.fhv.teamd.musicshop.userclient.view.article.SearchController;
 import at.fhv.teamd.musicshop.userclient.view.receiveMessage.ReceiveMessageController;
 import at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartController;
+import at.fhv.teamd.musicshop.userclient.view.writeMessage.WriteMessageController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -22,32 +25,48 @@ public class AppController {
     @FXML
     private FontAwesomeIconView receiveMessageIcon;
     @FXML
+    private Tab receiveMessageTab;
+    @FXML
+    private Tab writeMessageTab;
+    @FXML
     private Tab searchTab;
     @FXML
     private Tab returnTab;
     @FXML
     private Tab shoppingCartTab;
     @FXML
-    private Tab newMessageTab;
-    @FXML
     private TabPane tabs;
     @FXML
-    private ShoppingCartController shoppingCartController;
-    @FXML
     private ReceiveMessageController receiveMessageController;
+    @FXML
+    private WriteMessageController writeMessageController;
+    @FXML
+    private SearchController searchController;
+    @FXML
+    private ReturnController returnController;
+    @FXML
+    private ShoppingCartController shoppingCartController;
+
 
     private LoginController loginController;
 
     @FXML
     public void initialize() {
-        shoppingCartController.setAppController(this);
+        this.shoppingCartController.setAppController(this);
         this.receiveMessageController.setAppController(this);
+
+        this.receiveMessageController.bindActiveProperty(receiveMessageTab.selectedProperty());
+        this.writeMessageController.bindActiveProperty(writeMessageTab.selectedProperty());
+        this.searchController.bindActiveProperty(searchTab.selectedProperty());
+        this.returnController.bindActiveProperty(returnTab.selectedProperty());
+        this.shoppingCartController.bindActiveProperty(shoppingCartTab.selectedProperty());
+
 
         new Thread(() -> {
             this.searchTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.searchArticlesByAttributes));
             this.returnTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.returnItem));
             this.shoppingCartTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.getShoppingCart));
-            this.newMessageTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.publishMessage));
+            this.writeMessageTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.publishMessage));
         }).start();
     }
 

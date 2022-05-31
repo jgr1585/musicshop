@@ -8,9 +8,11 @@ import at.fhv.teamd.musicshop.userclient.Main;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.observer.LoginObserver;
 import at.fhv.teamd.musicshop.userclient.observer.LoginSubject;
+import at.fhv.teamd.musicshop.userclient.view.ActivePropertyBindable;
 import at.fhv.teamd.musicshop.userclient.view.AppController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -40,7 +42,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class ReceiveMessageController implements LoginObserver {
+public class ReceiveMessageController implements LoginObserver, ActivePropertyBindable {
 
     @FXML
     private TableColumn<MessageDTO, String> colDate;
@@ -67,6 +69,10 @@ public class ReceiveMessageController implements LoginObserver {
     public ReceiveMessageController() {
         //Stop the executor service when the stage is closed
         Main.onClose(this::onLogout);
+    }
+
+    public void bindActiveProperty(ReadOnlyBooleanProperty activeProp) {
+
     }
 
     @FXML

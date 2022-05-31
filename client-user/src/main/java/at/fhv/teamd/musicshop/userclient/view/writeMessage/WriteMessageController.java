@@ -6,7 +6,9 @@ import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.view.ActivePropertyBindable;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,8 +18,12 @@ import javafx.util.StringConverter;
 import java.rmi.RemoteException;
 import java.util.UUID;
 
-public class WriteMessageController {
+public class WriteMessageController implements ActivePropertyBindable {
 
+    @FXML
+    private Button formCancelBtn;
+    @FXML
+    private Button formSubmitBtn;
     @FXML
     private ComboBox<TopicDTO> messageTopic;
 
@@ -28,6 +34,11 @@ public class WriteMessageController {
     private TextArea messageBody;
 
     private TopicDTO selectedTopic;
+
+    public void bindActiveProperty(ReadOnlyBooleanProperty activeProp) {
+        formCancelBtn.cancelButtonProperty().bind(activeProp);
+        formSubmitBtn.defaultButtonProperty().bind(activeProp);
+    }
 
     @FXML
     public void initialize() {

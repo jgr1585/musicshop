@@ -12,7 +12,7 @@
             <Insets />
          </opaqueInsets>
          <tabs>
-            <Tab closable="false" onSelectionChanged="#onTabSelectionChanged" style="-fx-background-color: #6c359b; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="Inbox">
+            <Tab fx:id="receiveMessageTab" closable="false" onSelectionChanged="#onTabSelectionChanged" style="-fx-background-color: #6c359b; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="Inbox">
                <content>
                   <fx:include source="receiveMessage/receive-message.fxml" fx:id="receiveMessage" />
                </content>
@@ -20,9 +20,9 @@
                   <FontAwesomeIconView fill="#FFFFFF" glyphName="ENVELOPE" size="20" fx:id="receiveMessageIcon" />
                </graphic>
             </Tab>
-            <Tab fx:id="newMessageTab" onSelectionChanged="#onTabSelectionChanged" closable="false" disable="true" style="-fx-background-color: #0261bf; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="New Message">
+            <Tab fx:id="writeMessageTab" onSelectionChanged="#onTabSelectionChanged" closable="false" disable="true" style="-fx-background-color: #0261bf; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="New Message">
                <content>
-                  <fx:include source="writeMessage/write-message.fxml" />
+                  <fx:include source="writeMessage/write-message.fxml" fx:id="writeMessage" />
                </content>
                <graphic>
                   <FontAwesomeIconView fill="#FFFFFF" glyphName="EDIT" size="20" />
@@ -30,7 +30,7 @@
             </Tab>
             <Tab fx:id="searchTab" onSelectionChanged="#onTabSelectionChanged" closable="false" style="-fx-background-color: #7565fd; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-radius: 4; -fx-border-width: 3; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="Search">
                <content>
-                  <fx:include source="searchArticle/search.fxml" />
+                  <fx:include source="searchArticle/search.fxml" fx:id="search" />
                </content>
                <graphic>
                   <FontAwesomeIconView fill="#FFFFFF" glyphName="SEARCH" size="20" />
@@ -38,7 +38,7 @@
             </Tab>
             <Tab fx:id="returnTab" onSelectionChanged="#onTabSelectionChanged" closable="false" disable="true" style="-fx-background-color: #4251b3; -fx-background-radius: 4; -fx-border-color: #000000; -fx-border-width: 3; -fx-border-radius: 4; -fx-focus-color: #FFFFFF; -fx-faint-focus-color: #FFFFFF;" text="Return">
                <content>
-                  <fx:include source="returnArticle/return.fxml" />
+                  <fx:include source="returnArticle/return.fxml" fx:id="return" />
                </content>
                <graphic>
                   <FontAwesomeIconView fill="#FFFFFF" glyphName="UNDO" size="20" />
