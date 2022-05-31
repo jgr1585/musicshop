@@ -60,11 +60,11 @@ class ShoppingCartServiceTest {
         Set<LineItemDTO> expectedLineItemsIncreasedAmount = Set.of(DTOProvider.buildLineItemDTO(lineItemIncreasedAmount));
 
         //when
-        this.shoppingCartService.addToShoppingCart(userId, mediumDTO, amount);
+        this.shoppingCartService.addToShoppingCart(userId, mediumDTO.id(), amount);
         ShoppingCartDTO shoppingCartDTO = this.shoppingCartService.getShoppingCart(userId);
         Set<LineItemDTO> actualLineItems = shoppingCartDTO.lineItems();
 
-        this.shoppingCartService.addToShoppingCart(userId, mediumDTO, amount);
+        this.shoppingCartService.addToShoppingCart(userId, mediumDTO.id(), amount);
         ShoppingCartDTO shoppingCartDTOIncreasedAmount = this.shoppingCartService.getShoppingCart(userId);
         Set<LineItemDTO> actualLineItemsIncreasedAmount = shoppingCartDTOIncreasedAmount.lineItems();
 
@@ -99,21 +99,21 @@ class ShoppingCartServiceTest {
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
 
-        this.shoppingCartService.addToShoppingCart(userId, mediumDTO, amount);
+        this.shoppingCartService.addToShoppingCart(userId, mediumDTO.id(), amount);
 
         //when remove 1 of 3
-        this.shoppingCartService.removeFromShoppingCart(userId, mediumDTO, 1);
+        this.shoppingCartService.removeFromShoppingCart(userId, mediumDTO.id(), 1);
 
         //then quantity should equal 2
         int expectedAmount = 2;
         Assertions.assertEquals(expectedAmount, this.shoppingCartService.getShoppingCart(userId).lineItems().stream().findFirst().orElseThrow().quantity().intValue());
 
         //when remove 2 of 2
-        this.shoppingCartService.removeFromShoppingCart(userId, mediumDTO, 2);
+        this.shoppingCartService.removeFromShoppingCart(userId, mediumDTO.id(), 2);
 
         //then quantity should equal 0
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
-        Assertions.assertThrows(IllegalArgumentException.class, () -> this.shoppingCartService.removeFromShoppingCart("user0000", mediumDTO, 10));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> this.shoppingCartService.removeFromShoppingCart("user0000", mediumDTO.id(), 10));
     }
 
     @Test
@@ -128,7 +128,7 @@ class ShoppingCartServiceTest {
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
 
-        this.shoppingCartService.addToShoppingCart(userId, mediumDTO, amount);
+        this.shoppingCartService.addToShoppingCart(userId, mediumDTO.id(), amount);
 
         //when
         this.shoppingCartService.buyFromShoppingCart(userId, 0);
@@ -161,8 +161,8 @@ class ShoppingCartServiceTest {
         Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
-        this.shoppingCartService.addToShoppingCart(userId1, mediumDTO, amount);
-        this.shoppingCartService.addToShoppingCart(userId2, mediumDTO, amount);
+        this.shoppingCartService.addToShoppingCart(userId1, mediumDTO.id(), amount);
+        this.shoppingCartService.addToShoppingCart(userId2, mediumDTO.id(), amount);
 
         //when
         Assertions.assertDoesNotThrow(() -> this.shoppingCartService.buyFromShoppingCart(userId1, 0));
@@ -183,8 +183,8 @@ class ShoppingCartServiceTest {
         Mockito.when(this.mediumRepository.findMediumById(medium.getId())).thenReturn(Optional.of(medium));
 
         MediumDTO mediumDTO = DTOProvider.buildMediumDTO(medium);
-        this.shoppingCartService.addToShoppingCart(userId1, mediumDTO, 2);
-        this.shoppingCartService.addToShoppingCart(userId2, mediumDTO, 4);
+        this.shoppingCartService.addToShoppingCart(userId1, mediumDTO.id(), 2);
+        this.shoppingCartService.addToShoppingCart(userId2, mediumDTO.id(), 4);
 
         //when
         ShoppingCartDTO shoppingCartDTO1 = this.shoppingCartService.getShoppingCart(userId1);

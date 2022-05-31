@@ -1,7 +1,6 @@
 package at.fhv.teamd.musicshop.backend.infrastructure;
 
-import at.fhv.teamd.musicshop.backend.domain.DomainFactory;
-import at.fhv.teamd.musicshop.backend.domain.user.Employee;
+import at.fhv.teamd.musicshop.backend.domain.employee.Employee;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -7,6 +7,9 @@ import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.article.Artist;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
+import at.fhv.teamd.musicshop.backend.domain.customer.CreditCardType;
+import at.fhv.teamd.musicshop.backend.domain.customer.Customer;
+import at.fhv.teamd.musicshop.backend.domain.customer.Gender;
 import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
@@ -14,11 +17,10 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
-import at.fhv.teamd.musicshop.backend.domain.user.Employee;
+import at.fhv.teamd.musicshop.backend.domain.employee.Employee;
 import at.fhv.teamd.musicshop.library.permission.UserRole;
 
 import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,9 +28,10 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collector;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -40,6 +43,7 @@ public abstract class BaseRepositoryData {
     private static final Set<Medium> media;
     private static final Set<Supplier> suppliers;
     private static final Set<Employee> employees;
+    private static final Set<Customer> customers;
     private static final Set<Topic> topics;
 
     private static final Set<Invoice> invoices;
@@ -51,6 +55,7 @@ public abstract class BaseRepositoryData {
         media = new HashSet<>();
         suppliers = new HashSet<>();
         employees = new HashSet<>();
+        customers = new HashSet<>();
         topics = new HashSet<>();
         invoices = new HashSet<>();
 
@@ -90,6 +95,8 @@ public abstract class BaseRepositoryData {
         return Collections.unmodifiableSet(employees);
     }
 
+    public static Set<Customer> getCustomers() { return Collections.unmodifiableSet(customers); }
+
     public static void init() {
         // Reset the database
         deleteDatabase();
@@ -100,6 +107,7 @@ public abstract class BaseRepositoryData {
         media.clear();
         suppliers.clear();
         employees.clear();
+        customers.clear();
         topics.clear();
         invoices.clear();
 
@@ -403,6 +411,18 @@ public abstract class BaseRepositoryData {
         employees.add(new Employee("bak3400", "Batuhan", "Akkus", Set.of(UserRole.SELLER), Set.of(topicAdministrative, topicHipHop, topicSoul, topicRockNRoll, topicPop, topicJazz)));
         employees.add(new Employee("tf-test", "Thomas", "Feilhauer", Set.of(UserRole.ADMIN), Set.of(topicAdministrative, topicOrder, topicSoul, topicJazz)));
 
+        //create customers
+        customers.add(new Customer(1, "JosieS", "5497056331911690"));
+        customers.add(new Customer(2, "JonasN", "4412614992618410"));
+        customers.add(new Customer(3, "MiroH",  "5425110212013160"));
+        customers.add(new Customer(4, "EnnoK", "4149159917878530"));
+        customers.add(new Customer(5, "TammeK", "5256110980293610"));
+        customers.add(new Customer(6, "EvelinaR", "4541979993294440"));
+        customers.add(new Customer(7, "AzadG", "5232969453861870"));
+        customers.add(new Customer(8, "SammyB", "4344721596616160"));
+        customers.add(new Customer(9, "KatrinK", "5486293928490720"));
+        customers.add(new Customer(10, "DanaH",  "5310021062469900"));
+
         //create suppliers
         suppliers.addAll(media.stream()
                 .map(Medium::getSupplier)
@@ -420,6 +440,7 @@ public abstract class BaseRepositoryData {
 
         media.forEach(em::persist);
         employees.forEach(em::persist);
+        customers.forEach(em::persist);
         invoices.forEach(em::persist);
 
         em.flush();

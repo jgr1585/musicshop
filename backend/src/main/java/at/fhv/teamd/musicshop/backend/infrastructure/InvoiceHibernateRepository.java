@@ -3,11 +3,13 @@ package at.fhv.teamd.musicshop.backend.infrastructure;
 import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
 import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
 import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
+import at.fhv.teamd.musicshop.library.DTO.InvoiceDTO;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -72,6 +74,23 @@ public class InvoiceHibernateRepository implements InvoiceRepository {
         em.close();
 
         return invoiceToReturn;
+    }
+
+    @Override
+    public List<Invoice> findInvoicesByCustomerNo(int customerNo) {
+        Objects.requireNonNull(customerNo);
+
+        EntityManager em = PersistenceManager.getEntityManagerInstance();
+
+        TypedQuery<Invoice> query = em.createQuery("SELECT i FROM Invoice i WHERE i.customerNo =:customerNo", Invoice.class);
+
+        query.setParameter("customerNo", customerNo);
+
+        List<Invoice> invoices = query.getResultList();
+
+        em.close();
+
+        return invoices;
     }
 
     @Override

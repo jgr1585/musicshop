@@ -1,5 +1,7 @@
 package at.fhv.teamd.musicshop.library.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -7,9 +9,16 @@ import java.util.Set;
 
 public final class InvoiceDTO implements Serializable {
 
+    @JsonProperty(required = true)
     private Long id;
+
+    @JsonProperty(required = true)
     private Set<LineItemDTO> lineItems;
+
+    @JsonProperty(required = true)
     private BigDecimal totalPrice;
+
+    @JsonProperty(required = true)
     private Integer customerNo;
 
     public Long id() {

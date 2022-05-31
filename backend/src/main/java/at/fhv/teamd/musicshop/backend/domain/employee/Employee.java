@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.backend.domain.user;
+package at.fhv.teamd.musicshop.backend.domain.employee;
 
 import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 import at.fhv.teamd.musicshop.library.permission.UserRole;
@@ -7,7 +7,6 @@ import lombok.Getter;
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Getter
