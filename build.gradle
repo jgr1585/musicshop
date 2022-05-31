@@ -1,0 +1,26 @@
+plugins {
+    id "org.sonarqube" version "3.3"
+}
+
+group 'at.fhv.teamd'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "FHV-ITB20-SS22-Team-D_Musicshop"
+        property "sonar.organization", "Musicshop"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
