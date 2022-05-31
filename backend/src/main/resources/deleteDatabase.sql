@@ -14,3 +14,4 @@ delete from public.medium;
 delete from public.article;
 delete from public.supplier;
 delete from public.topic;
+delete from public.customer;
