@@ -1,5 +1,7 @@
 package at.fhv.teamd.musicshop.library.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -7,11 +9,15 @@ import java.util.Objects;
 public final class MediumDTO implements Serializable {
     private static final long serialVersionUID = -6811236899891117944L;
 
+    @JsonProperty(required = true)
     private Long id;
-
+    @JsonProperty(required = true)
     private BigDecimal price;
+    @JsonProperty(required = true)
     private String type;
+    @JsonProperty(required = true)
     private SupplierDTO supplier;
+    @JsonProperty(required = true)
     private Integer stockQuantity;
 
     public static MediumDTO.Builder builder() {

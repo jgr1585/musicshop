@@ -1,13 +1,16 @@
 package at.fhv.teamd.musicshop.library.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 public final class ArtistDTO implements Serializable {
     private static final long serialVersionUID = 5031759949516398235L;
 
+    @JsonProperty(required = true)
     private Long id;
-
+    @JsonProperty(required = true)
     private String name;
 
     public static ArtistDTO.Builder builder() {

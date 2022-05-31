@@ -7,10 +7,7 @@ import at.fhv.teamd.musicshop.library.DTO.*;
 import at.fhv.teamd.musicshop.library.exceptions.*;
 
 import javax.ejb.*;
-import javax.inject.Inject;
-import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Set;
 
 // TODO: still to-do: remove services constructor dependency injection of applicationClientSession and use field-based approach (may use a SessionService to register ApplicationClientSessions -> but think this well-through as this might be hacky)
@@ -31,7 +28,7 @@ public class ApplicationClientImpl implements ApplicationClient {
 
     @Override
     public void authenticate(String authUser, String authPassword) throws AuthenticationFailedException {
-        AuthService.authenticate(authUser, authPassword);
+        AuthService.authenticateEmployee(authUser, authPassword);
 
         applicationClientSession = new ApplicationClientSession(authUser);
     }
@@ -78,14 +75,14 @@ public class ApplicationClientImpl implements ApplicationClient {
     public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.addToShoppingCart);
 
-        shoppingCartService.addToShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
+        shoppingCartService.addToShoppingCart(applicationClientSession.getUserId(), mediumDTO.id(), amount);
     }
 
     @Override
     public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.removeFromShoppingCart);
 
-        shoppingCartService.removeFromShoppingCart(applicationClientSession.getUserId(), mediumDTO, amount);
+        shoppingCartService.removeFromShoppingCart(applicationClientSession.getUserId(), mediumDTO.id(), amount);
     }
 
     @Override

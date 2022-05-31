@@ -1,20 +1,39 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Drop Database" type="DatabaseScript">
     <data-source id="7c9f98aa-c047-40b0-a8f1-f1e3076cbea7" namespace="database/&quot;postgres&quot;" />
-    <script-text>drop table if exists article_article cascade;
+    <script-text>drop sequence if exists hibernate_sequence cascade;
+
+drop sequence if exists invoice_sequence cascade;
+
+drop table if exists article_article cascade;
+
 drop table if exists article_artist cascade;
+
 drop table if exists artist cascade;
+
 drop table if exists employee_topic cascade;
+
 drop table if exists employee_userroles cascade;
+
 drop table if exists employee cascade;
+
 drop table if exists invoice_lineitem cascade;
+
 drop table if exists invoice cascade;
+
 drop table if exists lineitem_quantities cascade;
+
 drop table if exists lineitem cascade;
+
 drop table if exists medium cascade;
+
 drop table if exists article cascade;
+
 drop table if exists supplier cascade;
-drop table if exists topic cascade;</script-text>
+
+drop table if exists topic cascade;
+
+drop table if exists customer cascade;</script-text>
     <method v="2" />
   </configuration>
 </component>

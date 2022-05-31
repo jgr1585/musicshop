@@ -1,5 +1,11 @@
 package at.fhv.teamd.musicshop.library.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer;
+
 import java.io.Serializable;
 import java.time.Duration;
 import java.util.Objects;
@@ -7,9 +13,13 @@ import java.util.Objects;
 public final class SupplierDTO implements Serializable {
     private static final long serialVersionUID = 7220444567998280771L;
 
+    @JsonProperty(required = true)
     private Long id;
-
+    @JsonProperty(required = true)
     private String name;
+    @JsonProperty(required = true)
+    @JsonDeserialize(using = DurationDeserializer.class)
+    @JsonSerialize(using = DurationSerializer.class)
     private Duration supplyDuration;
 
     public static SupplierDTO.Builder builder() {
