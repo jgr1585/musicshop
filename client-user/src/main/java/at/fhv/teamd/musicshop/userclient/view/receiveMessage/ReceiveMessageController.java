@@ -27,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
+import javax.swing.event.ChangeListener;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
@@ -43,6 +44,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class ReceiveMessageController implements LoginObserver, ActivePropertyBindable {
+
+    private static final int POLL_PERIOD = 10;
 
     @FXML
     private TableColumn<MessageDTO, String> colDate;
@@ -72,7 +75,38 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
     }
 
     public void bindActiveProperty(ReadOnlyBooleanProperty activeProp) {
+        if (activeProp.getValue())
+            activatePolling();
+        else
+            deactivatePolling();
 
+        activeProp.addListener((observable, oldValue, newValue) -> {
+            if (newValue)
+                activatePolling();
+            else
+                deactivatePolling();
+        });
+    }
+
+    private void activatePolling() {
+        if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages)) {
+            executorService = Executors.newSingleThreadScheduledExecutor();
+            //Create a scheduled executor service to update the table 10 seconds
+            this.executorService.scheduleAtFixedRate(() -> {
+                try {
+                    this.loadMessage();
+                } catch (MessagingException | NotAuthorizedException | RemoteException e) {
+                    e.printStackTrace();
+                }
+            }, 1, POLL_PERIOD, TimeUnit.SECONDS);
+        }
+    }
+
+    private void deactivatePolling() {
+        if (executorService != null && !executorService.isShutdown()) {
+            this.executorService.shutdown();
+            this.executorService.shutdownNow();
+        }
     }
 
     @FXML
@@ -198,23 +232,11 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
 
     @Override
     public void onLogin() {
-        if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages)) {
-            this.executorService = Executors.newSingleThreadScheduledExecutor();
 
-            //Create a scheduled executor service to update the table 10 seconds
-            executorService.scheduleAtFixedRate(() -> {
-                try {
-                    this.loadMessage();
-                } catch (MessagingException | NotAuthorizedException | RemoteException e) {
-                    e.printStackTrace();
-                }
-            }, 1, 10, TimeUnit.SECONDS);
-        }
     }
 
     @Override
     public void onLogout() {
-        this.executorService.shutdown();
-        this.executorService.shutdownNow();
+        deactivatePolling();
     }
 }
