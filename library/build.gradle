@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id "org.sonarqube" version "3.3"
 }
 
 group 'at.fhv.teamd'
@@ -27,12 +26,4 @@ dependencies {
 
 test {
     useJUnitPlatform()
-}
-
-sonarqube {
-    properties {
-        property "sonar.projectKey", "kaufi95_musicshop"
-        property "sonar.organization", "kaufi95"
-        property "sonar.host.url", "https://sonarcloud.io"
-    }
 }
