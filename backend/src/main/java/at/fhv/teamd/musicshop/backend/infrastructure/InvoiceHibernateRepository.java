@@ -3,7 +3,6 @@ package at.fhv.teamd.musicshop.backend.infrastructure;
 import at.fhv.teamd.musicshop.backend.application.PersistenceManager;
 import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
 import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
-import at.fhv.teamd.musicshop.library.DTO.InvoiceDTO;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;

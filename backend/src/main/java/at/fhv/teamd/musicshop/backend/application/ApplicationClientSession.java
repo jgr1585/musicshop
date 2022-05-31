@@ -12,7 +12,7 @@ public class ApplicationClientSession {
     private final Map<ApplicationClientSession.attributes, Object> sessionObjects = new HashMap<>();
 
     public ApplicationClientSession(String userId) {
-        setSessionObject(attributes.userID, userId);
+        setSessionObject(attributes.USERID, userId);
         this.userId = userId;
     }
 
@@ -49,7 +49,7 @@ public class ApplicationClientSession {
     }
 
     public enum attributes {
-        userID,
-        userRoles
+        USERID,
+        USER_ROLES
     }
 }

@@ -2,20 +2,18 @@ package at.fhv.teamd.musicshop.backend.application.services;
 
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.article.Album;
-import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
 import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
-import at.fhv.teamd.musicshop.backend.domain.repositories.CustomerRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
-import at.fhv.teamd.musicshop.library.DTO.*;
+import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
+import at.fhv.teamd.musicshop.library.DTO.InvoiceDTO;
+import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
+import at.fhv.teamd.musicshop.library.DTO.SongDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedInvoiceException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.apache.camel.json.simple.JsonObject;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,11 +24,9 @@ import java.util.stream.Stream;
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildInvoiceDTO;
 
 public class InvoiceService {
-    private static InvoiceRepository invoiceRepository;
+    private static final InvoiceRepository invoiceRepository = RepositoryFactory.getInvoiceRepositoryInstance();
 
-    InvoiceService() {
-        invoiceRepository = RepositoryFactory.getInvoiceRepositoryInstance();
-    }
+    private String message = "Invoice not found";
 
     public Long createInvoice(Set<LineItem> lineItems, int assignedCustomer) {
         Long id;
@@ -39,7 +35,6 @@ public class InvoiceService {
         } else {
             id = invoiceRepository.addInvoice(Invoice.of(lineItems));
         }
-        System.out.println("created new invoice");
         return id;
     }
 
@@ -48,7 +43,7 @@ public class InvoiceService {
         if (invoiceOpt.isPresent()) {
             return buildInvoiceDTO(invoiceOpt.get());
         } else {
-            throw new InvoiceException("Invoice not found");
+            throw new InvoiceException(message);
         }
     }
 
@@ -65,11 +60,11 @@ public class InvoiceService {
                     .increaseQuantityReturned(Quantity.of(quantity));
             invoiceRepository.update(invoice);
         } else {
-            throw new InvoiceException("Invoice not found");
+            throw new InvoiceException(message);
         }
     }
 
-    public List<InvoiceDTO> getInvoices(String username) throws InvoiceException, CustomerNotFoundException {
+    public List<InvoiceDTO> getInvoices(String username) throws CustomerNotFoundException {
         return invoiceRepository.findInvoicesByCustomerNo(
                         ServiceFactory
                                 .getCustomerServiceInstance()
@@ -83,7 +78,7 @@ public class InvoiceService {
 
         // get invoice
         Invoice invoice = invoiceRepository.findInvoiceById(invoiceId)
-                .orElseThrow(() -> new InvoiceException("Invoice not found."));
+                .orElseThrow(() -> new InvoiceException(message));
 
         // check if invoice is an invoice for customer
         if (!invoice.getCustomerNo().equals(customerNo)) {
