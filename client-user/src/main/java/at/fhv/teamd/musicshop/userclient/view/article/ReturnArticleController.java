@@ -12,8 +12,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import java.rmi.RemoteException;
-
 import static at.fhv.teamd.musicshop.userclient.view.FieldValidationHelper.numberOnly;
 
 public class ReturnArticleController implements GenericArticleController {
@@ -37,9 +35,7 @@ public class ReturnArticleController implements GenericArticleController {
         numberOnly(this.mediumAmount);
         numberOnly(this.mediumAmountSelected);
 
-        new Thread(() -> {
-            this.returnButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.returnItem));
-        }).start();
+        new Thread(() -> this.returnButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.returnItem))).start();
     }
 
     public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO) {
@@ -55,7 +51,7 @@ public class ReturnArticleController implements GenericArticleController {
     }
 
     @FXML
-    private void returnItem(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException, InvoiceException {
+    private void returnItem(ActionEvent actionEvent) throws NotAuthorizedException, InvoiceException {
         RemoteFacade.getInstance().returnItem(lineItemDTO, Integer.parseInt(this.mediumAmountSelected.getText()));
         new Alert(Alert.AlertType.INFORMATION, "Successfully returned items", ButtonType.OK).show();
         this.mediumAmountSelected.setText(Integer.valueOf(0).toString());

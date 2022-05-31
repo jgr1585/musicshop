@@ -2,6 +2,7 @@ package at.fhv.teamd.musicshop.userclient.view.shoppingcart;
 
 import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
@@ -50,7 +51,7 @@ public class ShoppingCartController implements ShoppingCartObserver {
     public void initialize() {
         try {
             reloadShoppingCart();
-        } catch (IOException | NotAuthorizedException e) {
+        } catch (IOException | NotAuthorizedException | ShoppingCartException e) {
             clearCart();
         }
 
@@ -70,7 +71,7 @@ public class ShoppingCartController implements ShoppingCartObserver {
         this.appController = appController;
     }
 
-    public void reloadShoppingCart() throws IOException, NotAuthorizedException {
+    public void reloadShoppingCart() throws IOException, NotAuthorizedException, ShoppingCartException {
         insertData(RemoteFacade.getInstance().getShoppingCart());
     }
 
@@ -92,7 +93,7 @@ public class ShoppingCartController implements ShoppingCartObserver {
     }
 
     @FXML
-    private void buyAll(ActionEvent actionEvent) throws IOException, NotAuthorizedException {
+    private void buyAll(ActionEvent actionEvent) throws IOException, NotAuthorizedException, ShoppingCartException {
         int customer = 0;
         if (!customerNo.getText().equals("")) {
             customer = Integer.parseInt(customerNo.getText());
@@ -116,7 +117,7 @@ public class ShoppingCartController implements ShoppingCartObserver {
     }
 
     @FXML
-    private void removeAll(ActionEvent actionEvent) throws IOException, NotAuthorizedException {
+    private void removeAll(ActionEvent actionEvent) throws IOException, NotAuthorizedException, ShoppingCartException {
         RemoteFacade.getInstance().emptyShoppingCart();
         reloadShoppingCart();
         removeCustomer();
@@ -151,7 +152,7 @@ public class ShoppingCartController implements ShoppingCartObserver {
     public void updateShoppingCart() {
         try {
             reloadShoppingCart();
-        } catch (IOException | NotAuthorizedException e) {
+        } catch (IOException | NotAuthorizedException | ShoppingCartException e) {
             clearCart();
         }
     }

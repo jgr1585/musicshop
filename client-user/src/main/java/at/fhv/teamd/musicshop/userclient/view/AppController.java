@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.userclient.view;
 
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.receiveMessage.ReceiveMessageController;
@@ -15,7 +16,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 
 public class AppController {
 
@@ -71,7 +71,7 @@ public class AppController {
     }
 
     @FXML
-    public void loadOnSelection(Event event) throws IOException, NotAuthorizedException {
+    public void loadOnSelection(Event event) throws IOException, NotAuthorizedException, ShoppingCartException {
         shoppingCartController.reloadShoppingCart();
     }
 

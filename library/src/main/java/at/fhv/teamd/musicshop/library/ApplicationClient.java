@@ -27,15 +27,15 @@ public interface ApplicationClient {
     void returnItem(LineItemDTO lineItem, int quantity) throws NotAuthorizedException, InvoiceException;
 
     // Shopping Cart
-    void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException;
+    void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException, ShoppingCartException;
 
-    void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException;
+    void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException, ShoppingCartException;
 
     void emptyShoppingCart() throws NotAuthorizedException;
 
-    String buyFromShoppingCart(int customerId) throws NotAuthorizedException;
+    String buyFromShoppingCart(int customerId) throws NotAuthorizedException, ShoppingCartException;
 
-    ShoppingCartDTO getShoppingCart() throws NotAuthorizedException;
+    ShoppingCartDTO getShoppingCart() throws NotAuthorizedException, ShoppingCartException;
 
     // Messaging
     void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws NotAuthorizedException, MessagingException;
@@ -50,7 +50,4 @@ public interface ApplicationClient {
 
     // Authorization
     boolean isAuthorizedFor(RemoteFunctionPermission functionPermission);
-
-    // Application Client
-    @Remove void destroy();
 }

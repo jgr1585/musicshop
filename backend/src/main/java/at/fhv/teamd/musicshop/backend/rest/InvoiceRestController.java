@@ -47,7 +47,7 @@ public class InvoiceRestController {
 
         try {
             return Response.ok(invoiceService.getInvoices(authenticatedUser.name())).build();
-        } catch (InvoiceException | CustomerNotFoundException e) {
+        } catch (CustomerNotFoundException e) {
             return Response.status(404, e.getMessage()).build();
         }
     }
