@@ -93,8 +93,8 @@ swaggerSources {
 
 sonarqube {
     properties {
-        property "sonar.projectKey", "kaufi95_musicshop"
-        property "sonar.organization", "kaufi95"
+        property "sonar.projectKey", "FHV-ITB20-SS22-Team-D_Musicshop"
+        property "sonar.organization", "Musicshop"
         property "sonar.host.url", "https://sonarcloud.io"
     }
 }
