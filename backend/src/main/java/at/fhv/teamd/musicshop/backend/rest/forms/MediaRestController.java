@@ -8,6 +8,7 @@ import at.fhv.teamd.musicshop.backend.rest.auth.Secured;
 import at.fhv.teamd.musicshop.backend.rest.auth.User;
 import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
 import at.fhv.teamd.musicshop.library.DTO.SongDTO;
+import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedInvoiceException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,8 +32,8 @@ public class MediaRestController {
     @AuthenticatedUser
     private User authenticatedUser;
 
-    private InvoiceService invoiceService = ServiceFactory.getInvoiceServiceInstance();
-    private ArticleService articleService = ServiceFactory.getArticleServiceInstance();
+    private final InvoiceService invoiceService = ServiceFactory.getInvoiceServiceInstance();
+    private final ArticleService articleService = ServiceFactory.getArticleServiceInstance();
 
     public MediaRestController() {}
 
@@ -55,7 +56,7 @@ public class MediaRestController {
             return Response.status(500).build();
         } catch (InvoiceException e) {
             return Response.status(404, "Invoice not found.").build();
-        } catch (UnauthorizedInvoiceException e) {
+        } catch (UnauthorizedInvoiceException | CustomerNotFoundException e) {
             return Response.status(401, "Unauthorized.").build();
         }
     }
@@ -79,17 +80,18 @@ public class MediaRestController {
             return Response.status(500).build();
         } catch (InvoiceException e) {
             return Response.status(404, "Invoice not found.").build();
-        } catch (UnauthorizedInvoiceException e) {
+        } catch (UnauthorizedInvoiceException | CustomerNotFoundException e) {
             return Response.status(401, "Unauthorized.").build();
         }
     }
 
-    private Response serveSong(int invoiceId, int songId) throws IOException, InvoiceException, UnauthorizedInvoiceException {
+    private Response serveSong(int invoiceId, int songId) throws IOException, InvoiceException, UnauthorizedInvoiceException, CustomerNotFoundException {
         // check if is allowed to access
         SongDTO song = invoiceService.getSongDTO(authenticatedUser.name(), invoiceId, songId);
 
         InputStream in = getClass().getClassLoader().getResourceAsStream("/WEB-INF/songs/" + song.uuid() + ".mp3");
 
+        assert in != null;
         Response resp = Response.ok(in.readAllBytes())
                 .type("application/mp3")
                 .header("Content-Disposition", "attachment; filename="+ song.title() + ".mp3")
@@ -99,7 +101,7 @@ public class MediaRestController {
         return resp;
     }
 
-    private Response serveAlbum(int invoiceId, int albumId) throws IOException, InvoiceException, UnauthorizedInvoiceException {
+    private Response serveAlbum(int invoiceId, int albumId) throws IOException, InvoiceException, UnauthorizedInvoiceException, CustomerNotFoundException {
         // check if is allowed to access
         AlbumDTO album = invoiceService.getAlbumDTO(authenticatedUser.name(), invoiceId, albumId);
 
