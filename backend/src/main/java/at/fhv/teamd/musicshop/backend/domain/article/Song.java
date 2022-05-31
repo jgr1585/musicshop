@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Getter
@@ -27,4 +28,11 @@ public class Song extends Article {
         super(title, label, releaseDate, genre, musicbrainzId, artists);
         this.length = Objects.requireNonNull(length);
     }
+
+    public Song(UUID uuid, String title, String label, LocalDate releaseDate, String genre, String musicbrainzId, Duration length, Set<Artist> artists) {
+        super(uuid, title, label, releaseDate, genre, musicbrainzId, artists);
+        this.length = Objects.requireNonNull(length);
+    }
+
+
 }
