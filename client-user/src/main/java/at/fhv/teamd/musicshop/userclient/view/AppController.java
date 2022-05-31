@@ -1,5 +1,6 @@
 package at.fhv.teamd.musicshop.userclient.view;
 
+import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
@@ -8,14 +9,13 @@ import at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartControlle
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 
 public class AppController {
 
@@ -64,15 +64,25 @@ public class AppController {
     }
 
     @FXML
-    private void onKeyPressed(KeyEvent keyEvent) throws IOException {
-        if (keyEvent.getCode() == KeyCode.ESCAPE) {
-            loginController.logout();
+    private void onKeyPressed(KeyEvent keyEvent) throws IOException, ApplicationClientException, NotAuthorizedException {
+        switch (keyEvent.getCode()) {
+            case ESCAPE:
+                loginController.logout();
+                break;
         }
     }
 
     @FXML
-    public void loadOnSelection(Event event) throws IOException, NotAuthorizedException {
-        shoppingCartController.reloadShoppingCart();
+    private void onTabSelectionChanged(Event event) throws IOException, NotAuthorizedException {
+        final EventTarget target = event.getTarget();
+
+        if (!(target instanceof Tab))
+            return;
+        Tab tab = (Tab) target;
+
+        if (tab.equals(shoppingCartTab)) {
+            shoppingCartController.reloadShoppingCart();
+        }
     }
 
     @FXML
