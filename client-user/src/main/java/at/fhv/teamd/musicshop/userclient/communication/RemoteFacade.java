@@ -85,13 +85,13 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
+    public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException, ShoppingCartException {
         getApplicationClientOrThrow().addToShoppingCart(mediumDTO, amount);
         ShoppingCartSubject.notifyShoppingCartUpdate();
     }
 
     @Override
-    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
+    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException, ShoppingCartException {
         getApplicationClientOrThrow().removeFromShoppingCart(mediumDTO, amount);
         ShoppingCartSubject.notifyShoppingCartUpdate();
     }
@@ -103,7 +103,7 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public String buyFromShoppingCart(int customerId) throws NotAuthorizedException {
+    public String buyFromShoppingCart(int customerId) throws NotAuthorizedException, ShoppingCartException {
         String invoiceNo;
         invoiceNo = getApplicationClientOrThrow().buyFromShoppingCart(customerId);
         ShoppingCartSubject.notifyShoppingCartUpdate();
@@ -111,7 +111,7 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public ShoppingCartDTO getShoppingCart() throws NotAuthorizedException {
+    public ShoppingCartDTO getShoppingCart() throws NotAuthorizedException, ShoppingCartException {
         return getApplicationClientOrThrow().getShoppingCart();
     }
 
@@ -145,9 +145,7 @@ public class RemoteFacade implements ApplicationClient {
         return getApplicationClientOrThrow().isAuthorizedFor(functionPermission);
     }
 
-    @Override
     public void destroy() {
-        getApplicationClientOrThrow().destroy();
         applicationClient = null;
     }
 }

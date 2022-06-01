@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
 import java.util.Set;
 
 // TODO: still to-do: remove services constructor dependency injection of applicationClientSession and use field-based approach (may use a SessionService to register ApplicationClientSessions -> but think this well-through as this might be hacky)
-@Stateless
+@Stateful
 public class ApplicationClientImpl implements ApplicationClient {
 
     private final AuthService authService = ServiceFactory.getAuthServiceInstance();
@@ -22,7 +22,7 @@ public class ApplicationClientImpl implements ApplicationClient {
     private final ShoppingCartService shoppingCartService = ServiceFactory.getShoppingCartServiceInstance();
 
     private ApplicationClientSession applicationClientSession;
-
+    private String userId;
 
     public ApplicationClientImpl() {
         //Required for hibernate
@@ -31,14 +31,12 @@ public class ApplicationClientImpl implements ApplicationClient {
     @Override
     public void authenticate(String authUser, String authPassword) throws AuthenticationFailedException {
         AuthService.authenticateEmployee(authUser, authPassword);
-
-        applicationClientSession = new ApplicationClientSession(authUser);
+        this.userId = authUser;
     }
 
     @Override
     public String getSessionUserId() {
-
-        return applicationClientSession.getUserId();
+        return this.userId;
     }
 
     @Override
@@ -76,66 +74,66 @@ public class ApplicationClientImpl implements ApplicationClient {
     }
 
     @Override
-    public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
+    public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException, ShoppingCartException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.addToShoppingCart);
 
-        shoppingCartService.addToShoppingCart(applicationClientSession.getUserId(), mediumDTO.id(), amount);
+        shoppingCartService.addToShoppingCart(userId, mediumDTO.id(), amount);
     }
 
     @Override
-    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException {
+    public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException, ShoppingCartException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.removeFromShoppingCart);
 
-        shoppingCartService.removeFromShoppingCart(applicationClientSession.getUserId(), mediumDTO.id(), amount);
+        shoppingCartService.removeFromShoppingCart(userId, mediumDTO.id(), amount);
     }
 
     @Override
     public void emptyShoppingCart() throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.emptyShoppingCart);
 
-        shoppingCartService.emptyShoppingCart(applicationClientSession.getUserId());
+        shoppingCartService.emptyShoppingCart(userId);
     }
 
     @Override
-    public String buyFromShoppingCart(int customerId) throws NotAuthorizedException {
+    public String buyFromShoppingCart(int customerId) throws NotAuthorizedException, ShoppingCartException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.buyFromShoppingCart);
 
-        return shoppingCartService.buyFromShoppingCart(applicationClientSession.getUserId(), customerId);
+        return shoppingCartService.buyFromShoppingCart(userId, customerId);
     }
 
     @Override
     public ShoppingCartDTO getShoppingCart() throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.getShoppingCart);
 
-        return shoppingCartService.getShoppingCart(applicationClientSession.getUserId());
+        return shoppingCartService.getShoppingCart(userId);
     }
 
     @Override
     public void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.publishOrderMessage);
 
-        messageService.publishOrder(applicationClientSession, mediumDTO, quantity);
+        messageService.publishOrder(userId, mediumDTO, quantity);
     }
 
     @Override
     public void publishMessage(MessageDTO message) throws NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.publishMessage);
 
-        messageService.publish(applicationClientSession, message);
+        messageService.publish(userId, message);
     }
 
     @Override
     public Set<MessageDTO> receiveMessages() throws NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.receiveMessages);
 
-        return messageService.receive(applicationClientSession);
+        return messageService.receive(userId);
     }
 
     @Override
     public void acknowledgeMessage(MessageDTO message) throws NotAuthorizedException, MessagingException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.acknowledgeMessage);
 
-        messageService.acknowledge(applicationClientSession, message);
+        messageService.acknowledge(userId, message);
     }
 
     @Override
@@ -153,10 +151,5 @@ public class ApplicationClientImpl implements ApplicationClient {
         } catch (NotAuthorizedException e) {
             return false;
         }
-    }
-
-    @Override
-    public void destroy() {
-        // required for EJB
     }
 }

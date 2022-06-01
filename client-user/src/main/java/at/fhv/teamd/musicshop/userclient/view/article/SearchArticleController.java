@@ -5,14 +5,13 @@ import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
-import java.rmi.RemoteException;
 
 import static at.fhv.teamd.musicshop.userclient.view.FieldValidationHelper.numberOnly;
 
@@ -62,7 +61,7 @@ public class SearchArticleController implements GenericArticleController {
     }
 
     @FXML
-    private void addToCart(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
+    private void addToCart(ActionEvent actionEvent) throws NotAuthorizedException, ShoppingCartException {
         RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()));
         new Alert(Alert.AlertType.INFORMATION, "Successfully added items", ButtonType.OK).show();
         this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
@@ -80,7 +79,7 @@ public class SearchArticleController implements GenericArticleController {
         this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
     }
 
-    public void order(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException, MessagingException {
+    public void order(ActionEvent actionEvent) throws NotAuthorizedException, MessagingException {
         RemoteFacade.getInstance().publishOrderMessage(mediumDTO, mediumAmountSelected.getText());
         new Alert(Alert.AlertType.INFORMATION, "Message successfully sent", ButtonType.CLOSE).show();
         this.mediumAmountSelected.setText(Integer.valueOf(0).toString());

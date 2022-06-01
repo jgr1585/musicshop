@@ -8,9 +8,11 @@ import at.fhv.teamd.musicshop.userclient.Main;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.observer.LoginObserver;
 import at.fhv.teamd.musicshop.userclient.observer.LoginSubject;
+import at.fhv.teamd.musicshop.userclient.view.ActivePropertyBindable;
 import at.fhv.teamd.musicshop.userclient.view.AppController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -25,6 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
+import javax.swing.event.ChangeListener;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.time.LocalDateTime;
@@ -40,7 +43,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class ReceiveMessageController implements LoginObserver {
+public class ReceiveMessageController implements LoginObserver, ActivePropertyBindable {
+
+    private static final int POLL_PERIOD = 10;
 
     @FXML
     private TableColumn<MessageDTO, String> colDate;
@@ -67,6 +72,41 @@ public class ReceiveMessageController implements LoginObserver {
     public ReceiveMessageController() {
         //Stop the executor service when the stage is closed
         Main.onClose(this::onLogout);
+    }
+
+    public void bindActiveProperty(ReadOnlyBooleanProperty activeProp) {
+        if (activeProp.getValue())
+            activatePolling();
+        else
+            deactivatePolling();
+
+        activeProp.addListener((observable, oldValue, newValue) -> {
+            if (newValue)
+                activatePolling();
+            else
+                deactivatePolling();
+        });
+    }
+
+    private void activatePolling() {
+        if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages)) {
+            executorService = Executors.newSingleThreadScheduledExecutor();
+            //Create a scheduled executor service to update the table 10 seconds
+            this.executorService.scheduleAtFixedRate(() -> {
+                try {
+                    this.loadMessage();
+                } catch (MessagingException | NotAuthorizedException | RemoteException e) {
+                    e.printStackTrace();
+                }
+            }, 1, POLL_PERIOD, TimeUnit.SECONDS);
+        }
+    }
+
+    private void deactivatePolling() {
+        if (executorService != null && !executorService.isShutdown()) {
+            this.executorService.shutdown();
+            this.executorService.shutdownNow();
+        }
     }
 
     @FXML
@@ -192,23 +232,11 @@ public class ReceiveMessageController implements LoginObserver {
 
     @Override
     public void onLogin() {
-        if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages)) {
-            this.executorService = Executors.newSingleThreadScheduledExecutor();
 
-            //Create a scheduled executor service to update the table 10 seconds
-            executorService.scheduleAtFixedRate(() -> {
-                try {
-                    this.loadMessage();
-                } catch (MessagingException | NotAuthorizedException | RemoteException e) {
-                    e.printStackTrace();
-                }
-            }, 1, 10, TimeUnit.SECONDS);
-        }
     }
 
     @Override
     public void onLogout() {
-        this.executorService.shutdown();
-        this.executorService.shutdownNow();
+        deactivatePolling();
     }
 }

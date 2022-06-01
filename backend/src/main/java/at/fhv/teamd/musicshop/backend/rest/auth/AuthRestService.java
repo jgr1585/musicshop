@@ -5,7 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.NoArgsConstructor;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -16,20 +16,17 @@ import java.time.ZoneOffset;
 import java.util.Date;
 
 @Path("/authentication")
+@NoArgsConstructor
 public class AuthRestService {
 
     public static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS384);
 
-    public AuthRestService() {
-    }
 
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Authentication succeeded"),
-            @ApiResponse(responseCode = "403", description = "Wrong credentials")
-    })
+    @ApiResponse(responseCode = "200", description = "Authentication succeeded")
+    @ApiResponse(responseCode = "403", description = "Wrong credentials")
     public Response authenticateUser(Credentials credentials) {
 
         String username = credentials.getUsername();

@@ -1,6 +1,6 @@
 <script setup>
 import Article from "./Article.vue";
-import axios from "axios";
+import { DefaultApi } from "../rest";
 </script>
 
 <script>
@@ -27,42 +27,21 @@ export default {
       if (this.$options.filters.validater(this.title, this.artist)) {
         this.loading = true;
 
-        axios
-          .get(
-            "http://localhost:8080/backend-1.0-SNAPSHOT/rest/article/search?title=" +
-              this.title +
-              "&artist=" +
-              this.artist
-          )
-          .then((response) => {
-            this.loading = false;
-            this.articles = response.data;
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.errored = true;
+        const opts = {
+          title: this.title,
+          artist: this.artist
+        };
+        new DefaultApi().searchArticlesByAttributes(opts, (error, data, response) => {
+          this.loading = false;
+          if (error) {
             alert(error);
-          })
-          .finally(() => {
-            this.loading = false;
-          });
-
-        // const opts = {
-        //   title: this.title,
-        //   artist: this.artist
-        // };
-        // new DefaultApi().searchArticlesByAttributes(opts, (error, data, response) => {
-        //   this.loading = false;
-        //   if (error) {
-        //     alert(error);
-        //     this.errored = true;
-        //   } else {
-        //     console.log(response);
-        //     this.articles = response.body;
-        //     console.log("API called successfully. Returned data: " + data);
-        //     console.log("API called successfully. Returned response: " + response);
-        //   }
-        // });
+            this.errored = true;
+          } else {
+            console.log(response);
+            this.articles = response.body;
+            console.log("API called successfully. Returned data: " + response.body);
+          }
+        });
       } else {
         alert("Please fill in at least one field");
       }
@@ -79,31 +58,28 @@ export default {
         return;
       }
 
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      };
-
       let id;
       article.mediums.forEach((medium) => {
         console.log(medium);
-        if (medium.type == "DIGITAL") {
+        if (medium.type === "DIGITAL") {
           id = medium.id;
         }
       });
 
-      const body = {
-        mediumId: id
+      const opts = {
+        body: {
+          mediumId: id
+        }
       };
 
-      axios
-        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/add", body, config)
-        .then((response) => {
+      new DefaultApi().addToShoppingCart(opts, (error, data, response) => {
+        if (error) {
+          alert(error);
+        } else {
           console.log(response);
           alert("Successfully added to cart");
-        }) // TODO: show message of 409
-        .catch((error) => {
-          alert(error);
-        });
+        }
+      });
     },
     reset() {
       this.title = "";

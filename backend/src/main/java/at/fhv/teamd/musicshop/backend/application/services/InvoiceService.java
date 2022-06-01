@@ -52,12 +52,16 @@ public class InvoiceService {
 
         if (invoiceOpt.isPresent()) {
             Invoice invoice = invoiceOpt.get();
-            invoice.getLineItems()
-                    .stream()
-                    .filter(lineItem1 -> lineItem1.getId() == lineItem.id())
-                    .findFirst()
-                    .orElseThrow(() -> new InvoiceException("LineItem not found"))
-                    .increaseQuantityReturned(Quantity.of(quantity));
+            try {
+                invoice.getLineItems()
+                        .stream()
+                        .filter(lineItem1 -> lineItem1.getId() == lineItem.id())
+                        .findFirst()
+                        .orElseThrow(() -> new InvoiceException("LineItem not found"))
+                        .increaseQuantityReturned(Quantity.of(quantity));
+            } catch (IllegalArgumentException e) {
+                throw new InvoiceException(e.getMessage());
+            }
             invoiceRepository.update(invoice);
         } else {
             throw new InvoiceException(message);
