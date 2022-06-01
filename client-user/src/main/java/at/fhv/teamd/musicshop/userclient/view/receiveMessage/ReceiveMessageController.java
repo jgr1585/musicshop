@@ -27,9 +27,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 
-import javax.swing.event.ChangeListener;
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -69,12 +67,19 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
     private boolean isFirstPoll = true;
     private ScheduledExecutorService executorService;
 
+    private static final boolean POLL_ALWAYS = true;
+
     public ReceiveMessageController() {
         //Stop the executor service when the stage is closed
         Main.onClose(this::onLogout);
     }
 
     public void bindActiveProperty(ReadOnlyBooleanProperty activeProp) {
+        if (POLL_ALWAYS) {
+            activatePolling();
+            return;
+        }
+
         if (activeProp.getValue())
             activatePolling();
         else

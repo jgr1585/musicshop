@@ -15,13 +15,12 @@ export default {
   },
   data() {
     return {
-      currentTab: "Search"
+      currentTab: "Search",
     };
   },
   methods: {
     setTab(tab) {
       this.currentTab = tab;
-      this.$forceUpdate();
     },
     logout() {
       localStorage.removeItem("token");
@@ -29,6 +28,15 @@ export default {
     },
     tokenIsNull() {
       return localStorage.getItem("token") == null;
+    },
+    setCorrectTab(tab) {
+      localStorage.setItem("tab", tab);
+      if (localStorage.getItem("token") == null) {
+        this.setTab('Login');
+        this.$forceUpdate();
+      } else {
+        this.setTab(tab);
+      }
     }
   },
   created() {
@@ -59,8 +67,7 @@ export default {
         <v-btn
             class="btn btn-primary rounded-pill"
             id="button"
-            @click="setTab('ShoppingCart')"
-            :disabled="tokenIsNull()"
+            @click="setCorrectTab('ShoppingCart')"
         >
           <v-icon
               size="25px"
@@ -72,8 +79,7 @@ export default {
         <v-btn
             class="btn btn-primary rounded-pill"
             id="button"
-            @click="setTab('Download')"
-            :disabled="tokenIsNull()"
+            @click="setCorrectTab('Download')"
         >
           <v-icon
               size="25px"
@@ -111,7 +117,9 @@ export default {
       </div>
     </nav>
 
-    <component :is="currentTab"></component>
+    <keep-alive :exclude="'ShoppingCart'">
+      <component v-on:updateParent="setTab" :is="currentTab"></component>
+    </keep-alive>
 
     <div class="container-xxl bg-white p-0">
       <div class="container text-center modal-body">
