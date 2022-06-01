@@ -103,3 +103,11 @@ task buildSpa(type: NpxTask) {
     command = 'npm'
     args = ['--prefix', '../spa', 'run', 'build']
 }
+
+tasks.getByName('war').dependsOn('resolve')
+tasks.getByName('war').dependsOn('generateSwaggerCode')
+tasks.getByName('war').dependsOn('generateSwaggerUI')
+tasks.getByName('war').dependsOn('buildSpa')
+tasks.getByName('buildSpa').dependsOn('resolve')
+tasks.getByName('generateSwaggerCode').dependsOn('resolve')
+tasks.getByName('generateSwaggerUI').dependsOn('resolve')
