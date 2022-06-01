@@ -8,8 +8,6 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
-import org.springframework.core.env.SystemEnvironmentPropertySource;
-import org.springframework.util.SystemPropertyUtils;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

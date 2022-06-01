@@ -1,7 +1,6 @@
 package at.fhv.teamd.musicshop.backend.domain.article;
 
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
-import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -9,7 +8,6 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -35,5 +33,19 @@ public class Album extends Article {
         Set<Artist> artists = new HashSet<>();
         songs.forEach(song -> artists.addAll(song.getArtists()));
         return artists;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Album album = (Album) o;
+        return Objects.equals(songs, album.songs) && Objects.equals(mediums, album.mediums);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), songs, mediums);
     }
 }

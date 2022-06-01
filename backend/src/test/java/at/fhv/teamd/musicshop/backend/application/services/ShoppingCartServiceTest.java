@@ -44,7 +44,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    public void given_shoppingCartService_when_addToShoppingCart_then_returnRefreshedShoppingCart() throws ShoppingCartException {
+    void given_shoppingCartService_when_addToShoppingCart_then_returnRefreshedShoppingCart() throws ShoppingCartException {
         //given
         String userId = "user123456";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
@@ -75,7 +75,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    public void given_shoppingCart_when_initializeShoppingcart_then_returnShoppingCart() {
+    void given_shoppingCart_when_initializeShoppingcart_then_returnShoppingCart() {
         //given
         String userId = "user1234";
         AtomicReference<Method> method = new AtomicReference<>();
@@ -90,7 +90,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    public void given_shoppingCartService_when_removeFromShoppingCart_then_returnRefreshedShoppingCart() throws ShoppingCartException {
+    void given_shoppingCartService_when_removeFromShoppingCart_then_returnRefreshedShoppingCart() throws ShoppingCartException {
         //given
         String userId = "user12345";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
@@ -114,11 +114,11 @@ class ShoppingCartServiceTest {
 
         //then quantity should equal 0
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
-        Assertions.assertThrows(IllegalArgumentException.class, () -> this.shoppingCartService.removeFromShoppingCart("user0000", mediumDTO.id(), 10));
+        Assertions.assertThrows(ShoppingCartException.class, () -> this.shoppingCartService.removeFromShoppingCart("user0000", mediumDTO.id(), 10));
     }
 
     @Test
-    public void given_articlesInShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() throws ShoppingCartException {
+    void given_articlesInShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() throws ShoppingCartException {
         //given
         String userId = "user1234567";
         Medium medium = DomainFactory.createMedium(MediumType.CD);
@@ -140,19 +140,19 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    public void given_emptyShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() {
+    void given_emptyShoppingCart_when_buyFromShoppingCart_then_returnEmptyShoppingCart() {
         //given
         String userId = "user1239";
 
         //when
-        Assertions.assertThrows(IllegalArgumentException.class, () -> this.shoppingCartService.buyFromShoppingCart(userId, 0));
+        Assertions.assertThrows(ShoppingCartException.class, () -> this.shoppingCartService.buyFromShoppingCart(userId, 0));
 
         //then
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
     }
 
     @Test
-    public void given_articlesInShoppingCart_when_buyFromShoppingCart_item_not_in_stock_then_Throw_Exeption() throws ShoppingCartException {
+    void given_articlesInShoppingCart_when_buyFromShoppingCart_item_not_in_stock_then_Throw_Exeption() throws ShoppingCartException {
         //given
         String userId1 = "user1234";
         String userId2 = "user5678";
@@ -175,7 +175,7 @@ class ShoppingCartServiceTest {
     }
 
     @Test
-    public void given_shoppingCart_when_initializeShoppingCart_then_returnEqual() throws ShoppingCartException {
+    void given_shoppingCart_when_initializeShoppingCart_then_returnEqual() throws ShoppingCartException {
         //given
         String userId1 = "user1236";
         String userId2 = "user5679";

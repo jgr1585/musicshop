@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-// TODO: Think about using dedicated non-persistent ShoppingCart class
 @Entity
 public class LineItem {
     @Id

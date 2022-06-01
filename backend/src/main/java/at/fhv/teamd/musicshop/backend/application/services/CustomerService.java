@@ -15,7 +15,7 @@ public class CustomerService {
     private static final CustomerRepository customerRepository = RepositoryFactory.getCustomerRepositoryInstance();
 
     public Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException {
-        return CustomerClient.getCustomerClient().searchCustomersByName(name);
+        return CustomerClient.getCustomerDBClient().searchCustomersByName(name);
     }
 
     public int getCustomerNoByUsername(String username) throws CustomerNotFoundException {

@@ -10,6 +10,10 @@ public class LoginSubject {
         observers = new LinkedList<>();
     }
 
+    private LoginSubject() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static void addObserver(LoginObserver observer) {
         observers.add(observer);
     }
