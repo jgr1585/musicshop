@@ -114,7 +114,7 @@ class ShoppingCartServiceTest {
 
         //then quantity should equal 0
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());
-        Assertions.assertThrows(IllegalArgumentException.class, () -> this.shoppingCartService.removeFromShoppingCart("user0000", mediumDTO.id(), 10));
+        Assertions.assertThrows(ShoppingCartException.class, () -> this.shoppingCartService.removeFromShoppingCart("user0000", mediumDTO.id(), 10));
     }
 
     @Test
@@ -145,7 +145,7 @@ class ShoppingCartServiceTest {
         String userId = "user1239";
 
         //when
-        Assertions.assertThrows(IllegalArgumentException.class, () -> this.shoppingCartService.buyFromShoppingCart(userId, 0));
+        Assertions.assertThrows(ShoppingCartException.class, () -> this.shoppingCartService.buyFromShoppingCart(userId, 0));
 
         //then
         Assertions.assertTrue(this.shoppingCartService.getShoppingCart(userId).lineItems().isEmpty());

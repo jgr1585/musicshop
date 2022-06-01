@@ -42,7 +42,7 @@ class InvoiceServiceTest {
     }
 
     @Test
-    public void given_InvoiceService_when_createInvoice_then_repository_contains_invoiceWithoutCustomer() {
+    void given_InvoiceService_when_createInvoice_then_repository_contains_invoiceWithoutCustomer() {
         // given
         Invoice expectedInvoice = Invoice.of(Set.of(DomainFactory.createLineItem()));
 
@@ -54,7 +54,7 @@ class InvoiceServiceTest {
     }
 
     @Test
-    public void given_InvoiceService_when_createInvoice_then_repository_contains_invoiceWithCustomer() {
+    void given_InvoiceService_when_createInvoice_then_repository_contains_invoiceWithCustomer() {
         // given
         Invoice expectedInvoice = Invoice.of(Set.of(DomainFactory.createLineItem()), 2);
 
@@ -66,7 +66,7 @@ class InvoiceServiceTest {
     }
 
     @Test
-    public void given_InvoiceService_when_searchInvoiceById_then_return_InvoiceDTO() throws InvoiceException {
+    void given_InvoiceService_when_searchInvoiceById_then_return_InvoiceDTO() throws InvoiceException {
         // given
         Invoice invoice = DomainFactory.createInvoice();
         Mockito.when(invoiceRepository.findInvoiceById(invoice.getId())).thenReturn(Optional.of(invoice));
@@ -80,7 +80,7 @@ class InvoiceServiceTest {
     }
 
     @Test
-    public void given_InvoiceService_when_returnItem_then_returnQuantity_increased() throws InvoiceException {
+    void given_InvoiceService_when_returnItem_then_returnQuantity_increased() throws InvoiceException {
         // given
         Invoice invoice = DomainFactory.createInvoice();
         LineItem lineItem = invoice.getLineItems().iterator().next();
@@ -98,7 +98,7 @@ class InvoiceServiceTest {
     }
 
     @Test
-    public void given_InvoiceService_when_returnItem_and_quantity_isZero_or_toBig_then_throws() {
+    void given_InvoiceService_when_returnItem_and_quantity_isZero_or_toBig_then_throws() {
         // given
         Invoice invoice = DomainFactory.createInvoice();
         LineItem lineItem = invoice.getLineItems().iterator().next();
@@ -107,14 +107,14 @@ class InvoiceServiceTest {
 
         // when .. then
         int amountToReturn1 = 0;
-        Assertions.assertThrows(IllegalArgumentException.class, () -> invoiceService.returnItem(DTOProvider.buildLineItemDTO(lineItem), amountToReturn1));
+        Assertions.assertThrows(InvoiceException.class, () -> invoiceService.returnItem(DTOProvider.buildLineItemDTO(lineItem), amountToReturn1));
 
         int amountToReturn2 = 100;
-        Assertions.assertThrows(IllegalArgumentException.class, () -> invoiceService.returnItem(DTOProvider.buildLineItemDTO(lineItem), amountToReturn2));
+        Assertions.assertThrows(InvoiceException.class, () -> invoiceService.returnItem(DTOProvider.buildLineItemDTO(lineItem), amountToReturn2));
     }
 
     @Test
-    public void given_InvoiceService_when_searchInvoiceById_then_throws_and_doestNotThrow() {
+    void given_InvoiceService_when_searchInvoiceById_then_throws_and_doestNotThrow() {
         // given
         Invoice invoice = DomainFactory.createInvoice();
         Mockito.when(invoiceRepository.findInvoiceById(invoice.getId())).thenReturn(Optional.of(invoice));
@@ -125,7 +125,7 @@ class InvoiceServiceTest {
     }
 
     @Test
-    public void given_InvoiceService_when_returnItem_then_throws_and_doestNotThrow() {
+    void given_InvoiceService_when_returnItem_then_throws_and_doestNotThrow() {
         // given
         Invoice invoice = DomainFactory.createInvoice();
         LineItem lineItem = invoice.getLineItems().iterator().next();
