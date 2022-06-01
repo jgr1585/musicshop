@@ -14,28 +14,26 @@ import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedInvoiceException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 import java.io.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Secured
 @Path("/media")
 @SecurityRequirement(name = "Authentication")
+@NoArgsConstructor
 public class MediaRestController {
     @Inject
     @AuthenticatedUser
     private User authenticatedUser;
 
     private final InvoiceService invoiceService = ServiceFactory.getInvoiceServiceInstance();
-    private final ArticleService articleService = ServiceFactory.getArticleServiceInstance();
 
-    public MediaRestController() {}
 
     @GET
     @Operation(summary = "Download song")

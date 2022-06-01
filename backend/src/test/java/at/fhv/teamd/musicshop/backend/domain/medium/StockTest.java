@@ -9,9 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class StockTest {
 
-    @Test
-    void of() {
-    }
 
     @Test
     void given_stock_when_getQuantity_then_returnQuantity() {

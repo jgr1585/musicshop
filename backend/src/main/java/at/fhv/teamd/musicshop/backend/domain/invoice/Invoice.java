@@ -1,6 +1,5 @@
 package at.fhv.teamd.musicshop.backend.domain.invoice;
 
-import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import lombok.Getter;
 
@@ -53,7 +52,7 @@ public class Invoice {
     }
 
     private BigDecimal calculateTotalPrice(Set<LineItem> lineItems) {
-        BigDecimal totalPrice = BigDecimal.valueOf(0);
+        totalPrice = BigDecimal.valueOf(0);
         for (LineItem lineItem : lineItems) {
             totalPrice = totalPrice.add(lineItem.getTotalPrice());
         }

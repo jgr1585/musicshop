@@ -43,7 +43,9 @@ public class ArticleController {
     private final Consumer<ArticleDTO> loadCoverArtConsumer = articleDTO -> {
         try {
             this.loadCoverArt(articleDTO);
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+            //Nothing to do
+        }
     };
 
     public void addMediumTypes(ArticleDTO articleDTO, Tabs tab) throws IOException {

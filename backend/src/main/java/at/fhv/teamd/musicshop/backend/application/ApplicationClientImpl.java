@@ -20,8 +20,6 @@ public class ApplicationClientImpl implements ApplicationClient {
     private final InvoiceService invoiceService = ServiceFactory.getInvoiceServiceInstance();
     private final MessageService messageService = ServiceFactory.getMessageServiceInstance();
     private final ShoppingCartService shoppingCartService = ServiceFactory.getShoppingCartServiceInstance();
-
-    private ApplicationClientSession applicationClientSession;
     private String userId;
 
     public ApplicationClientImpl() {

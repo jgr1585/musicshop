@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
-public class ArticleServiceTest {
+class ArticleServiceTest {
 
     @Mock
     private ArticleRepository articleRepository;
@@ -35,7 +35,7 @@ public class ArticleServiceTest {
     }
 
     @Test
-    public void given_ArticleService_when_searchArticles_then_returnListOfArticles() {
+    void given_ArticleService_when_searchArticles_then_returnListOfArticles() {
         // given
         Article article = DomainFactory.createArticle();
         String title = article.getTitle();

@@ -9,6 +9,10 @@ public class ReturnSubject {
         observers = new LinkedList<>();
     }
 
+    private ReturnSubject() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final List<ReturnObserver> observers;
 
     public static void addObserver(ReturnObserver observer) {

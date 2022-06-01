@@ -1,7 +1,6 @@
 package at.fhv.teamd.musicshop.backend.domain.repositories;
 
 import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
-import at.fhv.teamd.musicshop.library.DTO.InvoiceDTO;
 
 import java.util.List;
 import java.util.Optional;

@@ -17,6 +17,7 @@ import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.io.IOException;
@@ -84,11 +85,9 @@ public class AppController {
     }
 
     @FXML
-    private void onKeyPressed(KeyEvent keyEvent) throws IOException, ApplicationClientException, NotAuthorizedException {
-        switch (keyEvent.getCode()) {
-            case ESCAPE:
-                loginController.logout();
-                break;
+    private void onKeyPressed(KeyEvent keyEvent) throws IOException {
+        if (keyEvent.getCode() == KeyCode.ESCAPE) {
+            loginController.logout();
         }
     }
 
