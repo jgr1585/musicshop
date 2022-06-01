@@ -95,7 +95,7 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
             this.executorService.scheduleAtFixedRate(() -> {
                 try {
                     this.loadMessage();
-                } catch (MessagingException | NotAuthorizedException | RemoteException e) {
+                } catch (MessagingException | NotAuthorizedException e) {
                     e.printStackTrace();
                 }
             }, 1, POLL_PERIOD, TimeUnit.SECONDS);
@@ -167,7 +167,7 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
             System.out.println("Trash Button Pressed: " + message.title());
             try {
                 deleteMessage(message);
-            } catch (RemoteException | NotAuthorizedException | MessagingException e) {
+            } catch (NotAuthorizedException | MessagingException e) {
                 throw new RuntimeException(e);
             }
         });

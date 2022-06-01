@@ -61,7 +61,7 @@ public class SearchArticleController implements GenericArticleController {
     }
 
     @FXML
-    private void addToCart(ActionEvent actionEvent) throws NotAuthorizedException {
+    private void addToCart(ActionEvent actionEvent) throws NotAuthorizedException, ShoppingCartException {
         RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()));
         new Alert(Alert.AlertType.INFORMATION, "Successfully added items", ButtonType.OK).show();
         this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
