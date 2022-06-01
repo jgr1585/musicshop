@@ -1,6 +1,6 @@
 <script setup>
 import LineItem from "./LineItem.vue";
-import axios from "axios";
+import { DefaultApi } from "../rest";
 </script>
 
 <script>
@@ -22,31 +22,15 @@ export default {
         return;
       }
 
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      };
-
-      axios
-        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/get", {}, config)
-        .then((response) => {
-          console.log(response.data);
-
-          this.lineItems = response.data.lineItems;
-          this.totalAmount = response.data.totalAmount;
-        })
-        .catch((error) => {
+      new DefaultApi().getShoppingCart((error, data, response) => {
+        if (error) {
           alert(error);
-        });
-
-      // new DefaultApi().getShoppingCart((error, data, response) => {
-      //   if (error) {
-      //     alert(error);
-      //   } else {
-      //     console.log(response);
-      //     console.log("API called successfully. Returned data: " + data);
-      //     console.log("API called successfully. Returned response: " + response);
-      //   }
-      // });
+        } else {
+          console.log(response.body);
+          this.lineItems = response.body.lineItems;
+          this.totalAmount = response.body.totalAmount;
+        }
+      });
     },
     removeFromCart(id) {
       if (localStorage.getItem("token") == null) {
@@ -55,24 +39,21 @@ export default {
         return;
       }
 
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      const opts = {
+        body: {
+          mediumId: id
+        }
       };
 
-      const body = {
-        mediumId: id
-      };
-
-      axios
-        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/remove", body, config)
-        .then((response) => {
+      new DefaultApi().removeFromShoppingCart(opts, (error, data, response) => {
+        if (error) {
+          alert(error);
+        } else {
           console.log(response);
           alert("Successfully removed from cart");
           this.getShoppingCart();
-        })
-        .catch((error) => {
-          alert(error);
-        });
+        }
+      });
     },
     buyFromCart() {
       if (localStorage.getItem("token") == null) {
@@ -81,25 +62,22 @@ export default {
         return;
       }
 
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      const opts = {
+        body: {
+          creditCardNo: this.creditcardNo
+        }
       };
 
-      const body = {
-        creditCardNo: this.creditcardNo
-      };
-
-      axios
-        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/buy", body, config)
-        .then((response) => {
+      new DefaultApi().buyFromShoppingCart(opts, (error, data, response) => {
+        if (error) {
+          alert(error);
+        } else {
           console.log(response);
+          this.creditcardNo = "";
           alert("Successfully purchased");
           this.getShoppingCart();
-          this.creditcardNo = "";
-        })
-        .catch((error) => {
-          alert(error);
-        });
+        }
+      });
     },
     emptyCart() {
       if (localStorage.getItem("token") == null) {
@@ -108,21 +86,16 @@ export default {
         return;
       }
 
-      const config = {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-      };
-
-      axios
-        .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/empty", {}, config)
-        .then((response) => {
+      new DefaultApi().emptyShoppingCart((error, data, response) => {
+        if (error) {
+          alert(error);
+        } else {
           console.log(response);
           alert("Shopping Cart emptied");
           this.getShoppingCart();
           this.creditcardNo = "";
-        })
-        .catch((error) => {
-          alert(error);
-        });
+        }
+      });
     }
   },
   created() {

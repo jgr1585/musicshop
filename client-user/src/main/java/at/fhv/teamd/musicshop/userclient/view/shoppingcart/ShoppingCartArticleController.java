@@ -4,6 +4,7 @@ import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
 import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
+import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
@@ -36,9 +37,7 @@ public class ShoppingCartArticleController implements GenericArticleController {
         // force the field to be numeric only
         numberOnly(this.mediumAmountStock);
 
-        new Thread(() -> {
-            this.removeButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.removeFromShoppingCart));
-        }).start();
+        new Thread(() -> this.removeButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.removeFromShoppingCart))).start();
     }
 
     @Override
@@ -57,7 +56,7 @@ public class ShoppingCartArticleController implements GenericArticleController {
     }
 
     @FXML
-    private void reduceByOne(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
+    private void reduceByOne(ActionEvent actionEvent) throws NotAuthorizedException, ShoppingCartException {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         if (val > 0) {
             this.mediumAmountSelected.setText(Integer.valueOf(val - 1).toString());
@@ -66,7 +65,7 @@ public class ShoppingCartArticleController implements GenericArticleController {
     }
 
     @FXML
-    private void increaseByOne(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
+    private void increaseByOne(ActionEvent actionEvent) throws NotAuthorizedException, ShoppingCartException {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         if (val < this.lineItemDTO.medium().stockQuantity()) {
             this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
@@ -75,7 +74,7 @@ public class ShoppingCartArticleController implements GenericArticleController {
     }
 
     @FXML
-    private void remove(ActionEvent actionEvent) throws RemoteException, NotAuthorizedException {
+    private void remove(ActionEvent actionEvent) throws NotAuthorizedException, ShoppingCartException {
         RemoteFacade.getInstance().removeFromShoppingCart(mediumDTO, lineItemDTO.quantity());
     }
 }

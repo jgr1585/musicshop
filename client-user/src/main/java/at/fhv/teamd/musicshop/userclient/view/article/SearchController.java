@@ -6,6 +6,8 @@ import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.view.ActivePropertyBindable;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +19,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SearchController {
+public class SearchController implements ActivePropertyBindable {
 
     @FXML
     private TextField searchByTitle;
@@ -25,6 +27,15 @@ public class SearchController {
     private TextField searchByArtist;
     @FXML
     private VBox searchPane;
+    @FXML
+    private Button formCancelBtn;
+    @FXML
+    private Button formSubmitBtn;
+
+    public void bindActiveProperty(ReadOnlyBooleanProperty activeProp) {
+        formCancelBtn.cancelButtonProperty().bind(activeProp);
+        formSubmitBtn.defaultButtonProperty().bind(activeProp);
+    }
 
     public void searchAlbum(SongDTO song) {
         this.searchPane.getChildren().clear();

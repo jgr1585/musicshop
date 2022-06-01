@@ -12,11 +12,7 @@ import java.rmi.RemoteException;
 import java.util.Set;
 
 public class CustomerService {
-    private static CustomerRepository customerRepository;
-
-    public CustomerService() {
-        customerRepository = RepositoryFactory.getCustomerRepositoryInstance();
-    }
+    private static final CustomerRepository customerRepository = RepositoryFactory.getCustomerRepositoryInstance();
 
     public Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException {
         return CustomerClient.getCustomerDBClient().searchCustomersByName(name);

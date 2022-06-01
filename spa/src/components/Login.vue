@@ -1,5 +1,5 @@
 <script setup>
-import axios from "axios";
+import { DefaultApi } from "../rest";
 </script>
 
 <script>
@@ -21,45 +21,38 @@ export default {
     }
   },
   methods: {
+    addTokenToApiClient() {
+      new DefaultApi().apiClient.authentications = {
+        Authentication: {
+          type: "oauth2",
+          accessToken: localStorage.getItem("token")
+        }
+      };
+    },
     login() {
       if (this.$options.filters.validater(this.username, this.password)) {
         this.loading = true;
 
-        axios
-          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/authentication", {
+        const opts = {
+          body: {
             username: this.username,
             password: this.password
-          })
-          .then((response) => {
-            this.loading = false;
-            this.errored = false;
-            localStorage.setItem("token", response.data);
-            console.log(localStorage.getItem("token"));
-            location.reload();
-          })
-          .catch((error) => {
-            this.loading = false;
-            this.errored = true;
-            alert(error);
-          });
+          }
+        };
 
-        // TODO: solve problem about of setting JWT in header
-        // const opts = {
-        //   body: {
-        //     username: this.username,
-        //     password: this.password
-        //   }
-        // };
-        // new DefaultApi().authenticateUser(opts, (error, data, response) => {
-        //   this.loading = false;
-        //   if (error) {
-        //     this.errored = true;
-        //     alert(error);
-        //   } else {
-        //     this.token = response.text;
-        //     console.log("Token: " + response.text);
-        //   }
-        // });
+        new DefaultApi().authenticateUser(opts, (error, data, response) => {
+          this.loading = false;
+          if (error) {
+            alert(error);
+            this.errored = true;
+          } else {
+            console.log(response);
+            localStorage.setItem("token", response.text);
+            console.log(localStorage.getItem("token"));
+            this.addTokenToApiClient();
+            // location.reload();
+          }
+        });
       } else {
         alert("Please fill in all the fields");
       }
