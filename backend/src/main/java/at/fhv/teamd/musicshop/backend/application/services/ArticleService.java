@@ -79,21 +79,6 @@ public class ArticleService {
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
-    public Optional<AlbumDTO> getAlbumById(long id) throws ApplicationClientException {
-        if (id < 1) {
-            throw new ApplicationClientException("Validation error: Id must be greater than 0.");
-        }
-
-        Article article = articleRepository.findArticleById(id).filter(a -> a instanceof Album).orElse(null);
-        Album album = (Album) article;
-
-        if (album != null) {
-            return Optional.of(DTOProvider.buildArticleDTO(album));
-        } else {
-            return Optional.empty();
-        }
-    }
-
     /*
         At least one field has to be filled
         Minimum length of a field: 1 character
