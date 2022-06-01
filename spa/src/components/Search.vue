@@ -4,6 +4,7 @@ import { DefaultApi } from "../rest";
 </script>
 
 <script>
+
 export default {
   props: {
     token: String
@@ -54,6 +55,7 @@ export default {
 
       if (localStorage.getItem("token") == null) {
         alert("You are not logged in!");
+        this.$emit('updateParent', 'Login')
         this.errored = true;
         return;
       }
@@ -121,7 +123,7 @@ export default {
           </v-btn>
 
           <v-btn class="btn-primary rounded-pill w-33" id="button" @click="reset" color="#FFD700">
-            <v-icon size="25px"> mdi-replay</v-icon>
+            <v-icon size="25px"> mdi-filter-remove</v-icon>
           </v-btn>
         </div>
       </div>
@@ -140,24 +142,24 @@ export default {
             <v-col>
               <Article :article="article" />
             </v-col>
-            <v-col class="col-1">
-              <v-btn
-                v-if="article.mediums"
-                class="ma-lg-10 bg-transparent rounded-pill pa-5"
-                @click="addToCart(article)"
-                :disabled="tokenIsNull()"
-              >
-                <v-icon color="#ffd700" size="40"> mdi-basket-fill</v-icon>
-              </v-btn>
-              <v-btn
-                v-else
-                class="ma-lg-10 bg-transparent rounded-pill pa-5"
-                @click="addToCart(article.albums.at(0))"
-                :disabled="tokenIsNull()"
-              >
-                <v-icon color="#ffd700" size="40"> mdi-basket-fill</v-icon>
-              </v-btn>
-            </v-col>
+            <div>
+              <v-col class="col-1">
+                <v-btn
+                    v-if="article.mediums"
+                    class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                    @click="addToCart(article)"
+                >
+                  <v-icon color="#ffd700" size="40"> mdi-cart</v-icon>
+                </v-btn>
+                <v-btn
+                    v-else
+                    class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                    @click="addToCart(article.albums.at(0))"
+                >
+                  <v-icon color="#ffd700" size="40"> mdi-cart</v-icon>
+                </v-btn>
+              </v-col>
+            </div>
           </v-row>
         </v-container>
       </div>
@@ -170,13 +172,7 @@ export default {
     <img class="bottom-img" alt="billie" src="/src/assets/billie.jpg" width="220" height="180" />
     <img class="bottom-img" alt="madonna" src="/src/assets/Madonna.jpg" width="200" height="180" />
     <img class="bottom-img" alt="manson" src="/src/assets/manson.jpg" width="190" height="180" />
-    <img
-      class="bottom-img"
-      alt="postmalone"
-      src="/src/assets/postmalone.jpg"
-      width="200"
-      height="180"
-    />
+    <img class="bottom-img" alt="postmalone" src="/src/assets/postmalone.jpg" width="200" height="180"/>
   </div>
 </template>
 
