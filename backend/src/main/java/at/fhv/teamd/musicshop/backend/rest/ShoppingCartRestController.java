@@ -12,6 +12,7 @@ import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -23,14 +24,13 @@ import java.util.NoSuchElementException;
 @Consumes("application/json")
 @Produces("application/json")
 @SecurityRequirement(name = "Authentication")
+@NoArgsConstructor
 public class ShoppingCartRestController {
 
     @Inject
     @AuthenticatedUser
     private User authenticatedUser;
 
-    public ShoppingCartRestController() {
-    }
 
     @POST
     @Path("/add")
