@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -26,6 +27,7 @@ import javax.ws.rs.core.UriInfo;
 @Consumes("application/json")
 @Produces("application/json")
 @SecurityRequirement(name = "Authentication")
+@NoArgsConstructor
 public class InvoiceRestController {
 
     @Inject
@@ -33,8 +35,6 @@ public class InvoiceRestController {
     private User authenticatedUser;
 
     private final InvoiceService invoiceService = ServiceFactory.getInvoiceServiceInstance();
-
-    public InvoiceRestController() {}
 
     @GET
     @Operation(summary = "Get customer invoices")
