@@ -1,6 +1,5 @@
 <script setup>
 import LineItem from "./LineItem.vue";
-import axios from "axios";
 </script>
 
 <script>
@@ -10,34 +9,16 @@ export default {
       invoiceID: "",
       loading: false,
       errored: false,
-      lineItems: []
+      lineItems: [],
+      title: ""
     };
   },
   methods: {
-    search() {
-      if (localStorage.getItem("token") == null) {
-        alert("You are not logged in!");
-        this.errored = true;
-        return;
-      }
+    play() {
 
-      const config = {
-        headers: {Authorization: `Bearer ${localStorage.getItem("token")}`}
-      };
+    },
+    download() {
 
-      const body = {
-        mediumId: id
-      };
-
-      axios
-          .post("http://localhost:8080/backend-1.0-SNAPSHOT/rest/shoppingcart/remove", body, config)
-          .then((response) => {
-            console.log(response);
-            alert("Successfully removed from cart");
-          })
-          .catch((error) => {
-            alert(error);
-          });
     }
   }
 };
@@ -49,7 +30,24 @@ export default {
       <div class="row g-5 align-items-center pa-5">
         <h1 class="text-white mb-4 animated slideInDown">Playlist</h1>
       </div>
+      <div class="w-auto align-center" id="search">
+        <input
+            class="v-col-lg-auto border-e rounded-pill w-66 input"
+            type="text"
+            :value="title"
+            @input="title = $event.target.value"
+            placeholder="Title"
+        />
+        <div class="w-33">
+          <v-btn class="btn-primary rounded-pill w-33" id="button" @click="search" color="#FFD700">
+            <v-icon size="25px"> mdi-magnify</v-icon>
+          </v-btn>
 
+          <v-btn class="btn-primary rounded-pill w-33" id="button" @click="reset" color="#FFD700">
+            <v-icon size="25px"> mdi-filter-remove</v-icon>
+          </v-btn>
+        </div>
+      </div>
       <div v-if="errored">
         <p class="text">
           We're sorry, we're not able to retrieve this information at the moment, please try back
@@ -62,19 +60,19 @@ export default {
         <v-container v-else>
           <v-row v-for="lineItem in lineItems">
             <LineItem :lineItem="lineItem"/>
-            <v-col cols="2">
-              <v-chip
-                  class="ma-2"
-                  color="#ffd700"
-                  text-color="white"
-                  id="button"
-                  @click="addToCart"
+            <v-col class="col-1 row align-items-center">
+              <v-btn
+                  class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                  @click="play"
               >
-                <v-avatar left>
-                  <v-icon color="#ffd700"> mdi-basket</v-icon>
-                </v-avatar>
-                Remove
-              </v-chip>
+                <v-icon color="#ffd700" size="40"> mdi-play-circle-outline</v-icon>
+              </v-btn>
+              <v-btn
+                  class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                  @click="download"
+              >
+                <v-icon color="#ffd700" size="40"> mdi-download</v-icon>
+              </v-btn>
             </v-col>
           </v-row>
         </v-container>

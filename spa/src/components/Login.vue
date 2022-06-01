@@ -50,7 +50,7 @@ export default {
             localStorage.setItem("token", response.text);
             console.log(localStorage.getItem("token"));
             this.addTokenToApiClient();
-            // location.reload();
+            this.$emit('updateParent', localStorage.getItem('tab'))
           }
         });
       } else {
@@ -96,7 +96,7 @@ export default {
           </v-btn>
 
           <v-btn class="btn-primary rounded-pill w-33" id="button" @click="reset" color="#FFD700">
-            <v-icon size="25px"> mdi-replay </v-icon>
+            <v-icon size="25px"> mdi-filter-remove </v-icon>
           </v-btn>
         </div>
       </div>
@@ -117,10 +117,6 @@ export default {
 </template>
 
 <style>
-#header {
-  background-color: #181818 !important;
-  padding-bottom: 250px;
-}
 
 .input {
   background-color: #ffffff;
