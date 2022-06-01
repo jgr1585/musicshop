@@ -31,7 +31,6 @@ public class ShoppingCartRestController {
     @AuthenticatedUser
     private User authenticatedUser;
 
-
     @POST
     @Path("/add")
     @Operation(summary = "Add an item to your ShoppingCart")

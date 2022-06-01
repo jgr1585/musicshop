@@ -1,6 +1,8 @@
 package at.fhv.teamd.musicshop.backend.rest.auth;
 
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class User {
 
     private String username;

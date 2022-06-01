@@ -21,7 +21,6 @@ public class AuthRestService {
 
     public static final Key KEY = Keys.secretKeyFor(SignatureAlgorithm.HS384);
 
-
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes(MediaType.APPLICATION_JSON)
