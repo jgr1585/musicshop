@@ -69,14 +69,15 @@ public class SearchArticleController implements GenericArticleController {
 
     public void reduceByOne(ActionEvent actionEvent) {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
-        if (val > 0) {
+        if (val > 0)
             this.mediumAmountSelected.setText(Integer.valueOf(val - 1).toString());
-        }
     }
 
     public void increaseByOne(ActionEvent actionEvent) {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
-        this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
+        int valInStock = Integer.parseInt(this.mediumAmount.getText());
+        if (val < valInStock)
+            this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
     }
 
     public void order(ActionEvent actionEvent) throws NotAuthorizedException, MessagingException {
