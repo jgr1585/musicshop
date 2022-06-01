@@ -20,13 +20,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class MessageService {
-    private static EmployeeRepository employeeRepository;
-    private static TopicRepository topicRepository;
-
-    MessageService() {
-        employeeRepository = RepositoryFactory.getEmployeeRepositoryInstance();
-        topicRepository = RepositoryFactory.getTopicRepositoryInstance();
-    }
+    private static final EmployeeRepository employeeRepository = RepositoryFactory.getEmployeeRepositoryInstance();
+    private static final TopicRepository topicRepository = RepositoryFactory.getTopicRepositoryInstance();
 
     private static final String BROKER_URL = "tcp://10.0.40.166:61616";
     private static final long MSG_TTL = TimeUnit.DAYS.toMillis(7);
@@ -95,7 +90,7 @@ public class MessageService {
                 javax.jms.Message message;
                 while ((message = messageConsumer.receive(TIMEOUT)) != null) {
                     messages.add(message);
-                    System.out.println("received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
+                    //System.out.println("received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
                 }
             }
 
