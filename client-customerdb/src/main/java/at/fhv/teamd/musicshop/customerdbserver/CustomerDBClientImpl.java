@@ -35,9 +35,6 @@ public class CustomerDBClientImpl extends UnicastRemoteObject implements Custome
         }
     }
 
-    public static void init() {
-    }
-
     public CustomerDBClientImpl() throws RemoteException {
         super(CustomerDBServer.BIND_PORT);
     }

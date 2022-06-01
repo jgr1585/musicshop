@@ -5,7 +5,6 @@ import at.fhv.teamd.musicshop.library.exceptions.*;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 
 import javax.ejb.Remote;
-import javax.ejb.Remove;
 import java.util.Set;
 
 @Remote

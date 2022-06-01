@@ -12,7 +12,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import java.rmi.RemoteException;
 
 import static at.fhv.teamd.musicshop.userclient.view.FieldValidationHelper.numberOnly;
 

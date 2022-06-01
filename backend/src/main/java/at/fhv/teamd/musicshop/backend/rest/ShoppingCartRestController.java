@@ -44,7 +44,7 @@ public class ShoppingCartRestController {
             return Response.status(401).build();
         }
         try {
-            ServiceFactory.getShoppingCartServiceInstance().addDigitalsToShoppingCart(authenticatedUser.name(), form.mediumId);
+            ServiceFactory.getShoppingCartServiceInstance().addDigitalsToShoppingCart(authenticatedUser.name(), form.getMediumId());
         } catch (NoSuchElementException e) {
             return Response.status(404, e.getMessage()).build();
         } catch (ShoppingCartException e) {
@@ -65,7 +65,7 @@ public class ShoppingCartRestController {
             return Response.status(401).build();
         }
         try {
-            ServiceFactory.getShoppingCartServiceInstance().removeDigitalsFromShoppingCart(authenticatedUser.name(), form.mediumId);
+            ServiceFactory.getShoppingCartServiceInstance().removeDigitalsFromShoppingCart(authenticatedUser.name(), form.getMediumId());
         } catch (ShoppingCartException e) {
             return Response.status(406, e.getMessage()).build();
         }
@@ -116,7 +116,7 @@ public class ShoppingCartRestController {
         }
         String invoiceNo;
         try {
-            invoiceNo = ServiceFactory.getShoppingCartServiceInstance().buyDigitalsFromShoppingCart(authenticatedUser.name(), form.creditCardNo);
+            invoiceNo = ServiceFactory.getShoppingCartServiceInstance().buyDigitalsFromShoppingCart(authenticatedUser.name(), form.getCreditCardNo());
         } catch (CustomerNotFoundException e) {
             return Response.status(404, e.getMessage()).build();
         } catch (ShoppingCartException e) {

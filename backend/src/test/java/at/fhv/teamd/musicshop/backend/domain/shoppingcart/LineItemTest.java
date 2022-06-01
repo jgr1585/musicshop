@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class LineItemTest {
+class LineItemTest {
     @Test
     void given_quantity_when_increaseQuantity_then_returnIncreasedQuantity() {
         //given

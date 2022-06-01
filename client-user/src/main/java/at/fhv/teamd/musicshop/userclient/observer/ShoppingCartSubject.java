@@ -9,6 +9,10 @@ public class ShoppingCartSubject {
         observers = new LinkedList<>();
     }
 
+    private ShoppingCartSubject() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final List<ShoppingCartObserver> observers;
 
     public static void addObserver(ShoppingCartObserver observer) {

@@ -126,7 +126,7 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
         this.appController = appController;
     }
 
-    private void loadMessage() throws RemoteException, MessagingException, NotAuthorizedException {
+    private void loadMessage() throws MessagingException, NotAuthorizedException {
         System.out.println("poll");
         List<MessageDTO> messages = RemoteFacade.getInstance()
                 .receiveMessages().stream()
@@ -148,7 +148,7 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
         }
     }
 
-    private void deleteMessage(MessageDTO message) throws RemoteException, NotAuthorizedException, MessagingException {
+    private void deleteMessage(MessageDTO message) throws NotAuthorizedException, MessagingException {
         if (message != null) {
             this.inbox.getItems().remove(message);
             RemoteFacade.getInstance().acknowledgeMessage(message);
@@ -221,7 +221,7 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
     }
 
     private void updateMessagesTabIcon() {
-        if (this.newMessages.size() > 0) {
+        if (!this.newMessages.isEmpty()) {
             this.appController.getReceiveMessageIcon().setIcon(FontAwesomeIcon.ENVELOPE_OPEN);
             this.appController.getReceiveMessageIcon().setFill(Color.RED);
         } else {
