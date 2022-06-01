@@ -103,12 +103,3 @@ task buildSpa(type: NpxTask) {
     command = 'npm'
     args = ['--prefix', '../spa', 'run', 'build']
 }
-
-//build.finalizedBy {
-//        resolve
-//        println('first')
-//    generateSwaggerCode
-//    println('middle')
-//        buildSpa
-//        println('last')
-//}
