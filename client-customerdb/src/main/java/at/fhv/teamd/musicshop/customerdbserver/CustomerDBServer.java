@@ -9,8 +9,6 @@ public class CustomerDBServer {
     public static final int BIND_PORT = 1100;
 
     public static void main(String[] args) throws RemoteException, MalformedURLException {
-        CustomerDBClientImpl.init();
-
         LocateRegistry.createRegistry(BIND_PORT);
         System.out.println("Registry started @ port " + BIND_PORT);
 
