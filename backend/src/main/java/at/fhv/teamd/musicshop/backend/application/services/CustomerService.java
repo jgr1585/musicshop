@@ -7,7 +7,6 @@ import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
-import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 
 import java.rmi.RemoteException;
 import java.util.Set;
@@ -20,7 +19,7 @@ public class CustomerService {
     }
 
     public Set<CustomerDTO> searchCustomersByName(String name) throws RemoteException, CustomerDBClientException {
-        return CustomerClient.getCustomerClient().searchCustomersByName(name);
+        return CustomerClient.getCustomerDBClient().searchCustomersByName(name);
     }
 
     public int getCustomerNoByUsername(String username) throws CustomerNotFoundException {
