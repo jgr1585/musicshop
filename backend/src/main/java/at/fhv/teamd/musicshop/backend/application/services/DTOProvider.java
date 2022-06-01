@@ -108,15 +108,15 @@ public class DTOProvider {
     }
 
     static ArticleDTO buildArticleDTO(Article article) {
-        return buildArticleDTOWithMediumTypes(article, EnumSet.allOf(MediumType.class));
+        return buildArticleDTOWithMediumTypes(article, MediumType.allMediumTypes());
     }
 
     static AlbumDTO buildArticleDTO(Album album) {
-        return buildArticleDTOWithMediumTypes(album, EnumSet.allOf(MediumType.class));
+        return buildArticleDTOWithMediumTypes(album, MediumType.allMediumTypes());
     }
 
     static SongDTO buildArticleDTO(Song song) {
-        return buildArticleDTOWithMediumTypes(song, EnumSet.allOf(MediumType.class));
+        return buildArticleDTOWithMediumTypes(song, MediumType.allMediumTypes());
     }
 
     static ArticleDTO buildArticleDTOWithMediumTypes(Article article, EnumSet<MediumType> includedMediumTypes) {

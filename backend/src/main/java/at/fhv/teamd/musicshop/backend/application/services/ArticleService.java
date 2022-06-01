@@ -62,7 +62,7 @@ public class ArticleService {
             throw new ApplicationClientException("Validation error: No searchable param for search.");
         }
 
-        EnumSet<MediumType> filteredMediumTypes = EnumSet.complementOf(EnumSet.of(MediumType.DIGITAL));
+        EnumSet<MediumType> filteredMediumTypes = MediumType.analogMediumTypes();
         return filterArticlesByAnyAlbumMediumType(articleRepository.searchArticlesByAttributes(title, artist), filteredMediumTypes).stream()
                 .map(article -> DTOProvider.buildArticleDTOWithMediumTypes(article, filteredMediumTypes))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
@@ -73,7 +73,7 @@ public class ArticleService {
             throw new ApplicationClientException("Validation error: No searchable param for search.");
         }
 
-        EnumSet<MediumType> filteredMediumTypes = EnumSet.of(MediumType.DIGITAL);
+        EnumSet<MediumType> filteredMediumTypes = MediumType.digitalMediumTypes();
         return filterArticlesByAnyAlbumMediumType(articleRepository.searchArticlesByAttributes(title, artist), filteredMediumTypes).stream()
                 .map(article -> DTOProvider.buildArticleDTOWithMediumTypes(article, filteredMediumTypes))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
