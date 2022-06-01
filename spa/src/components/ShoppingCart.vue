@@ -5,6 +5,7 @@ import { DefaultApi } from "../rest";
 
 <script>
 export default {
+  name: 'ShoppingCart',
   data() {
     return {
       loading: false,
@@ -128,7 +129,7 @@ export default {
                 class="ma-lg-10 bg-transparent rounded-pill pa-5"
                 @click="removeFromCart(lineItem.medium.id)"
               >
-                <v-icon color="#ffd700" size="40"> mdi-delete</v-icon>
+                <v-icon color="#ffd700" size="40"> mdi-file-excel-box</v-icon>
               </v-btn>
             </v-col>
           </v-row>
@@ -137,7 +138,7 @@ export default {
 
       <v-row align="center" justify="center">
         <input
-          class="v-col-lg-auto border-e rounded-pill w-33 input"
+          class="v-col-lg-auto border-e rounded-pill w-66 input"
           type="text"
           :value="creditcardNo"
           @input="creditcardNo = $event.target.value"
@@ -156,7 +157,7 @@ export default {
         </v-btn>
 
         <v-btn class="btn-primary rounded-pill w-33" id="button" @click="emptyCart" color="#FFD700">
-          <v-icon size="25px"> mdi-basket-unfill</v-icon>
+          <v-icon size="25px"> mdi-delete</v-icon>
         </v-btn>
       </v-col>
     </div>
