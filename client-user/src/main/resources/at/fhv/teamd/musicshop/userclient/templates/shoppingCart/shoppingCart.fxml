@@ -44,12 +44,12 @@
                   </Pane>
                   <Pane prefWidth="500.0" style="-fx-background-color: #000000FF;" GridPane.columnIndex="1">
                      <children>
-                        <Button fx:id="emptyButton" disable="true" layoutX="366.0" layoutY="24.0" mnemonicParsing="false" onAction="#removeAll" prefWidth="120.0" style="-fx-background-color: #547af9;" text="Empty">
+                        <Button fx:id="formCancelBtn" disable="true" layoutX="366.0" layoutY="24.0" mnemonicParsing="false" onAction="#removeAll" prefWidth="120.0" style="-fx-background-color: #547af9;" text="Empty">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </Button>
-                        <Button fx:id="buyButton" disable="true" layoutX="232.0" layoutY="24.0" mnemonicParsing="false" onAction="#buyAll" prefWidth="120.0" style="-fx-background-color: #547af9;" text="Buy">
+                        <Button fx:id="formSubmitBtn" disable="true" layoutX="232.0" layoutY="24.0" mnemonicParsing="false" onAction="#buyAll" prefWidth="120.0" style="-fx-background-color: #547af9;" text="Buy">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>

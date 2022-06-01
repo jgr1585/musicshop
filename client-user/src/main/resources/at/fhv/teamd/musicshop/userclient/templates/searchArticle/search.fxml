@@ -26,8 +26,8 @@
             </Pane>
             <Pane style="-fx-background-color: #547af9;" GridPane.columnIndex="1">
                <children>
-                  <Button cancelButton="true" layoutX="43.0" layoutY="24.0" minWidth="70.0" mnemonicParsing="false" onAction="#resetSearch" pickOnBounds="false" style="-fx-background-color: #c89be7; -fx-border-color: #000000; -fx-border-width: 2; -fx-border-radius: 4;" text="Reset" />
-                  <Button fx:id="searchButton" defaultButton="true" layoutX="136.0" layoutY="24.0" minWidth="70.0" mnemonicParsing="false" onAction="#searchArticles" pickOnBounds="false" style="-fx-background-color: #05b789; -fx-border-color: #000000; -fx-border-radius: 4; -fx-border-width: 2;" text="Search" />
+                  <Button fx:id="formCancelBtn" layoutX="43.0" layoutY="24.0" minWidth="70.0" mnemonicParsing="false" onAction="#resetSearch" pickOnBounds="false" style="-fx-background-color: #c89be7; -fx-border-color: #000000; -fx-border-width: 2; -fx-border-radius: 4;" text="Reset" />
+                  <Button fx:id="formSubmitBtn" layoutX="136.0" layoutY="24.0" minWidth="70.0" mnemonicParsing="false" onAction="#searchArticles" pickOnBounds="false" style="-fx-background-color: #05b789; -fx-border-color: #000000; -fx-border-radius: 4; -fx-border-width: 2;" text="Search" />
                </children>
             </Pane>
          </children>

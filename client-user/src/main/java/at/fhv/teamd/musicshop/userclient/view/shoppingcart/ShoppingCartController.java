@@ -8,9 +8,11 @@ import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartObserver;
 import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartSubject;
+import at.fhv.teamd.musicshop.userclient.view.ActivePropertyBindable;
 import at.fhv.teamd.musicshop.userclient.view.AppController;
 import at.fhv.teamd.musicshop.userclient.view.article.ArticleController;
 import at.fhv.teamd.musicshop.userclient.view.customer.CustomerController;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,31 +23,33 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.text.DecimalFormat;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ShoppingCartController implements ShoppingCartObserver {
+public class ShoppingCartController implements ShoppingCartObserver, ActivePropertyBindable {
 
     @FXML
     private Button removeButton;
     @FXML
     private Button selectButton;
     @FXML
-    private Button emptyButton;
+    private Button formCancelBtn;
     @FXML
-    private Button buyButton;
+    private Button formSubmitBtn;
     @FXML
     private Label totalAmount;
-
     @FXML
     private VBox shoppingCartElements;
-
     @FXML
     private Label customerNo;
 
     private AppController appController;
+
+    public void bindActiveProperty(ReadOnlyBooleanProperty activeProp) {
+        formCancelBtn.cancelButtonProperty().bind(activeProp);
+        formSubmitBtn.defaultButtonProperty().bind(activeProp);
+    }
 
     @FXML
     public void initialize() {
@@ -58,8 +62,8 @@ public class ShoppingCartController implements ShoppingCartObserver {
         ShoppingCartSubject.addObserver(this);
 
         new Thread(() -> {
-            this.emptyButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.emptyShoppingCart));
-            this.buyButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.buyFromShoppingCart));
+            this.formCancelBtn.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.emptyShoppingCart));
+            this.formSubmitBtn.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.buyFromShoppingCart));
 
             final boolean canAddCustomer = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.searchCustomersByName);
             this.removeButton.setDisable(!canAddCustomer);

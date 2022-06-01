@@ -44,12 +44,12 @@
                </VBox.margin></TextArea>
             <HBox alignment="TOP_CENTER">
                <children>
-                  <Button cancelButton="true" defaultButton="true" mnemonicParsing="false" onAction="#resetMessage" prefWidth="115.0" style="-fx-background-color: #c89be7; -fx-border-color: #000000; -fx-border-width: 2; -fx-border-radius: 4; -fx-font-size: 13; -fx-font-weight: bold; -fx-botton-radius: 4;" text="Reset">
+                  <Button fx:id="formCancelBtn" mnemonicParsing="false" onAction="#resetMessage" prefWidth="115.0" style="-fx-background-color: #c89be7; -fx-border-color: #000000; -fx-border-width: 2; -fx-border-radius: 4; -fx-font-size: 13; -fx-font-weight: bold; -fx-botton-radius: 4;" text="Reset">
                      <HBox.margin>
                         <Insets bottom="15.0" right="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Button defaultButton="true" mnemonicParsing="false" onAction="#sendMessage" prefWidth="115.0" style="-fx-background-color: #05b789; -fx-border-color: #000000; -fx-border-radius: 4; -fx-border-width: 2; -fx-font-size: 13; -fx-font-weight: bold; -fx-bottom-radius: 4;" text="Send" textFill="WHITE">
+                  <Button fx:id="formSubmitBtn" mnemonicParsing="false" onAction="#sendMessage" prefWidth="115.0" style="-fx-background-color: #05b789; -fx-border-color: #000000; -fx-border-radius: 4; -fx-border-width: 2; -fx-font-size: 13; -fx-font-weight: bold; -fx-bottom-radius: 4;" text="Send" textFill="WHITE">
                      <HBox.margin>
                         <Insets bottom="15.0" left="10.0" />
                      </HBox.margin>
