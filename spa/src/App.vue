@@ -21,7 +21,6 @@ export default {
   methods: {
     setTab(tab) {
       this.currentTab = tab;
-      localStorage.getItem("token") == null ? (this.loggedIn = false) : (this.loggedIn = true);
       this.$forceUpdate();
     },
     logout() {

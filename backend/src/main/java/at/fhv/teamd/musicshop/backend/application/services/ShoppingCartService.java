@@ -28,62 +28,56 @@ public class ShoppingCartService {
     private void initializeShoppingcart(String userId) {
         if (!shoppingCartExists(userId)) {
             sessionLineItems.put(userId, new HashSet<>());
-        } else {
-            throw new IllegalStateException("Shopping cart already exists.");
         }
     }
 
-    public void addToShoppingCart(String userId, long mediumId, int amount) {
+    public void addToShoppingCart(String userId, long mediumId, int amount) throws ShoppingCartException {
         if (!shoppingCartExists(userId)) {
             initializeShoppingcart(userId);
         }
 
-        if (amount < 1) throw new IllegalArgumentException(message);
+        if (amount < 1) throw new ShoppingCartException(message);
 
         Set<LineItem> lineItems = sessionLineItems.get(userId);
 
         Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow();
 
-        lineItems.stream()
-                .filter(li -> li.getMedium().getId() == mediumId)
-                .findFirst()
-                .ifPresentOrElse(li -> {
-                    if (li.getQuantity().getValue() + amount <= medium.getStock().getQuantity().getValue()) {
-                        li.increaseQuantity(Quantity.of(amount));
-                    } else {
-                        throw new IllegalArgumentException(message);
-                    }
-                }, () -> {
-                    if (amount <= medium.getStock().getQuantity().getValue()) {
-                        lineItems.add(new LineItem(Quantity.of(amount), medium));
-                        sessionLineItems.put(userId, lineItems);
-                    } else {
-                        throw new IllegalArgumentException(message);
-                    }
-                });
+        if (lineItems.stream().anyMatch(li -> li.getMedium().getId() == mediumId)) {
+            LineItem lineItem = lineItems.stream().filter(li -> li.getMedium().getId() == mediumId).findFirst().get();
+            if (lineItem.getQuantity().getValue() + amount <= medium.getStock().getQuantity().getValue()) {
+                lineItem.increaseQuantity(Quantity.of(amount));
+            } else {
+                throw new ShoppingCartException(message);
+            }
+        } else {
+            if (amount <= medium.getStock().getQuantity().getValue()) {
+                lineItems.add(new LineItem(Quantity.of(amount), medium));
+                sessionLineItems.put(userId, lineItems);
+            } else {
+                throw new ShoppingCartException(message);
+            }
+        }
     }
 
-    public void removeFromShoppingCart(String userId, long mediumId, int amount) {
+    public void removeFromShoppingCart(String userId, long mediumId, int amount) throws ShoppingCartException {
         if (!shoppingCartExists(userId)) {
             emptyShoppingCart(userId);
         }
 
-        if (amount < 1) throw new IllegalArgumentException(message);
+        if (amount < 1) throw new ShoppingCartException(message);
 
         Set<LineItem> lineItems = sessionLineItems.get(userId);
 
-        lineItems.stream()
+        LineItem lineItem = lineItems.stream()
                 .filter(li -> li.getMedium().getId() == mediumId)
                 .findFirst()
-                .ifPresentOrElse(li -> {
-                    if (li.getQuantity().getValue() > amount) {
-                        li.decreaseQuantity(Quantity.of(amount));
-                    } else {
-                        lineItems.remove(li);
-                    }
-                }, () -> {
-                    throw new IllegalArgumentException(message);
-                });
+                .orElseThrow(() -> new ShoppingCartException(message));
+
+        if (lineItem.getQuantity().getValue() > amount) {
+            lineItem.decreaseQuantity(Quantity.of(amount));
+        } else {
+            lineItems.remove(lineItem);
+        }
     }
 
     public void emptyShoppingCart(String userId) {
@@ -97,32 +91,32 @@ public class ShoppingCartService {
         return buildShoppingCartDTO(sessionLineItems.get(userId));
     }
 
-    public String buyFromShoppingCart(String userId, int id) {
+    public String buyFromShoppingCart(String userId, int id) throws ShoppingCartException {
         if (!shoppingCartExists(userId)) {
             emptyShoppingCart(userId);
         }
 
         Set<LineItem> lineItems = sessionLineItems.get(userId);
 
-        if (lineItems.isEmpty()) throw new IllegalArgumentException("No LineItems in ShoppingCart");
+        if (lineItems.isEmpty()) throw new ShoppingCartException("No LineItems in ShoppingCart");
 
-        lineItems.forEach(lineItem -> {
+        for (LineItem lineItem : lineItems) {
             Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
             if (medium.getStock().getQuantity().getValue() < lineItem.getQuantity().getValue()) {
-                throw new RuntimeException("Not enough Items in Stock: " + medium.getId());
+                throw new ShoppingCartException("Not enough Items in Stock: " + medium.getId());
             }
-        });
+        }
 
         Long invoiceNo = ServiceFactory.getInvoiceServiceInstance().createInvoice(lineItems, id);
 
         emptyShoppingCart(userId);
 
         // decrease quantities
-        lineItems.forEach(lineItem -> {
+        for (LineItem lineItem : lineItems) {
             Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
             medium.setStock(Stock.of(medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity())));
             mediumRepository.update(medium);
-        });
+        }
         return String.valueOf(invoiceNo);
     }
 

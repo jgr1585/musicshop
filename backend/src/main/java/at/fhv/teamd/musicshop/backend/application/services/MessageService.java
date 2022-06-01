@@ -1,6 +1,5 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
-import at.fhv.teamd.musicshop.backend.application.ApplicationClientSession;
 import at.fhv.teamd.musicshop.backend.domain.message.Message;
 import at.fhv.teamd.musicshop.backend.domain.repositories.EmployeeRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.TopicRepository;
@@ -40,7 +39,7 @@ public class MessageService {
         return connection;
     }
 
-    public void publishOrder(ApplicationClientSession applicationClientSession, MediumDTO mediumDTO, String quantity) throws MessagingException {
+    public void publishOrder(String userId, MediumDTO mediumDTO, String quantity) throws MessagingException {
         if (Integer.parseInt(quantity) < 1) throw new IllegalArgumentException("Quantity to order to small");
         Message sendMsg = Message.of(
                 "Order",
@@ -48,16 +47,16 @@ public class MessageService {
                 "Order medium ID: " + mediumDTO.id() + "\n" + "Order medium amount: " + quantity
         );
 
-        publish(applicationClientSession, sendMsg);
+        publish(userId, sendMsg);
     }
 
-    public void publish(ApplicationClientSession applicationClientSession, MessageDTO message) throws MessagingException {
-        publish(applicationClientSession, Message.of(message.topic().name(), message.title(), message.body()));
+    public void publish(String userId, MessageDTO message) throws MessagingException {
+        publish(userId, Message.of(message.topic().name(), message.title(), message.body()));
     }
 
-    private void publish(ApplicationClientSession applicationClientSession, Message message) throws MessagingException {
+    private void publish(String userId, Message message) throws MessagingException {
         try {
-            Connection connection = createConnection((String) applicationClientSession.getSessionObject(ApplicationClientSession.attributes.userID));
+            Connection connection = createConnection(userId);
             Session session = connection.createSession(false, javax.jms.Session.CLIENT_ACKNOWLEDGE);
 
             MessageProducer messageProducer = session.createProducer(session.createTopic(message.getTopicName()));
@@ -77,17 +76,17 @@ public class MessageService {
         }
     }
 
-    public Set<MessageDTO> receive(ApplicationClientSession applicationClientSession) throws MessagingException {
+    public Set<MessageDTO> receive(String userId) throws MessagingException {
         try {
-            Connection connection = createConnection((String) applicationClientSession.getSessionObject(ApplicationClientSession.attributes.userID));
+            Connection connection = createConnection(userId);
             Session session = connection.createSession(false, javax.jms.Session.CLIENT_ACKNOWLEDGE);
 
             Set<MessageConsumer> messageConsumers = new HashSet<>();
 
-            Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(applicationClientSession.getUserId()).orElseThrow().getSubscribedTopics();
+            Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(userId).orElseThrow().getSubscribedTopics();
 
             for (Topic topic : subscribedTopics) {
-                messageConsumers.add(session.createDurableSubscriber(topic, applicationClientSession.getUserId() + "_" + topic.getTopicName()));
+                messageConsumers.add(session.createDurableSubscriber(topic, userId + "_" + topic.getTopicName()));
             }
 
             Set<javax.jms.Message> messages = new LinkedHashSet<>();
@@ -124,17 +123,17 @@ public class MessageService {
         }
     }
 
-    public void acknowledge(ApplicationClientSession applicationClientSession, MessageDTO messageToAcknowledge) throws MessagingException {
+    public void acknowledge(String userId, MessageDTO messageToAcknowledge) throws MessagingException {
         try {
-            Connection connection = createConnection((String) applicationClientSession.getSessionObject(ApplicationClientSession.attributes.userID));
+            Connection connection = createConnection(userId);
             Session session = connection.createSession(false, javax.jms.Session.CLIENT_ACKNOWLEDGE);
 
             Set<MessageConsumer> messageConsumers = new HashSet<>();
 
-            Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(applicationClientSession.getUserId()).orElseThrow().getSubscribedTopics();
+            Set<Topic> subscribedTopics = employeeRepository.findEmployeeByUserName(userId).orElseThrow().getSubscribedTopics();
 
             for (Topic topic : subscribedTopics) {
-                messageConsumers.add(session.createDurableSubscriber(topic, applicationClientSession.getUserId() + "_" + topic.getTopicName()));
+                messageConsumers.add(session.createDurableSubscriber(topic, userId + "_" + topic.getTopicName()));
             }
 
             for (MessageConsumer messageConsumer : messageConsumers) {

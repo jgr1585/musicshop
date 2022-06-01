@@ -8,11 +8,14 @@ import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.observer.ReturnObserver;
 import at.fhv.teamd.musicshop.userclient.observer.ReturnSubject;
+import at.fhv.teamd.musicshop.userclient.view.ActivePropertyBindable;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -20,12 +23,21 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.Set;
 
-public class ReturnController implements ReturnObserver {
+public class ReturnController implements ReturnObserver, ActivePropertyBindable {
 
     @FXML
     private TextField searchByInvoiceNo;
     @FXML
     private VBox searchPane;
+    @FXML
+    private Button formCancelBtn;
+    @FXML
+    private Button formSubmitBtn;
+
+    public void bindActiveProperty(ReadOnlyBooleanProperty activeProp) {
+        formCancelBtn.cancelButtonProperty().bind(activeProp);
+        formSubmitBtn.defaultButtonProperty().bind(activeProp);
+    }
 
     @FXML
     public void initialize() {

@@ -3,17 +3,11 @@ package at.fhv.teamd.musicshop.backend.infrastructure;
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
-import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
-import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
-import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.sound.sampled.Line;
-import java.math.BigDecimal;
-import java.time.Duration;
 import java.util.Optional;
 import java.util.Set;
 
