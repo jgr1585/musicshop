@@ -75,35 +75,35 @@ public class ApplicationClientImpl implements ApplicationClient {
     public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException, ShoppingCartException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.addToShoppingCart);
 
-        shoppingCartService.addToShoppingCart(userId, mediumDTO.id(), amount);
+        shoppingCartService.addPhysicalMediumToShoppingCart(userId, mediumDTO.id(), amount);
     }
 
     @Override
     public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException, ShoppingCartException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.removeFromShoppingCart);
 
-        shoppingCartService.removeFromShoppingCart(userId, mediumDTO.id(), amount);
+        shoppingCartService.removePhysicalMediumFromShoppingCart(userId, mediumDTO.id(), amount);
     }
 
     @Override
     public void emptyShoppingCart() throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.emptyShoppingCart);
 
-        shoppingCartService.emptyShoppingCart(userId);
+        shoppingCartService.emptyPhysicalMediumShoppingCart(userId);
     }
 
     @Override
     public String buyFromShoppingCart(int customerId) throws NotAuthorizedException, ShoppingCartException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.buyFromShoppingCart);
 
-        return shoppingCartService.buyFromShoppingCart(userId, customerId);
+        return shoppingCartService.buyFromPhysicalMediumShoppingCart(userId, customerId);
     }
 
     @Override
     public ShoppingCartDTO getShoppingCart() throws NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.getShoppingCart);
 
-        return shoppingCartService.getShoppingCart(userId);
+        return shoppingCartService.getPhysicalMediumShoppingCart(userId);
     }
 
     @Override
