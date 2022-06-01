@@ -41,7 +41,7 @@ public class ApplicationClientImpl implements ApplicationClient {
     public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException, NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.searchArticlesByAttributes);
 
-        return articleService.searchArticlesByAttributes(title, artist);
+        return articleService.searchPhysicalMediumArticles(title, artist);
     }
 
     @Override
