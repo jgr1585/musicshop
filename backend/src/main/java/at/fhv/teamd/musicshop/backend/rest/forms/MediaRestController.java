@@ -1,13 +1,12 @@
 package at.fhv.teamd.musicshop.backend.rest.forms;
 
-import at.fhv.teamd.musicshop.backend.application.services.ArticleService;
 import at.fhv.teamd.musicshop.backend.application.services.InvoiceService;
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.backend.rest.auth.AuthenticatedUser;
 import at.fhv.teamd.musicshop.backend.rest.auth.Secured;
 import at.fhv.teamd.musicshop.backend.rest.auth.User;
-import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
-import at.fhv.teamd.musicshop.library.DTO.SongDTO;
+import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
+import at.fhv.teamd.musicshop.library.dto.SongDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedInvoiceException;

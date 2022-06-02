@@ -7,7 +7,7 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
-import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
+import at.fhv.teamd.musicshop.library.dto.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 
@@ -23,7 +23,7 @@ public class ShoppingCartService {
 
     private static final MediumRepository mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
 
-    private String message = "Quantity not acceptable";
+    private final String message = "Quantity not acceptable";
 
     private void initializeShoppingcart(String userId) {
         if (!shoppingCartExists(userId)) {
@@ -43,7 +43,7 @@ public class ShoppingCartService {
         Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow();
 
         if (lineItems.stream().anyMatch(li -> li.getMedium().getId() == mediumId)) {
-            LineItem lineItem = lineItems.stream().filter(li -> li.getMedium().getId() == mediumId).findFirst().get();
+            LineItem lineItem = lineItems.stream().filter(li -> li.getMedium().getId() == mediumId).findFirst().orElseThrow();
             if (lineItem.getQuantity().getValue() + amount <= medium.getStock().getQuantity().getValue()) {
                 lineItem.increaseQuantity(Quantity.of(amount));
             } else {

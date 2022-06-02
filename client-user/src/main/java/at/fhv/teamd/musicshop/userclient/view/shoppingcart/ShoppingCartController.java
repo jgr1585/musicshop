@@ -1,6 +1,6 @@
 package at.fhv.teamd.musicshop.userclient.view.shoppingcart;
 
-import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
+import at.fhv.teamd.musicshop.library.dto.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
@@ -62,10 +62,10 @@ public class ShoppingCartController implements ShoppingCartObserver, ActivePrope
         ShoppingCartSubject.addObserver(this);
 
         new Thread(() -> {
-            this.formCancelBtn.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.emptyShoppingCart));
-            this.formSubmitBtn.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.buyFromShoppingCart));
+            this.formCancelBtn.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.EMPTY_SHOPPING_CART));
+            this.formSubmitBtn.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.BUY_FROM_SHOPPING_CART));
 
-            final boolean canAddCustomer = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.searchCustomersByName);
+            final boolean canAddCustomer = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.SEARCH_CUSTOMERS_BY_NAME);
             this.removeButton.setDisable(!canAddCustomer);
             this.selectButton.setDisable(!canAddCustomer);
         }).start();
@@ -121,33 +121,31 @@ public class ShoppingCartController implements ShoppingCartObserver, ActivePrope
     }
 
     @FXML
-    private void removeAll(ActionEvent actionEvent) throws IOException, NotAuthorizedException, ShoppingCartException {
+    private void removeAll() throws IOException, NotAuthorizedException, ShoppingCartException {
         RemoteFacade.getInstance().emptyShoppingCart();
         reloadShoppingCart();
         removeCustomer();
     }
 
-    public void addCustomer(ActionEvent actionEvent) {
+    @FXML
+    private void addCustomer() {
         try {
-            AtomicInteger customerNo = new AtomicInteger();
+            AtomicInteger customerNumber = new AtomicInteger();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/at/fhv/teamd/musicshop/userclient/templates/customer/customer.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 800, 600);
             CustomerController controller = fxmlLoader.getController();
-            controller.setAtomicInteger(customerNo);
+            controller.setAtomicInteger(customerNumber);
             Stage stage = new Stage();
             stage.setTitle("Select customer");
             stage.setScene(scene);
             stage.showAndWait();
-            this.customerNo.setText(customerNo.toString());
-        } catch (Throwable e) {
+            this.customerNo.setText(customerNumber.toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void removeCustomer(ActionEvent actionEvent) {
-        removeCustomer();
-    }
-
+    @FXML
     private void removeCustomer() {
         this.customerNo.setText("");
     }

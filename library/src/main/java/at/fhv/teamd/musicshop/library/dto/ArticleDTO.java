@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.library.DTO;
+package at.fhv.teamd.musicshop.library.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

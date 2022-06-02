@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.library.DTO;
+package at.fhv.teamd.musicshop.library.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -61,13 +61,14 @@ public final class ShoppingCartDTO implements Serializable {
         public ShoppingCartDTO build() {
             return this.instance;
         }
-    }
 
-    private static BigDecimal calculateTotalAmount (Set<LineItemDTO> lineItems) {
-        BigDecimal value = new BigDecimal(0);
-        for (LineItemDTO lineItem : lineItems) {
-            value = value.add(lineItem.totalPrice());
+        private static BigDecimal calculateTotalAmount(Set<LineItemDTO> lineItems) {
+            BigDecimal value = new BigDecimal(0);
+            for (LineItemDTO lineItem : lineItems) {
+                value = value.add(lineItem.totalPrice());
+            }
+            return value;
         }
-        return value;
+
     }
 }

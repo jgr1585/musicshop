@@ -1,7 +1,7 @@
 package at.fhv.teamd.musicshop.userclient.view.article;
 
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.DTO.SongDTO;
+import at.fhv.teamd.musicshop.library.dto.ArticleDTO;
+import at.fhv.teamd.musicshop.library.dto.SongDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.userclient.Tabs;

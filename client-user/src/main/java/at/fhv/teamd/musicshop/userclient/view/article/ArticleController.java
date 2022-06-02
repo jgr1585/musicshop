@@ -1,6 +1,6 @@
 package at.fhv.teamd.musicshop.userclient.view.article;
 
-import at.fhv.teamd.musicshop.library.DTO.*;
+import at.fhv.teamd.musicshop.library.dto.*;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
@@ -75,7 +75,7 @@ public class ArticleController {
 
                 Parent root = fxmlLoader.load();
                 GenericArticleController controller = fxmlLoader.getController();
-                controller.setMediumType(articleDTO, mediumDTO);
+                controller.setMediumType(mediumDTO);
                 this.mediumTypeList.getChildren().add(root);
             }
         } else if (articleDTO instanceof SongDTO && this.searchController != null) {

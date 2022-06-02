@@ -3,7 +3,7 @@ package at.fhv.teamd.musicshop.backend.application;
 import at.fhv.teamd.musicshop.backend.application.services.*;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
-import at.fhv.teamd.musicshop.library.DTO.*;
+import at.fhv.teamd.musicshop.library.dto.*;
 import at.fhv.teamd.musicshop.library.exceptions.*;
 
 import javax.ejb.*;
@@ -39,14 +39,14 @@ public class ApplicationClientImpl implements ApplicationClient {
 
     @Override
     public Set<ArticleDTO> searchArticlesByAttributes(String title, String artist) throws ApplicationClientException, NotAuthorizedException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.searchArticlesByAttributes);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.SEARCH_ARTICLES_BY_ATTRIBUTES);
 
         return articleService.searchArticlesByAttributes(title, artist);
     }
 
     @Override
     public Set<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException, NotAuthorizedException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.searchCustomersByName);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.SEARCH_CUSTOMERS_BY_NAME);
 
 
         try {
@@ -59,84 +59,84 @@ public class ApplicationClientImpl implements ApplicationClient {
 
     @Override
     public InvoiceDTO findInvoiceById(Long id) throws NotAuthorizedException, InvoiceException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.findInvoiceById);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.FIND_INVOICE_BY_ID);
 
         return invoiceService.searchInvoiceById(id);
     }
 
     @Override
     public void returnItem(LineItemDTO lineItem, int quantity) throws NotAuthorizedException, InvoiceException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.returnItem);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.RETURN_ITEM);
 
         invoiceService.returnItem(lineItem, quantity);
     }
 
     @Override
     public void addToShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException, ShoppingCartException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.addToShoppingCart);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.ADD_TO_SHOPPING_CART);
 
         shoppingCartService.addToShoppingCart(userId, mediumDTO.id(), amount);
     }
 
     @Override
     public void removeFromShoppingCart(MediumDTO mediumDTO, int amount) throws NotAuthorizedException, ShoppingCartException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.removeFromShoppingCart);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.REMOVE_FROM_SHOPPING_CART);
 
         shoppingCartService.removeFromShoppingCart(userId, mediumDTO.id(), amount);
     }
 
     @Override
     public void emptyShoppingCart() throws NotAuthorizedException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.emptyShoppingCart);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.EMPTY_SHOPPING_CART);
 
         shoppingCartService.emptyShoppingCart(userId);
     }
 
     @Override
     public String buyFromShoppingCart(int customerId) throws NotAuthorizedException, ShoppingCartException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.buyFromShoppingCart);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.BUY_FROM_SHOPPING_CART);
 
         return shoppingCartService.buyFromShoppingCart(userId, customerId);
     }
 
     @Override
     public ShoppingCartDTO getShoppingCart() throws NotAuthorizedException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.getShoppingCart);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.GET_SHOPPING_CART);
 
         return shoppingCartService.getShoppingCart(userId);
     }
 
     @Override
     public void publishOrderMessage(MediumDTO mediumDTO, String quantity) throws NotAuthorizedException, MessagingException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.publishOrderMessage);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.PUBLISH_ORDER_MESSAGE);
 
         messageService.publishOrder(userId, mediumDTO, quantity);
     }
 
     @Override
     public void publishMessage(MessageDTO message) throws NotAuthorizedException, MessagingException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.publishMessage);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.PUBLISH_MESSAGE);
 
         messageService.publish(userId, message);
     }
 
     @Override
     public Set<MessageDTO> receiveMessages() throws NotAuthorizedException, MessagingException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.receiveMessages);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.RECEIVE_MESSAGES);
 
         return messageService.receive(userId);
     }
 
     @Override
     public void acknowledgeMessage(MessageDTO message) throws NotAuthorizedException, MessagingException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.acknowledgeMessage);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.ACKNOWLEDGE_MESSAGE);
 
         messageService.acknowledge(userId, message);
     }
 
     @Override
     public Set<TopicDTO> getAllTopics() throws NotAuthorizedException {
-        authService.authorizeAccessLevels(RemoteFunctionPermission.getAllTopics);
+        authService.authorizeAccessLevels(RemoteFunctionPermission.GET_ALL_TOPICS);
 
         return messageService.getAllTopics();
     }

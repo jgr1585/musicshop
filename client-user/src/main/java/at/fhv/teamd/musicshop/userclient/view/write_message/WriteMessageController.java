@@ -1,7 +1,7 @@
-package at.fhv.teamd.musicshop.userclient.view.writeMessage;
+package at.fhv.teamd.musicshop.userclient.view.write_message;
 
-import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
-import at.fhv.teamd.musicshop.library.DTO.TopicDTO;
+import at.fhv.teamd.musicshop.library.dto.MessageDTO;
+import at.fhv.teamd.musicshop.library.dto.TopicDTO;
 import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
@@ -15,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 
-import java.rmi.RemoteException;
 import java.util.UUID;
 
 public class WriteMessageController implements ActivePropertyBindable {
@@ -47,7 +46,7 @@ public class WriteMessageController implements ActivePropertyBindable {
 
     private void initMessageTopic(){
         try {
-            if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.getAllTopics)) {
+            if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.GET_ALL_TOPICS)) {
                 this.messageTopic.setItems(FXCollections.observableArrayList(RemoteFacade.getInstance().getAllTopics()));
                 this.messageTopic.setConverter(new StringConverter<>() {
                     @Override
