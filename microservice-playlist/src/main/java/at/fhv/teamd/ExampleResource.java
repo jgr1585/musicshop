@@ -1,4 +1,4 @@
-package com.example;
+package at.fhv.teamd;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

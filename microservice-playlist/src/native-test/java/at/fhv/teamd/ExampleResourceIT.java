@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.playlist;
+package at.fhv.teamd;
 
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
