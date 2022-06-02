@@ -5,7 +5,6 @@ import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.NoArgsConstructor;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -14,8 +13,8 @@ import java.util.Set;
 @Path("/article")
 @Produces("application/json")
 @Consumes("application/json")
-@NoArgsConstructor
 public class ArticleRestController {
+    public ArticleRestController() {}
 
     @GET
     @Path("/search")
@@ -28,7 +27,7 @@ public class ArticleRestController {
         if (title.equals("") && artist.equals("")) {
             return Response.status(400).build();
         }
-        Set<ArticleDTO> articles = ServiceFactory.getArticleServiceInstance().searchArticlesByAttributes(title, artist);
+        Set<ArticleDTO> articles = ServiceFactory.getArticleServiceInstance().searchDigitalMediumArticles(title, artist);
         if (!articles.isEmpty()) {
             return Response.ok().entity(articles).build();
         } else {

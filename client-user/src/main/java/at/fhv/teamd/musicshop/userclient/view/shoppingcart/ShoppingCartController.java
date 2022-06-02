@@ -6,6 +6,7 @@ import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.Tabs;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
+import at.fhv.teamd.musicshop.userclient.observer.SearchSubject;
 import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartObserver;
 import at.fhv.teamd.musicshop.userclient.observer.ShoppingCartSubject;
 import at.fhv.teamd.musicshop.userclient.view.ActivePropertyBindable;
@@ -115,6 +116,7 @@ public class ShoppingCartController implements ShoppingCartObserver, ActivePrope
             String invoiceNo = RemoteFacade.getInstance().buyFromShoppingCart(customer);
             new Alert(Alert.AlertType.INFORMATION, "Successfully purchased items\nInvoice number: " + invoiceNo, ButtonType.CLOSE).show();
             reloadShoppingCart();
+            SearchSubject.notifyObserversUpdate();
             removeCustomer();
             appController.selectSearchTab();
         }

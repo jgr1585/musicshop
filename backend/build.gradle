@@ -64,13 +64,13 @@ resolve {
 }
 
 swaggerSources {
-    musicshop {
+    backend {
         code {
             inputFile = file('src/main/webapp/openapi.yaml')
             language = 'javascript'
             copy {
-                from 'build/swagger-code-musicshop/src'
-                into '../spa/src/rest'
+                from 'build/swagger-code-backend/src'
+                into '../spa/src/rest/backend'
             }
         }
         ui {
@@ -79,35 +79,38 @@ swaggerSources {
         }
         copy {
             from 'src/main/webapp/openapi.yaml'
-            into '../spa/src/rest'
+            into '../spa/src/rest/backend'
         }
     }
-//    musicshopCS {
-//        code {
-//            inputFile = file('src/main/webapp/openapi.yaml')
-//            language = 'csharp'
-//            outputDir = file('src/main/webapp/swagger-code-cs')
-//        }
-//    }
 }
 
-tasks.withType(JavaCompile) {
+compileJava {
     options.encoding = 'UTF-8'
 }
 
-tasks.withType(Test) {
-    systemProperty "file.encoding", "UTF-8"
+compileTestJava {
+    options.encoding = 'UTF-8'
 }
 
-task buildSpa(type: NpxTask) {
-    command = 'npm'
-    args = ['--prefix', '../spa', 'run', 'build']
-}
-
-tasks.getByName('war').dependsOn('resolve')
-tasks.getByName('war').dependsOn('generateSwaggerCode')
-tasks.getByName('war').dependsOn('generateSwaggerUI')
-tasks.getByName('war').dependsOn('buildSpa')
-tasks.getByName('buildSpa').dependsOn('resolve')
-tasks.getByName('generateSwaggerCode').dependsOn('resolve')
-tasks.getByName('generateSwaggerUI').dependsOn('resolve')
+//node {
+//    download = true
+//    workDir = file("${project.buildDir}/nodejs")
+//    npmWorkDir = file("${project.buildDir}/npm")
+//    nodeModulesDir = file("${project.projectDir}/spa")
+//}
+//
+//npm_run_build {
+//    inputs.dir "../spa"
+//    inputs.files fileTree("public")
+//    inputs.files fileTree("src")
+//
+//    inputs.file 'package.json'
+//    inputs.file 'package-lock.json'
+//
+//    outputs.dir 'build'
+//}
+//
+//tasks.getByName('generateSwaggerUIMusicshop').dependsOn('resolve')
+//tasks.getByName('generateSwaggerCodeMusicshop').dependsOn('generateSwaggerUIMusicshop')
+//tasks.getByName('npm_run_build').dependsOn('generateSwaggerCodeMusicshop')
+//tasks.getByName('war').dependsOn('npm_run_build')

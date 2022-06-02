@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.backend.rest;
+package at.fhv.teamd.rest;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -14,7 +14,7 @@ import javax.ws.rs.core.Application;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Musicshop API",
+                title = "Musicshop Download API",
                 version = "3.0.1",
                 contact = @Contact(
                         name = "Musicshop API Support",
@@ -24,8 +24,8 @@ import javax.ws.rs.core.Application;
                         name = "Apache 2.0",
                         url = "https://www.apache.org/licenses/LICENSE-2.0.html")),
         servers = {
-                @Server(url = "http://localhost:8080/backend-1.0-SNAPSHOT"),
-                @Server(url = "http://10.0.40.166:8080/backend-1.0-SNAPSHOT")
+                @Server(url = "http://localhost:8082/"),
+                @Server(url = "http://10.0.40.166:8082/")
         }
 )
 
