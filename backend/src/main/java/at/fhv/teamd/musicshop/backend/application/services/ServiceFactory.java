@@ -7,6 +7,8 @@ public class ServiceFactory {
     private static InvoiceService invoiceService;
     private static MessageService messageService;
     private static ShoppingCartService shoppingCartService;
+    private static PlaylistService playlistService;
+    private static MediaService mediaService;
 
     private ServiceFactory() {}
 
@@ -50,5 +52,19 @@ public class ServiceFactory {
             messageService = new MessageService();
         }
         return messageService;
+    }
+
+    public static PlaylistService getPlaylistServiceInstance() {
+        if (playlistService == null) {
+            playlistService = new PlaylistService();
+        }
+        return playlistService;
+    }
+
+    public static MediaService getMediaServiceInstance() {
+        if (mediaService == null) {
+            mediaService = new MediaService();
+        }
+        return mediaService;
     }
 }
