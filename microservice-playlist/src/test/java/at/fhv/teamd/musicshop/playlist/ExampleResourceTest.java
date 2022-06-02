@@ -1,4 +1,4 @@
-package com.example;
+package at.fhv.teamd.musicshop.playlist;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
