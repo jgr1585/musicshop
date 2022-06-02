@@ -1,6 +1,5 @@
 package at.fhv.teamd.musicshop.userclient.view;
 
-import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
