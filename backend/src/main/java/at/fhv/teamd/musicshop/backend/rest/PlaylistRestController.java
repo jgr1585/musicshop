@@ -31,7 +31,6 @@ public class PlaylistRestController {
     @AuthenticatedUser
     private User authenticatedUser;
 
-    private final InvoiceService invoiceService = ServiceFactory.getInvoiceServiceInstance();
     private final PlaylistService playlistService = ServiceFactory.getPlaylistServiceInstance();
 
     @GET
