@@ -9,9 +9,14 @@ import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.util.Duration;
 
 import static at.fhv.teamd.musicshop.userclient.view.FieldValidationHelper.numberOnly;
 
@@ -62,21 +67,37 @@ public class SearchArticleController implements GenericArticleController {
 
     @FXML
     private void addToCart(ActionEvent actionEvent) throws NotAuthorizedException, ShoppingCartException {
-        RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, Integer.parseInt(this.mediumAmountSelected.getText()));
-        new Alert(Alert.AlertType.INFORMATION, "Successfully added items", ButtonType.OK).show();
-        this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
+        int amount = Integer.parseInt(this.mediumAmountSelected.getText());
+        RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, amount);
+
+        Label lbl = mediumPrice;
+        Paint paintBefore = lbl.getTextFill();
+        String textBefore = lbl.getText();
+        Timeline flashInfo = new Timeline(
+                new KeyFrame(Duration.ZERO, e -> {
+                    lbl.setTextFill(Color.RED);
+                    lbl.setText("ADDED!");
+                }),
+
+                new KeyFrame(Duration.millis(4000), e -> {
+                    lbl.setTextFill(paintBefore);
+                    lbl.setText(textBefore);
+                })
+        );
+        flashInfo.play();
     }
 
     public void reduceByOne(ActionEvent actionEvent) {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
-        if (val > 0) {
+        if (val > 0)
             this.mediumAmountSelected.setText(Integer.valueOf(val - 1).toString());
-        }
     }
 
     public void increaseByOne(ActionEvent actionEvent) {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
-        this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
+        int valInStock = Integer.parseInt(this.mediumAmount.getText());
+        if (val < valInStock)
+            this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
     }
 
     public void order(ActionEvent actionEvent) throws NotAuthorizedException, MessagingException {
