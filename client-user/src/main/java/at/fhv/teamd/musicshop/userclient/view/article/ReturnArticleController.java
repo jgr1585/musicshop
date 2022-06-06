@@ -1,14 +1,12 @@
 package at.fhv.teamd.musicshop.userclient.view.article;
 
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.library.dto.LineItemDTO;
+import at.fhv.teamd.musicshop.library.dto.MediumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -35,10 +33,10 @@ public class ReturnArticleController implements GenericArticleController {
         numberOnly(this.mediumAmount);
         numberOnly(this.mediumAmountSelected);
 
-        new Thread(() -> this.returnButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.returnItem))).start();
+        new Thread(() -> this.returnButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.RETURN_ITEM))).start();
     }
 
-    public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO) {
+    public void setMediumType(MediumDTO mediumDTO) {
         throw new RuntimeException();
     }
 
@@ -51,23 +49,25 @@ public class ReturnArticleController implements GenericArticleController {
     }
 
     @FXML
-    private void returnItem(ActionEvent actionEvent) throws NotAuthorizedException, InvoiceException {
+    private void returnItem() throws NotAuthorizedException, InvoiceException {
         RemoteFacade.getInstance().returnItem(lineItemDTO, Integer.parseInt(this.mediumAmountSelected.getText()));
         new Alert(Alert.AlertType.INFORMATION, "Successfully returned items", ButtonType.OK).show();
-        this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
+        this.mediumAmountSelected.setText(Integer.toString(0));
     }
 
-    public void reduceByOne(ActionEvent actionEvent) {
+    @FXML
+    private void reduceByOne() {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         if (val > 0) {
-            this.mediumAmountSelected.setText(Integer.valueOf(val - 1).toString());
+            this.mediumAmountSelected.setText(Integer.toString(val - 1));
         }
     }
 
-    public void increaseByOne(ActionEvent actionEvent) {
+    @FXML
+    private void increaseByOne() {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         if (val < Integer.parseInt(this.mediumAmount.getText()) - Integer.parseInt(this.alreadyReturnedAmount.getText())) {
-            this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
+            this.mediumAmountSelected.setText(Integer.toString(val + 1));
         }
     }
 }

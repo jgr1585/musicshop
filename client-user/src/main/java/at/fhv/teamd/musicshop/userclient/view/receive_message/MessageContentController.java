@@ -1,6 +1,6 @@
-package at.fhv.teamd.musicshop.userclient.view.receiveMessage;
+package at.fhv.teamd.musicshop.userclient.view.receive_message;
 
-import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
+import at.fhv.teamd.musicshop.library.dto.MessageDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;

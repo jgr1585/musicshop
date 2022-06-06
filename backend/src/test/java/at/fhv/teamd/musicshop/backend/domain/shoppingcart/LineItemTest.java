@@ -69,7 +69,8 @@ class LineItemTest {
         String messageExpected = "Quantity to return must be greater than zero";
 
         //when
-        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,() -> lineItem.increaseQuantityReturned(Quantity.of(value)));
+        final Quantity quantity = Quantity.of(value);
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,() -> lineItem.increaseQuantityReturned(quantity));
         String messageActual = thrown.getMessage();
 
         //then
@@ -84,7 +85,8 @@ class LineItemTest {
         String messageExpected = "Quantity to return is to big";
 
         //when
-        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,() -> lineItem.increaseQuantityReturned(Quantity.of(value)));
+        final Quantity quantity = Quantity.of(value);
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class,() -> lineItem.increaseQuantityReturned(quantity));
         String messageActual = thrown.getMessage();
 
         //then

@@ -1,6 +1,6 @@
-package at.fhv.teamd.musicshop.userclient.view.receiveMessage;
+package at.fhv.teamd.musicshop.userclient.view.receive_message;
 
-import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
+import at.fhv.teamd.musicshop.library.dto.MessageDTO;
 import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
@@ -60,7 +60,7 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
     @FXML
     private TableView<MessageDTO> inbox;
 
-    private Stage stage;
+    private final Stage stage;
     private boolean canAcknowledgeMessage;
     private Set<MessageDTO> newMessages;
     private AppController appController;
@@ -72,6 +72,7 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
     public ReceiveMessageController() {
         //Stop the executor service when the stage is closed
         Main.onClose(this::onLogout);
+        this.stage = new Stage();
     }
 
     public void bindActiveProperty(ReadOnlyBooleanProperty activeProp) {
@@ -80,13 +81,13 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
             return;
         }
 
-        if (activeProp.getValue())
+        if (Boolean.TRUE.equals(activeProp.getValue()))
             activatePolling();
         else
             deactivatePolling();
 
         activeProp.addListener((observable, oldValue, newValue) -> {
-            if (newValue)
+            if (Boolean.TRUE.equals(newValue))
                 activatePolling();
             else
                 deactivatePolling();
@@ -94,7 +95,7 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
     }
 
     private void activatePolling() {
-        if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.receiveMessages)) {
+        if (RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.RECEIVE_MESSAGES)) {
             executorService = Executors.newSingleThreadScheduledExecutor();
             //Create a scheduled executor service to update the table 10 seconds
             this.executorService.scheduleAtFixedRate(() -> {
@@ -116,7 +117,6 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
 
     @FXML
     public void initialize() {
-        this.stage = new Stage();
         this.stage.setTitle("Inbox");
         this.newMessages = new HashSet<>();
 
@@ -124,7 +124,7 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
 
         formatTable();
 
-        new Thread(() -> this.canAcknowledgeMessage = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.acknowledgeMessage)).start();
+        new Thread(() -> this.canAcknowledgeMessage = RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.ACKNOWLEDGE_MESSAGE)).start();
     }
 
     public void setAppController(AppController appController) {
@@ -237,7 +237,7 @@ public class ReceiveMessageController implements LoginObserver, ActivePropertyBi
 
     @Override
     public void onLogin() {
-
+        // Nothing to do
     }
 
     @Override

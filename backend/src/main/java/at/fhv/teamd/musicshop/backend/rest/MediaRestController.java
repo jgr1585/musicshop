@@ -94,15 +94,27 @@ public class MediaRestController {
     @GET
     @Path("/stream/song/{songId}")
     @Operation(summary = "Retrieve a song stream")
-    @ApiResponse(responseCode = "200", description = "Returns List<AlbumDTO>")
+    @ApiResponse(responseCode = "200", description = "Returns binary song stream")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     public Response streamSong(@PathParam("songId") int songId) {
         if (authenticatedUser == null) {
-            return Response.status(401).build();
+            return Response.status(401, "Not authenticated.").build();
         }
 
-        // TODO
+        try {
+            List<AlbumDTO> playlist = playlistService.getPlaylist(authenticatedUser.name());
+            ByteArrayOutputStream baos = mediaService.getPlaylistSongBinaryStream(playlist, songId);
 
-        return null;
+            return Response.ok(baos.toByteArray())
+                    .type("application/mp3")
+                    .build();
+
+        } catch (FileNotFoundException e) {
+            return Response.status(404, "Requested file not found.").build();
+        } catch (IOException e) {
+            return Response.status(500).build();
+        } catch (UnauthorizedMediaException | CustomerNotFoundException e) {
+            return Response.status(401, "Unauthorized.").build();
+        }
     }
 }
