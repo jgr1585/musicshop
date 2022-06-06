@@ -5,13 +5,8 @@ import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
 import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
-import at.fhv.teamd.musicshop.library.DTO.InvoiceDTO;
-import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
-import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
 import at.fhv.teamd.musicshop.library.dto.InvoiceDTO;
 import at.fhv.teamd.musicshop.library.dto.LineItemDTO;
-import at.fhv.teamd.musicshop.library.dto.SongDTO;
-import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 
 import java.util.Optional;

@@ -2,7 +2,7 @@ package at.fhv.teamd.rest;
 
 import at.fhv.teamd.application.MediaService;
 import at.fhv.teamd.application.PlaylistService;
-import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
+import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedMediaException;
 import at.fhv.teamd.rest.auth.Secured;

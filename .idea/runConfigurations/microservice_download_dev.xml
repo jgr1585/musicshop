@@ -1,8 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="microservice download dev" type="Multirun" separateTabs="false" reuseTabsWithFailures="false" startOneByOne="true" markFailedProcess="true" hideSuccessProcess="false" delayTime="0.0">
-    <runConfiguration name="microservice-download [quarkusDev]" type="Gradle" />
+    <runConfiguration name="musicshop:microservice-download [quarkusDev]" type="Gradle" />
     <method v="2">
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks="resolve, generateSwaggerUI, generateSwaggerCode" externalProjectPath="$PROJECT_DIR$/microservice-download" vmOptions="" scriptParameters="" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="resolve" externalProjectPath="$PROJECT_DIR$/microservice-download" vmOptions="" scriptParameters="" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="generateSwaggerUI" externalProjectPath="$PROJECT_DIR$/microservice-download" vmOptions="" scriptParameters="" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="generateSwaggerCode" externalProjectPath="$PROJECT_DIR$/microservice-download" vmOptions="" scriptParameters="" />
     </method>
   </configuration>
 </component>
