@@ -5,9 +5,9 @@ import at.fhv.teamd.musicshop.backend.domain.repositories.EmployeeRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.TopicRepository;
 import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
-import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
-import at.fhv.teamd.musicshop.library.DTO.TopicDTO;
+import at.fhv.teamd.musicshop.library.dto.MediumDTO;
+import at.fhv.teamd.musicshop.library.dto.MessageDTO;
+import at.fhv.teamd.musicshop.library.dto.TopicDTO;
 import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
@@ -90,7 +90,6 @@ public class MessageService {
                 javax.jms.Message message;
                 while ((message = messageConsumer.receive(TIMEOUT)) != null) {
                     messages.add(message);
-                    //System.out.println("received " + ((TextMessage) message).getText() + "; " + message.getJMSMessageID());
                 }
             }
 

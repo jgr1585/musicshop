@@ -7,7 +7,7 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
-import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
+import at.fhv.teamd.musicshop.library.dto.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 

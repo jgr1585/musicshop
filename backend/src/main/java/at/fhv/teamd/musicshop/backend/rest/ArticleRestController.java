@@ -1,7 +1,7 @@
 package at.fhv.teamd.musicshop.backend.rest;
 
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
+import at.fhv.teamd.musicshop.library.dto.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

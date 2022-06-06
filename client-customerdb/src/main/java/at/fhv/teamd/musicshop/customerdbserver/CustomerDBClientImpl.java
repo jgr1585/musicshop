@@ -1,7 +1,7 @@
 package at.fhv.teamd.musicshop.customerdbserver;
 
 import at.fhv.teamd.musicshop.library.CustomerDBClient;
-import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
+import at.fhv.teamd.musicshop.library.dto.CustomerDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 

@@ -21,7 +21,7 @@ public class Topic implements javax.jms.Topic, Comparable<Topic> {
 
     public Topic(String name) {
         this.uuid = UUID.randomUUID();
-        Objects.requireNonNull(this.name = name);
+        this.name = name;
     }
 
     @Override

@@ -7,6 +7,11 @@ import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.DTO.InvoiceDTO;
 import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
+import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
+import at.fhv.teamd.musicshop.library.dto.InvoiceDTO;
+import at.fhv.teamd.musicshop.library.dto.LineItemDTO;
+import at.fhv.teamd.musicshop.library.dto.SongDTO;
+import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 
 import java.util.Optional;
@@ -17,7 +22,7 @@ import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.bu
 public class InvoiceService {
     private static final InvoiceRepository invoiceRepository = RepositoryFactory.getInvoiceRepositoryInstance();
 
-    private String message = "Invoice not found";
+    private final String message = "Invoice not found";
 
     public Long createInvoice(Set<LineItem> lineItems, int assignedCustomer) {
         Long id;
