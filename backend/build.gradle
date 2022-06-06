@@ -64,13 +64,13 @@ resolve {
 }
 
 swaggerSources {
-    musicshop {
+    backend {
         code {
             inputFile = file('src/main/webapp/openapi.yaml')
             language = 'javascript'
             copy {
-                from 'build/swagger-code-musicshop/src'
-                into '../spa/src/rest'
+                from 'build/swagger-code-backend/src'
+                into '../spa/src/rest/backend'
             }
         }
         ui {
@@ -79,17 +79,17 @@ swaggerSources {
         }
         copy {
             from 'src/main/webapp/openapi.yaml'
-            into '../spa/src/rest'
+            into '../spa/src/rest/backend'
         }
     }
 }
 
-tasks.withType(JavaCompile) {
+compileJava {
     options.encoding = 'UTF-8'
 }
 
-tasks.withType(Test) {
-    systemProperty "file.encoding", "UTF-8"
+compileTestJava {
+    options.encoding = 'UTF-8'
 }
 
 //node {
