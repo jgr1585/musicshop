@@ -1,9 +1,11 @@
-package at.fhv.teamd.musicshop.backend.application.services;
+package at.fhv.teamd.application;
 
 import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
 import at.fhv.teamd.musicshop.library.DTO.SongDTO;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedMediaException;
+import lombok.NoArgsConstructor;
 
+import javax.ejb.Stateless;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,6 +14,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+@Stateless
+@NoArgsConstructor
 public class MediaService {
 
     public ByteArrayOutputStream getPlaylistAlbumBinaryStream(List<AlbumDTO> playlist, int albumId) throws IOException, UnauthorizedMediaException {

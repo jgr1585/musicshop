@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="microservice playlist dev" type="Multirun" separateTabs="false" reuseTabsWithFailures="false" startOneByOne="true" markFailedProcess="true" hideSuccessProcess="false" delayTime="0.0">
+    <runConfiguration name="microservice-playlist [quarkusDev]" type="Gradle" />
+    <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="false" tasks="resolve, generateSwaggerUI, generateSwaggerCode" externalProjectPath="$PROJECT_DIR$/microservice-playlist" vmOptions="" scriptParameters="" />
+    </method>
+  </configuration>
+</component>

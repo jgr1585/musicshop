@@ -1,6 +1,5 @@
 package at.fhv.teamd.musicshop.backend.rest;
 
-import at.fhv.teamd.musicshop.backend.application.services.InvoiceService;
 import at.fhv.teamd.musicshop.backend.application.services.PlaylistService;
 import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.backend.rest.auth.AuthenticatedUser;
@@ -38,10 +37,6 @@ public class PlaylistRestController {
     @ApiResponse(responseCode = "200", description = "Returns List<AlbumDTO>")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     public Response getUserPlaylist() {
-        if (authenticatedUser == null) {
-            return Response.status(401).build();
-        }
-
         try {
             return Response.ok(playlistService.getPlaylist(authenticatedUser.name())).build();
         } catch (CustomerNotFoundException e) {

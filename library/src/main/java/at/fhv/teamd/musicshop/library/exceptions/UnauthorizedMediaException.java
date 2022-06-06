@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.backend.application.services;
+package at.fhv.teamd.musicshop.library.exceptions;
 
 public class UnauthorizedMediaException extends Exception {
     public UnauthorizedMediaException() {

@@ -1,21 +1,20 @@
-package at.fhv.teamd.musicshop.backend.rest;
+package at.fhv.teamd.rest;
 
-import at.fhv.teamd.musicshop.backend.application.services.MediaService;
-import at.fhv.teamd.musicshop.backend.application.services.PlaylistService;
-import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
-import at.fhv.teamd.musicshop.backend.rest.auth.AuthenticatedUser;
-import at.fhv.teamd.musicshop.backend.rest.auth.Secured;
-import at.fhv.teamd.musicshop.backend.rest.auth.User;
+import at.fhv.teamd.application.MediaService;
+import at.fhv.teamd.application.PlaylistService;
 import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedMediaException;
+import at.fhv.teamd.rest.auth.Secured;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import lombok.NoArgsConstructor;
 
+import javax.ejb.EJB;
 import javax.inject.Inject;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -25,15 +24,15 @@ import java.util.List;
 @Secured
 @Path("/media")
 @SecurityRequirement(name = "Authentication")
-@NoArgsConstructor
 public class MediaRestController {
 
-    @Inject
-    @AuthenticatedUser
-    private User authenticatedUser;
+    @EJB
+    private MediaService mediaService;
 
-    private final PlaylistService playlistService = ServiceFactory.getPlaylistServiceInstance();
-    private final MediaService mediaService = ServiceFactory.getMediaServiceInstance();
+    @EJB
+    private PlaylistService playlistService;
+
+    public MediaRestController() {}
 
     @GET
     @Path("/download/album/{albumId}")
@@ -41,12 +40,9 @@ public class MediaRestController {
     @ApiResponse(responseCode = "200", description = "Returns binary zip of album")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     public Response downloadAlbum(@PathParam("albumId") int albumId) {
-        if (authenticatedUser == null) {
-            return Response.status(401, "Not authenticated.").build();
-        }
 
         try {
-            List<AlbumDTO> playlist = playlistService.getPlaylist(authenticatedUser.name());
+            List<AlbumDTO> playlist = playlistService.getUserPlaylist();
             ByteArrayOutputStream baos = mediaService.getPlaylistAlbumBinaryStream(playlist, albumId);
 
             return Response.ok(baos.toByteArray())
@@ -58,7 +54,7 @@ public class MediaRestController {
             return Response.status(404, "Requested file not found.").build();
         } catch (IOException e) {
             return Response.status(500).build();
-        } catch (UnauthorizedMediaException | CustomerNotFoundException e) {
+        } catch (UnauthorizedMediaException e) {
             return Response.status(401, "Unauthorized.").build();
         }
     }
@@ -69,12 +65,9 @@ public class MediaRestController {
     @ApiResponse(responseCode = "200", description = "Returns binary song file")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     public Response downloadSong(@PathParam("songId") int songId) {
-        if (authenticatedUser == null) {
-            return Response.status(401, "Not authenticated.").build();
-        }
 
         try {
-            List<AlbumDTO> playlist = playlistService.getPlaylist(authenticatedUser.name());
+            List<AlbumDTO> playlist = playlistService.getUserPlaylist();
             ByteArrayOutputStream baos = mediaService.getPlaylistSongBinaryStream(playlist, songId);
 
             return Response.ok(baos.toByteArray())
@@ -86,23 +79,8 @@ public class MediaRestController {
             return Response.status(404, "Requested file not found.").build();
         } catch (IOException e) {
             return Response.status(500).build();
-        } catch (UnauthorizedMediaException | CustomerNotFoundException e) {
+        } catch (UnauthorizedMediaException e) {
             return Response.status(401, "Unauthorized.").build();
         }
-    }
-
-    @GET
-    @Path("/stream/song/{songId}")
-    @Operation(summary = "Retrieve a song stream")
-    @ApiResponse(responseCode = "200", description = "Returns List<AlbumDTO>")
-    @ApiResponse(responseCode = "401", description = "Unauthorized")
-    public Response streamSong(@PathParam("songId") int songId) {
-        if (authenticatedUser == null) {
-            return Response.status(401).build();
-        }
-
-        // TODO
-
-        return null;
     }
 }

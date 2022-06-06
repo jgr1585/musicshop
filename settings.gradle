@@ -3,3 +3,6 @@ include 'library'
 include 'backend'
 include 'client-customerdb'
 include 'client-user'
+
+include 'microservice-download'
+include 'microservice-playlist'
