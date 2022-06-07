@@ -31,7 +31,6 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
         return this.id;
     }
 
-    // no json property
     public UUID uuid() { return this.uuid; }
 
     public String title() {

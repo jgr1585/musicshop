@@ -6,11 +6,14 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
+import com.fasterxml.jackson.databind.ser.std.UUIDSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -22,6 +25,11 @@ import java.util.List;
 public interface ArticleDTO {
     @JsonProperty(required = true)
     Long id();
+
+    @JsonProperty(required = true)
+    @JsonDeserialize(using = UUIDDeserializer.class)
+    @JsonSerialize(using = UUIDSerializer.class)
+    UUID uuid();
 
     @JsonProperty(required = true)
     String title();
