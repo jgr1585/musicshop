@@ -1,10 +1,9 @@
-package at.fhv.teamd.application.Services;
+package at.fhv.teamd.playlist.application.services;
 
 import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
 import at.fhv.teamd.musicshop.library.dto.SongDTO;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedMediaException;
 import lombok.NoArgsConstructor;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;

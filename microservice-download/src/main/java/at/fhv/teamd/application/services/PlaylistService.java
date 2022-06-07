@@ -1,9 +1,7 @@
-package at.fhv.teamd.application.Services;
+package at.fhv.teamd.application.services;
 
 import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
 import at.fhv.teamd.musicshop.library.dto.ArticleDTO;
-import at.fhv.teamd.rest.auth.AuthenticatedUser;
-import at.fhv.teamd.rest.auth.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import org.apache.http.client.methods.CloseableHttpResponse;
