@@ -42,7 +42,7 @@ public class MediaRestController {
     @Operation(summary = "Retrieve the album download which comes as zipped archive")
     @ApiResponse(responseCode = "200", description = "Returns binary zip of album")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
-    public Response downloadAlbum(@HeaderParam ("Authorization") String authorization, @PathParam("albumId") int albumId) {
+    public Response downloadAlbum(@PathParam("albumId") int albumId) {
 
         try {
             List<AlbumDTO> playlist = playlistService.getUserPlaylist(authenticatedUser.authToken());

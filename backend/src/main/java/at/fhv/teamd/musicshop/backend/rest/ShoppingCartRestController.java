@@ -25,6 +25,8 @@ import java.util.NoSuchElementException;
 @Produces("application/json")
 @SecurityRequirement(name = "Authentication")
 @NoArgsConstructor
+
+// TODO: add GenericEntity on response
 public class ShoppingCartRestController {
 
     @Inject

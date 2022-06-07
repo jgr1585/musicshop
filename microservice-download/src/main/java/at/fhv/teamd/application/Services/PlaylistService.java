@@ -1,6 +1,7 @@
 package at.fhv.teamd.application.Services;
 
 import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
+import at.fhv.teamd.musicshop.library.dto.ArticleDTO;
 import at.fhv.teamd.rest.auth.AuthenticatedUser;
 import at.fhv.teamd.rest.auth.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +28,6 @@ public class PlaylistService {
         return objectMapper.
                 readValue(response.getEntity().getContent(),
                         objectMapper.getTypeFactory().
-                                constructCollectionType(List.class, AlbumDTO.class));
+                                constructCollectionType(List.class, ArticleDTO.class));
     }
 }
