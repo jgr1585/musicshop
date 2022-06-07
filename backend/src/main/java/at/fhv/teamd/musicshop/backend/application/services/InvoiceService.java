@@ -17,7 +17,7 @@ import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.bu
 public class InvoiceService {
     private static final InvoiceRepository invoiceRepository = RepositoryFactory.getInvoiceRepositoryInstance();
 
-    private final String message = "Invoice not found";
+    private static final String MESSAGE = "Invoice not found";
 
     public Long createInvoice(Set<LineItem> lineItems, int assignedCustomer) {
         Long id;
@@ -34,7 +34,7 @@ public class InvoiceService {
         if (invoiceOpt.isPresent()) {
             return buildInvoiceDTO(invoiceOpt.get());
         } else {
-            throw new InvoiceException(message);
+            throw new InvoiceException(MESSAGE);
         }
     }
 
@@ -55,7 +55,7 @@ public class InvoiceService {
             }
             invoiceRepository.update(invoice);
         } else {
-            throw new InvoiceException(message);
+            throw new InvoiceException(MESSAGE);
         }
     }
 }
