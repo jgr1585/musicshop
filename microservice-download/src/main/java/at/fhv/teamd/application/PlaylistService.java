@@ -21,7 +21,7 @@ public class PlaylistService {
 
     @Inject
     @AuthenticatedUser
-    private User token;
+    User token;
 
     CloseableHttpClient httpClient = HttpClients.createDefault();
 

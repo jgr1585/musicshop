@@ -1,5 +1,5 @@
 <script setup>
-import { DefaultApi } from "../rest";
+import { DefaultApi } from "../rest/backend";
 </script>
 
 <script>

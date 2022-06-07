@@ -21,7 +21,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Inject
     @AuthenticatedUser
-    private Event<String> newRequestEvent;
+    Event<String> newRequestEvent;
 
     private static final String REALM = "example";
     private static final String AUTHENTICATION_SCHEME = "Bearer";

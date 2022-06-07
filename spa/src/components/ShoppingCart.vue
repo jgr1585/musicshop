@@ -1,6 +1,6 @@
 <script setup>
 import LineItem from "./LineItem.vue";
-import { DefaultApi } from "../rest";
+import { DefaultApi } from "../rest/backend";
 </script>
 
 <script>

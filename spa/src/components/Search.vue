@@ -1,6 +1,6 @@
 <script setup>
 import Article from "./Article.vue";
-import { DefaultApi } from "../rest";
+import { DefaultApi } from "../rest/backend";
 </script>
 
 <script>
