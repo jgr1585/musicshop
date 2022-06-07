@@ -68,9 +68,6 @@ public final class SongDTO implements ArticleDTO, Serializable {
     }
 
     @JsonProperty(required = true)
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
     public List<AlbumDTO> albums() {
         return Collections.unmodifiableList(albums);
     }

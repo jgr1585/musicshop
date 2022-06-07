@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public final class AlbumDTO implements ArticleDTO, Serializable {
     private static final long serialVersionUID = 2304687831949112622L;
 
@@ -63,9 +66,6 @@ public final class AlbumDTO implements ArticleDTO, Serializable {
     }
 
     @JsonProperty(required = true)
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
     public List<SongDTO> songs() {
         return Collections.unmodifiableList(songs);
     }
