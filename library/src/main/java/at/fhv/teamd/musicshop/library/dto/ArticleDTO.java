@@ -10,7 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -42,5 +42,5 @@ public interface ArticleDTO {
     String musicbrainzId();
 
     @JsonProperty(required = true)
-    Set<ArtistDTO> artists();
+    List<ArtistDTO> artists();
 }

@@ -136,8 +136,8 @@ public class DTOProvider {
 
         albumBuilder.withSongs(
                 album.getSongs().stream()
-                        .map(song -> getSongDTOBuilder(song).withAlbums(Collections.singleton(albumBuilder.build())).build())
-                        .collect(Collectors.toUnmodifiableSet()));
+                        .map(song -> getSongDTOBuilder(song).withAlbums(Collections.singletonList(albumBuilder.build())).build())
+                        .collect(Collectors.toUnmodifiableList()));
 
         return albumBuilder.build();
     }
@@ -147,8 +147,8 @@ public class DTOProvider {
 
         songBuilder.withAlbums(
                 song.getAlbums().stream()
-                        .map(album -> getAlbumDTOBuilder(album, includedMediumTypes).withSongs(Collections.singleton(songBuilder.build())).build())
-                        .collect(Collectors.toUnmodifiableSet()));
+                        .map(album -> getAlbumDTOBuilder(album, includedMediumTypes).withSongs(Collections.singletonList(songBuilder.build())).build())
+                        .collect(Collectors.toUnmodifiableList()));
 
         return songBuilder.build();
     }
@@ -165,7 +165,7 @@ public class DTOProvider {
                         song.getMusicbrainzId(),
                         song.getArtists().stream()
                                 .map(DTOProvider::buildArtistDTO)
-                                .collect(Collectors.toUnmodifiableSet()));
+                                .collect(Collectors.toUnmodifiableList()));
         return builder.withSongSpecificData(song.getLength());
     }
 
@@ -182,10 +182,10 @@ public class DTOProvider {
                         album.getArtists()
                                 .stream()
                                 .map(DTOProvider::buildArtistDTO)
-                                .collect(Collectors.toUnmodifiableSet()));
+                                .collect(Collectors.toUnmodifiableList()));
         return builder.withAlbumSpecificData(album.getMediums().stream()
                 .filter(medium -> includedMediumTypes.contains(medium.getType()))
                 .map(DTOProvider::buildMediumDTO)
-                .collect(Collectors.toUnmodifiableSet()));
+                .collect(Collectors.toUnmodifiableList()));
     }
 }
