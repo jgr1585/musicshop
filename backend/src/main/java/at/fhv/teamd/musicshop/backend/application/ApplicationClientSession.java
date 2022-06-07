@@ -1,7 +1,8 @@
 package at.fhv.teamd.musicshop.backend.application;
 
 import lombok.Getter;
-import java.util.HashMap;
+
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -9,7 +10,7 @@ public class ApplicationClientSession {
 
     @Getter
     private final String userId;
-    private final Map<ApplicationClientSession.attributes, Object> sessionObjects = new HashMap<>();
+    private final Map<ApplicationClientSession.attributes, Object> sessionObjects = new EnumMap<> (attributes.class);
 
     public ApplicationClientSession(String userId) {
         setSessionObject(attributes.USERID, userId);

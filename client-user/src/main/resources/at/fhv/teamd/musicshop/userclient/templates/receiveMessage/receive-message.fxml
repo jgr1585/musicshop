@@ -3,7 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 
-<ScrollPane fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #000000; -fx-font-size: 13; -fx-font-weight: bold;" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.receiveMessage.ReceiveMessageController">
+<ScrollPane fitToWidth="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: #000000; -fx-font-size: 13; -fx-font-weight: bold;" xmlns="http://javafx.com/javafx/11" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.fhv.teamd.musicshop.userclient.view.receive_message.ReceiveMessageController">
    <content>
       <TableView fx:id="inbox" prefHeight="756.0" prefWidth="970.0" style="-fx-background-color: #000000; -fx-text-fill: #FFFFFF;">
          <columns>

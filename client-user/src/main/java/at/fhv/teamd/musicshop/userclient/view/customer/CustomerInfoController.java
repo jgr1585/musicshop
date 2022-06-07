@@ -1,6 +1,6 @@
 package at.fhv.teamd.musicshop.userclient.view.customer;
 
-import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
+import at.fhv.teamd.musicshop.library.dto.CustomerDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

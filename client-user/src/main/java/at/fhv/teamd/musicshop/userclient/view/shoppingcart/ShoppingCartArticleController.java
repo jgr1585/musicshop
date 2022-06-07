@@ -1,8 +1,7 @@
 package at.fhv.teamd.musicshop.userclient.view.shoppingcart;
 
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.library.dto.LineItemDTO;
+import at.fhv.teamd.musicshop.library.dto.MediumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
@@ -36,11 +35,11 @@ public class ShoppingCartArticleController implements GenericArticleController {
         // force the field to be numeric only
         numberOnly(this.mediumAmountStock);
 
-        new Thread(() -> this.removeButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.removeFromShoppingCart))).start();
+        new Thread(() -> this.removeButton.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.REMOVE_FROM_SHOPPING_CART))).start();
     }
 
     @Override
-    public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO) {
+    public void setMediumType(MediumDTO mediumDTO) {
         throw new RuntimeException();
     }
 
@@ -55,25 +54,25 @@ public class ShoppingCartArticleController implements GenericArticleController {
     }
 
     @FXML
-    private void reduceByOne(ActionEvent actionEvent) throws NotAuthorizedException, ShoppingCartException {
+    private void reduceByOne() throws NotAuthorizedException, ShoppingCartException {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         if (val > 0) {
-            this.mediumAmountSelected.setText(Integer.valueOf(val - 1).toString());
+            this.mediumAmountSelected.setText(Integer.toString(val - 1));
             RemoteFacade.getInstance().removeFromShoppingCart(mediumDTO, 1);
         }
     }
 
     @FXML
-    private void increaseByOne(ActionEvent actionEvent) throws NotAuthorizedException, ShoppingCartException {
+    private void increaseByOne() throws NotAuthorizedException, ShoppingCartException {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         if (val < this.lineItemDTO.medium().stockQuantity()) {
-            this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
+            this.mediumAmountSelected.setText(Integer.toString(val + 1));
             RemoteFacade.getInstance().addToShoppingCart(mediumDTO, 1);
         }
     }
 
     @FXML
-    private void remove(ActionEvent actionEvent) throws NotAuthorizedException, ShoppingCartException {
+    private void remove() throws NotAuthorizedException, ShoppingCartException {
         RemoteFacade.getInstance().removeFromShoppingCart(mediumDTO, lineItemDTO.quantity());
     }
 }

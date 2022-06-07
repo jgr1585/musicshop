@@ -3,21 +3,21 @@ package at.fhv.teamd.musicshop.library.permission;
 import java.util.Set;
 
 public enum RemoteFunctionPermission {
-    searchArticlesByAttributes(Set.of(UserRole.SELLER)),
-    searchCustomersByName(searchArticlesByAttributes.getRoles()),
-    addToShoppingCart(searchArticlesByAttributes.getRoles()),
-    removeFromShoppingCart(searchArticlesByAttributes.getRoles()),
-    emptyShoppingCart(searchArticlesByAttributes.getRoles()),
-    buyFromShoppingCart(searchArticlesByAttributes.getRoles()),
-    getShoppingCart(searchArticlesByAttributes.getRoles()),
-    findInvoiceById(searchArticlesByAttributes.getRoles()),
-    returnItem(searchArticlesByAttributes.getRoles()),
+    SEARCH_ARTICLES_BY_ATTRIBUTES(Set.of(UserRole.SELLER)),
+    SEARCH_CUSTOMERS_BY_NAME(SEARCH_ARTICLES_BY_ATTRIBUTES.getRoles()),
+    ADD_TO_SHOPPING_CART(SEARCH_ARTICLES_BY_ATTRIBUTES.getRoles()),
+    REMOVE_FROM_SHOPPING_CART(SEARCH_ARTICLES_BY_ATTRIBUTES.getRoles()),
+    EMPTY_SHOPPING_CART(SEARCH_ARTICLES_BY_ATTRIBUTES.getRoles()),
+    BUY_FROM_SHOPPING_CART(SEARCH_ARTICLES_BY_ATTRIBUTES.getRoles()),
+    GET_SHOPPING_CART(SEARCH_ARTICLES_BY_ATTRIBUTES.getRoles()),
+    FIND_INVOICE_BY_ID(SEARCH_ARTICLES_BY_ATTRIBUTES.getRoles()),
+    RETURN_ITEM(SEARCH_ARTICLES_BY_ATTRIBUTES.getRoles()),
 
-    publishOrderMessage(Set.of(UserRole.SELLER)),
-    publishMessage(Set.of(UserRole.OPERATOR)),
-    receiveMessages(Set.of(UserRole.values())),
-    acknowledgeMessage(receiveMessages.getRoles()),
-    getAllTopics(publishMessage.getRoles());
+    PUBLISH_ORDER_MESSAGE(Set.of(UserRole.SELLER)),
+    PUBLISH_MESSAGE(Set.of(UserRole.OPERATOR)),
+    RECEIVE_MESSAGES(Set.of(UserRole.values())),
+    ACKNOWLEDGE_MESSAGE(RECEIVE_MESSAGES.getRoles()),
+    GET_ALL_TOPICS(PUBLISH_MESSAGE.getRoles());
 
     private final Set<UserRole> roles;
 
