@@ -7,7 +7,7 @@ import at.fhv.teamd.musicshop.backend.application.services.UnauthorizedMediaExce
 import at.fhv.teamd.musicshop.backend.rest.auth.AuthenticatedUser;
 import at.fhv.teamd.musicshop.backend.rest.auth.Secured;
 import at.fhv.teamd.musicshop.backend.rest.auth.User;
-import at.fhv.teamd.musicshop.library.DTO.AlbumDTO;
+import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

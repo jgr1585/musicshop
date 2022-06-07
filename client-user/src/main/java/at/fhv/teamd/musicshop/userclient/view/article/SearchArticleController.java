@@ -9,8 +9,6 @@ import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
 import javafx.animation.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
@@ -96,8 +94,7 @@ public class SearchArticleController implements GenericArticleController {
     @FXML
     private void increaseByOne() {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
-        if (val < valInStock)
-            this.mediumAmountSelected.setText(Integer.toString(val + 1));
+        this.mediumAmountSelected.setText(Integer.toString(val + 1));
     }
 
     @FXML
