@@ -1,4 +1,4 @@
-package at.fhv.teamd.application;
+package at.fhv.teamd.application.Services;
 
 import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
 import at.fhv.teamd.rest.auth.AuthenticatedUser;
@@ -10,22 +10,15 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 
-@Stateless
 @NoArgsConstructor
 public class PlaylistService {
 
-    @Inject
-    @AuthenticatedUser
-    User token;
-
     CloseableHttpClient httpClient = HttpClients.createDefault();
 
-    public List<AlbumDTO> getUserPlaylist() throws IOException {
+    public List<AlbumDTO> getUserPlaylist(String token) throws IOException {
         HttpGet request = new HttpGet("http://localhost:8080/backend-1.0-SNAPSHOT/rest/playlist/");
         request.addHeader("Authorization", "Bearer: " + token);
         request.addHeader("content-type", "application/json");

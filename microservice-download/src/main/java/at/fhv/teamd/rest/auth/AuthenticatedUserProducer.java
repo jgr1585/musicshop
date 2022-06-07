@@ -12,8 +12,7 @@ public class AuthenticatedUserProducer {
     @AuthenticatedUser
     User authenticatedUser;
 
-    public void handleRequestEvent(@Observes @AuthenticatedUser String username) {
+    public void handleAuthenticationEvent(@Observes @AuthenticatedUser String username) {
         this.authenticatedUser = new User(username);
     }
-
 }
