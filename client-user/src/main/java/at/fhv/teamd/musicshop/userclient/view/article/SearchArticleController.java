@@ -1,6 +1,5 @@
 package at.fhv.teamd.musicshop.userclient.view.article;
 
-import at.fhv.teamd.musicshop.library.dto.ArticleDTO;
 import at.fhv.teamd.musicshop.library.dto.LineItemDTO;
 import at.fhv.teamd.musicshop.library.dto.MediumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
@@ -9,9 +8,8 @@ import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
-import javafx.animation.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
@@ -49,7 +47,7 @@ public class SearchArticleController implements GenericArticleController {
         }).start();
     }
 
-    public void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO) {
+    public void setMediumType(MediumDTO mediumDTO) {
         this.mediumDTO = mediumDTO;
         this.mediumType.setText(mediumDTO.type());
         this.mediumPrice.setText(mediumDTO.price().toString());
@@ -66,7 +64,7 @@ public class SearchArticleController implements GenericArticleController {
     }
 
     @FXML
-    private void addToCart(ActionEvent actionEvent) throws NotAuthorizedException, ShoppingCartException {
+    private void addToCart() throws NotAuthorizedException, ShoppingCartException {
         int amount = Integer.parseInt(this.mediumAmountSelected.getText());
         RemoteFacade.getInstance().addToShoppingCart(this.mediumDTO, amount);
 
@@ -88,24 +86,24 @@ public class SearchArticleController implements GenericArticleController {
     }
 
     @FXML
-    private void reduceByOne(ActionEvent actionEvent) {
+    private void reduceByOne() {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         if (val > 0)
-            this.mediumAmountSelected.setText(Integer.valueOf(val - 1).toString());
+            this.mediumAmountSelected.setText(Integer.toString(val - 1));
     }
 
     @FXML
-    private void increaseByOne(ActionEvent actionEvent) {
+    private void increaseByOne() {
         int val = Integer.parseInt(this.mediumAmountSelected.getText());
         int valInStock = Integer.parseInt(this.mediumAmount.getText());
         if (val < valInStock)
-            this.mediumAmountSelected.setText(Integer.valueOf(val + 1).toString());
+            this.mediumAmountSelected.setText(Integer.toString(val + 1));
     }
 
     @FXML
-    private void order(ActionEvent actionEvent) throws NotAuthorizedException, MessagingException {
+    private void order() throws NotAuthorizedException, MessagingException {
         RemoteFacade.getInstance().publishOrderMessage(mediumDTO, mediumAmountSelected.getText());
         new Alert(Alert.AlertType.INFORMATION, "Message successfully sent", ButtonType.CLOSE).show();
-        this.mediumAmountSelected.setText(Integer.valueOf(0).toString());
+        this.mediumAmountSelected.setText(Integer.toString(0));
     }
 }
