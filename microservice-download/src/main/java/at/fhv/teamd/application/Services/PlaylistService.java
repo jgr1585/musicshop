@@ -20,7 +20,7 @@ public class PlaylistService {
 
     public List<AlbumDTO> getUserPlaylist(String token) throws IOException {
         HttpGet request = new HttpGet("http://localhost:8080/backend-1.0-SNAPSHOT/rest/playlist/");
-        request.addHeader("Authorization", "Bearer: " + token);
+        request.addHeader("Authorization", "Bearer " + token);
         request.addHeader("content-type", "application/json");
         CloseableHttpResponse response = httpClient.execute(request);
         ObjectMapper objectMapper = new ObjectMapper();

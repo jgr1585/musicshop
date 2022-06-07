@@ -56,7 +56,7 @@ public class MediaRestController {
         } catch (FileNotFoundException e) {
             return Response.status(404, "Requested file not found.").build();
         } catch (IOException e) {
-            return Response.status(500, e.getMessage()).build();
+            return Response.status(500).build();
         } catch (UnauthorizedMediaException e) {
             return Response.status(401, "Unauthorized.").build();
         }
@@ -81,7 +81,7 @@ public class MediaRestController {
         } catch (FileNotFoundException e) {
             return Response.status(404, "Requested file not found.").build();
         } catch (IOException e) {
-            return Response.status(500, e.getMessage()).build();
+            return Response.status(500).build();
         } catch (UnauthorizedMediaException e) {
             return Response.status(401, "Unauthorized.").build();
         }
