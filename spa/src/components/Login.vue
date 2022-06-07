@@ -1,5 +1,7 @@
 <script setup>
-import { DefaultApi } from "../rest/backend";
+import { DefaultApi as BackendApi } from "../rest/backend/index.js";
+import { DefaultApi as DownloadApi } from "../rest/microservicedownload/index.js";
+import { DefaultApi as PlaylistApi } from "../rest/microserviceplaylist/index.js";
 </script>
 
 <script>
@@ -22,7 +24,19 @@ export default {
   },
   methods: {
     addTokenToApiClient() {
-      new DefaultApi().apiClient.authentications = {
+      new BackendApi().apiClient.authentications = {
+        Authentication: {
+          type: "oauth2",
+          accessToken: localStorage.getItem("token")
+        }
+      };
+      new DownloadApi().apiClient.authentications = {
+        Authentication: {
+          type: "oauth2",
+          accessToken: localStorage.getItem("token")
+        }
+      };
+      new PlaylistApi().apiClient.authentications = {
         Authentication: {
           type: "oauth2",
           accessToken: localStorage.getItem("token")
@@ -40,7 +54,7 @@ export default {
           }
         };
 
-        new DefaultApi().authenticateUser(opts, (error, data, response) => {
+        new BackendApi().authenticateUser(opts, (error, data, response) => {
           this.loading = false;
           if (error) {
             alert(error);
@@ -50,7 +64,7 @@ export default {
             localStorage.setItem("token", response.text);
             console.log(localStorage.getItem("token"));
             this.addTokenToApiClient();
-            this.$emit('updateParent', localStorage.getItem('tab'))
+            this.$emit("updateParent", localStorage.getItem("tab"));
           }
         });
       } else {
@@ -117,7 +131,6 @@ export default {
 </template>
 
 <style>
-
 .input {
   background-color: #ffffff;
 }

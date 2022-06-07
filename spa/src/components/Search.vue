@@ -1,6 +1,6 @@
 <script setup>
 import Article from "./Article.vue";
-import { DefaultApi } from "../rest/backend";
+import { DefaultApi as BackendApi } from "../rest/backend/index.js";
 </script>
 
 <script>
@@ -32,13 +32,14 @@ export default {
           title: this.title,
           artist: this.artist
         };
-        new DefaultApi().searchArticlesByAttributes(opts, (error, data, response) => {
+        new BackendApi().searchArticlesByAttributes(opts, (error, data, response) => {
           this.loading = false;
           if (error) {
             alert(error);
             this.errored = true;
           } else {
             console.log(response);
+            console.log(response.body);
             this.articles = response.body;
             console.log("API called successfully. Returned data: " + response.body);
           }
@@ -74,7 +75,7 @@ export default {
         }
       };
 
-      new DefaultApi().addToShoppingCart(opts, (error, data, response) => {
+      new BackendApi().addToShoppingCart(opts, (error, data, response) => {
         if (error) {
           alert(error);
         } else {
