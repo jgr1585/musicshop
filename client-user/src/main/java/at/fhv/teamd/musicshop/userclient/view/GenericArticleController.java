@@ -5,6 +5,6 @@ import at.fhv.teamd.musicshop.library.dto.LineItemDTO;
 import at.fhv.teamd.musicshop.library.dto.MediumDTO;
 
 public interface GenericArticleController {
-    void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO);
+    void setMediumType(MediumDTO mediumDTO);
     void setMediumType(LineItemDTO lineItemDTO);
 }
