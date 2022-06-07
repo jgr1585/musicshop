@@ -17,6 +17,8 @@ dependencies {
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
 
+    implementation 'org.jboss.resteasy:resteasy-client:6.0.1.Final'
+
     implementation project(':library')
 
     swaggerUI 'org.webjars:swagger-ui:4.10.3'
@@ -26,6 +28,13 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.4'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.4'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.4'
+
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 group 'at.fhv.teamd'

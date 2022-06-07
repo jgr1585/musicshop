@@ -1,4 +1,4 @@
-package at.fhv.teamd.application.Services;
+package at.fhv.teamd.application.services;
 
 public class ServiceFactory {
     private static PlaylistService playlistService;

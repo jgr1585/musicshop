@@ -1,8 +1,8 @@
 package at.fhv.teamd.rest;
 
-import at.fhv.teamd.application.Services.MediaService;
-import at.fhv.teamd.application.Services.PlaylistService;
-import at.fhv.teamd.application.Services.ServiceFactory;
+import at.fhv.teamd.application.services.MediaService;
+import at.fhv.teamd.application.services.PlaylistService;
+import at.fhv.teamd.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedMediaException;
 import at.fhv.teamd.rest.auth.AuthenticatedUser;
@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
