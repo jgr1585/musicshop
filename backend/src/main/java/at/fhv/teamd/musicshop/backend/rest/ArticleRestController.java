@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import java.util.Set;
 
@@ -28,8 +29,9 @@ public class ArticleRestController {
             return Response.status(400).build();
         }
         Set<ArticleDTO> articles = ServiceFactory.getArticleServiceInstance().searchDigitalMediumArticles(title, artist);
+        GenericEntity<Set<ArticleDTO>> articlesEntity = new GenericEntity<>(articles) {};
         if (!articles.isEmpty()) {
-            return Response.ok().entity(articles).build();
+            return Response.ok().entity(articlesEntity).build();
         } else {
             return Response.status(204).build();
         }

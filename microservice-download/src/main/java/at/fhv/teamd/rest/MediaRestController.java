@@ -1,16 +1,18 @@
 package at.fhv.teamd.rest;
 
-import at.fhv.teamd.application.MediaService;
-import at.fhv.teamd.application.PlaylistService;
+import at.fhv.teamd.application.services.MediaService;
+import at.fhv.teamd.application.services.PlaylistService;
+import at.fhv.teamd.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
-import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedMediaException;
+import at.fhv.teamd.rest.auth.AuthenticatedUser;
 import at.fhv.teamd.rest.auth.Secured;
+import at.fhv.teamd.rest.auth.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.NoArgsConstructor;
 
-import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -24,15 +26,15 @@ import java.util.List;
 @Secured
 @Path("/media")
 @SecurityRequirement(name = "Authentication")
+@NoArgsConstructor
 public class MediaRestController {
 
-    @EJB
-    private MediaService mediaService;
+    private final MediaService mediaService = ServiceFactory.getMediaServiceInstance();
+    private final PlaylistService playlistService = ServiceFactory.getPlaylistServiceInstance();
 
-    @EJB
-    private PlaylistService playlistService;
-
-    public MediaRestController() {}
+    @Inject
+    @AuthenticatedUser
+    User authenticatedUser;
 
     @GET
     @Path("/download/album/{albumId}")
@@ -42,7 +44,7 @@ public class MediaRestController {
     public Response downloadAlbum(@PathParam("albumId") int albumId) {
 
         try {
-            List<AlbumDTO> playlist = playlistService.getUserPlaylist();
+            List<AlbumDTO> playlist = playlistService.getUserPlaylist(authenticatedUser.authToken());
             ByteArrayOutputStream baos = mediaService.getPlaylistAlbumBinaryStream(playlist, albumId);
 
             return Response.ok(baos.toByteArray())
@@ -67,7 +69,7 @@ public class MediaRestController {
     public Response downloadSong(@PathParam("songId") int songId) {
 
         try {
-            List<AlbumDTO> playlist = playlistService.getUserPlaylist();
+            List<AlbumDTO> playlist = playlistService.getUserPlaylist(authenticatedUser.authToken());
             ByteArrayOutputStream baos = mediaService.getPlaylistSongBinaryStream(playlist, songId);
 
             return Response.ok(baos.toByteArray())

@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="generate all and build" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/spa/package.json" />
+    <command value="run" />
+    <scripts>
+      <script value="build" />
+    </scripts>
+    <node-interpreter value="project" />
+    <envs />
+    <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="resolve generateSwaggerUI generateSwaggerCode" externalProjectPath="$PROJECT_DIR$/backend" vmOptions="" scriptParameters="" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="resolve generateSwaggerUI generateSwaggerCode" externalProjectPath="$PROJECT_DIR$/microservice-download" vmOptions="" scriptParameters="" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="resolve generateSwaggerUI generateSwaggerCode" externalProjectPath="$PROJECT_DIR$/microservice-playlist" vmOptions="" scriptParameters="" />
+    </method>
+  </configuration>
+</component>

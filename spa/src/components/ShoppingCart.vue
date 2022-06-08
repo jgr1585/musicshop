@@ -1,6 +1,6 @@
 <script setup>
 import LineItem from "./LineItem.vue";
-import { DefaultApi } from "../rest/backend";
+import { DefaultApi as BackendApi } from "../rest/backend/index.js";
 </script>
 
 <script>
@@ -23,7 +23,7 @@ export default {
         return;
       }
 
-      new DefaultApi().getShoppingCart((error, data, response) => {
+      new BackendApi().getShoppingCart((error, data, response) => {
         if (error) {
           alert(error);
         } else {
@@ -46,7 +46,7 @@ export default {
         }
       };
 
-      new DefaultApi().removeFromShoppingCart(opts, (error, data, response) => {
+      new BackendApi().removeFromShoppingCart(opts, (error, data, response) => {
         if (error) {
           alert(error);
         } else {
@@ -69,7 +69,7 @@ export default {
         }
       };
 
-      new DefaultApi().buyFromShoppingCart(opts, (error, data, response) => {
+      new BackendApi().buyFromShoppingCart(opts, (error, data, response) => {
         if (error) {
           alert(error);
         } else {
@@ -87,7 +87,7 @@ export default {
         return;
       }
 
-      new DefaultApi().emptyShoppingCart((error, data, response) => {
+      new BackendApi().emptyShoppingCart((error, data, response) => {
         if (error) {
           alert(error);
         } else {
