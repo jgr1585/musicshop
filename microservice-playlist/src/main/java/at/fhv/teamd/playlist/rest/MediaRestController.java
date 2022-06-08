@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -38,9 +39,11 @@ public class MediaRestController {
 
     @GET
     @Path("/stream/song/{songId}")
+    @Produces("application/mp3")
     @Operation(summary = "Retrieve a song stream")
     @ApiResponse(responseCode = "200", description = "Returns binary song stream")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
+    @ApiResponse(responseCode = "500", description = "Server Error")
     public Response streamSong(@PathParam("songId") int songId) {
         if (authenticatedUser == null) {
             return Response.status(401, "Not authenticated.").build();
