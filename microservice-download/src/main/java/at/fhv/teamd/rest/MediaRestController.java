@@ -14,9 +14,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -38,9 +36,11 @@ public class MediaRestController {
 
     @GET
     @Path("/download/album/{albumId}")
+    @Produces("application/zip")
     @Operation(summary = "Retrieve the album download which comes as zipped archive")
     @ApiResponse(responseCode = "200", description = "Returns binary zip of album")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
+    @ApiResponse(responseCode = "500", description = "Server Error")
     public Response downloadAlbum(@PathParam("albumId") int albumId) {
 
         try {
@@ -63,9 +63,11 @@ public class MediaRestController {
 
     @GET
     @Path("/download/song/{songId}")
+    @Produces("application/mp3")
     @Operation(summary = "Retrieve the song download which comes as audio filed")
     @ApiResponse(responseCode = "200", description = "Returns binary song file")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
+    @ApiResponse(responseCode = "500", description = "Server Error")
     public Response downloadSong(@PathParam("songId") int songId) {
 
         try {

@@ -45,7 +45,7 @@ public class ShoppingCartService {
 
         Set<LineItem> lineItems = physicalMediumLineItems.get(userId);
 
-        Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow();
+        Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow(() -> new ShoppingCartException("Medium not found."));
 
         if (medium.getType() == MediumType.DIGITAL)
             throw new ShoppingCartException("Only non-digital mediums are allowed here");
@@ -60,7 +60,7 @@ public class ShoppingCartService {
 
             lineItem.increaseQuantity(Quantity.of(amount));
 
-        // medium does not exists in lineItems
+            // medium does not exists in lineItems
         } else {
             // insufficient mediums in stock
             if (amount > medium.getStock().getQuantity().getValue())
@@ -75,7 +75,7 @@ public class ShoppingCartService {
 
         Set<LineItem> lineItems = digitalMediumLineItems.get(userId);
 
-        Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow();
+        Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow(() -> new ShoppingCartException("Medium not found."));
 
         if (medium.getType() != MediumType.DIGITAL)
             throw new ShoppingCartException("Only digital mediums are allowed here");
@@ -84,7 +84,7 @@ public class ShoppingCartService {
         if (lineItems.stream().noneMatch(li -> li.getMedium().getId() == mediumId)) {
             lineItems.add(new LineItem(Quantity.of(1), medium));
 
-        // medium already exists in lineItems
+            // medium already exists in lineItems
         } else {
             throw new ShoppingCartException("Already in ShoppingCart");
         }
