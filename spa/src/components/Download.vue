@@ -29,6 +29,14 @@ export default {
           this.$notify({
             type: "success",
             title: "Download started"});
+          console.log(response);
+          const url = window.URL.createObjectURL(response.body);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "album.zip");
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
         }
       });
     },
@@ -43,6 +51,14 @@ export default {
           this.$notify({
             type: "success",
             title: "Download started"});
+          console.log(response);
+          const url = window.URL.createObjectURL(response.body);
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "song.mp3");
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
         }
       });
     },
@@ -116,7 +132,10 @@ export default {
               </v-btn>
             </v-col>
             <v-col class="col-1 row align-items-center">
-              <v-btn class="ma-lg-10 bg-transparent rounded-pill pa-5" @click="downloadAlbum(article.id)">
+              <v-btn
+                class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                @click="downloadAlbum(article.id)"
+              >
                 <v-icon color="#ffd700" size="40"> mdi-download</v-icon>
               </v-btn>
             </v-col>
@@ -131,7 +150,10 @@ export default {
               </v-btn>
             </v-col>
             <v-col class="col-1 row align-items-center">
-              <v-btn class="ma-lg-10 bg-transparent rounded-pill pa-5" @click="downloadSong(article.id)">
+              <v-btn
+                class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                @click="downloadSong(article.id)"
+              >
                 <v-icon color="#ffd700" size="40"> mdi-download</v-icon>
               </v-btn>
             </v-col>
