@@ -35,7 +35,9 @@ export default {
         new BackendApi().searchArticlesByAttributes(opts, (error, data, response) => {
           this.loading = false;
           if (error) {
-            alert(error);
+            this.$notify({
+              type: "error",
+              title: error});
             this.errored = true;
           } else {
             console.log(response);
@@ -45,17 +47,24 @@ export default {
           }
         });
       } else {
-        alert("Please fill in at least one field");
+        this.$notify({
+          type: "warn",
+          title: "Please fill in at least one field"})
       }
     },
     addToCart(article) {
       if (article.mediums == null) {
-        alert("This article is not available");
+        this.$notify({
+          type: "error",
+          title: "This article is not available"
+        });
         return;
       }
 
       if (localStorage.getItem("token") == null) {
-        alert("You are not logged in!");
+        this.$notify({
+          type: "error",
+          title: "You are not logged in!"});
         this.$emit('updateParent', 'Login')
         this.errored = true;
         return;
@@ -77,10 +86,15 @@ export default {
 
       new BackendApi().addToShoppingCart(opts, (error, data, response) => {
         if (error) {
-          alert(error);
+          this.$notify({
+            type: "error",
+            title: error});
         } else {
           console.log(response);
-          alert("Successfully added to cart");
+          this.$notify({
+            type: "success",
+            title: "Successfully added to cart"
+          });
         }
       });
     },

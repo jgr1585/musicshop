@@ -8,6 +8,7 @@
     "preview": "vite preview --port 9090"
   },
   "dependencies": {
+    "@kyvg/vue3-notification": "^2.3.4",
     "@mdi/font": "5.9.55",
     "axios": "^0.27.2",
     "querystring": "^0.2.1",

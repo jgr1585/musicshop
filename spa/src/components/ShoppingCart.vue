@@ -18,14 +18,20 @@ export default {
   methods: {
     getShoppingCart() {
       if (localStorage.getItem("token") == null) {
-        alert("You are not logged in!");
+        this.$notify({
+          type: "success",
+          title: "You are not logged in!"
+        });
         this.errored = true;
         return;
       }
 
       new BackendApi().getShoppingCart((error, data, response) => {
         if (error) {
-          alert(error);
+          this.$notify({
+            type: "error",
+            title: error
+          });
         } else {
           console.log(response.body);
           this.lineItems = response.body.lineItems;
@@ -35,7 +41,10 @@ export default {
     },
     removeFromCart(id) {
       if (localStorage.getItem("token") == null) {
-        alert("You are not logged in!");
+        this.$notify({
+          type: "success",
+          tile: "You are not logged in!"
+        });
         this.errored = true;
         return;
       }
@@ -48,17 +57,26 @@ export default {
 
       new BackendApi().removeFromShoppingCart(opts, (error, data, response) => {
         if (error) {
-          alert(error);
+          this.$notify({
+            type: "error",
+            title: error
+          });
         } else {
           console.log(response);
-          alert("Successfully removed from cart");
+          this.$notify({
+            type: "success",
+            title: "Successfully removed from cart"
+          });
           this.getShoppingCart();
         }
       });
     },
     buyFromCart() {
       if (localStorage.getItem("token") == null) {
-        alert("You are not logged in!");
+        this.$notify({
+          type: "success",
+          title: "You are not logged in!"
+        });
         this.errored = true;
         return;
       }
@@ -71,28 +89,43 @@ export default {
 
       new BackendApi().buyFromShoppingCart(opts, (error, data, response) => {
         if (error) {
-          alert(error);
+          this.$notify({
+            type: "error",
+            title: error
+          });
         } else {
           console.log(response);
           this.creditcardNo = "";
-          alert("Successfully purchased");
+          this.$notify({
+            type: "success",
+            title: "Successfully purchased"
+          });
           this.getShoppingCart();
         }
       });
     },
     emptyCart() {
       if (localStorage.getItem("token") == null) {
-        alert("You are not logged in!");
+        this.$notify({
+          type: "success",
+          title: "You are not logged in!"
+        });
         this.errored = true;
         return;
       }
 
       new BackendApi().emptyShoppingCart((error, data, response) => {
         if (error) {
-          alert(error);
+          this.$notify({
+            type: "error",
+            title: error
+          });
         } else {
           console.log(response);
-          alert("Shopping Cart emptied");
+          this.$notify({
+            type: "success",
+            title: "Shopping Cart emptied"
+          });
           this.getShoppingCart();
           this.creditcardNo = "";
         }

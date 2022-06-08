@@ -117,6 +117,7 @@ export default {
       </div>
     </nav>
 
+    <notifications position="center"/>
     <keep-alive :exclude="'ShoppingCart'">
       <component v-on:updateParent="setTab" :is="currentTab"></component>
     </keep-alive>

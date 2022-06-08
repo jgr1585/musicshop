@@ -21,27 +21,37 @@ export default {
       console.log("ID: " + id);
       new DownloadApi().downloadAlbum(id, (error, data, response) => {
         if (error) {
-          alert(error);
+          this.$notify({
+            type: "error",
+            title: error});
           this.errored = true;
         } else {
-          alert("Download started");
+          this.$notify({
+            type: "success",
+            title: "Download started"});
         }
       });
     },
     downloadSong(id) {
       new DownloadApi().downloadSong(id, (error, data, response) => {
         if (error) {
-          alert(error);
+          this.$notify({
+            type: "error",
+            title: error});
           this.errored = true;
         } else {
-          alert("Download started");
+          this.$notify({
+            type: "success",
+            title: "Download started"});
         }
       });
     },
     search() {
       new BackendApi().getUserPlaylist((error, data, response) => {
         if (error) {
-          alert(error);
+          this.$notify({
+            type: "error",
+            title: error});
           this.errored = true;
         } else {
           console.log(response);

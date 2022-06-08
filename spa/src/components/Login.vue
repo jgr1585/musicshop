@@ -57,7 +57,9 @@ export default {
         new BackendApi().authenticateUser(opts, (error, data, response) => {
           this.loading = false;
           if (error) {
-            alert(error);
+            this.$notify({
+              type: "error",
+              title: error});
             this.errored = true;
           } else {
             console.log(response);
@@ -68,7 +70,9 @@ export default {
           }
         });
       } else {
-        alert("Please fill in all the fields");
+        this.$notify({
+          type: "warn",
+          title: "Please fill in all the fields"});
       }
     },
     reset() {
