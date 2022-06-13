@@ -9,7 +9,6 @@ import at.fhv.teamd.rest.auth.AuthenticatedUser;
 import at.fhv.teamd.rest.auth.Secured;
 import at.fhv.teamd.rest.auth.User;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
