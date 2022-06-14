@@ -57,13 +57,6 @@ export default {
     tokenIsNull() {
       return localStorage.getItem("token") == null;
     }
-  },
-  created() {
-    console.log("LOGIN: " + localStorage.getItem("token"));
-    if (localStorage.getItem("token") != null) {
-      this.$emit("addTokenToApiClient");
-      this.$emit("updateParent", localStorage.getItem("tab"));
-    }
   }
 };
 </script>
