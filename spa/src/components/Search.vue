@@ -4,7 +4,6 @@ import { DefaultApi as BackendApi } from "../rest/backend/index.js";
 </script>
 
 <script>
-
 export default {
   props: {
     token: String
@@ -14,7 +13,6 @@ export default {
       title: "",
       artist: "",
       loading: false,
-      errored: false,
       articles: []
     };
   },
@@ -37,8 +35,8 @@ export default {
           if (error) {
             this.$notify({
               type: "error",
-              title: error});
-            this.errored = true;
+              title: error
+            });
           } else {
             console.log(response);
             console.log(response.body);
@@ -49,7 +47,8 @@ export default {
       } else {
         this.$notify({
           type: "warn",
-          title: "Please fill in at least one field"})
+          title: "Please fill in at least one field"
+        });
       }
     },
     addToCart(article) {
@@ -64,9 +63,9 @@ export default {
       if (localStorage.getItem("token") == null) {
         this.$notify({
           type: "error",
-          title: "You are not logged in!"});
-        this.$emit('updateParent', 'Login')
-        this.errored = true;
+          title: "You are not logged in!"
+        });
+        this.$emit("updateParent", "Login");
         return;
       }
 
@@ -88,7 +87,8 @@ export default {
         if (error) {
           this.$notify({
             type: "error",
-            title: error});
+            title: error
+          });
         } else {
           console.log(response);
           this.$notify({
@@ -101,7 +101,6 @@ export default {
     reset() {
       this.title = "";
       this.artist = "";
-      this.errored = false;
       this.articles = [];
     },
     tokenIsNull() {
@@ -142,15 +141,7 @@ export default {
           </v-btn>
         </div>
       </div>
-
-      <div v-if="errored">
-        <p class="text">
-          We're sorry, we're not able to retrieve this information at the moment, please try back
-          later
-        </p>
-      </div>
-
-      <div v-else>
+      <div>
         <div v-if="loading">Loading...</div>
         <v-container v-else>
           <v-row v-for="article in articles" style="margin-top: 30px" class="align-center">
@@ -160,16 +151,16 @@ export default {
             <div>
               <v-col class="col-1">
                 <v-btn
-                    v-if="article.mediums"
-                    class="ma-lg-10 bg-transparent rounded-pill pa-5"
-                    @click="addToCart(article)"
+                  v-if="article.mediums"
+                  class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                  @click="addToCart(article)"
                 >
                   <v-icon color="#ffd700" size="40"> mdi-cart</v-icon>
                 </v-btn>
                 <v-btn
-                    v-else
-                    class="ma-lg-10 bg-transparent rounded-pill pa-5"
-                    @click="addToCart(article.albums.at(0))"
+                  v-else
+                  class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                  @click="addToCart(article.albums.at(0))"
                 >
                   <v-icon color="#ffd700" size="40"> mdi-cart</v-icon>
                 </v-btn>
@@ -187,7 +178,13 @@ export default {
     <img class="bottom-img" alt="billie" src="/src/assets/billie.jpg" width="220" height="180" />
     <img class="bottom-img" alt="madonna" src="/src/assets/Madonna.jpg" width="200" height="180" />
     <img class="bottom-img" alt="manson" src="/src/assets/manson.jpg" width="190" height="180" />
-    <img class="bottom-img" alt="postmalone" src="/src/assets/postmalone.jpg" width="200" height="180"/>
+    <img
+      class="bottom-img"
+      alt="postmalone"
+      src="/src/assets/postmalone.jpg"
+      width="200"
+      height="180"
+    />
   </div>
 </template>
 

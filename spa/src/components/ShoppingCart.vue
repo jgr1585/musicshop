@@ -5,11 +5,10 @@ import { DefaultApi as BackendApi } from "../rest/backend/index.js";
 
 <script>
 export default {
-  name: 'ShoppingCart',
+  name: "ShoppingCart",
   data() {
     return {
       loading: false,
-      errored: false,
       creditcardNo: "",
       totalAmount: 0,
       lineItems: []
@@ -22,7 +21,6 @@ export default {
           type: "success",
           title: "You are not logged in!"
         });
-        this.errored = true;
         return;
       }
 
@@ -45,7 +43,6 @@ export default {
           type: "success",
           tile: "You are not logged in!"
         });
-        this.errored = true;
         return;
       }
 
@@ -77,7 +74,6 @@ export default {
           type: "success",
           title: "You are not logged in!"
         });
-        this.errored = true;
         return;
       }
 
@@ -110,7 +106,6 @@ export default {
           type: "success",
           title: "You are not logged in!"
         });
-        this.errored = true;
         return;
       }
 
@@ -144,15 +139,7 @@ export default {
       <div class="row align-items-center pa-5">
         <h1 class="text-white mb-4 animated slideInDown">Shopping Cart</h1>
       </div>
-
-      <div v-if="errored">
-        <p class="text">
-          We're sorry, we're not able to retrieve this information at the moment, please try back
-          later
-        </p>
-      </div>
-
-      <div v-else>
+      <div>
         <div v-if="loading">Loading...</div>
         <v-container v-else>
           <v-row v-for="lineItem in lineItems">

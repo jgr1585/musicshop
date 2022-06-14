@@ -12,7 +12,7 @@ export default {
 
 <template>
   <v-col>
-    <Article :article="lineItem.article"/>
+    <Article :article="lineItem.article" />
   </v-col>
 </template>
 

@@ -1,18 +1,17 @@
 <script setup>
 import Article from "./Article.vue";
-import {DefaultApi as BackendApi} from "../rest/backend/index.js";
-import {DefaultApi as DownloadApi} from "../rest/microservicedownload/index.js";
-import {DefaultApi as PlaylistApi} from "../rest/microserviceplaylist";
+import { DefaultApi as BackendApi } from "../rest/backend/index.js";
+import { DefaultApi as DownloadApi } from "../rest/microservicedownload/index.js";
+import { DefaultApi as PlaylistApi } from "../rest/microserviceplaylist";
 </script>
 
 <script>
-
 export default {
   data() {
     return {
       loading: false,
-      errored: false,
       articles: [],
+      songIDs: [],
       title: "",
       audio: new Audio(),
       currentPlaying: null
@@ -26,7 +25,6 @@ export default {
             type: "error",
             title: error
           });
-          this.errored = true;
         } else {
           console.log(response);
           var url = window.URL.createObjectURL(response.body);
@@ -43,8 +41,19 @@ export default {
       this.$forceUpdate();
     },
     playNext() {
-      let index = this.articles.findIndex(article => article.id === this.currentPlaying);
-      this.play(this.articles.at((index + 1) % this.articles.length).id);
+      let index = this.findNextID();
+      this.play(index);
+    },
+    shuffle() {
+      this.play(this.songIDs.at(Math.floor(Math.random()*this.songIDs.length)));
+    },
+    findNextID() {
+      let index = this.songIDs.indexOf(this.currentPlaying);
+      if (index === -1) {
+        return this.songIDs[0];
+      } else {
+        return this.songIDs.at((index + 1) % this.songIDs.length);
+      }
     },
     downloadAlbum(id) {
       new DownloadApi().downloadAlbum(id, (error, data, response) => {
@@ -53,7 +62,6 @@ export default {
             type: "error",
             title: error
           });
-          this.errored = true;
         } else {
           this.$notify({
             type: "success",
@@ -77,7 +85,6 @@ export default {
             type: "error",
             title: error
           });
-          this.errored = true;
         } else {
           this.$notify({
             type: "success",
@@ -106,18 +113,23 @@ export default {
           console.log(response);
           console.log(response.body);
           this.articles = response.body;
+          this.articles.forEach((article) => {
+            article.songs.forEach((song) => {
+              this.songIDs.push(song.id);
+            });
+          });
+          console.log(this.songIDs);
         }
       });
     },
     reset() {
-      this.errored = false;
       this.articles = [];
       this.title = "";
     }
   },
   created() {
     this.search();
-    //this.audio.addEventListener("ended", this.playNext);
+    this.audio.addEventListener("ended", this.playNext);
   }
 };
 </script>
@@ -130,43 +142,54 @@ export default {
       </div>
       <div class="w-auto align-center" id="search">
         <input
-            class="v-col-lg-auto border-e rounded-pill w-66 input"
-            type="text"
-            :value="title"
-            @input="title = $event.target.value"
-            placeholder="Title"
+          class="v-col-lg-auto border-e rounded-pill w-66 input"
+          type="text"
+          :value="title"
+          @input="title = $event.target.value"
+          placeholder="Title"
         />
         <div class="w-33">
           <v-btn class="btn-primary rounded-pill w-33" id="button" @click="search" color="#FFD700">
-            <v-icon size="25px"> mdi-magnify</v-icon>
+            <v-icon size="25px"> mdi-magnify </v-icon>
           </v-btn>
 
           <v-btn class="btn-primary rounded-pill w-33" id="button" @click="reset" color="#FFD700">
-            <v-icon size="25px"> mdi-filter-remove</v-icon>
+            <v-icon size="25px"> mdi-filter-remove </v-icon>
+          </v-btn>
+
+          <v-btn
+            class="btn-primary rounded-pill w-33"
+            id="button"
+            @click="playNext"
+            color="#FFD700"
+          >
+            <v-icon size="25px"> mdi-arrow-right-thin </v-icon>
+          </v-btn>
+
+          <v-btn
+            class="btn-primary rounded-pill w-33"
+            id="button"
+            @click="shuffle"
+            color="#FFD700"
+          >
+            <v-icon size="25px"> mdi-shuffle </v-icon>
           </v-btn>
         </div>
       </div>
-      <div v-if="errored">
-        <p class="text">
-          We're sorry, we're not able to retrieve this information at the moment, please try back
-          later
-        </p>
-      </div>
-
-      <div v-else>
+      <div>
         <div v-if="loading">Loading...</div>
         <v-container v-else v-for="article in articles">
           <v-row>
             <v-col>
-              <Article :article="article"/>
+              <Article :article="article" />
             </v-col>
             <v-col class="col-1 row align-items-center">
-              <v-btn class="hidden bg-transparent"/>
+              <v-btn class="hidden bg-transparent" />
             </v-col>
             <v-col class="col-1 row align-items-center">
               <v-btn
-                  class="ma-lg-10 bg-transparent rounded-pill pa-5"
-                  @click="downloadAlbum(article.id)"
+                class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                @click="downloadAlbum(article.id)"
               >
                 <v-icon color="#ffd700" size="40"> mdi-download</v-icon>
               </v-btn>
@@ -174,9 +197,12 @@ export default {
           </v-row>
           <v-row v-for="article in article.songs">
             <v-col>
-              <Article :article="article"/>
+              <Article :article="article" />
             </v-col>
-            <v-col v-if="this.audio.played && this.currentPlaying === article.id" class="col-1 row align-items-center">
+            <v-col
+              v-if="this.audio.played && this.currentPlaying === article.id"
+              class="col-1 row align-items-center"
+            >
               <v-btn class="ma-lg-10 bg-transparent rounded-pill pa-5" @click="pause()">
                 <v-icon color="#ffd700" size="40"> mdi-pause</v-icon>
               </v-btn>
@@ -188,8 +214,8 @@ export default {
             </v-col>
             <v-col class="col-1 row align-items-center">
               <v-btn
-                  class="ma-lg-10 bg-transparent rounded-pill pa-5"
-                  @click="downloadSong(article.id)"
+                class="ma-lg-10 bg-transparent rounded-pill pa-5"
+                @click="downloadSong(article.id)"
               >
                 <v-icon color="#ffd700" size="40"> mdi-download</v-icon>
               </v-btn>

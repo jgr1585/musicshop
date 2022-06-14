@@ -3,6 +3,10 @@ import Search from "./components/Search.vue";
 import ShoppingCart from "./components/ShoppingCart.vue";
 import Login from "./components/Login.vue";
 import Download from "./components/Download.vue";
+
+import { DefaultApi as BackendApi } from "./rest/backend/index.js";
+import { DefaultApi as DownloadApi } from "./rest/microservicedownload/index.js";
+import { DefaultApi as PlaylistApi } from "./rest/microserviceplaylist/index.js";
 </script>
 
 <script>
@@ -15,7 +19,7 @@ export default {
   },
   data() {
     return {
-      currentTab: "Search",
+      currentTab: "Search"
     };
   },
   methods: {
@@ -32,15 +36,38 @@ export default {
     setCorrectTab(tab) {
       localStorage.setItem("tab", tab);
       if (localStorage.getItem("token") == null) {
-        this.setTab('Login');
+        this.setTab("Login");
         this.$forceUpdate();
       } else {
         this.setTab(tab);
       }
+    },
+    addTokenToApiClient() {
+      new BackendApi().apiClient.authentications = {
+        Authentication: {
+          type: "oauth2",
+          accessToken: localStorage.getItem("token")
+        }
+      };
+      new DownloadApi().apiClient.authentications = {
+        Authentication: {
+          type: "oauth2",
+          accessToken: localStorage.getItem("token")
+        }
+      };
+      new PlaylistApi().apiClient.authentications = {
+        Authentication: {
+          type: "oauth2",
+          accessToken: localStorage.getItem("token")
+        }
+      };
     }
   },
   created() {
     console.log(localStorage.getItem("token"));
+    if (localStorage.getItem("token") != null) {
+      this.addTokenToApiClient();
+    }
   }
 };
 </script>
@@ -49,77 +76,57 @@ export default {
   <div class="container-xxl bg-white p-0">
     <nav class="navbar navbar-expand navbar-light px-4 px-lg-5 py-4" id="home">
       <a href="index.html">
-        <img alt="logo" src="./assets/logo.png" width="250" height="180"/>
+        <img alt="logo" src="./assets/logo.png" width="200" height="120" />
       </a>
       <div>
-        <v-btn
-            class="btn btn-primary rounded-pill"
-            id="button"
-            @click="setTab('Search')"
-        >
-          <v-icon
-              size="25px"
-          >
-            mdi-magnify
-          </v-icon>
+        <v-btn class="btn btn-primary rounded-pill" id="button" @click="setTab('Search')">
+          <v-icon size="25px"> mdi-magnify </v-icon>
           Search
         </v-btn>
         <v-btn
-            class="btn btn-primary rounded-pill"
-            id="button"
-            @click="setCorrectTab('ShoppingCart')"
+          class="btn btn-primary rounded-pill"
+          id="button"
+          @click="setCorrectTab('ShoppingCart')"
         >
-          <v-icon
-              size="25px"
-          >
-            mdi-cart
-          </v-icon>
+          <v-icon size="25px"> mdi-cart </v-icon>
           Shopping Cart
         </v-btn>
-        <v-btn
-            class="btn btn-primary rounded-pill"
-            id="button"
-            @click="setCorrectTab('Download')"
-        >
-          <v-icon
-              size="25px"
-          >
-            mdi-music
-          </v-icon>
+        <v-btn class="btn btn-primary rounded-pill" id="button" @click="setCorrectTab('Download')">
+          <v-icon size="25px"> mdi-music </v-icon>
           Playlist
         </v-btn>
-        <v-btn
-            v-if="tokenIsNull()"
-            class="btn btn-primary rounded-pill"
-            id="button"
-            @click="setTab('Login')"
+        <!-- <v-btn
+          v-if="tokenIsNull()"
+          class="btn btn-primary rounded-pill"
+          id="button"
+          @click="setTab('Login')"
         >
-          <v-icon
-              size="25px"
-          >
-            mdi-login
-          </v-icon>
+          <v-icon size="25px"> mdi-login </v-icon>
           Login
         </v-btn>
+        <v-btn v-else class="btn btn-primary rounded-pill" id="button" @click="logout">
+          <v-icon size="25px"> mdi-logout </v-icon>
+          Logout
+        </v-btn> -->
         <v-btn
-            v-else
-            class="btn btn-primary rounded-pill"
-            id="button"
-            @click="logout"
+          v-if="!tokenIsNull()"
+          class="btn btn-primary rounded-pill"
+          id="button"
+          @click="logout"
         >
-          <v-icon
-              size="25px"
-          >
-            mdi-logout
-          </v-icon>
+          <v-icon size="25px"> mdi-logout </v-icon>
           Logout
         </v-btn>
       </div>
     </nav>
 
-    <notifications position="center"/>
+    <notifications position="center" />
     <keep-alive :exclude="'ShoppingCart'">
-      <component v-on:updateParent="setTab" :is="currentTab"></component>
+      <component
+        v-on:updateParent="setTab"
+        v-on:addTokenToApiClient="addTokenToApiClient"
+        :is="currentTab"
+      ></component>
     </keep-alive>
 
     <div class="container-xxl bg-white p-0">

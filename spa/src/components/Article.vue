@@ -3,9 +3,6 @@ export default {
   props: {
     article: Object
   }
-  // created() {
-  //   console.log(this.article);
-  // }
 };
 </script>
 
