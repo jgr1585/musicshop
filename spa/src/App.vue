@@ -68,6 +68,9 @@ export default {
     if (localStorage.getItem("token") != null) {
       this.addTokenToApiClient();
     }
+    if (localStorage.getItem("tab") != null) {
+      this.setTab(localStorage.getItem("tab"));
+    }
   }
 };
 </script>
