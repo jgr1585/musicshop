@@ -4,7 +4,6 @@ import at.fhv.teamd.musicshop.backend.domain.DomainFactory;
 import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
-import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
@@ -13,10 +12,8 @@ import at.fhv.teamd.musicshop.library.dto.MediumDTO;
 import at.fhv.teamd.musicshop.library.dto.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -29,17 +26,12 @@ import java.util.concurrent.atomic.AtomicReference;
 @ExtendWith(MockitoExtension.class)
 class ShoppingCartServiceTest {
 
-    @Mock
-    private MediumRepository mediumRepository;
-    @Mock
-    private InvoiceRepository invoiceRepository;
+    private final MediumRepository mediumRepository;
 
-    private ShoppingCartService shoppingCartService;
+    private final ShoppingCartService shoppingCartService;
 
-    @BeforeEach
-    public void init() {
-        RepositoryFactory.setMediumRepository(this.mediumRepository);
-        RepositoryFactory.setInvoiceRepository(this.invoiceRepository);
+    private ShoppingCartServiceTest() {
+        this.mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
         this.shoppingCartService = new ShoppingCartService();
     }
 
@@ -72,21 +64,6 @@ class ShoppingCartServiceTest {
         //then
         Assertions.assertTrue(expectedLineItems.containsAll(actualLineItems) && actualLineItems.containsAll(expectedLineItems));
         Assertions.assertTrue(expectedLineItemsIncreasedAmount.containsAll(actualLineItemsIncreasedAmount) && actualLineItemsIncreasedAmount.containsAll(expectedLineItemsIncreasedAmount));
-    }
-
-    @Test
-    void given_shoppingCart_when_initializeShoppingcart_then_returnShoppingCart() {
-        //given
-        String userId = "user1234";
-        AtomicReference<Method> method = new AtomicReference<>();
-        Assertions.assertDoesNotThrow(() -> method.set(ShoppingCartService.class.getDeclaredMethod("initializeShoppingcart", String.class)));
-        method.get().setAccessible(true);
-
-        //when
-        this.shoppingCartService.getPhysicalMediumShoppingCart(userId);
-
-        //then
-        Assertions.assertThrows(InvocationTargetException.class, () -> method.get().invoke(this.shoppingCartService, userId));
     }
 
     @Test
@@ -167,7 +144,7 @@ class ShoppingCartServiceTest {
 
         //when
         Assertions.assertDoesNotThrow(() -> this.shoppingCartService.buyFromPhysicalMediumShoppingCart(userId1, 0));
-        Assertions.assertThrows(RuntimeException.class,() -> this.shoppingCartService.buyFromPhysicalMediumShoppingCart(userId2, 0));
+        Assertions.assertThrows(ShoppingCartException.class,() -> this.shoppingCartService.buyFromPhysicalMediumShoppingCart(userId2, 0));
 
         //then
         Assertions.assertTrue(this.shoppingCartService.getPhysicalMediumShoppingCart(userId1).lineItems().isEmpty());
