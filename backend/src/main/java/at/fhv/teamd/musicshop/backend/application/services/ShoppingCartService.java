@@ -4,6 +4,8 @@ import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
+import at.fhv.teamd.musicshop.backend.domain.repositories.CustomerRepository;
+import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
@@ -23,6 +25,8 @@ public class ShoppingCartService {
     private final Map<String, Set<LineItem>> digitalMediumLineItems = new HashMap<>();
 
     private final MediumRepository mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
+    private final CustomerRepository customerRepository = RepositoryFactory.getCustomerRepositoryInstance();
+    private final InvoiceRepository invoiceRepository = RepositoryFactory.getInvoiceRepositoryInstance();
 
     private static final String ERR_MSG_QUANTITY = "Quantity not acceptable";
     private static final String ERR_MSG_INSUFFICIENT_STOCK = "Insufficient in stock";
@@ -79,6 +83,13 @@ public class ShoppingCartService {
 
         if (medium.getType() != MediumType.DIGITAL)
             throw new ShoppingCartException("Only digital mediums are allowed here");
+
+        // has medium already purchased
+        if (invoiceRepository.findInvoicesByCustomerNo(customerRepository.findCustomerByUserName(userId).orElseThrow(() -> new ShoppingCartException("Invalid userId")).getCustomerNo()).stream()
+                .flatMap(invoice -> invoice.getLineItems().stream())
+                .anyMatch(lineItem -> lineItem.getMedium().equals(medium))) {
+            throw new ShoppingCartException("Item already purchased.");
+        }
 
         // medium does not exists in lineItems
         if (lineItems.stream().noneMatch(li -> li.getMedium().getId() == mediumId)) {
