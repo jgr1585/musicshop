@@ -5,11 +5,10 @@ import { DefaultApi as BackendApi } from "../rest/backend/index.js";
 
 <script>
 export default {
-  name: 'ShoppingCart',
+  name: "ShoppingCart",
   data() {
     return {
       loading: false,
-      errored: false,
       creditcardNo: "",
       totalAmount: 0,
       lineItems: []
@@ -18,14 +17,19 @@ export default {
   methods: {
     getShoppingCart() {
       if (localStorage.getItem("token") == null) {
-        alert("You are not logged in!");
-        this.errored = true;
+        this.$notify({
+          type: "success",
+          title: "You are not logged in!"
+        });
         return;
       }
 
       new BackendApi().getShoppingCart((error, data, response) => {
         if (error) {
-          alert(error);
+          this.$notify({
+            type: "error",
+            title: error
+          });
         } else {
           console.log(response.body);
           this.lineItems = response.body.lineItems;
@@ -35,8 +39,10 @@ export default {
     },
     removeFromCart(id) {
       if (localStorage.getItem("token") == null) {
-        alert("You are not logged in!");
-        this.errored = true;
+        this.$notify({
+          type: "success",
+          tile: "You are not logged in!"
+        });
         return;
       }
 
@@ -48,18 +54,26 @@ export default {
 
       new BackendApi().removeFromShoppingCart(opts, (error, data, response) => {
         if (error) {
-          alert(error);
+          this.$notify({
+            type: "error",
+            title: error
+          });
         } else {
           console.log(response);
-          alert("Successfully removed from cart");
+          this.$notify({
+            type: "success",
+            title: "Successfully removed from cart"
+          });
           this.getShoppingCart();
         }
       });
     },
     buyFromCart() {
       if (localStorage.getItem("token") == null) {
-        alert("You are not logged in!");
-        this.errored = true;
+        this.$notify({
+          type: "success",
+          title: "You are not logged in!"
+        });
         return;
       }
 
@@ -71,28 +85,42 @@ export default {
 
       new BackendApi().buyFromShoppingCart(opts, (error, data, response) => {
         if (error) {
-          alert(error);
+          this.$notify({
+            type: "error",
+            title: error
+          });
         } else {
           console.log(response);
           this.creditcardNo = "";
-          alert("Successfully purchased");
+          this.$notify({
+            type: "success",
+            title: "Successfully purchased"
+          });
           this.getShoppingCart();
         }
       });
     },
     emptyCart() {
       if (localStorage.getItem("token") == null) {
-        alert("You are not logged in!");
-        this.errored = true;
+        this.$notify({
+          type: "success",
+          title: "You are not logged in!"
+        });
         return;
       }
 
       new BackendApi().emptyShoppingCart((error, data, response) => {
         if (error) {
-          alert(error);
+          this.$notify({
+            type: "error",
+            title: error
+          });
         } else {
           console.log(response);
-          alert("Shopping Cart emptied");
+          this.$notify({
+            type: "success",
+            title: "Shopping Cart emptied"
+          });
           this.getShoppingCart();
           this.creditcardNo = "";
         }
@@ -111,15 +139,7 @@ export default {
       <div class="row align-items-center pa-5">
         <h1 class="text-white mb-4 animated slideInDown">Shopping Cart</h1>
       </div>
-
-      <div v-if="errored">
-        <p class="text">
-          We're sorry, we're not able to retrieve this information at the moment, please try back
-          later
-        </p>
-      </div>
-
-      <div v-else>
+      <div>
         <div v-if="loading">Loading...</div>
         <v-container v-else>
           <v-row v-for="lineItem in lineItems">

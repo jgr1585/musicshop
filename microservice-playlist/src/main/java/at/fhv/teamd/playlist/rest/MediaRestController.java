@@ -9,6 +9,8 @@ import at.fhv.teamd.playlist.rest.auth.AuthenticatedUser;
 import at.fhv.teamd.playlist.rest.auth.Secured;
 import at.fhv.teamd.playlist.rest.auth.User;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.NoArgsConstructor;
@@ -41,7 +43,7 @@ public class MediaRestController {
     @Path("/stream/song/{songId}")
     @Produces("application/mp3")
     @Operation(summary = "Retrieve a song stream")
-    @ApiResponse(responseCode = "200", description = "Returns binary song stream")
+    @ApiResponse(responseCode = "200", description = "Returns binary song stream", useReturnTypeSchema = true, content = @Content(mediaType = "application/mp3", schema = @Schema(type = "string", format = "binary")))
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "500", description = "Server Error")
     public Response streamSong(@PathParam("songId") int songId) {

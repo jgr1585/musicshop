@@ -5,7 +5,6 @@ import at.fhv.teamd.musicshop.backend.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.backend.rest.auth.AuthenticatedUser;
 import at.fhv.teamd.musicshop.backend.rest.auth.Secured;
 import at.fhv.teamd.musicshop.backend.rest.auth.User;
-import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,7 +18,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 @Secured
 @Path("/playlist")

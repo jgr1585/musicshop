@@ -1,6 +1,7 @@
 package at.fhv.teamd.musicshop.backend.domain.medium;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 public enum MediumType {
     CD, VINYL, CASSETTE, DIGITAL;
@@ -13,7 +14,7 @@ public enum MediumType {
         return EnumSet.of(DIGITAL);
     }
 
-    public static EnumSet<MediumType> allMediumTypes() {
+    public static Set<MediumType> allMediumTypes() {
         return EnumSet.allOf(MediumType.class);
     }
 }

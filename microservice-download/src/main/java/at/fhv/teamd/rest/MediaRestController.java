@@ -9,6 +9,8 @@ import at.fhv.teamd.rest.auth.AuthenticatedUser;
 import at.fhv.teamd.rest.auth.Secured;
 import at.fhv.teamd.rest.auth.User;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.NoArgsConstructor;
@@ -38,7 +40,7 @@ public class MediaRestController {
     @Path("/download/album/{albumId}")
     @Produces("application/zip")
     @Operation(summary = "Retrieve the album download which comes as zipped archive")
-    @ApiResponse(responseCode = "200", description = "Returns binary zip of album")
+    @ApiResponse(responseCode = "200", description = "Returns binary zip of album", useReturnTypeSchema = true, content = @Content(mediaType = "application/zip", schema = @Schema(type = "string", format = "binary")))
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "500", description = "Server Error")
     public Response downloadAlbum(@PathParam("albumId") int albumId) {
@@ -47,10 +49,7 @@ public class MediaRestController {
             List<AlbumDTO> playlist = playlistService.getUserPlaylist(authenticatedUser.authToken());
             ByteArrayOutputStream baos = mediaService.getPlaylistAlbumBinaryStream(playlist, albumId);
 
-            return Response.ok(baos.toByteArray())
-                    .type("application/zip")
-                    .header("Content-Disposition", "attachment; filename=" + mediaService.getAlbumDownloadFilename(playlist, albumId))
-                    .build();
+            return Response.ok(baos.toByteArray()).type("application/zip").header("Content-Disposition", "attachment; filename=" + mediaService.getAlbumDownloadFilename(playlist, albumId)).build();
 
         } catch (FileNotFoundException e) {
             return Response.status(404, "Requested file not found.").build();
@@ -65,7 +64,7 @@ public class MediaRestController {
     @Path("/download/song/{songId}")
     @Produces("application/mp3")
     @Operation(summary = "Retrieve the song download which comes as audio filed")
-    @ApiResponse(responseCode = "200", description = "Returns binary song file")
+    @ApiResponse(responseCode = "200", description = "Returns binary song file", useReturnTypeSchema = true, content = @Content(mediaType = "application/mp3", schema = @Schema(type = "string", format = "binary")))
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "500", description = "Server Error")
     public Response downloadSong(@PathParam("songId") int songId) {
@@ -74,10 +73,7 @@ public class MediaRestController {
             List<AlbumDTO> playlist = playlistService.getUserPlaylist(authenticatedUser.authToken());
             ByteArrayOutputStream baos = mediaService.getPlaylistSongBinaryStream(playlist, songId);
 
-            return Response.ok(baos.toByteArray())
-                    .type("application/mp3")
-                    .header("Content-Disposition", "attachment; filename="+ mediaService.getSongDownloadFilename(playlist, songId))
-                    .build();
+            return Response.ok(baos.toByteArray()).type("application/mp3").header("Content-Disposition", "attachment; filename=" + mediaService.getSongDownloadFilename(playlist, songId)).build();
 
         } catch (FileNotFoundException e) {
             return Response.status(404, "Requested file not found.").build();
