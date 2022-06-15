@@ -37,7 +37,7 @@ public class Main extends Application {
             stage.setTitle("MusicShop24 - Login");
             stage.setScene(scene);
             stage.show();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             showError(Thread.currentThread(), e);
         }
         Thread.setDefaultUncaughtExceptionHandler(Main::showError);
