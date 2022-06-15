@@ -6,7 +6,7 @@
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$/microservice-download" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
+        <option name="scriptParameters" value="-Ddebug=5005" />
         <option name="taskDescriptions">
           <list />
         </option>
