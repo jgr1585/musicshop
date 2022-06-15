@@ -94,7 +94,8 @@ export default {
           this.creditcardNo = "";
           this.$notify({
             type: "success",
-            title: "Successfully purchased"
+            title: "Successfully purchased",
+            text: response.text
           });
           this.getShoppingCart();
         }
