@@ -7,7 +7,6 @@ import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.GenericArticleController;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
