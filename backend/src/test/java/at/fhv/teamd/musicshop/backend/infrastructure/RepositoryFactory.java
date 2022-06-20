@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 public class RepositoryFactory {
     private static final ArticleRepository articleRepository;
     private static final MediumRepository mediumRepository;
+    private static final CustomerRepository customerRepository;
     private static final EmployeeRepository employeeRepository;
     private static final InvoiceRepository invoiceRepository;
     private static final TopicRepository topicRepository;
@@ -14,6 +15,7 @@ public class RepositoryFactory {
     static {
         articleRepository = Mockito.mock(ArticleRepository.class);
         mediumRepository = Mockito.mock(MediumRepository.class);
+        customerRepository = Mockito.mock(CustomerRepository.class);
         employeeRepository = Mockito.mock(EmployeeRepository.class);
         invoiceRepository = Mockito.mock(InvoiceRepository.class);
         topicRepository = Mockito.mock(TopicRepository.class);
@@ -25,6 +27,10 @@ public class RepositoryFactory {
 
     public static MediumRepository getMediumRepositoryInstance() {
         return mediumRepository;
+    }
+
+    public static CustomerRepository getCustomerRepositoryInstance() {
+        return customerRepository;
     }
 
     public static EmployeeRepository getEmployeeRepositoryInstance() {
