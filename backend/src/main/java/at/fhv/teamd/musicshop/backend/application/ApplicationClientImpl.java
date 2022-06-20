@@ -10,7 +10,6 @@ import javax.ejb.*;
 import java.rmi.RemoteException;
 import java.util.Set;
 
-// TODO: still to-do: remove services constructor dependency injection of applicationClientSession and use field-based approach (may use a SessionService to register ApplicationClientSessions -> but think this well-through as this might be hacky)
 @Stateful
 public class ApplicationClientImpl implements ApplicationClient {
 
@@ -48,13 +47,11 @@ public class ApplicationClientImpl implements ApplicationClient {
     public Set<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException, NotAuthorizedException {
         authService.authorizeAccessLevels(RemoteFunctionPermission.SEARCH_CUSTOMERS_BY_NAME);
 
-
         try {
             return customerService.searchCustomersByName(name);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override
