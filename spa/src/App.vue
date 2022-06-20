@@ -25,6 +25,11 @@ export default {
   methods: {
     setTab(tab) {
       this.currentTab = tab;
+      if (tab === "Search" && localStorage.getItem("lastAction") === "addToCart") {
+        this.addToCartAfterLogin();
+        localStorage.setItem("lastAction", null);
+      }
+      window.scrollTo(0,0);
     },
     logout() {
       localStorage.removeItem("token");
@@ -61,13 +66,38 @@ export default {
           accessToken: localStorage.getItem("token")
         }
       };
+    },
+    addToCartAfterLogin() {
+      const opts = {
+        body: {
+          mediumId: localStorage.getItem("mediumId")
+        }
+      };
+
+      new BackendApi().addToShoppingCart(opts, (error, data, response) => {
+        if (error) {
+          this.$notify({
+            type: "error",
+            title: error
+          });
+        } else {
+          console.log(response);
+          this.$notify({
+            type: "success",
+            title: "Successfully added to cart"
+          });
+        }
+      });
     }
   },
   created() {
     console.log(localStorage.getItem("token"));
+    console.log(localStorage.getItem("lastAction"));
     if (localStorage.getItem("token") != null) {
       this.addTokenToApiClient();
     }
+    localStorage.setItem("lastAction", null);
+    localStorage.setItem("mediumId", null);
   }
 };
 </script>
@@ -95,7 +125,7 @@ export default {
           <v-icon size="25px"> mdi-music </v-icon>
           Playlist
         </v-btn>
-        <!-- <v-btn
+        <v-btn
           v-if="tokenIsNull()"
           class="btn btn-primary rounded-pill"
           id="button"
@@ -105,15 +135,6 @@ export default {
           Login
         </v-btn>
         <v-btn v-else class="btn btn-primary rounded-pill" id="button" @click="logout">
-          <v-icon size="25px"> mdi-logout </v-icon>
-          Logout
-        </v-btn> -->
-        <v-btn
-          v-if="!tokenIsNull()"
-          class="btn btn-primary rounded-pill"
-          id="button"
-          @click="logout"
-        >
           <v-icon size="25px"> mdi-logout </v-icon>
           Logout
         </v-btn>

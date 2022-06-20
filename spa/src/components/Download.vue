@@ -19,6 +19,16 @@ export default {
   },
   methods: {
     play(id) {
+      if (localStorage.getItem("token") == null) {
+        this.$notify({
+          type: "success",
+          title: "You are not logged in!"
+        });
+        localStorage.setItem("tab", "Download");
+        this.$emit("updateParent", "Login");
+        return;
+      }
+
       new PlaylistApi().streamSong(id, (error, data, response) => {
         if (error) {
           this.$notify({
@@ -45,7 +55,7 @@ export default {
       this.play(index);
     },
     shuffle() {
-      this.play(this.songIDs.at(Math.floor(Math.random()*this.songIDs.length)));
+      this.play(this.songIDs.at(Math.floor(Math.random() * this.songIDs.length)));
     },
     findNextID() {
       let index = this.songIDs.indexOf(this.currentPlaying);
@@ -56,6 +66,16 @@ export default {
       }
     },
     downloadAlbum(id) {
+      if (localStorage.getItem("token") == null) {
+        this.$notify({
+          type: "success",
+          title: "You are not logged in!"
+        });
+        localStorage.setItem("tab", "Download");
+        this.$emit("updateParent", "Login");
+        return;
+      }
+
       new DownloadApi().downloadAlbum(id, (error, data, response) => {
         if (error) {
           this.$notify({
@@ -79,6 +99,16 @@ export default {
       });
     },
     downloadSong(id) {
+      if (localStorage.getItem("token") == null) {
+        this.$notify({
+          type: "success",
+          title: "You are not logged in!"
+        });
+        localStorage.setItem("tab", "Download");
+        this.$emit("updateParent", "Login");
+        return;
+      }
+
       new DownloadApi().downloadSong(id, (error, data, response) => {
         if (error) {
           this.$notify({
@@ -102,6 +132,16 @@ export default {
       });
     },
     search() {
+      if (localStorage.getItem("token") == null) {
+        this.$notify({
+          type: "success",
+          title: "You are not logged in!"
+        });
+        localStorage.setItem("tab", "Download");
+        this.$emit("updateParent", "Login");
+        return;
+      }
+
       new BackendApi().getUserPlaylist((error, data, response) => {
         if (error) {
           this.$notify({
@@ -121,10 +161,6 @@ export default {
           console.log(this.songIDs);
         }
       });
-    },
-    reset() {
-      this.articles = [];
-      this.title = "";
     }
   },
   created() {
@@ -140,23 +176,8 @@ export default {
       <div class="row g-5 align-items-center pa-5">
         <h1 class="text-white mb-4 animated slideInDown">Playlist</h1>
       </div>
-      <div class="w-auto align-center" id="search">
-        <input
-          class="v-col-lg-auto border-e rounded-pill w-66 input"
-          type="text"
-          :value="title"
-          @input="title = $event.target.value"
-          placeholder="Title"
-        />
-        <div class="w-33">
-          <v-btn class="btn-primary rounded-pill w-33" id="button" @click="search" color="#FFD700">
-            <v-icon size="25px"> mdi-magnify </v-icon>
-          </v-btn>
-
-          <v-btn class="btn-primary rounded-pill w-33" id="button" @click="reset" color="#FFD700">
-            <v-icon size="25px"> mdi-filter-remove </v-icon>
-          </v-btn>
-
+      <div class="row justify-content-center mx-auto">
+        <div class="row justify-content-center mx-auto w-33">
           <v-btn
             class="btn-primary rounded-pill w-33"
             id="button"
@@ -166,12 +187,7 @@ export default {
             <v-icon size="25px"> mdi-arrow-right-thin </v-icon>
           </v-btn>
 
-          <v-btn
-            class="btn-primary rounded-pill w-33"
-            id="button"
-            @click="shuffle"
-            color="#FFD700"
-          >
+          <v-btn class="btn-primary rounded-pill w-33" id="button" @click="shuffle" color="#FFD700">
             <v-icon size="25px"> mdi-shuffle </v-icon>
           </v-btn>
         </div>
@@ -182,9 +198,6 @@ export default {
           <v-row>
             <v-col>
               <Article :article="article" />
-            </v-col>
-            <v-col class="col-1 row align-items-center">
-              <v-btn class="hidden bg-transparent" />
             </v-col>
             <v-col class="col-1 row align-items-center">
               <v-btn
@@ -200,7 +213,7 @@ export default {
               <Article :article="article" />
             </v-col>
             <v-col
-              v-if="this.audio.played && this.currentPlaying === article.id"
+              v-if="audio.played && currentPlaying === article.id"
               class="col-1 row align-items-center"
             >
               <v-btn class="ma-lg-10 bg-transparent rounded-pill pa-5" @click="pause()">

@@ -60,15 +60,6 @@ export default {
         return;
       }
 
-      if (localStorage.getItem("token") == null) {
-        this.$notify({
-          type: "error",
-          title: "You are not logged in!"
-        });
-        this.$emit("updateParent", "Login");
-        return;
-      }
-
       let id;
       article.mediums.forEach((medium) => {
         console.log(medium);
@@ -76,6 +67,18 @@ export default {
           id = medium.id;
         }
       });
+
+      if (localStorage.getItem("token") == null) {
+        this.$notify({
+          type: "error",
+          title: "You are not logged in!"
+        });
+        localStorage.setItem("tab", "Search");
+        localStorage.setItem("lastAction", "addToCart");
+        localStorage.setItem("mediumId", id);
+        this.$emit("updateParent", "Login");
+        return;
+      }
 
       const opts = {
         body: {

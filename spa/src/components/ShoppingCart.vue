@@ -21,6 +21,8 @@ export default {
           type: "success",
           title: "You are not logged in!"
         });
+        localStorage.setItem("tab", "ShoppingCart");
+        this.$emit("updateParent", "Login");
         return;
       }
 
@@ -43,6 +45,8 @@ export default {
           type: "success",
           tile: "You are not logged in!"
         });
+        localStorage.setItem("tab", "ShoppingCart");
+        this.$emit("updateParent", "Login");
         return;
       }
 
@@ -74,6 +78,8 @@ export default {
           type: "success",
           title: "You are not logged in!"
         });
+        localStorage.setItem("tab", "ShoppingCart");
+        this.$emit("updateParent", "Login");
         return;
       }
 
@@ -107,6 +113,8 @@ export default {
           type: "success",
           title: "You are not logged in!"
         });
+        localStorage.setItem("tab", "ShoppingCart");
+        this.$emit("updateParent", "Login");
         return;
       }
 
