@@ -3,7 +3,6 @@ package at.fhv.teamd.playlist.rest.auth;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import javax.annotation.Priority;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -20,8 +19,7 @@ import java.io.IOException;
 public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Inject
-    @AuthenticatedUser
-    Event<String> userAuthenticatedEvent;
+    Tokenholder tokenholder;
 
     private static final String REALM = "example";
     private static final String AUTHENTICATION_SCHEME = "Bearer";
@@ -36,7 +34,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
         try {
             String token = authorizationHeader.substring(AUTHENTICATION_SCHEME.length()).trim();
-            userAuthenticatedEvent.fire(token);
+            tokenholder.setToken(token);
         } catch (Exception e) {
             abortWithUnauthorized(requestContext);
         }
