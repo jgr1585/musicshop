@@ -8,6 +8,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.eclipse.microprofile.config.ConfigProvider;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +19,10 @@ public class PlaylistService {
     CloseableHttpClient httpClient = HttpClients.createDefault();
 
     public List<AlbumDTO> getUserPlaylist(String token) throws IOException {
-        HttpGet request = new HttpGet("http://localhost:8080/backend-1.0-SNAPSHOT/rest/playlist/");
+        String backendUrl = ConfigProvider.getConfig().getOptionalValue("backend.url", String.class)
+                .orElse("");
+
+        HttpGet request = new HttpGet(backendUrl + "/rest/playlist/");
         request.addHeader("Authorization", "Bearer " + token);
         request.addHeader("content-type", "application/json");
         CloseableHttpResponse response = httpClient.execute(request);
