@@ -10,8 +10,6 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 3.0.1
 servers:
-- url: http://localhost:8080/
-  variables: {}
 - url: http://10.0.40.166:8080/
   variables: {}
 paths:
