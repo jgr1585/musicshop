@@ -2,14 +2,13 @@ package at.fhv.teamd.rest.auth;
 
 import lombok.NoArgsConstructor;
 
+import javax.enterprise.context.RequestScoped;
+
+@RequestScoped
 @NoArgsConstructor
-public class User {
+public class Tokenholder {
 
     private String token;
-
-    public User(String token) {
-        this.token = token;
-    }
 
     public String authToken() {
         return token;

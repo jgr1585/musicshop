@@ -5,9 +5,8 @@ import at.fhv.teamd.application.services.PlaylistService;
 import at.fhv.teamd.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedMediaException;
-import at.fhv.teamd.rest.auth.AuthenticatedUser;
 import at.fhv.teamd.rest.auth.Secured;
-import at.fhv.teamd.rest.auth.User;
+import at.fhv.teamd.rest.auth.Tokenholder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,8 +32,7 @@ public class MediaRestController {
     private final PlaylistService playlistService = ServiceFactory.getPlaylistServiceInstance();
 
     @Inject
-    @AuthenticatedUser
-    User authenticatedUser;
+    Tokenholder tokenholder;
 
     @GET
     @Path("/download/album/{albumId}")
@@ -46,7 +44,7 @@ public class MediaRestController {
     public Response downloadAlbum(@PathParam("albumId") int albumId) {
 
         try {
-            List<AlbumDTO> playlist = playlistService.getUserPlaylist(authenticatedUser.authToken());
+            List<AlbumDTO> playlist = playlistService.getUserPlaylist(tokenholder.authToken());
             ByteArrayOutputStream baos = mediaService.getPlaylistAlbumBinaryStream(playlist, albumId);
 
             return Response.ok(baos.toByteArray()).type("application/zip").header("Content-Disposition", "attachment; filename=" + mediaService.getAlbumDownloadFilename(playlist, albumId)).build();
@@ -70,7 +68,7 @@ public class MediaRestController {
     public Response downloadSong(@PathParam("songId") int songId) {
 
         try {
-            List<AlbumDTO> playlist = playlistService.getUserPlaylist(authenticatedUser.authToken());
+            List<AlbumDTO> playlist = playlistService.getUserPlaylist(tokenholder.authToken());
             ByteArrayOutputStream baos = mediaService.getPlaylistSongBinaryStream(playlist, songId);
 
             return Response.ok(baos.toByteArray()).type("application/mp3").header("Content-Disposition", "attachment; filename=" + mediaService.getSongDownloadFilename(playlist, songId)).build();
