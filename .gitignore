@@ -2,7 +2,8 @@
 # Created by https://www.toptal.com/developers/gitignore/api/java,macos,linux,gradle,windows,intellij,dotnetcore,intellij+iml,visualstudiocode,vuejs
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,macos,linux,gradle,windows,intellij,dotnetcore,intellij+iml,visualstudiocode,vuejs
 
-**/webapp/**
+**/webapp/spa/**
+**/webapp/swagger-ui/**
 
 ### DotnetCore ###
 # .NET Core build folders
