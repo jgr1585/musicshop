@@ -28,8 +28,6 @@ import javax.ws.rs.core.Application;
         }
 )
 
-// TODO: switch servers before push to master!
-
 @SecurityScheme(name = "Authentication",
         description = "JWT token",
         type = SecuritySchemeType.HTTP,

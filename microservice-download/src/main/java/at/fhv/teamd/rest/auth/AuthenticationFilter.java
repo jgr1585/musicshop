@@ -20,8 +20,7 @@ import java.io.IOException;
 public class AuthenticationFilter implements ContainerRequestFilter {
 
     @Inject
-    @AuthenticatedUser
-    Event<String> userAuthenticatedEvent;
+    Tokenholder tokenholder;
 
     private static final String REALM = "example";
     private static final String AUTHENTICATION_SCHEME = "Bearer";
@@ -36,7 +35,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
         try {
             String token = authorizationHeader.substring(AUTHENTICATION_SCHEME.length()).trim();
-            userAuthenticatedEvent.fire(token);
+            tokenholder.setToken(token);
         } catch (Exception e) {
             abortWithUnauthorized(requestContext);
         }

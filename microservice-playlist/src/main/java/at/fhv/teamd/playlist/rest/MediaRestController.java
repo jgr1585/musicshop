@@ -5,9 +5,8 @@ import at.fhv.teamd.playlist.application.services.PlaylistService;
 import at.fhv.teamd.playlist.application.services.ServiceFactory;
 import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.UnauthorizedMediaException;
-import at.fhv.teamd.playlist.rest.auth.AuthenticatedUser;
 import at.fhv.teamd.playlist.rest.auth.Secured;
-import at.fhv.teamd.playlist.rest.auth.User;
+import at.fhv.teamd.playlist.rest.auth.Tokenholder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -36,8 +35,7 @@ public class MediaRestController {
     private final PlaylistService playlistService = ServiceFactory.getPlaylistServiceInstance();
 
     @Inject
-    @AuthenticatedUser
-    User authenticatedUser;
+    Tokenholder tokenholder;
 
     @GET
     @Path("/stream/song/{songId}")
@@ -47,12 +45,12 @@ public class MediaRestController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "500", description = "Server Error")
     public Response streamSong(@PathParam("songId") int songId) {
-        if (authenticatedUser == null) {
+        if (tokenholder == null) {
             return Response.status(401, "Not authenticated.").build();
         }
 
         try {
-            List<AlbumDTO> playlist = playlistService.getUserPlaylist(authenticatedUser.authToken());
+            List<AlbumDTO> playlist = playlistService.getUserPlaylist(tokenholder.authToken());
             ByteArrayOutputStream baos = mediaService.getPlaylistSongBinaryStream(playlist, songId);
 
             return Response.ok(baos.toByteArray())
