@@ -16,6 +16,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 
 @Secured
@@ -37,12 +38,8 @@ public class PlaylistRestController {
     @ApiResponse(responseCode = "200", description = "Returns List<AlbumDTO>")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     public Response getUserPlaylist() {
-        if (authenticatedUser == null) {
-            return Response.status(401).build();
-        }
-
         try {
-            return Response.ok(playlistService.getPlaylist(authenticatedUser.name())).build();
+            return Response.ok(new GenericEntity<>(playlistService.getPlaylist(authenticatedUser.name())) {}).build();
         } catch (CustomerNotFoundException e) {
             return Response.status(404, e.getMessage()).build();
         }

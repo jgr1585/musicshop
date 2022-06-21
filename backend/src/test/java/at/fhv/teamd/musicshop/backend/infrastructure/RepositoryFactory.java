@@ -1,17 +1,25 @@
 package at.fhv.teamd.musicshop.backend.infrastructure;
 
 import at.fhv.teamd.musicshop.backend.domain.repositories.*;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 
 public class RepositoryFactory {
-    private static ArticleRepository articleRepository;
+    private static final ArticleRepository articleRepository;
+    private static final MediumRepository mediumRepository;
+    private static final CustomerRepository customerRepository;
+    private static final EmployeeRepository employeeRepository;
+    private static final InvoiceRepository invoiceRepository;
+    private static final TopicRepository topicRepository;
 
-    private static MediumRepository mediumRepository;
-
-    private static EmployeeRepository employeeRepository;
-
-    private static InvoiceRepository invoiceRepository;
-
-    private static TopicRepository topicRepository;
+    static {
+        articleRepository = Mockito.mock(ArticleRepository.class);
+        mediumRepository = Mockito.mock(MediumRepository.class);
+        customerRepository = Mockito.mock(CustomerRepository.class);
+        employeeRepository = Mockito.mock(EmployeeRepository.class);
+        invoiceRepository = Mockito.mock(InvoiceRepository.class);
+        topicRepository = Mockito.mock(TopicRepository.class);
+    }
 
     public static ArticleRepository getArticleRepositoryInstance() {
         return articleRepository;
@@ -19,6 +27,10 @@ public class RepositoryFactory {
 
     public static MediumRepository getMediumRepositoryInstance() {
         return mediumRepository;
+    }
+
+    public static CustomerRepository getCustomerRepositoryInstance() {
+        return customerRepository;
     }
 
     public static EmployeeRepository getEmployeeRepositoryInstance() {
@@ -31,25 +43,5 @@ public class RepositoryFactory {
 
     public static TopicRepository getTopicRepositoryInstance() {
         return topicRepository;
-    }
-
-    public static void setArticleRepository(ArticleRepository articleRepository) {
-        RepositoryFactory.articleRepository = articleRepository;
-    }
-
-    public static void setMediumRepository(MediumRepository mediumRepository) {
-        RepositoryFactory.mediumRepository = mediumRepository;
-    }
-
-    public static void setEmployeeRepository(EmployeeRepository employeeRepository) {
-        RepositoryFactory.employeeRepository = employeeRepository;
-    }
-
-    public static void setInvoiceRepository(InvoiceRepository invoiceRepository) {
-        RepositoryFactory.invoiceRepository = invoiceRepository;
-    }
-
-    public static void setTopicRepository(TopicRepository topicRepository) {
-        RepositoryFactory.topicRepository = topicRepository;
     }
 }

@@ -25,6 +25,8 @@ import java.util.NoSuchElementException;
 @Produces("application/json")
 @SecurityRequirement(name = "Authentication")
 @NoArgsConstructor
+
+// TODO: add GenericEntity on response
 public class ShoppingCartRestController {
 
     @Inject
@@ -101,6 +103,7 @@ public class ShoppingCartRestController {
 
     @POST
     @Path("/buy")
+    @Produces("text/plain")
     @Operation(summary = "Buy Items from ShoppingCart",
             description = "Returns the InvoiceNo. on success?")
     @ApiResponse(responseCode = "200", description = "Successfully bought Items")

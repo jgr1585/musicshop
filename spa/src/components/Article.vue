@@ -11,10 +11,10 @@ export default {
     <v-row class="pa-2">
       <v-col class="col-md-2 ma-2">
         <img
-            :src="'http://coverartarchive.org/release/' + article.musicbrainzId + '/front/'"
-            alt="Album Cover"
-            class="vertical-center"
-            id="img"
+          :src="'http://coverartarchive.org/release/' + article.musicbrainzId + '/front/'"
+          alt="Album Cover"
+          class="vertical-center"
+          id="img"
         />
       </v-col>
       <v-col>
@@ -24,11 +24,14 @@ export default {
         <p>
           Artists: <i v-for="artist in article.artists">{{ artist.name }};</i>
         </p>
-        <p v-if="article.mediums">
-          Price: € {{
-            article.mediums.filter(medium => {
-              return medium.type === "DIGITAL"
-            }).at(0).price
+        <p v-if="article.type === 'album'">
+          Price: €
+          {{
+            article.mediums
+              .filter((medium) => {
+                return medium.type === "DIGITAL";
+              })
+              .at(0).price
           }}
         </p>
       </v-col>

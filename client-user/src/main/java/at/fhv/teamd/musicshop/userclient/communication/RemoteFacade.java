@@ -29,7 +29,7 @@ public class RemoteFacade implements ApplicationClient {
             Context ctx = new InitialContext(props);
 
             // ejb:/[DeployedName]/Implementierungsname![packages + Interface of Bean]
-            applicationClient = (ApplicationClient) ctx.lookup("ejb:/backend-1.0-SNAPSHOT/ApplicationClientImpl!at.fhv.teamd.musicshop.library.ApplicationClient");
+            applicationClient = (ApplicationClient) ctx.lookup("ejb:/backend-1.0-SNAPSHOT/ApplicationClientImpl!at.fhv.teamd.musicshop.library.ApplicationClient?stateful");
 
             applicationClient.authenticate(authUser, authPassword);
 
@@ -55,7 +55,7 @@ public class RemoteFacade implements ApplicationClient {
 
     @Override
     public void authenticate(String authUser, String authPassword) {
-        //TODO: implement
+        // do not implement
     }
 
     @Override

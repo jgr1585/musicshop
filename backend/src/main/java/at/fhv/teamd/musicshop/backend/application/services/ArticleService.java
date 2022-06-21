@@ -3,27 +3,20 @@ package at.fhv.teamd.musicshop.backend.application.services;
 import at.fhv.teamd.musicshop.backend.domain.article.Album;
 import at.fhv.teamd.musicshop.backend.domain.article.Article;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
-import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
-import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
-import at.fhv.teamd.musicshop.library.dto.AlbumDTO;
 import at.fhv.teamd.musicshop.library.dto.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 
 import java.util.EnumSet;
 import java.util.LinkedHashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class ArticleService {
-    private final ArticleRepository articleRepository = RepositoryFactory.getArticleRepositoryInstance();;
-    private final MediumRepository mediumRepository = RepositoryFactory.getMediumRepositoryInstance();;
+    private final ArticleRepository articleRepository = RepositoryFactory.getArticleRepositoryInstance();
 
     ArticleService() {
     }

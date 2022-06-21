@@ -2,18 +2,14 @@ package at.fhv.teamd.musicshop.backend.application.services;
 
 import at.fhv.teamd.musicshop.backend.domain.DomainFactory;
 import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
-import at.fhv.teamd.musicshop.backend.domain.repositories.ArticleRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
-import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.dto.InvoiceDTO;
 import at.fhv.teamd.musicshop.library.exceptions.InvoiceException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -24,20 +20,12 @@ import java.util.Set;
 @ExtendWith(MockitoExtension.class)
 class InvoiceServiceTest {
 
-    @Mock
-    private ArticleRepository articleRepository;
-    @Mock
-    private MediumRepository mediumRepository;
-    @Mock
-    private InvoiceRepository invoiceRepository;
+    private final InvoiceRepository invoiceRepository;
 
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
-    @BeforeEach
-    public void init() {
-        RepositoryFactory.setArticleRepository(this.articleRepository);
-        RepositoryFactory.setMediumRepository(this.mediumRepository);
-        RepositoryFactory.setInvoiceRepository(this.invoiceRepository);
+    private InvoiceServiceTest() {
+        this.invoiceRepository = RepositoryFactory.getInvoiceRepositoryInstance();
         this.invoiceService = new InvoiceService();
     }
 

@@ -1,0 +1,86 @@
+plugins {
+    id 'java'
+    id 'io.quarkus' version '2.9.2.Final'
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.0"
+    id 'org.hidetake.swagger.generator' version '2.19.2'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    implementation 'io.quarkus:quarkus-resteasy-reactive'
+    implementation 'io.quarkus:quarkus-arc'
+    testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.rest-assured:rest-assured'
+
+    implementation 'org.jboss.resteasy:resteasy-client:6.0.1.Final'
+
+    implementation project(':library')
+
+    swaggerUI 'org.webjars:swagger-ui:4.10.3'
+    implementation 'io.swagger.core.v3:swagger-integration:2.2.0'
+    swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.34'
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.4'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.4'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.4'
+
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+}
+
+group 'at.fhv.teamd'
+version '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+resolve {
+    outputFileName = 'openapi'
+    outputFormat = 'YAML'
+    prettyPrint = 'TRUE'
+    classpath = sourceSets.main.runtimeClasspath
+    resourcePackages = ['at.fhv.teamd']
+    outputDir = file('src/main/resources/META-INF/resources')
+    alwaysResolveAppPath = 'TRUE'
+}
+
+swaggerSources {
+    microserviceplaylist {
+        code {
+            inputFile = file('src/main/resources/META-INF/resources/openapi.yaml')
+            language = 'javascript'
+            copy {
+                from 'build/swagger-code-microserviceplaylist/src'
+                into '../spa/src/rest/microserviceplaylist/'
+            }
+        }
+        ui {
+            inputFile = file('src/main/resources/META-INF/resources/openapi.yaml')
+            outputDir = file('src/main/resources/META-INF/resources/swagger-ui')
+        }
+        copy {
+            from 'src/main/resources/META-INF/resources/openapi.yaml'
+            into '../spa/src/rest/microserviceplaylist'
+        }
+    }
+}

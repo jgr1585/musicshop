@@ -7,7 +7,6 @@ import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
 import at.fhv.teamd.musicshop.library.dto.ArticleDTO;
 import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -23,15 +22,12 @@ import java.util.stream.Collectors;
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
 
-    @Mock
-    private ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
+    private final ArticleService articleService;
 
-    private ArticleService articleService;
-
-    @BeforeEach
-    public void init() {
-        RepositoryFactory.setArticleRepository(this.articleRepository);
+    private ArticleServiceTest() {
+        this.articleRepository = RepositoryFactory.getArticleRepositoryInstance();
         this.articleService = new ArticleService();
     }
 
@@ -41,8 +37,7 @@ class ArticleServiceTest {
         Article article = DomainFactory.createArticle();
         String title = article.getTitle();
         String artistName = "";
-        SortedSet<Article> articles = new TreeSet<>();
-        articles.add(article);
+        Set<Article> articles = Set.of(article);
 
         Mockito.when(this.articleRepository.searchArticlesByAttributes(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString())).thenReturn(articles);
 

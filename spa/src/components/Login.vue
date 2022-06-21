@@ -1,18 +1,14 @@
 <script setup>
-import { DefaultApi } from "../rest/backend";
+import { DefaultApi as BackendApi } from "../rest/backend/index.js";
 </script>
 
 <script>
 export default {
-  props: {
-    token: String
-  },
   data() {
     return {
       username: "",
       password: "",
-      loading: false,
-      errored: false
+      loading: false
     };
   },
   filters: {
@@ -21,14 +17,6 @@ export default {
     }
   },
   methods: {
-    addTokenToApiClient() {
-      new DefaultApi().apiClient.authentications = {
-        Authentication: {
-          type: "oauth2",
-          accessToken: localStorage.getItem("token")
-        }
-      };
-    },
     login() {
       if (this.$options.filters.validater(this.username, this.password)) {
         this.loading = true;
@@ -40,27 +28,31 @@ export default {
           }
         };
 
-        new DefaultApi().authenticateUser(opts, (error, data, response) => {
+        new BackendApi().authenticateUser(opts, (error, data, response) => {
           this.loading = false;
           if (error) {
-            alert(error);
-            this.errored = true;
+            this.$notify({
+              type: "error",
+              title: error
+            });
           } else {
             console.log(response);
             localStorage.setItem("token", response.text);
             console.log(localStorage.getItem("token"));
-            this.addTokenToApiClient();
-            this.$emit('updateParent', localStorage.getItem('tab'))
+            this.$emit("addTokenToApiClient");
+            this.$emit("updateParent", localStorage.getItem("tab"));
           }
         });
       } else {
-        alert("Please fill in all the fields");
+        this.$notify({
+          type: "warn",
+          title: "Please fill in all the fields"
+        });
       }
     },
     reset() {
       this.username = "";
       this.password = "";
-      this.errored = false;
     },
     tokenIsNull() {
       return localStorage.getItem("token") == null;
@@ -105,19 +97,11 @@ export default {
         <div v-if="loading">Loading...</div>
         <h1 v-else>Welcome {{ username }}</h1>
       </div>
-
-      <div v-if="errored">
-        <p class="text">
-          We're sorry, we're not able to retrieve this information at the moment, please try back
-          later
-        </p>
-      </div>
     </div>
   </div>
 </template>
 
 <style>
-
 .input {
   background-color: #ffffff;
 }

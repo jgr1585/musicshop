@@ -1,8 +1,6 @@
 package at.fhv.teamd.musicshop.library.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer;
@@ -11,14 +9,11 @@ import com.fasterxml.jackson.datatype.jsr310.ser.DurationSerializer;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public final class SongDTO implements ArticleDTO, Serializable {
-    private static final long serialVersionUID = -8929295739018385391L;
+    private static final long serialVersionUID = -7820576030677913799L;
 
     private Long id;
     private UUID uuid;
@@ -27,9 +22,9 @@ public final class SongDTO implements ArticleDTO, Serializable {
     private LocalDate releaseDate;
     private String genre;
     private String musicbrainzId;
-    private Set<ArtistDTO> artists;
+    private List<ArtistDTO> artists;
     private Duration length;
-    private Set<AlbumDTO> albums;
+    private List<AlbumDTO> albums;
 
     public static SongDTO.Builder builder() {
         return new SongDTO.Builder();
@@ -39,7 +34,6 @@ public final class SongDTO implements ArticleDTO, Serializable {
         return this.id;
     }
 
-    // no json property
     public UUID uuid() { return this.uuid; }
 
     public String title() {
@@ -60,8 +54,8 @@ public final class SongDTO implements ArticleDTO, Serializable {
 
     public String musicbrainzId() { return this.musicbrainzId; }
 
-    public Set<ArtistDTO> artists() {
-        return Collections.unmodifiableSet(artists);
+    public List<ArtistDTO> artists() {
+        return Collections.unmodifiableList(artists);
     }
 
     @JsonProperty(required = true)
@@ -72,11 +66,8 @@ public final class SongDTO implements ArticleDTO, Serializable {
     }
 
     @JsonProperty(required = true)
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
-    public Set<AlbumDTO> albums() {
-        return Collections.unmodifiableSet(albums);
+    public List<AlbumDTO> albums() {
+        return Collections.unmodifiableList(albums);
     }
 
     private SongDTO() {
@@ -118,7 +109,7 @@ public final class SongDTO implements ArticleDTO, Serializable {
                 LocalDate releaseDate,
                 String genre,
                 String musicbrainzId,
-                Set<ArtistDTO> artists
+                List<ArtistDTO> artists
         ) {
             this.instance.id = id;
             this.instance.uuid = uuid;
@@ -139,7 +130,7 @@ public final class SongDTO implements ArticleDTO, Serializable {
         }
 
         public SongDTO.Builder withAlbums(
-                Set<AlbumDTO> albums
+                List<AlbumDTO> albums
         ) {
             this.instance.albums = albums;
             return this;
