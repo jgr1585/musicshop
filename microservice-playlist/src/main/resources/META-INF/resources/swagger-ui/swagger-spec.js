@@ -14,7 +14,7 @@ window.swaggerSpec={
     "version" : "3.0.1"
   },
   "servers" : [ {
-    "url" : "http://localhost:8083/",
+    "url" : "http://20.117.121.158/",
     "variables" : { }
   } ],
   "paths" : {
