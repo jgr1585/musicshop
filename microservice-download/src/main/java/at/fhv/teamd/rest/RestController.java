@@ -24,8 +24,7 @@ import javax.ws.rs.core.Application;
                         name = "Apache 2.0",
                         url = "https://www.apache.org/licenses/LICENSE-2.0.html")),
         servers = {
-                @Server(url = "http://localhost:8082/"),
-                @Server(url = "http://10.0.40.166:8082/")
+                @Server(url = "http://20.39.221.88/")
         }
 )
 
