@@ -1,7 +1,7 @@
 package at.fhv.teamd.musicshop.customerdbserver;
 
 import at.fhv.teamd.musicshop.library.CustomerDBClient;
-import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
+import at.fhv.teamd.musicshop.library.dto.CustomerDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 
@@ -41,8 +41,12 @@ public class CustomerDBClientImpl extends UnicastRemoteObject implements Custome
 
     @Override
     public Set<CustomerDTO> searchCustomersByName(String name) throws CustomerDBClientException {
+        String stringQuery = "SELECT * FROM $tableName WHERE \"givenName\" ILIKE ? OR \"familyName\" ILIKE ? OR \"birthName\" ILIKE ? LIMIT $limit;";
+        String query = stringQuery.replace("$tableName", DB_CUSTOMERS_TABLE)
+                .replace("$limit", Integer.toString(LIST_MAX_RESULTS));
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + DB_CUSTOMERS_TABLE + " WHERE \"givenName\" ILIKE ? OR \"familyName\" ILIKE ? OR \"birthName\" ILIKE ? LIMIT " + LIST_MAX_RESULTS + ";")) {
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
             String searchStr = "%" + name + "%";
             stmt.setString(1, searchStr);
@@ -66,8 +70,11 @@ public class CustomerDBClientImpl extends UnicastRemoteObject implements Custome
 
     @Override
     public CustomerDTO findCustomerById(int customerId) throws CustomerDBClientException, CustomerNotFoundException {
+        String stringQuery = "SELECT * FROM $tableName WHERE id=?";
+        String query = stringQuery.replace("$tableName", DB_CUSTOMERS_TABLE);
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + DB_CUSTOMERS_TABLE + " WHERE id=?")) {
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, customerId);
             ResultSet rs = stmt.executeQuery();

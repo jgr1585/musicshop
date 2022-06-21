@@ -6,13 +6,15 @@ import at.fhv.teamd.musicshop.backend.domain.article.Artist;
 import at.fhv.teamd.musicshop.backend.domain.article.Song;
 import at.fhv.teamd.musicshop.backend.domain.invoice.Invoice;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
+import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Supplier;
 import at.fhv.teamd.musicshop.backend.domain.message.Message;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.domain.topic.Topic;
-import at.fhv.teamd.musicshop.library.DTO.*;
+import at.fhv.teamd.musicshop.library.dto.*;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -106,37 +108,49 @@ public class DTOProvider {
     }
 
     static ArticleDTO buildArticleDTO(Article article) {
+        return buildArticleDTOWithMediumTypes(article, MediumType.allMediumTypes());
+    }
+
+    static AlbumDTO buildArticleDTO(Album album) {
+        return buildArticleDTOWithMediumTypes(album, MediumType.allMediumTypes());
+    }
+
+    static SongDTO buildArticleDTO(Song song) {
+        return buildArticleDTOWithMediumTypes(song, MediumType.allMediumTypes());
+    }
+
+    static ArticleDTO buildArticleDTOWithMediumTypes(Article article, EnumSet<MediumType> includedMediumTypes) {
         if (article instanceof Album) {
-            return buildArticleDTO((Album) article);
+            return buildArticleDTOWithMediumTypes((Album) article, includedMediumTypes);
 
         } else if (article instanceof Song) {
-            return buildArticleDTO((Song) article);
+            return buildArticleDTOWithMediumTypes((Song) article, includedMediumTypes);
 
         } else {
             throw new UnsupportedOperationException();
         }
     }
 
-    static AlbumDTO buildArticleDTO(Album album) {
-        final AlbumDTO.Builder builder = getAlbumDTOBuilder(album);
+    static AlbumDTO buildArticleDTOWithMediumTypes(Album album, EnumSet<MediumType> includedMediumTypes) {
+        final AlbumDTO.Builder albumBuilder = getAlbumDTOBuilder(album, includedMediumTypes);
 
-        builder.withSongs(
+        albumBuilder.withSongs(
                 album.getSongs().stream()
-                        .map(song -> getSongDTOBuilder(song).withAlbums(Collections.singleton(builder.build())).build())
-                        .collect(Collectors.toUnmodifiableSet()));
+                        .map(song -> getSongDTOBuilder(song).withAlbums(Collections.singletonList(albumBuilder.build())).build())
+                        .collect(Collectors.toUnmodifiableList()));
 
-        return builder.build();
+        return albumBuilder.build();
     }
 
-    static SongDTO buildArticleDTO(Song song) {
-        final SongDTO.Builder builder = getSongDTOBuilder(song);
+    static SongDTO buildArticleDTOWithMediumTypes(Song song, EnumSet<MediumType> includedMediumTypes) {
+        final SongDTO.Builder songBuilder = getSongDTOBuilder(song);
 
-        builder.withAlbums(
+        songBuilder.withAlbums(
                 song.getAlbums().stream()
-                        .map(album -> getAlbumDTOBuilder(album).withSongs(Collections.singleton(builder.build())).build())
-                        .collect(Collectors.toUnmodifiableSet()));
+                        .map(album -> getAlbumDTOBuilder(album, includedMediumTypes).withSongs(Collections.singletonList(songBuilder.build())).build())
+                        .collect(Collectors.toUnmodifiableList()));
 
-        return builder.build();
+        return songBuilder.build();
     }
 
     private static SongDTO.Builder getSongDTOBuilder(Song song) {
@@ -151,11 +165,11 @@ public class DTOProvider {
                         song.getMusicbrainzId(),
                         song.getArtists().stream()
                                 .map(DTOProvider::buildArtistDTO)
-                                .collect(Collectors.toUnmodifiableSet()));
+                                .collect(Collectors.toUnmodifiableList()));
         return builder.withSongSpecificData(song.getLength());
     }
 
-    private static AlbumDTO.Builder getAlbumDTOBuilder(Album album) {
+    private static AlbumDTO.Builder getAlbumDTOBuilder(Album album, EnumSet<MediumType> includedMediumTypes) {
         final AlbumDTO.Builder builder = AlbumDTO.builder()
                 .withArticleSpecificData(
                         album.getId(),
@@ -168,7 +182,10 @@ public class DTOProvider {
                         album.getArtists()
                                 .stream()
                                 .map(DTOProvider::buildArtistDTO)
-                                .collect(Collectors.toUnmodifiableSet()));
-        return builder.withAlbumSpecificData(album.getMediums().stream().map(DTOProvider::buildMediumDTO).collect(Collectors.toUnmodifiableSet()));
+                                .collect(Collectors.toUnmodifiableList()));
+        return builder.withAlbumSpecificData(album.getMediums().stream()
+                .filter(medium -> includedMediumTypes.contains(medium.getType()))
+                .map(DTOProvider::buildMediumDTO)
+                .collect(Collectors.toUnmodifiableList()));
     }
 }

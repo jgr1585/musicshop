@@ -37,7 +37,7 @@ public class LoginController {
 
     public void logout() throws IOException {
         LoginSubject.notifyLogout();
-        RemoteFacade.getInstance().destroy();
+        RemoteFacade.destroy();
 
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("templates/login.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), stage.getScene().getWidth(), stage.getScene().getHeight());

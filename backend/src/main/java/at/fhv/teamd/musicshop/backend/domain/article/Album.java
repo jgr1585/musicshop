@@ -39,13 +39,11 @@ public class Album extends Article {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Album album = (Album) o;
-        return Objects.equals(songs, album.songs) && Objects.equals(mediums, album.mediums);
+        return super.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), songs, mediums);
+        return super.hashCode();
     }
 }

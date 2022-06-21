@@ -4,10 +4,12 @@ import at.fhv.teamd.musicshop.backend.domain.Quantity;
 import at.fhv.teamd.musicshop.backend.domain.medium.Medium;
 import at.fhv.teamd.musicshop.backend.domain.medium.MediumType;
 import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
+import at.fhv.teamd.musicshop.backend.domain.repositories.CustomerRepository;
+import at.fhv.teamd.musicshop.backend.domain.repositories.InvoiceRepository;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
-import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
+import at.fhv.teamd.musicshop.library.dto.ShoppingCartDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 
@@ -19,60 +21,100 @@ import java.util.Set;
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildShoppingCartDTO;
 
 public class ShoppingCartService {
-    private static final Map<String, Set<LineItem>> sessionLineItems = new HashMap<>();
+    private final Map<String, Set<LineItem>> physicalMediumLineItems = new HashMap<>();
+    private final Map<String, Set<LineItem>> digitalMediumLineItems = new HashMap<>();
 
-    private static final MediumRepository mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
+    private final MediumRepository mediumRepository = RepositoryFactory.getMediumRepositoryInstance();
+    private final CustomerRepository customerRepository = RepositoryFactory.getCustomerRepositoryInstance();
+    private final InvoiceRepository invoiceRepository = RepositoryFactory.getInvoiceRepositoryInstance();
 
-    private String message = "Quantity not acceptable";
+    private static final String ERR_MSG_QUANTITY = "Quantity not acceptable";
+    private static final String ERR_MSG_INSUFFICIENT_STOCK = "Insufficient in stock";
 
-    private void initializeShoppingcart(String userId) {
-        if (!shoppingCartExists(userId)) {
-            sessionLineItems.put(userId, new HashSet<>());
+    private void initializeUserShoppingCartsIfUninitialized(String userId) {
+        if (!userShoppingCartsExist(userId)) {
+            physicalMediumLineItems.put(userId, new HashSet<>());
+            digitalMediumLineItems.put(userId, new HashSet<>());
         }
     }
 
-    public void addToShoppingCart(String userId, long mediumId, int amount) throws ShoppingCartException {
-        if (!shoppingCartExists(userId)) {
-            initializeShoppingcart(userId);
-        }
+    private boolean userShoppingCartsExist(String userId) {
+        return digitalMediumLineItems.containsKey(userId) && physicalMediumLineItems.containsKey(userId);
+    }
 
-        if (amount < 1) throw new ShoppingCartException(message);
+    public void addPhysicalMediumToShoppingCart(String userId, long mediumId, int amount) throws ShoppingCartException {
+        initializeUserShoppingCartsIfUninitialized(userId);
 
-        Set<LineItem> lineItems = sessionLineItems.get(userId);
+        if (amount < 1) throw new ShoppingCartException(ERR_MSG_QUANTITY);
 
-        Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow();
+        Set<LineItem> lineItems = physicalMediumLineItems.get(userId);
 
+        Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow(() -> new ShoppingCartException("Medium not found."));
+
+        if (medium.getType() == MediumType.DIGITAL)
+            throw new ShoppingCartException("Only non-digital mediums are allowed here");
+
+        // medium already exists in lineItems -> increase lineItem amount
         if (lineItems.stream().anyMatch(li -> li.getMedium().getId() == mediumId)) {
             LineItem lineItem = lineItems.stream().filter(li -> li.getMedium().getId() == mediumId).findFirst().get();
-            if (lineItem.getQuantity().getValue() + amount <= medium.getStock().getQuantity().getValue()) {
-                lineItem.increaseQuantity(Quantity.of(amount));
-            } else {
-                throw new ShoppingCartException(message);
-            }
+
+            // insufficient mediums in stock
+            if (lineItem.getQuantity().getValue() + amount > medium.getStock().getQuantity().getValue())
+                throw new ShoppingCartException(ERR_MSG_INSUFFICIENT_STOCK);
+
+            lineItem.increaseQuantity(Quantity.of(amount));
+
+            // medium does not exists in lineItems
         } else {
-            if (amount <= medium.getStock().getQuantity().getValue()) {
-                lineItems.add(new LineItem(Quantity.of(amount), medium));
-                sessionLineItems.put(userId, lineItems);
-            } else {
-                throw new ShoppingCartException(message);
-            }
+            // insufficient mediums in stock
+            if (amount > medium.getStock().getQuantity().getValue())
+                throw new ShoppingCartException(ERR_MSG_INSUFFICIENT_STOCK);
+
+            lineItems.add(new LineItem(Quantity.of(amount), medium));
         }
     }
 
-    public void removeFromShoppingCart(String userId, long mediumId, int amount) throws ShoppingCartException {
-        if (!shoppingCartExists(userId)) {
-            emptyShoppingCart(userId);
+    public void addDigitalMediumToShoppingCart(String userId, long mediumId) throws ShoppingCartException {
+        initializeUserShoppingCartsIfUninitialized(userId);
+
+        Set<LineItem> lineItems = digitalMediumLineItems.get(userId);
+
+        Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow(() -> new ShoppingCartException("Medium not found."));
+
+        if (medium.getType() != MediumType.DIGITAL)
+            throw new ShoppingCartException("Only digital mediums are allowed here");
+
+        // has medium already purchased
+        if (invoiceRepository.findInvoicesByCustomerNo(customerRepository.findCustomerByUserName(userId).orElseThrow(() -> new ShoppingCartException("Invalid userId")).getCustomerNo()).stream()
+                .flatMap(invoice -> invoice.getLineItems().stream())
+                .anyMatch(lineItem -> lineItem.getMedium().equals(medium))) {
+            throw new ShoppingCartException("Item already purchased.");
         }
 
-        if (amount < 1) throw new ShoppingCartException(message);
+        // medium does not exists in lineItems
+        if (lineItems.stream().noneMatch(li -> li.getMedium().getId() == mediumId)) {
+            lineItems.add(new LineItem(Quantity.of(1), medium));
 
-        Set<LineItem> lineItems = sessionLineItems.get(userId);
+            // medium already exists in lineItems
+        } else {
+            throw new ShoppingCartException("Already in ShoppingCart");
+        }
+    }
+
+    public void removePhysicalMediumFromShoppingCart(String userId, long mediumId, int amount) throws ShoppingCartException {
+        initializeUserShoppingCartsIfUninitialized(userId);
+
+        if (amount < 1) throw new ShoppingCartException(ERR_MSG_QUANTITY);
+
+        Set<LineItem> lineItems = physicalMediumLineItems.get(userId);
 
         LineItem lineItem = lineItems.stream()
                 .filter(li -> li.getMedium().getId() == mediumId)
                 .findFirst()
-                .orElseThrow(() -> new ShoppingCartException(message));
+                // no line item with medium found
+                .orElseThrow(() -> new ShoppingCartException("No line item with medium exists"));
 
+        // decrease amount or remove lineItem
         if (lineItem.getQuantity().getValue() > amount) {
             lineItem.decreaseQuantity(Quantity.of(amount));
         } else {
@@ -80,109 +122,86 @@ public class ShoppingCartService {
         }
     }
 
-    public void emptyShoppingCart(String userId) {
-        sessionLineItems.put(userId, new HashSet<>());
-    }
+    public void removeDigitalMediumFromShoppingCart(String userId, long mediumId) throws ShoppingCartException {
+        initializeUserShoppingCartsIfUninitialized(userId);
 
-    public ShoppingCartDTO getShoppingCart(String userId) {
-        if (!shoppingCartExists(userId)) {
-            initializeShoppingcart(userId);
-        }
-        return buildShoppingCartDTO(sessionLineItems.get(userId));
-    }
-
-    public String buyFromShoppingCart(String userId, int id) throws ShoppingCartException {
-        if (!shoppingCartExists(userId)) {
-            emptyShoppingCart(userId);
-        }
-
-        Set<LineItem> lineItems = sessionLineItems.get(userId);
-
-        if (lineItems.isEmpty()) throw new ShoppingCartException("No LineItems in ShoppingCart");
-
-        for (LineItem lineItem : lineItems) {
-            Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
-            if (medium.getStock().getQuantity().getValue() < lineItem.getQuantity().getValue()) {
-                throw new ShoppingCartException("Not enough Items in Stock: " + medium.getId());
-            }
-        }
-
-        Long invoiceNo = ServiceFactory.getInvoiceServiceInstance().createInvoice(lineItems, id);
-
-        emptyShoppingCart(userId);
-
-        // decrease quantities
-        for (LineItem lineItem : lineItems) {
-            Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
-            medium.setStock(Stock.of(medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity())));
-            mediumRepository.update(medium);
-        }
-        return String.valueOf(invoiceNo);
-    }
-
-    public void addDigitalsToShoppingCart(String userId, long mediumId) throws ShoppingCartException {
-        if (!shoppingCartExists(userId)) {
-            initializeShoppingcart(userId);
-        }
-
-        Set<LineItem> lineItems = sessionLineItems.get(userId);
-
-        Medium medium = mediumRepository.findMediumById(mediumId).orElseThrow();
-
-        if (medium.getType() != MediumType.DIGITAL)
-            throw new ShoppingCartException("Only digital mediums are allowed here");
-
-        if (lineItems.stream().noneMatch(li -> li.getMedium().getId() == mediumId)) {
-            lineItems.add(new LineItem(Quantity.of(1), medium));
-            sessionLineItems.put(userId, lineItems);
-        } else {
-            throw new ShoppingCartException("Already in ShoppingCart");
-        }
-    }
-
-    public void removeDigitalsFromShoppingCart(String userId, long mediumId) throws ShoppingCartException {
-        if (!shoppingCartExists(userId)) {
-            emptyShoppingCart(userId);
-        }
-
-        Set<LineItem> lineItems = sessionLineItems.get(userId);
+        Set<LineItem> lineItems = digitalMediumLineItems.get(userId);
 
         lineItems.remove(
                 lineItems.stream()
                         .filter(li -> li.getMedium().getId() == mediumId)
                         .findFirst()
-                        .orElseThrow(() -> new ShoppingCartException("Not in ShoppingCart")));
+                        .orElseThrow(() -> new ShoppingCartException("No line item with medium exists")));
     }
 
-    public String buyDigitalsFromShoppingCart(String userId, String creditCardNo) throws CustomerNotFoundException, ShoppingCartException {
-        if (!shoppingCartExists(userId)) {
-            emptyShoppingCart(userId);
-        }
+    public void emptyPhysicalMediumShoppingCart(String userId) {
+        physicalMediumLineItems.put(userId, new HashSet<>());
+    }
 
-        if (!ServiceFactory.getCustomerServiceInstance().getCustomerByUsername(userId).getCreditcardNo().equals(creditCardNo)) {
-            throw new ShoppingCartException("CreditCardNo does not match!");
-        }
+    public void emptyDigitalMediumShoppingCart(String userId) {
+        digitalMediumLineItems.put(userId, new HashSet<>());
+    }
 
-        int id = ServiceFactory.getCustomerServiceInstance().getCustomerNoByUsername(userId);
+    public ShoppingCartDTO getPhysicalMediumShoppingCart(String userId) {
+        initializeUserShoppingCartsIfUninitialized(userId);
 
-        Set<LineItem> lineItems = sessionLineItems.get(userId);
+        return buildShoppingCartDTO(physicalMediumLineItems.get(userId));
+    }
+
+    public ShoppingCartDTO getDigitalMediumShoppingCart(String userId) {
+        initializeUserShoppingCartsIfUninitialized(userId);
+
+        return buildShoppingCartDTO(digitalMediumLineItems.get(userId));
+    }
+
+    public String buyFromPhysicalMediumShoppingCart(String userId, int customerNo) throws ShoppingCartException {
+        initializeUserShoppingCartsIfUninitialized(userId);
+
+        Set<LineItem> lineItems = physicalMediumLineItems.get(userId);
 
         if (lineItems.isEmpty()) throw new ShoppingCartException("No LineItems in ShoppingCart");
 
         for (LineItem lineItem : lineItems) {
             Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
-            if (medium.getType() != MediumType.DIGITAL)
-                throw new ShoppingCartException("Only digital mediums are allowed");
+
+            // insufficient mediums in stock
+            if (medium.getStock().getQuantity().getValue() < lineItem.getQuantity().getValue()) {
+                throw new ShoppingCartException(ERR_MSG_INSUFFICIENT_STOCK);
+            }
         }
 
-        Long invoiceNo = ServiceFactory.getInvoiceServiceInstance().createInvoice(lineItems, id);
+        Long invoiceNo = ServiceFactory.getInvoiceServiceInstance().createInvoice(lineItems, customerNo);
 
-        emptyShoppingCart(userId);
+        emptyPhysicalMediumShoppingCart(userId);
+
+        // decrease stock quantities
+        for (LineItem lineItem : lineItems) {
+            Medium medium = mediumRepository.findMediumById(lineItem.getMedium().getId()).orElseThrow();
+
+            medium.setStock(Stock.of(medium.getStock().getQuantity().decreaseBy(lineItem.getQuantity())));
+            mediumRepository.update(medium);
+        }
 
         return String.valueOf(invoiceNo);
     }
 
-    private boolean shoppingCartExists(String userId) {
-        return sessionLineItems.containsKey(userId);
+    public String buyFromDigitalMediumShoppingCart(String userId, String creditCardNo) throws CustomerNotFoundException, ShoppingCartException {
+        initializeUserShoppingCartsIfUninitialized(userId);
+
+        if (!ServiceFactory.getCustomerServiceInstance().getCustomerByUsername(userId).getCreditcardNo().equals(creditCardNo)) {
+            throw new ShoppingCartException("CreditCardNo does not match!");
+        }
+
+        int customerNo = ServiceFactory.getCustomerServiceInstance().getCustomerNoByUsername(userId);
+
+        Set<LineItem> lineItems = digitalMediumLineItems.get(userId);
+
+        if (lineItems.isEmpty()) throw new ShoppingCartException("No LineItems in ShoppingCart");
+
+        Long invoiceNo = ServiceFactory.getInvoiceServiceInstance().createInvoice(lineItems, customerNo);
+
+        emptyDigitalMediumShoppingCart(userId);
+
+        return String.valueOf(invoiceNo);
     }
 }

@@ -4,7 +4,7 @@ import at.fhv.teamd.musicshop.backend.communication.CustomerClient;
 import at.fhv.teamd.musicshop.backend.domain.customer.Customer;
 import at.fhv.teamd.musicshop.backend.domain.repositories.CustomerRepository;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
-import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
+import at.fhv.teamd.musicshop.library.dto.CustomerDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerNotFoundException;
 

@@ -6,10 +6,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 public class LineItem {
@@ -21,7 +18,7 @@ public class LineItem {
     @Getter private UUID uuid;
 
     @ElementCollection
-    private final Map<Quantities, Quantity> quantities = new HashMap<>();
+    private final Map<Quantities, Quantity> quantities = new EnumMap<> (Quantities.class);
 
     @Column(nullable = false)
     @Getter private BigDecimal price;

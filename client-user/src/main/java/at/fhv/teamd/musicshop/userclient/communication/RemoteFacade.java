@@ -1,7 +1,7 @@
 package at.fhv.teamd.musicshop.userclient.communication;
 
 import at.fhv.teamd.musicshop.library.ApplicationClient;
-import at.fhv.teamd.musicshop.library.DTO.*;
+import at.fhv.teamd.musicshop.library.dto.*;
 import at.fhv.teamd.musicshop.library.exceptions.*;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.observer.ReturnSubject;
@@ -29,7 +29,7 @@ public class RemoteFacade implements ApplicationClient {
             Context ctx = new InitialContext(props);
 
             // ejb:/[DeployedName]/Implementierungsname![packages + Interface of Bean]
-            applicationClient = (ApplicationClient) ctx.lookup("ejb:/backend-1.0-SNAPSHOT/ApplicationClientImpl!at.fhv.teamd.musicshop.library.ApplicationClient");
+            applicationClient = (ApplicationClient) ctx.lookup("ejb:/backend-1.0-SNAPSHOT/ApplicationClientImpl!at.fhv.teamd.musicshop.library.ApplicationClient?stateful");
 
             applicationClient.authenticate(authUser, authPassword);
 
@@ -54,8 +54,8 @@ public class RemoteFacade implements ApplicationClient {
     }
 
     @Override
-    public void authenticate(String authUser, String authPassword) throws AuthenticationFailedException {
-
+    public void authenticate(String authUser, String authPassword) {
+        // do not implement
     }
 
     @Override
@@ -145,7 +145,7 @@ public class RemoteFacade implements ApplicationClient {
         return getApplicationClientOrThrow().isAuthorizedFor(functionPermission);
     }
 
-    public void destroy() {
+    public static void destroy() {
         applicationClient = null;
     }
 }

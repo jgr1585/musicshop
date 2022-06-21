@@ -25,6 +25,8 @@ import java.util.NoSuchElementException;
 @Produces("application/json")
 @SecurityRequirement(name = "Authentication")
 @NoArgsConstructor
+
+// TODO: add GenericEntity on response
 public class ShoppingCartRestController {
 
     @Inject
@@ -44,7 +46,7 @@ public class ShoppingCartRestController {
             return Response.status(401).build();
         }
         try {
-            ServiceFactory.getShoppingCartServiceInstance().addDigitalsToShoppingCart(authenticatedUser.name(), form.getMediumId());
+            ServiceFactory.getShoppingCartServiceInstance().addDigitalMediumToShoppingCart(authenticatedUser.name(), form.getMediumId());
         } catch (NoSuchElementException e) {
             return Response.status(404, e.getMessage()).build();
         } catch (ShoppingCartException e) {
@@ -65,7 +67,7 @@ public class ShoppingCartRestController {
             return Response.status(401).build();
         }
         try {
-            ServiceFactory.getShoppingCartServiceInstance().removeDigitalsFromShoppingCart(authenticatedUser.name(), form.getMediumId());
+            ServiceFactory.getShoppingCartServiceInstance().removeDigitalMediumFromShoppingCart(authenticatedUser.name(), form.getMediumId());
         } catch (ShoppingCartException e) {
             return Response.status(406, e.getMessage()).build();
         }
@@ -82,7 +84,7 @@ public class ShoppingCartRestController {
         if (authenticatedUser == null) {
             return Response.status(401).build();
         }
-        ServiceFactory.getShoppingCartServiceInstance().emptyShoppingCart(authenticatedUser.name());
+        ServiceFactory.getShoppingCartServiceInstance().emptyDigitalMediumShoppingCart(authenticatedUser.name());
         return Response.status(204).build();
     }
 
@@ -96,11 +98,12 @@ public class ShoppingCartRestController {
         if (authenticatedUser == null) {
             return Response.status(401).build();
         }
-        return Response.ok(ServiceFactory.getShoppingCartServiceInstance().getShoppingCart(authenticatedUser.name())).build();
+        return Response.ok(ServiceFactory.getShoppingCartServiceInstance().getDigitalMediumShoppingCart(authenticatedUser.name())).build();
     }
 
     @POST
     @Path("/buy")
+    @Produces("text/plain")
     @Operation(summary = "Buy Items from ShoppingCart",
             description = "Returns the InvoiceNo. on success?")
     @ApiResponse(responseCode = "200", description = "Successfully bought Items")
@@ -116,7 +119,7 @@ public class ShoppingCartRestController {
         }
         String invoiceNo;
         try {
-            invoiceNo = ServiceFactory.getShoppingCartServiceInstance().buyDigitalsFromShoppingCart(authenticatedUser.name(), form.getCreditCardNo());
+            invoiceNo = ServiceFactory.getShoppingCartServiceInstance().buyFromDigitalMediumShoppingCart(authenticatedUser.name(), form.getCreditCardNo());
         } catch (CustomerNotFoundException e) {
             return Response.status(404, e.getMessage()).build();
         } catch (ShoppingCartException e) {

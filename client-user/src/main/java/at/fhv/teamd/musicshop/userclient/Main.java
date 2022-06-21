@@ -37,7 +37,7 @@ public class Main extends Application {
             stage.setTitle("MusicShop24 - Login");
             stage.setScene(scene);
             stage.show();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             showError(Thread.currentThread(), e);
         }
         Thread.setDefaultUncaughtExceptionHandler(Main::showError);
@@ -71,10 +71,6 @@ public class Main extends Application {
             new Alert(Alert.AlertType.ERROR, cause.getMessage(), ButtonType.CLOSE).showAndWait();
         } else {
             e.printStackTrace();
-            // Print stack trace in alert modal
-//            StringWriter errorMsg = new StringWriter();
-//            e.printStackTrace(new PrintWriter(errorMsg));
-//            new Alert(Alert.AlertType.ERROR, "An exception occurred:\n\n"+errorMsg, ButtonType.CLOSE).showAndWait();
             new Alert(Alert.AlertType.ERROR, "An error occurred. Check the error output stream for details.", ButtonType.CLOSE).showAndWait();
 
             e.printStackTrace();

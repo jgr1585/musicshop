@@ -1,15 +1,14 @@
 package at.fhv.teamd.musicshop.userclient.view;
 
-import at.fhv.teamd.musicshop.library.exceptions.ApplicationClientException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.exceptions.ShoppingCartException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;
 import at.fhv.teamd.musicshop.userclient.view.article.ReturnController;
 import at.fhv.teamd.musicshop.userclient.view.article.SearchController;
-import at.fhv.teamd.musicshop.userclient.view.receiveMessage.ReceiveMessageController;
+import at.fhv.teamd.musicshop.userclient.view.receive_message.ReceiveMessageController;
 import at.fhv.teamd.musicshop.userclient.view.shoppingcart.ShoppingCartController;
-import at.fhv.teamd.musicshop.userclient.view.writeMessage.WriteMessageController;
+import at.fhv.teamd.musicshop.userclient.view.write_message.WriteMessageController;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -65,10 +64,10 @@ public class AppController {
 
 
         new Thread(() -> {
-            this.searchTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.searchArticlesByAttributes));
-            this.returnTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.returnItem));
-            this.shoppingCartTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.getShoppingCart));
-            this.writeMessageTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.publishMessage));
+            this.searchTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.SEARCH_ARTICLES_BY_ATTRIBUTES));
+            this.returnTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.RETURN_ITEM));
+            this.shoppingCartTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.GET_SHOPPING_CART));
+            this.writeMessageTab.setDisable(!RemoteFacade.getInstance().isAuthorizedFor(RemoteFunctionPermission.PUBLISH_MESSAGE));
         }).start();
     }
 
