@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.library.DTO;
+package at.fhv.teamd.musicshop.library.dto;
 
 import java.time.LocalDate;
 import java.util.Set;

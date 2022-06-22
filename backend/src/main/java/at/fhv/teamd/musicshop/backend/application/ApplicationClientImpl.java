@@ -3,7 +3,7 @@ package at.fhv.teamd.musicshop.backend.application;
 import at.fhv.teamd.musicshop.backend.application.services.*;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.library.ApplicationClient;
-import at.fhv.teamd.musicshop.library.DTO.*;
+import at.fhv.teamd.musicshop.library.dto.*;
 import at.fhv.teamd.musicshop.library.exceptions.*;
 
 import java.rmi.NoSuchObjectException;

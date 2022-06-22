@@ -1,6 +1,6 @@
 package at.fhv.teamd.musicshop.userclient.view.receiveMessage;
 
-import at.fhv.teamd.musicshop.library.DTO.MessageDTO;
+import at.fhv.teamd.musicshop.library.dto.MessageDTO;
 import at.fhv.teamd.musicshop.library.exceptions.MessagingException;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;

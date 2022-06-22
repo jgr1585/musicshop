@@ -1,8 +1,8 @@
 package at.fhv.teamd.musicshop.userclient.view;
 
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.library.dto.ArticleDTO;
+import at.fhv.teamd.musicshop.library.dto.LineItemDTO;
+import at.fhv.teamd.musicshop.library.dto.MediumDTO;
 
 public interface GenericArticleController {
     void setMediumType(ArticleDTO articleDTO, MediumDTO mediumDTO);

@@ -1,7 +1,7 @@
 package at.fhv.teamd.musicshop.backend.application.services;
 
 import at.fhv.teamd.musicshop.backend.communication.CustomerClient;
-import at.fhv.teamd.musicshop.library.DTO.CustomerDTO;
+import at.fhv.teamd.musicshop.library.dto.CustomerDTO;
 import at.fhv.teamd.musicshop.library.exceptions.CustomerDBClientException;
 
 import java.rmi.RemoteException;

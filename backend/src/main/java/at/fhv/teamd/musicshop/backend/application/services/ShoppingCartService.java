@@ -6,11 +6,10 @@ import at.fhv.teamd.musicshop.backend.domain.medium.Stock;
 import at.fhv.teamd.musicshop.backend.domain.repositories.MediumRepository;
 import at.fhv.teamd.musicshop.backend.domain.shoppingcart.LineItem;
 import at.fhv.teamd.musicshop.backend.infrastructure.RepositoryFactory;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
-import at.fhv.teamd.musicshop.library.DTO.ShoppingCartDTO;
+import at.fhv.teamd.musicshop.library.dto.MediumDTO;
+import at.fhv.teamd.musicshop.library.dto.ShoppingCartDTO;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static at.fhv.teamd.musicshop.backend.application.services.DTOProvider.buildShoppingCartDTO;
 

@@ -1,6 +1,6 @@
 package at.fhv.teamd.musicshop.library;
 
-import at.fhv.teamd.musicshop.library.DTO.*;
+import at.fhv.teamd.musicshop.library.dto.*;
 import at.fhv.teamd.musicshop.library.exceptions.*;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 

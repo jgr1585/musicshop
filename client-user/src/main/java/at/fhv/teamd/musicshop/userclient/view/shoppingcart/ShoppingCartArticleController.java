@@ -1,8 +1,8 @@
 package at.fhv.teamd.musicshop.userclient.view.shoppingcart;
 
-import at.fhv.teamd.musicshop.library.DTO.ArticleDTO;
-import at.fhv.teamd.musicshop.library.DTO.LineItemDTO;
-import at.fhv.teamd.musicshop.library.DTO.MediumDTO;
+import at.fhv.teamd.musicshop.library.dto.ArticleDTO;
+import at.fhv.teamd.musicshop.library.dto.LineItemDTO;
+import at.fhv.teamd.musicshop.library.dto.MediumDTO;
 import at.fhv.teamd.musicshop.library.exceptions.NotAuthorizedException;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.communication.RemoteFacade;

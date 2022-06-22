@@ -2,7 +2,7 @@ package at.fhv.teamd.musicshop.userclient.communication;
 
 import at.fhv.teamd.musicshop.library.ApplicationClient;
 import at.fhv.teamd.musicshop.library.ApplicationClientFactory;
-import at.fhv.teamd.musicshop.library.DTO.*;
+import at.fhv.teamd.musicshop.library.dto.*;
 import at.fhv.teamd.musicshop.library.exceptions.*;
 import at.fhv.teamd.musicshop.library.permission.RemoteFunctionPermission;
 import at.fhv.teamd.musicshop.userclient.observer.ReturnSubject;

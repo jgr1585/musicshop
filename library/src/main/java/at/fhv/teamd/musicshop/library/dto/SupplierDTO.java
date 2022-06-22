@@ -1,4 +1,4 @@
-package at.fhv.teamd.musicshop.library.DTO;
+package at.fhv.teamd.musicshop.library.dto;
 
 import java.io.Serializable;
 import java.time.Duration;
