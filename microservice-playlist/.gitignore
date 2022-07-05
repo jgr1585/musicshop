@@ -34,4 +34,4 @@ nb-configuration.xml
 
 # Local environment
 .env
-/src/main/resources/META-INF/resources/
+#/src/main/resources/META-INF/resources/
